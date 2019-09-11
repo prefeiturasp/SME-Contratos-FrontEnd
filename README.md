@@ -4,20 +4,19 @@
 
 # SME-Contratos-FrontEnd
 
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Projeto de Frontend com REACT JS
 
 ## Available Scripts
 
-In the project directory, you can run:
+Dentro do diretorio do projeto você pode rodar:
 
 ### `npm start`
 
-Runs the app in the development mode.<br>
+Roda o sistema em modo de desenvolvimento.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+A página irá recarregar toda vez que você fizer uma edição de arquivo.<br>
+Você também poderá ver qualquer error no console.
 
 ### `npm test`
 
