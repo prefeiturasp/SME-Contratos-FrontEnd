@@ -11,6 +11,7 @@
     "react-scripts": "3.1.1",
     "reactstrap": "^8.0.1",
     "redux": "^4.0.4",
+    "redux-form": "^8.2.6",
     "redux-multi": "^0.1.12",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
