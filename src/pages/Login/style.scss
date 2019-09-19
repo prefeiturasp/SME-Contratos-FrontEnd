@@ -1,0 +1,29 @@
+.login {
+  overflow: hidden;
+  position: fixed;
+}
+
+::-webkit-scrollbar {
+  display: none;
+  overflow: hidden;
+}
+
+.block-logo {
+  height: 15%;
+}
+
+.ml-5-2 {
+  margin-left: 5.5rem !important;
+}
+
+label {
+  font-family: Roboto;
+}
+
+a {
+  color: #6a6a6a !important;
+}
+
+.btn-login {
+    background-color: #6A6A6A !important;
+}
