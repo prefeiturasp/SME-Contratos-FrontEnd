@@ -9,7 +9,7 @@ import { Button, Form } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { Field, reduxForm } from 'redux-form'
 import "./style.scss";
-import {InputLabel} from "../../components/InputLabel";
+import { InputLabel } from "../../components/InputLabel";
 
 export class Login extends Component {
 
@@ -18,7 +18,7 @@ export class Login extends Component {
   }
 
   render() {
-    const {handleSubmit} = this.props
+    const { handleSubmit, submitting, pristine } = this.props
     return (
       <Container classe={"login h-100 w-100"}>
         <Row>
@@ -34,33 +34,34 @@ export class Login extends Component {
             <Row centralizar={true} classe={"w-75 pb-5 ml-5-2"}>
               <Grid cols={"1 4 4 8"}>
                 <Form onSubmit={handleSubmit(this.submit)}>
+                    <Field
+                      component={InputLabel}
+                      label={"RF ou CPF"}
+                      id={"username"}
+                      type={"text"}
+                      autocomplete={"Off"}
+                      placeholder={'Insira seu RF ou CPF'}
+                      name={'username'}
+                      />
                   <Field
                     component={InputLabel}
-                    label={"RF ou CPF"}
-                    id={"username"}
-                    type={"text"}
                     autocomplete={"Off"}
-                    placeholder={'Insira seu RF ou CPF'}
-                    name={'username'}
+                    label={"Senha"}
+                    id={"senha"}
+                    type="password"
+                    placeholder={'Insira sua senha'}
+                    name={'password'}
                   />
-                  <Field
-                      component={InputLabel} 
-                      label={"Senha"} 
-                      id={"senha"} 
-                      type={"password"}
-                      placeholder={'Insira sua senha'}
-                      name={'password'}
-                      />
                   <div className="pb-4 d-flex justify-content-end">
                     <NavLink>Esqueci minha senha</NavLink>
                   </div>
 
-                  <Button 
-                        type={'submit'} 
-                        color="secondary bt-login" 
-                        size="lg" 
-                        // disabled={pristine || submitting}
-                        block>
+                  <Button
+                    type={'submit'}
+                    color="secondary bt-login"
+                    size="lg"
+                    disabled={pristine || submitting}
+                    block>
                     Acessar
                   </Button>
                   <div className="pt-3 d-flex justify-content-center">
