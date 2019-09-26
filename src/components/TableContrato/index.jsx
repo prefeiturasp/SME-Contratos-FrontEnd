@@ -8,9 +8,9 @@ const Table = ({ dadosContrato, nomeColunas }) => {
   return (
     <div class="table">
       <table class="table">
-        <Head listaContratos={listaContratos} nomecolunas={nomeColunas} />
+        <Head listaContratos={listaContratos} nomeColunas={nomeColunas} />
         <tbody>
-          { dadosContrato.map((registroTabela , key)=> <Row registroTabela={registroTabela} id={key} />) }
+          { dadosContrato.map((registroTabela, key)=> <Row registroTabela={registroTabela} id={key} />) }
         </tbody>
       </table>
     </div>
