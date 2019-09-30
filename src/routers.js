@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { isAuthenticated } from "./services/auth.service";
 import RoutesConfig from './configs/routes.constants'
 import Login from "./pages/Login";
+import ListaContrato from "./pages/ListaContrato";
 
 const PrivateRoute = ({ component: Componet, ...rest }) => {
   return (
@@ -21,9 +22,10 @@ const PrivateRoute = ({ component: Componet, ...rest }) => {
   );
 };
 
-export default Routers => (
+const Routers = () => (
   <Switch>
     <Route exact path="/login" component={Login} />
+    <Route path="/listacontratos" component={ListaContrato} />
     {RoutesConfig.map((value, key) => {
         return (
             <PrivateRoute 
@@ -36,3 +38,5 @@ export default Routers => (
     })}
   </Switch>
 );
+
+export default Routers
