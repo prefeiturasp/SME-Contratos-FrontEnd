@@ -5,12 +5,12 @@ import Head from "./Head";
 const Table = ({ dadosContrato, nomeColunas }) => {
   const listaContratos = Object.keys(dadosContrato[0]);
   return (
-    <div class="table">
-      <table class="table">
+    <div className="table contratos">
+      <table className="table">
         <Head listaContratos={listaContratos} nomeColunas={nomeColunas} />
         <tbody>
           {dadosContrato.map((registroTabela, key) => (
-            <Row registroTabela={registroTabela} id={key} />
+            <Row key={key} registroTabela={registroTabela} id={key} />
           ))}
         </tbody>
       </table>
