@@ -89,7 +89,7 @@ export class Login extends Component {
                     name={"password"}
                   />
                   <div className="pb-4 d-flex justify-content-end">
-                    <NavLink className="link">Esqueci minha senha</NavLink>
+                    <NavLink to="/esqueci-minha-senha" className="link">Esqueci minha senha</NavLink>
                   </div>
                   <div className="pb-4 d-flex justify-content-center">
                     <Alert color="danger" isOpen={alerta}>

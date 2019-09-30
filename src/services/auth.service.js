@@ -23,12 +23,9 @@ export const login = async (username, password) => {
     if (validaResposta(response.status)) {
       const json = await response.json();
       if (validarToken(json.token)) {
-        const resposta = validarPrimeiroAcesso(username);
-        if (resposta) {
           localStorage.setItem(TOKEN_ALIAS, json.token);
           return true;
-        }
-      } 
+      }
     }
     return false;
   } catch (error) {
@@ -68,6 +65,42 @@ export const trocarSenha = async (password, password2) => {
   }
 };
 
+export const esqueciMinhaSenha = async username => {
+  try {
+    const OBJ_REQUEST = {
+      headers: authHeader,
+      method: "POST",
+      body: JSON.stringify({ username })
+    };
+    const response = await fetch(
+      `${CONFIG.API_URL}/esqueci-minha-senha/`,
+      OBJ_REQUEST
+    );
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const redefinirSenha = async (password, password2, hash_redefinicao) => {
+  try {
+    const OBJ_REQUEST = {
+      headers: authHeader,
+      method: "POST",
+      body: JSON.stringify({ hash_redefinicao, password, password2 })
+    };
+    const response = await fetch(
+      `${CONFIG.API_URL}/redefinir-senha/`,
+      OBJ_REQUEST
+    );
+    const json = await response.json();
+    return { status: response.status, detail: json.detail };
+  } catch (error) {
+    return false;
+  }
+};
+
 const validaResposta = status => {
   if (status === STATUS_OK) {
     return true;
@@ -101,16 +134,16 @@ const validarToken = token => {
   return true;
 };
 
-const validarPrimeiroAcesso = username => {
-  let resposta = true;
+export const validarPrimeiroAcesso = () => {
+  const decoded = decode(localStorage.getItem(TOKEN_ALIAS));
+  const username = decoded.username;
   primeiroAcesso(username).then(response => {
     if (response.alterar) {
+      localStorage.removeItem(TOKEN_ALIAS);
       localStorage.setItem(USERNAME_TEMP, username);
       window.location.href = "/primeiro-acesso";
-      resposta = false;
-    }
+    } 
   });
-  return resposta;
 };
 
 export const removerUsernameTemp = () => {
