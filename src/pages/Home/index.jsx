@@ -1,8 +1,18 @@
-import React from 'react'
-import Page from '../../components/Page';
+import React, { Component } from "react";
+import Page from "../../components/Page";
+import { validarPrimeiroAcesso } from "../../services/auth.service";
 
-export default props => (
-    <Page titulo="Home">
-        <h1>Welcome To COAD</h1>
-    </Page>
-) 
+export default class Home extends Component {
+
+  componentWillMount() {
+    validarPrimeiroAcesso();
+  }
+
+  render() {
+    return (
+      <Page>
+        <h1>Bem vindo ao COAD</h1>
+      </Page>
+    );
+  }
+}
