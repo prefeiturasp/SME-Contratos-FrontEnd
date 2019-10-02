@@ -5,8 +5,8 @@ export const textColor = valorTd => {
     case "6 meses":
       return "text-warning";
     case "Regular":
-      return "text-danger";
-    case "excepcionalidade":
+      return "text-success";
+    case "Excepcionalidade":
       return "text-primary";
     case "Ultimo Ano":
       return "text-info";
