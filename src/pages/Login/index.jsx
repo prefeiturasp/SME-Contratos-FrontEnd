@@ -75,13 +75,13 @@ export class Login extends Component {
                     label={"RF ou CPF"}
                     id={"username"}
                     type={"text"}
-                    autocomplete={"Off"}
+                    autoComplete={"Off"}
                     placeholder={"Insira seu RF ou CPF"}
                     name={"username"}
                   />
                   <Field
                     component={InputLabel}
-                    autocomplete={"Off"}
+                    autoComplete={"Off"}
                     label={"Senha"}
                     id={"senha"}
                     type="password"
@@ -107,7 +107,7 @@ export class Login extends Component {
                     Acessar
                   </Button>
                   <div className="pt-3 d-flex justify-content-center">
-                    <NavLink className="link">Ainda não sou cadastrado</NavLink>
+                    <NavLink to="#" className="link">Ainda não sou cadastrado</NavLink>
                   </div>
                 </Form>
               </Grid>
