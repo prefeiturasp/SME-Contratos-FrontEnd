@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import App from "./App";
 import "startbootstrap-sb-admin-2/css/sb-admin-2.css";
 import store from "./store";
+import './assets/scss/style.scss'
 
 ReactDOM.render(
   <Provider store={store}>
