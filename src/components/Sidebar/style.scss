@@ -1,0 +1,43 @@
+$fontStyle: normal;
+$fontWeight: bold;
+$fontSizeSpan: 0.7rem !important;
+
+.span-coad-menu {
+  font-style: $fontStyle;
+  font-weight: $fontWeight;
+  font-size: $fontSizeSpan;
+}
+
+.coad-icon-sm {
+  font-size: 0.875em;
+}
+
+.coad-icon-lg {
+  font-size: 1.33em;
+}
+
+.coad-icon-xs {
+  font-size: 0.75em;
+}
+
+.nav-link-coad {
+  padding-bottom: 0px !important;
+}
+
+.coad-profile {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.coad-border {
+  border: 3px solid #e3e6f0 !important;
+}
+
+.coad-border-name {
+    border: 1px solid #e3e6f0 !important;
+    border-radius: 20px !important;
+  }
+
+.coad-text-sm {
+  font-size: 80%;
+}
