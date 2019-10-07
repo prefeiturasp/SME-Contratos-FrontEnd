@@ -6,7 +6,7 @@ export default props => (
     <div>
         <div id="wrapper">
             <Sidebar />
-            <div id="content-wrapper" class="d-flex flex-colum">
+            <div id="content-wrapper" className="d-flex flex-colum">
                 <div id="content">
                     <Topbar />
                     <div className="container-fluid">
@@ -18,8 +18,8 @@ export default props => (
                 </div>
             </div>
         </div>
-        <a class="scroll-to-top rounded" href="#page-top" style={style}>
-            <i class="fas fa-angle-up"></i>
+        <a className="scroll-to-top rounded" href="#page-top" style={style}>
+            <i className="fas fa-angle-up"></i>
         </a>
     </div>
 )

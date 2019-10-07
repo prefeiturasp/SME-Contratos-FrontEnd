@@ -4,7 +4,7 @@ import { validarPrimeiroAcesso } from "../../services/auth.service";
 
 export default class Home extends Component {
 
-  componentWillMount() {
+  componentDidMount() {
     validarPrimeiroAcesso();
   }
 
