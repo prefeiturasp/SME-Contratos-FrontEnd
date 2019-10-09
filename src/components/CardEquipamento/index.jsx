@@ -8,23 +8,23 @@ import "./style.scss";
 const CardEquipamento = props => {
   const { educacionais, centros, administrativas } = props.equipamento;
   return (
-    <div className="alinhamento">
+    <div className="alinhamento-equipamento">
       <Card className="equipamento">
         <CardImg top src={IconeEducacional} alt="Icone de seleção" />
         <CardBody>
-          <CardTitle className="equipamento-info">{educacionais}</CardTitle>
+          <CardTitle className="titulo-equipamento">{educacionais}</CardTitle>
         </CardBody>
       </Card>
       <Card className="equipamento">
         <CardImg top src={IconeCentros} alt="Icone de seleção" />
         <CardBody>
-          <CardTitle className="equipamento-info">{centros}</CardTitle>
+          <CardTitle className="titulo-equipamento">{centros}</CardTitle>
         </CardBody>
       </Card>
       <Card className="equipamento">
         <CardImg top src={IconeAdministrativo} alt="Icone de seleção" />
         <CardBody>
-          <CardTitle className="equipamento-info">{administrativas}</CardTitle>
+          <CardTitle className="titulo-equipamento">{administrativas}</CardTitle>
         </CardBody>
       </Card>
     </div>
