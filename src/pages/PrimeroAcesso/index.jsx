@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Row from "../../components/Row";
-import Container from "../../components/Container";
 import bg from "../../assets/images/bg.svg";
 import logoSP from "../../assets/images/logoSP.svg";
 import logoSME from "../../assets/images/logoSME.svg";
@@ -51,7 +50,7 @@ class PrimeiroAcesso extends Component {
     const { handleSubmit, submitting, pristine } = this.props;
     const { alerta } = this.state;
     return (
-      <Container classe={"login h-100 w-100"}>
+      <div>
         <Row>
           <Col>
             <img alt="img" height="70%" width="100%" src={bg} />
@@ -123,7 +122,7 @@ class PrimeiroAcesso extends Component {
             </Row>
           </Col>
         </Row>
-      </Container>
+      </div>
     );
   }
 }
