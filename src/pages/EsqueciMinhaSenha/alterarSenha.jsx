@@ -11,7 +11,7 @@ import { Field, reduxForm } from "redux-form";
 import { InputLabel } from "../../components/InputLabel";
 import "../Login/style.scss";
 import { getParams } from "../Login/helpers";
-import { redefinirSenha } from "../../services/auth.service";
+import { redefinirSenha } from "../../service/auth.service";
 import Login from "../Login";
 
 class AlterarSenha extends Component {

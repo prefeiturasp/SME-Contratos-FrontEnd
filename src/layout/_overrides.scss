@@ -1,0 +1,46 @@
+//Suggested location to add your overrides so that migration would be easy by just updating the SASS folder in the future
+$mainColor: #602a2a;
+.layout-wrapper {
+  background-color: #f2f2f2;
+  
+  .layout-topbar {
+    z-index: 10000;
+    height: 67px;
+
+    .layout-topbar-icons {
+      padding-top: 0.5em;
+    }
+  }
+  .layout-sidebar {
+    overflow-y: hidden;
+  }
+  .layout-sidebar-dark {
+    .layout-logo {
+      background-color: #ffffff;
+    }
+    .w-coad-logo {
+      width: 15.7rem;
+      height: 67px;
+      margin-top: -0.02rem;
+      img {
+        padding-top: 3px;
+      }
+    }
+  }
+  .layout-main {
+    background-color: #f2f2f2;
+  }
+
+  .active-menuitem {
+    background-color: #ffffff;
+    li > a > span {
+      color: $mainColor;
+    }
+  }
+
+  .layout-profile {
+    ul > li > button > span {
+      color: $mainColor;
+    }
+  }
+}

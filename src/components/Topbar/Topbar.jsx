@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import { logout } from "../../services/auth.service";
+import { logout } from "../../service/auth.service";
 import "./style.scss";
 import logoPrincipal from "../../assets/images/logoSGC.svg";
 import ajuda from "../../assets/images/bt-ajuda.svg";

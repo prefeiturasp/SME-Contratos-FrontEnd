@@ -11,7 +11,7 @@ import { Field, reduxForm } from "redux-form";
 import { InputLabel } from "../../components/InputLabel";
 import "../Login/style.scss";
 import Login from "../Login";
-import { esqueciMinhaSenha } from "../../services/auth.service";
+import { esqueciMinhaSenha } from "../../service/auth.service";
 
 class EsqueciMinhaSenha extends Component {
   constructor(props) {
