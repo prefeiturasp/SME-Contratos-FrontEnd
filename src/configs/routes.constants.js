@@ -2,6 +2,7 @@ import Home from "../pages/Home";
 import ListaContrato from "../pages/ListaContrato";
 import painelSelecao from "../pages/PainelSelecao";
 
+
 const RoutesConfig = [
     {
         path: "/",

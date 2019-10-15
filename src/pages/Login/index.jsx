@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Row from "../../components/Row";
-import Container from "../../components/Container";
 import bg from "../../assets/images/bg.svg";
 import logoSP from "../../assets/images/logoSP.svg";
 import logoSME from "../../assets/images/logoSME.svg";
@@ -10,7 +9,7 @@ import { NavLink } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
 import { InputLabel } from "../../components/InputLabel";
 import "./style.scss";
-import { login } from "../../services/auth.service";
+import { login } from "../../service/auth.service";
 import { getParams } from "./helpers";
 
 export class Login extends Component {
@@ -46,9 +45,9 @@ export class Login extends Component {
     const { handleSubmit, submitting, pristine } = this.props;
     const { alerta, mensagem } = this.state;
     return (
-      <Container classe={"login h-100 w-100"}>
+      <div>
         <Row>
-          <div className="col">
+          <div className="col d-none d-lg-block">
             <img alt="img" height="70%" width="100%" src={bg} />
           </div>
           <div className="col">
@@ -78,7 +77,7 @@ export class Login extends Component {
                     autoComplete={"Off"}
                     placeholder={"Insira seu RF ou CPF"}
                     name={"username"}
-                  />
+                    />
                   <Field
                     component={InputLabel}
                     autoComplete={"Off"}
@@ -87,7 +86,7 @@ export class Login extends Component {
                     type="password"
                     placeholder={"Insira sua senha"}
                     name={"password"}
-                  />
+                    />
                   <div className="pb-4 d-flex justify-content-end">
                     <NavLink to="/esqueci-minha-senha" className="link">Esqueci minha senha</NavLink>
                   </div>
@@ -103,7 +102,7 @@ export class Login extends Component {
                     size="lg"
                     disabled={pristine || submitting}
                     block
-                  >
+                    >
                     Acessar
                   </Button>
                   <div className="pt-3 d-flex justify-content-center">
@@ -117,7 +116,7 @@ export class Login extends Component {
             </Row>
           </div>
         </Row>
-      </Container>
+        </div>
     );
   }
 }

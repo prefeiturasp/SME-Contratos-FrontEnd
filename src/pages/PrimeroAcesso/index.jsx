@@ -10,7 +10,7 @@ import { NavLink } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
 import { InputLabel } from "../../components/InputLabel";
 import "../Login/style.scss";
-import { trocarSenha, isPrimeiroAcesso,  removerUsernameTemp} from "../../services/auth.service";
+import { trocarSenha, isPrimeiroAcesso,  removerUsernameTemp} from "../../service/auth.service";
 import Login from "../Login";
 
 class PrimeiroAcesso extends Component {
