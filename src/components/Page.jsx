@@ -14,6 +14,7 @@ import "../layout/layout.scss";
 import "../App.scss";
 import LOGO from "../assets/images/logoSGC.svg";
 import { NavLink } from "react-router-dom";
+import { MenuConfig } from "../configs/routes.constants";
 
 class Page extends Component {
   constructor() {
@@ -86,49 +87,50 @@ class Page extends Component {
   }
 
   createMenu() {
-    this.menu = [
-      {
-        label: "Visualizar Contratos",
-        icon: "pi pi-list",
-        command: () => {
-          window.location = '#/'
-        }
-      },
-      {
-        label: "Planejamento",
-        icon: "pi pi-align-justify",
-        command: () => {
-          window.location = '#/lista_contratos'
-        }
-      },
-      {
-        label: "Localizar gestores",
-        icon: "pi pi-map-marker",
-        command: () => {
-          window.location = '#'
-        }
-      },
-      {
-        label: "Relatórios",
-        icon: "pi pi-chart-bar",
-        command: () => {
-          window.location = '#'
-        }
-      },
-      {
-        label: "Gestão",
-        icon: "pi pi-users",
-        command: () => {
-          window.location = '#'
-        }
-      },
-      {
-        label: "Configurações",
-        icon: "pi pi-cog",
-        command: () => {
-          window.location = '#'
-        }
-      },
+    this.menu = MenuConfig
+    // this.menu = [
+    //   {
+    //     label: "Visualizar Contratos",
+    //     icon: "pi pi-list",
+    //     command: () => {
+    //       window.location = "#/";
+    //     }
+    //   },
+    //   {
+    //     label: "Planejamento",
+    //     icon: "pi pi-align-justify",
+    //     command: () => {
+    //       window.location = "#/lista_contratos";
+    //     }
+    //   },
+    //   {
+    //     label: "Localizar gestores",
+    //     icon: "pi pi-map-marker",
+    //     command: () => {
+    //       window.location = "#";
+    //     }
+    //   },
+    //   {
+    //     label: "Relatórios",
+    //     icon: "pi pi-chart-bar",
+    //     command: () => {
+    //       window.location = "#";
+    //     }
+    //   },
+    //   {
+    //     label: "Gestão",
+    //     icon: "pi pi-users",
+    //     command: () => {
+    //       window.location = "#";
+    //     }
+    //   },
+    //   {
+    //     label: "Configurações",
+    //     icon: "pi pi-cog",
+    //     command: () => {
+    //       window.location = "#";
+    //     }
+    //   }
       // {
       //   label: "Menu Colors",
       //   icon: "pi pi-fw pi-align-left",
@@ -222,7 +224,7 @@ class Page extends Component {
       //     window.location = "https://github.com/primefaces/sigma";
       //   }
       // }
-    ];
+    // ];
   }
 
   addClass(element, className) {
@@ -292,7 +294,8 @@ class Page extends Component {
         </div>
 
         <div className="layout-main">
-           {this.props.children}
+          <h3 className="pt-3">{this.props.titulo}</h3>
+          {this.props.children}
         </div>
 
         <div className="layout-mask"></div>

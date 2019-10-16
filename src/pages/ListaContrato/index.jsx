@@ -15,14 +15,12 @@ export class ListaContrato extends Component {
 
   setaTodosContratos() {
     getContratos().then(contratos => {
-      console.log(contratos);
       this.setState({ contratos });
     });
   }
 
   setaMeusContratos() {
     getMeusContratos().then(contratos => {
-      // console.log(contratos)
       this.setState({ contratos });
     });
   }

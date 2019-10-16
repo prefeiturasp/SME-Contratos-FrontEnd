@@ -5,7 +5,10 @@ export default class Container extends Component {
     return (
       <div className="p-grid mt-2">
         <div className="p-col-12">
-          <div className="card">{this.props.children}</div>
+          <div className="card">
+            <h2><i className={this.props.icone}></i> {this.props.subtitulo}</h2>
+            {this.props.children}
+          </div>
         </div>
       </div>
     );

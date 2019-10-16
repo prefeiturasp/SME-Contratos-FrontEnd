@@ -5,10 +5,7 @@ import { formatadoMonetario } from "../../utils/formatador";
 import "./style.scss";
 
 export class TableContrato extends Component {
-  constructor(props, context) {
-    super(props, context);
-  }
-
+  
   formataTotalMensal(rowData, column) {
     const formatter = new Intl.NumberFormat("pt-BR", {
       style: "currency",
@@ -66,6 +63,7 @@ export class TableContrato extends Component {
           scrollHeight="200px"
           resizableColumns={true}
           columnResizeMode="expand"
+          className="mt-3"
         >
           {dynamicColumns}
         </DataTable>
