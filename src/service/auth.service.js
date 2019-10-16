@@ -115,6 +115,18 @@ export const isAuthenticated = () => {
   return false;
 };
 
+export const getToken = () =>(
+  localStorage.getItem(TOKEN_ALIAS)
+)
+
+export const getHeaderToken = () =>(
+  {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    Authorization: `JWT ${getToken()}`
+  }
+)
+
 export const isPrimeiroAcesso = () => {
   if (localStorage.getItem(USERNAME_TEMP)) {
     return true;
