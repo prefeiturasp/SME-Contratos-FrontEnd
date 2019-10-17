@@ -4,8 +4,12 @@ import Container from "../../components/Container";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { TableContrato } from "../../components/TableContrato";
-import { getMeusContratos, getContratos } from "../../service/ContratoService.js";
+import {
+  getMeusContratos,
+  getContratos
+} from "../../service/ContratoService.js";
 import "./style.scss";
+import { formatadorDeData } from "../../utils/formatador";
 
 class ContratosContinuos extends Component {
   constructor(props) {
@@ -23,9 +27,17 @@ class ContratosContinuos extends Component {
 
   setaMeusContratos() {
     getMeusContratos().then(contratos => {
-      this.setState({ contratos });
+      const response = this.adicionarDataFormatada(contratos);
+      this.setState({ contratos: response });
     });
   }
+
+  adicionarDataFormatada = response => {
+    return response.map(contrato => ({
+      ...contrato,
+      dataFormatada: formatadorDeData(contrato.data_encerramento)
+    }));
+  };
 
   componentDidMount() {
     this.setaMeusContratos();

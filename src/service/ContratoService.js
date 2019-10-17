@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getHeaderToken } from "./auth.service";
+import { getHeaderToken, getUsuario } from "./auth.service";
 import CONFIG from "../configs/config.constants";
 
 
@@ -15,7 +15,7 @@ export function getMeusContratos() {
     headers : getHeaderToken()
   }
   return axios
-    .get(`${CONFIG.API_URL}/contratos/?gestor=1`, AUTH_HEADER)
+    .get(`${CONFIG.API_URL}/contratos/?gestor=${getUsuario().user_id}`, AUTH_HEADER)
     .then(res => res.data);
 }
 

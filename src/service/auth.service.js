@@ -23,8 +23,8 @@ export const login = async (username, password) => {
     if (validaResposta(response.status)) {
       const json = await response.json();
       if (validarToken(json.token)) {
-          localStorage.setItem(TOKEN_ALIAS, json.token);
-          return true;
+        localStorage.setItem(TOKEN_ALIAS, json.token);
+        return true;
       }
     }
     return false;
@@ -115,17 +115,19 @@ export const isAuthenticated = () => {
   return false;
 };
 
-export const getToken = () =>(
-  localStorage.getItem(TOKEN_ALIAS)
-)
+export const getToken = () => localStorage.getItem(TOKEN_ALIAS);
 
-export const getHeaderToken = () =>(
-  {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    Authorization: `JWT ${getToken()}`
-  }
-)
+export const getUsuario = () => {
+  const token = localStorage.getItem(TOKEN_ALIAS);
+  const usuario = decode(token);
+  return usuario;
+};
+
+export const getHeaderToken = () => ({
+  "Content-Type": "application/json",
+  Accept: "application/json",
+  Authorization: `JWT ${getToken()}`
+});
 
 export const isPrimeiroAcesso = () => {
   if (localStorage.getItem(USERNAME_TEMP)) {
@@ -154,7 +156,7 @@ export const validarPrimeiroAcesso = () => {
       localStorage.removeItem(TOKEN_ALIAS);
       localStorage.setItem(USERNAME_TEMP, username);
       window.location.href = "/primeiro-acesso";
-    } 
+    }
   });
 };
 

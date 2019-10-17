@@ -5,7 +5,7 @@ import { formatadoMonetario } from "../../utils/formatador";
 import "./style.scss";
 
 export class TableContrato extends Component {
-  
+
   formataTotalMensal(rowData, column) {
     const formatter = new Intl.NumberFormat("pt-BR", {
       style: "currency",
@@ -13,6 +13,8 @@ export class TableContrato extends Component {
     });
     return formatter.format(rowData.total_mensal);
   }
+
+  
 
   render() {
     const { contratos } = this.props;
@@ -28,7 +30,7 @@ export class TableContrato extends Component {
       { field: "tipo_servico.nome", header: "Tipode de Serviço" },
       { field: "empresa_contratada.nome", header: "Empresa" },
       { field: "estado_contrato", header: "Estado do Contrato" },
-      { field: "data_encerramento", header: "Data Encerramento" }
+      { field: "dataFormatada", header: "Data Encerramento" }
       // { field: "total_mensal", header: "Valor", body: this.formataTotalMensal }
     ];
 
