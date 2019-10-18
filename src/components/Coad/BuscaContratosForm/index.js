@@ -73,9 +73,9 @@ export class BuscaContratosForm extends Component {
                         </span>;
 
         return (
-            <Card footer={footer} className='filtro'>
+            <Card footer={footer} className='filtro filtroBorda'>
             <div className="p-grid p-fluid">
-                <div className="card card-w-title">
+                <div className="card card-w-title filtro">
 
                     <div className="p-grid">
 
