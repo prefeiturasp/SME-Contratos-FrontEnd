@@ -1,33 +1,48 @@
 import React from "react";
-import { Card, CardBody, CardTitle, CardImg } from "reactstrap";
-import IconeEducacional from "../../assets/images/icon-und-educacional.svg";
-import IconeCentros from "../../assets/images/icon-und-centros-unificados.svg";
-import IconeAdministrativo from "../../assets/images/icon-und-administrativas.svg";
-import "./style.scss";
+import IconeUE from "../../assets/images/icon-und-educacional.svg";
+import IconeCEU from "../../assets/images/icon-und-centros-unificados.svg";
+import IconeUA from "../../assets/images/icon-und-administrativas.svg";
+import { redirect } from "../../utils/redirect";
+import { Card, CardBody, CardTitle, CardDeck, CardImg } from "reactstrap";
+
+const styled = {
+  cursor: "pointer"
+};
 
 const CardEquipamento = props => {
-  const { educacionais, centros, administrativas } = props.equipamento;
   return (
-    <div className="alinhamento-equipamento">
-      <Card className="equipamento">
-        <CardImg top src={IconeEducacional} alt="Icone de seleção" />
+    <CardDeck className="container-card">
+      <Card
+        className="servico"
+        style={styled}
+        onClick={() => redirect("#/contratos_continuos/?equipamento=UE")}
+      >
+        <CardImg top src={IconeUE} alt="Icone de seleção" />
         <CardBody>
-          <CardTitle className="titulo-equipamento">{educacionais}</CardTitle>
+          <CardTitle>Unidades Educacionais</CardTitle>
         </CardBody>
       </Card>
-      <Card className="equipamento">
-        <CardImg top src={IconeCentros} alt="Icone de seleção" />
+      <Card
+        className="servico"
+        style={styled}
+        onClick={() => redirect("#/contratos_continuos/?equipamento=CEU")}
+      >
+        <CardImg top src={IconeCEU} alt="Icone de seleção" />
         <CardBody>
-          <CardTitle className="titulo-equipamento">{centros}</CardTitle>
+          <CardTitle>Centros Educacionais Unificados</CardTitle>
         </CardBody>
       </Card>
-      <Card className="equipamento">
-        <CardImg top src={IconeAdministrativo} alt="Icone de seleção" />
+      <Card
+        className="servico"
+        style={styled}
+        onClick={() => redirect("#/contratos_continuos/?equipamento=UA")}
+      >
+        <CardImg top src={IconeUA} alt="Icone de seleção" />
         <CardBody>
-          <CardTitle className="titulo-equipamento">{administrativas}</CardTitle>
+          <CardTitle>Unidades Administrativas</CardTitle>
         </CardBody>
       </Card>
-    </div>
+    </CardDeck>
   );
 };
 

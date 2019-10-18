@@ -7,18 +7,13 @@ import IconeMapa from "../../assets/images/icon-mapa.svg";
 import CardEquipamento from "../../components/CardEquipamento";
 import CardServico from "../../components/CardServico";
 
-const tipoEquipamento = {
-  educacionais: "Unidades Educacionais",
-  centros: "Centros Educacionais Unificados",
-  administrativas: "Unidades Administrativas"
-};
 
 class PainelSelecao extends Component {
   render() {
     return (
       <Page titulo="Painel de seleção">
         <CardSection icone={IconeEquipamento} titulo="Escolha Equipamento">
-          <CardEquipamento equipamento={tipoEquipamento} />
+          <CardEquipamento />
         </CardSection>
         <CardSection icone={IconeServico} titulo="Escolha Serviço">
           <CardServico />
