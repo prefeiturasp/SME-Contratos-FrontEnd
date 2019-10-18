@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Button} from 'primereact/button';
 import {Card} from 'primereact/card';
+import {InputText} from 'primereact/inputtext';
 
 import { SelecionaEmpresa } from '../SelecionaEmpresa'
 import { SelecionaSituacaoContrato } from '../SelecionaSituacaoContrato'
@@ -24,6 +25,7 @@ export class BuscaContratosForm extends Component {
             encerramentoDataInicial: '',
             encerramentoDataFinal: '',
             gestor: '',
+            termoContrato: ''
        }
     }
     
@@ -109,6 +111,15 @@ export class BuscaContratosForm extends Component {
                         <div className="p-col-6">
                             <SelecionaPeriodoEncerramentoContrato onSelect={this.setaRangeDataEncerramento.bind(this)}/>
                         </div>
+
+                        <div className="p-col-6">
+                            <InputText 
+                                value={this.state.termo_contrato} 
+                                onChange={(e) => this.setState({termoContrato: e.target.value})}
+                                placeholder="Termo de Contrato"
+                            />
+                        </div>
+
 
                     </div>
                 </div>
