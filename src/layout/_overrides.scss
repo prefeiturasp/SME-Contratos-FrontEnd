@@ -1,0 +1,74 @@
+//Suggested location to add your overrides so that migration would be easy by just updating the SASS folder in the future
+$mainColor: #602a2a;
+$whiteColor:  #ffffff;
+
+
+.layout-wrapper {
+  background-color: #f2f2f2;
+  
+  .layout-topbar {
+    z-index: 10000;
+    height: 67px;
+
+    .layout-topbar-icons {
+      padding-top: 0.5em;
+    }
+  }
+  .layout-sidebar {
+    overflow-y: hidden;
+  }
+  .layout-sidebar-dark {
+    .layout-logo {
+      background-color:$whiteColor;
+    }
+    .w-coad-logo {
+      width: 15.7rem;
+      height: 67px;
+      margin-top: -0.02rem;
+      img {
+        padding-top: 3px;
+      }
+    }
+  }
+  .layout-main {
+    background-color: #f2f2f2;
+  }
+
+  .active-menuitem {
+    background-color:$whiteColor;
+    li > a > span {
+      color: $mainColor;
+    }
+  }
+
+  .layout-profile {
+    ul > li > button > span {
+      color: $mainColor;
+    }
+  }
+  .p-button {
+    background-color: $mainColor;
+    border-color: $mainColor;
+  }
+
+  .p-accordion .p-accordion-header:not(.p-disabled).p-highlight:hover a{
+    border: 1px solid $mainColor !important;
+    background-color: $mainColor;
+  }
+
+  .btn-coad-background {
+    background-color: $mainColor;
+    border-color: $mainColor;
+    color: $whiteColor;
+  }
+  .btn-coad-background-outline {
+    border-color: $mainColor;
+    color: $mainColor !important;
+    background-color: $whiteColor;
+  }
+
+  .card-deck .card {
+    margin-bottom: 15px !important;
+}
+
+}

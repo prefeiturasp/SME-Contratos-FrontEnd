@@ -1,0 +1,25 @@
+.section {
+  padding: 0 0 1% 0;
+}
+
+.texto-cardsection {
+  color: #42474a;
+  display: inline-block;
+}
+
+#img-cardsection {
+  display: inline-block;
+  width: 1rem;
+  max-height: 50%;
+  margin: 0 1% 0 0;
+  border-top-left-radius: 0rem;
+  border-top-right-radius: 0rem;
+  vertical-align: text-top;
+}
+
+.tres-colunas {
+  .card {
+    min-width: auto;
+
+}
+}
