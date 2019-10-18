@@ -15,7 +15,7 @@ class PainelSelecao extends Component {
         <CardSection icone={IconeEquipamento} titulo="Escolha Equipamento">
           <CardEquipamento />
         </CardSection>
-        <CardSection icone={IconeServico} titulo="Escolha Serviço">
+        <CardSection icone={IconeServico} titulo="Escolha Categoria de Serviço">
           <CardServico />
         </CardSection>
         <CardSection icone={IconeMapa} titulo="Mapa das DRE's">
