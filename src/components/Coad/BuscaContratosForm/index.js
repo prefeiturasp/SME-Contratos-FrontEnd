@@ -18,14 +18,15 @@ export class BuscaContratosForm extends Component {
         super(props)
 
         this.state = {
-            empresa: '',
+            empresa_contratada: '',
             situacao: '',
-            estado: '',
+            estado_contrato: '',
             equipamento: '',
-            encerramentoDataInicial: '',
-            encerramentoDataFinal: '',
+            encerramento_de: '',
+            encerramento_ate: '',
             gestor: '',
-            termoContrato: ''
+            termo_contrato: '',
+            tipo_servico: ''
        }
     }
     
@@ -34,7 +35,7 @@ export class BuscaContratosForm extends Component {
     }
 
     setaEmpresa(empresa) {
-        this.setState({empresa: empresa.id})
+        this.setState({empresa_contratada: empresa.id})
     }
 
     setaSituacao(situacao) {
@@ -42,7 +43,7 @@ export class BuscaContratosForm extends Component {
     }
    
     setaEstado(estado) {
-        this.setState({estado: estado.id})
+        this.setState({estado_contrato: estado.id})
     }
    
     setaEquipamento(equipamento) {
@@ -50,7 +51,7 @@ export class BuscaContratosForm extends Component {
     }
    
     setaTipoServico(tipoServico) {
-        this.setState({tipoServico: tipoServico.id})
+        this.setState({tipo_servico: tipoServico.id})
     }
 
     setaGestor(gestor) {
@@ -59,10 +60,10 @@ export class BuscaContratosForm extends Component {
 
     setaRangeDataEncerramento(rangeDataEncerramento) {
         if (rangeDataEncerramento[0]) {
-            this.setState({encerramentoDataInicial: rangeDataEncerramento[0].toISOString().slice(0,10)})
+            this.setState({encerramento_de: rangeDataEncerramento[0].toISOString().slice(0,10)})
         }
         if (rangeDataEncerramento[1]) {
-            this.setState({encerramentoDataFinal: rangeDataEncerramento[1].toISOString().slice(0,10)})
+            this.setState({encerramento_ate: rangeDataEncerramento[1].toISOString().slice(0,10)})
         }
     }
    
@@ -115,7 +116,7 @@ export class BuscaContratosForm extends Component {
                         <div className="p-col-6">
                             <InputText 
                                 value={this.state.termo_contrato} 
-                                onChange={(e) => this.setState({termoContrato: e.target.value})}
+                                onChange={(e) => this.setState({termo_contrato: e.target.value})}
                                 placeholder="Termo de Contrato"
                             />
                         </div>

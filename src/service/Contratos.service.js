@@ -2,12 +2,23 @@ import axios from "axios";
 import { getHeaderToken, getUsuario } from "./auth.service";
 import CONFIG from "../configs/config.constants";
 
-export function getContratos() {
+export function getContratos(filtro) {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
+
+  let parametros = ''
+  for (var prop in filtro) {
+    if (Object.prototype.hasOwnProperty.call(filtro, prop)) {
+        if (filtro[prop]){
+          let prefix = parametros ? '&' : '?'
+          parametros += `${prefix}${prop}=${filtro[prop]}`
+        }
+    }
+  }
+
   return axios
-    .get(`${CONFIG.API_URL}/contratos/`, AUTH_HEADER)
+    .get(`${CONFIG.API_URL}/contratos/${parametros}`, AUTH_HEADER)
     .then(res => res.data);
 }
 
