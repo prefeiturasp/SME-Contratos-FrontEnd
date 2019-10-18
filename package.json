@@ -1,11 +1,11 @@
 {
-    "name": "sigma-react",
-    "version": "3.0.1-SNAPSHOT",
-    "homepage": "/sigma-react",
+    "name": "COAD",
+    "version": "0.2",
+    "homepage": "http://gaaton.educacao.intranet/",
     "private": false,
     "repository": {
         "type": "git",
-        "url": "https://github.com/primefaces/sigma.git"
+        "url": "https://github.com/prefeiturasp/SME-Contratos-FrontEnd"
     },
     "license": "MIT",
     "dependencies": {
