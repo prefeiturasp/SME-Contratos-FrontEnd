@@ -23,7 +23,9 @@ export class SelecionaPeriodoEncerramentoContrato extends Component {
             dayNamesShort: ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"],
             dayNamesMin: ["D", "S", "T", "Q", "Q", "S", "S"],
             monthNames: ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"],
-            monthNamesShort: ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"]
+            monthNamesShort: ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],
+            clear: 'Limpar',
+            today: 'Hoje',
         };
 
         return (
@@ -36,6 +38,7 @@ export class SelecionaPeriodoEncerramentoContrato extends Component {
                 dateFormat="dd/mm/yy"
                 showIcon={true}
                 placeholder="Selecione um período de encerramento..."
+                showButtonBar={true}
             />
         );
     }

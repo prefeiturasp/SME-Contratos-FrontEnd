@@ -30,6 +30,7 @@ export class SelecionaEstadoContrato extends Component {
                 onChange={event => this.selecionaEstado(event)} 
                 autoWidth={false} 
                 placeholder="Selecione um Estado..."
+                showClear={true}
             />
         );
     }

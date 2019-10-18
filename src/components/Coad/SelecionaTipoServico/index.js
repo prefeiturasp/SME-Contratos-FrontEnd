@@ -30,6 +30,7 @@ export class SelecionaTipoServico extends Component {
                 onChange={event => this.selecionaTipoServico(event)} 
                 autoWidth={false} 
                 placeholder="Selecione um Tipo de Serviço..."
+                showClear={true}
             />
         );
     }

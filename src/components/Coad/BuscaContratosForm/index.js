@@ -30,47 +30,42 @@ export class BuscaContratosForm extends Component {
        }
     }
     
-    componentDidMount(){
-        // this.setState({countriesData: this.countryService.getCountries(this)})
-    }
-
     setaEmpresa(empresa) {
-        this.setState({empresa_contratada: empresa.id})
+        this.setState({empresa_contratada: empresa ? empresa.id : ''})
     }
 
     setaSituacao(situacao) {
-        this.setState({situacao: situacao.id})
+        this.setState({situacao: situacao ? situacao.id : ''})
     }
    
     setaEstado(estado) {
-        this.setState({estado_contrato: estado.id})
+        this.setState({estado_contrato: estado ? estado.id : ''})
     }
    
     setaEquipamento(equipamento) {
-        this.setState({equipamento: equipamento.id})
+        this.setState({equipamento: equipamento ? equipamento.id : ''})
     }
    
     setaTipoServico(tipoServico) {
-        this.setState({tipo_servico: tipoServico.id})
+        this.setState({tipo_servico: tipoServico ? tipoServico.id : ''})
     }
 
     setaGestor(gestor) {
-        this.setState({gestor: gestor.id})
+        this.setState({gestor: gestor ? gestor.id : ''})
     }
 
     setaRangeDataEncerramento(rangeDataEncerramento) {
-        if (rangeDataEncerramento[0]) {
-            this.setState({encerramento_de: rangeDataEncerramento[0].toISOString().slice(0,10)})
+        if (rangeDataEncerramento && rangeDataEncerramento[0]) {
+            this.setState({encerramento_de: rangeDataEncerramento ? rangeDataEncerramento[0].toISOString().slice(0,10) : ''})
         }
-        if (rangeDataEncerramento[1]) {
-            this.setState({encerramento_ate: rangeDataEncerramento[1].toISOString().slice(0,10)})
+        if (rangeDataEncerramento && rangeDataEncerramento[1]) {
+            this.setState({encerramento_ate: rangeDataEncerramento ? rangeDataEncerramento[1].toISOString().slice(0,10) : ''})
         }
     }
    
     handleClickBuscar() {
         this.props.onBuscarClick(this.state)
     }
-
 
     render() {
         const footer = <span>
@@ -85,7 +80,7 @@ export class BuscaContratosForm extends Component {
                     <div className="p-grid">
 
                         <div className="p-col-12">
-                            <SelecionaEmpresa onSelect={this.setaEmpresa.bind(this)}/>
+                            <SelecionaEmpresa  empresa={this.state.empresa_contratada} onSelect={this.setaEmpresa.bind(this)}/>
                         </div>
 
                         <div className="p-col-6">

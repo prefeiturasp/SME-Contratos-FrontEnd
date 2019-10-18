@@ -30,6 +30,7 @@ export class SelecionaGestor extends Component {
                 onChange={event => this.selecionaUsuario(event)} 
                 autoWidth={false} 
                 placeholder="Selecione um Gestor..."
+                showClear={true}
             />
         );
     }

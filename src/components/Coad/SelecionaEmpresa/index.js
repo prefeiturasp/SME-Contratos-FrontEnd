@@ -30,6 +30,7 @@ export class SelecionaEmpresa extends Component {
                 onChange={event => this.selecionaEmpresa(event)} 
                 autoWidth={false} 
                 placeholder="Selecione uma Empresa..."
+                showClear={true}
             />
         );
     }
