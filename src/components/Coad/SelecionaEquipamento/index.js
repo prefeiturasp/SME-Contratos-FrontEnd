@@ -30,6 +30,7 @@ export class SelecionaEquipamento extends Component {
                 onChange={event => this.selecionaEquipamento(event)} 
                 autoWidth={false} 
                 placeholder="Selecione um Equipamento..."
+                showClear={true}
             />
         );
     }
