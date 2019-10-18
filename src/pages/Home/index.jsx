@@ -35,33 +35,13 @@ export default class Home extends Component {
 
   render() {
     return (
-      <Page>
-        <Container>
-          <h1>Welcome to COAD</h1>
+      <Page titulo="Painel Princpal">
+        <Container subtitulo="Painel Principal" icone="pi pi-chart-bar">
+          <hr/>
           <p>
-              Ut tincidunt tincidunt erat. Fusce vulputate eleifend sapien. Curabitur nisi. 
-              Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, 
-              sit amet adipiscing sem neque sed ipsum. Vivamus laoreet.
-              Ut tincidunt tincidunt erat. Fusce vulputate eleifend sapien. Curabitur nisi. 
-              Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, 
-              sit amet adipiscing sem neque sed ipsum. Vivamus laoreet.
-              Ut tincidunt tincidunt erat. Fusce vulputate eleifend sapien. Curabitur nisi. 
-              Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, 
-              sit amet adipiscing sem neque sed ipsum. Vivamus laoreet.
+              Aqui será o painel principal do sistema.
          </p>
         </Container>
-        <BuscaContratosForm onBuscarClick={filtros => this.onBuscarClick(filtros)}  />
-        <p>
-            Empresa: {this.state.filtros.empresa}
-            Gestor: {this.state.filtros.gestor}
-            Encerramento: {this.state.filtros.encerramentoDataInicial} a {this.state.filtros.encerramentoDataFinal}
-            Equipamento: {this.state.filtros.equipamento}
-            Estado: {this.state.filtros.estado}
-            Situacao: {this.state.filtros.situacao}
-            TermoContrato: {this.state.filtros.termoContrato}
-
-        </p>
-        
       </Page>
     );
   }

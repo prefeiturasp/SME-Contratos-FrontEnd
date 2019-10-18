@@ -1,5 +1,8 @@
 //Suggested location to add your overrides so that migration would be easy by just updating the SASS folder in the future
 $mainColor: #602a2a;
+$whiteColor:  #ffffff;
+
+
 .layout-wrapper {
   background-color: #f2f2f2;
   
@@ -16,7 +19,7 @@ $mainColor: #602a2a;
   }
   .layout-sidebar-dark {
     .layout-logo {
-      background-color: #ffffff;
+      background-color:$whiteColor;
     }
     .w-coad-logo {
       width: 15.7rem;
@@ -32,7 +35,7 @@ $mainColor: #602a2a;
   }
 
   .active-menuitem {
-    background-color: #ffffff;
+    background-color:$whiteColor;
     li > a > span {
       color: $mainColor;
     }
@@ -43,4 +46,29 @@ $mainColor: #602a2a;
       color: $mainColor;
     }
   }
+  .p-button {
+    background-color: $mainColor;
+    border-color: $mainColor;
+  }
+
+  .p-accordion .p-accordion-header:not(.p-disabled).p-highlight:hover a{
+    border: 1px solid $mainColor !important;
+    background-color: $mainColor;
+  }
+
+  .btn-coad-background {
+    background-color: $mainColor;
+    border-color: $mainColor;
+    color: $whiteColor;
+  }
+  .btn-coad-background-outline {
+    border-color: $mainColor;
+    color: $mainColor !important;
+    background-color: $whiteColor;
+  }
+
+  .card-deck .card {
+    margin-bottom: 15px !important;
+}
+
 }

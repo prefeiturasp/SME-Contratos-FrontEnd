@@ -36,7 +36,7 @@ export class CardServico extends Component {
             className="servico"
             style={styled}
             onClick={() =>
-              redirect(`#/contratos_continuos/?tipo_servico=${tipoServico.id}`)
+              redirect(`#/contratos-continuos/?tipo_servico=${tipoServico.id}`)
             }
           >
             <CardBody>
