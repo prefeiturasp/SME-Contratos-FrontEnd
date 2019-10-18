@@ -7,6 +7,7 @@ import { SelecionaSituacaoContrato } from '../SelecionaSituacaoContrato'
 import { SelecionaEstadoContrato } from '../SelecionaEstadoContrato'
 import { SelecionaEquipamento } from '../SelecionaEquipamento'
 import { SelecionaTipoServico } from '../SelecionaTipoServico'
+import { SelecionaGestor } from '../SelecionaGestor'
 import { SelecionaPeriodoEncerramentoContrato } from '../SelecionaPeriodoEncerramentoContrato'
 
 import './style.scss'
@@ -21,7 +22,8 @@ export class BuscaContratosForm extends Component {
             estado: '',
             equipamento: '',
             encerramentoDataInicial: '',
-            encerramentoDataFinal: ''
+            encerramentoDataFinal: '',
+            gestor: '',
        }
     }
     
@@ -47,6 +49,10 @@ export class BuscaContratosForm extends Component {
    
     setaTipoServico(tipoServico) {
         this.setState({tipoServico: tipoServico.id})
+    }
+
+    setaGestor(gestor) {
+        this.setState({gestor: gestor.id})
     }
 
     setaRangeDataEncerramento(rangeDataEncerramento) {
@@ -94,6 +100,11 @@ export class BuscaContratosForm extends Component {
                         <div className="p-col-6 ">
                             <SelecionaTipoServico onSelect={this.setaTipoServico.bind(this)}/>
                         </div>
+
+                        <div className="p-col-6 ">
+                            <SelecionaGestor onSelect={this.setaGestor.bind(this)}/>
+                        </div>
+
 
                         <div className="p-col-6">
                             <SelecionaPeriodoEncerramentoContrato onSelect={this.setaRangeDataEncerramento.bind(this)}/>
