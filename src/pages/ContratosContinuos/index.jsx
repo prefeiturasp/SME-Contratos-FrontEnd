@@ -7,9 +7,10 @@ import { TableContrato } from "../../components/TableContrato";
 import {
   getMeusContratos,
   getContratos
-} from "../../service/ContratoService.js";
+} from "../../service/Contratos.service";
 import "./style.scss";
 import { formatadorDeData } from "../../utils/formatador";
+import { BuscaContratosForm } from "../../components/Coad/BuscaContratosForm";
 
 class ContratosContinuos extends Component {
   constructor(props) {
@@ -42,27 +43,30 @@ class ContratosContinuos extends Component {
   componentDidMount() {
     this.setaMeusContratos();
   }
+  // className="coad-tab-panel-contratos-continuos"
 
   render() {
     const { contratos } = this.state;
     return (
       <Page titulo="Nome Serviço">
         <Container icone="pi pi-chart-bar" subtitulo="Vizualizar Contratos">
-          <TabView className="coad-tab-panel-contratos-continuos">
-            <TabPanel header="Personalizar Filtros">
-              <Accordion>
-                <AccordionTab
-                  contentClassName="coad-accordion-contratos-continuo"
-                  header="Personalizar filtro de busca"
-                >
-                  Content I
-                </AccordionTab>
-              </Accordion>
-            </TabPanel>
-            <TabPanel disabled header="Personalizar Colunas">
-              Content II
-            </TabPanel>
-          </TabView>
+          <Accordion>
+            <AccordionTab
+              contentClassName="coad-accordion-contratos-continuo"
+              header="Personalizar filtro de busca"
+            >
+              <TabView className="coad-tab-panel-contratos-continuos">
+                <TabPanel header="Personalizar Filtros">
+                  <BuscaContratosForm
+                    onBuscarClick={filtros => this.onBuscarClick(filtros)}
+                  />
+                </TabPanel>
+                <TabPanel disabled header="Personalizar Colunas">
+                  Content II
+                </TabPanel>
+              </TabView>
+            </AccordionTab>
+          </Accordion>
           <TableContrato contratos={contratos} />
         </Container>
       </Page>

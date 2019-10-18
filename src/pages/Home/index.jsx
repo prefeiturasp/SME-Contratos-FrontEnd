@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Page from "../../components/Page";
 import Container from "../../components/Container";
+import { BuscaContratosForm } from '../../components/Coad/BuscaContratosForm'
 
 export default class Home extends Component {
   render() {
@@ -20,6 +21,7 @@ export default class Home extends Component {
               sit amet adipiscing sem neque sed ipsum. Vivamus laoreet.
          </p>
         </Container>
+        <BuscaContratosForm onBuscarClick={filtros => this.onBuscarClick(filtros)}  />
       </Page>
     );
   }
