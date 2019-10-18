@@ -15,7 +15,7 @@ const CardEquipamento = props => {
       <Card
         className="servico"
         style={styled}
-        onClick={() => redirect("#/contratos_continuos/?equipamento=UE")}
+        onClick={() => redirect("#/contratos-continuos/?equipamento=UE")}
       >
         <CardImg top src={IconeUE} alt="Icone de seleção" />
         <CardBody>
@@ -25,7 +25,7 @@ const CardEquipamento = props => {
       <Card
         className="servico"
         style={styled}
-        onClick={() => redirect("#/contratos_continuos/?equipamento=CEU")}
+        onClick={() => redirect("#/contratos-continuos/?equipamento=CEU")}
       >
         <CardImg top src={IconeCEU} alt="Icone de seleção" />
         <CardBody>
@@ -35,7 +35,7 @@ const CardEquipamento = props => {
       <Card
         className="servico"
         style={styled}
-        onClick={() => redirect("#/contratos_continuos/?equipamento=UA")}
+        onClick={() => redirect("#/contratos-continuos/?equipamento=UA")}
       >
         <CardImg top src={IconeUA} alt="Icone de seleção" />
         <CardBody>

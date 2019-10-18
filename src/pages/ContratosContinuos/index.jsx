@@ -32,15 +32,11 @@ class ContratosContinuos extends Component {
     };
   }
 
-  setaTodosContratos() {
-    getContratos().then(contratos => {
-      this.setState({ contratos });
-    });
-  }
 
   setaMeusContratos() {
-    getMeusContratos().then(contratos => {
-      const response = this.adicionarDataFormatada(contratos);
+    const { filtros } = this.state;
+    getContratos(filtros).then(contratos => {
+      const response = this.adicionarDataFormatada(contratos)
       this.setState({ contratos: response });
     });
   }
@@ -53,18 +49,20 @@ class ContratosContinuos extends Component {
   };
 
   onBuscarClick = filtros => {
-    console.log(filtros);
+    getContratos(filtros).then(contratos => {
+      const response = this.adicionarDataFormatada(contratos)
+      this.setState({ contratos: response, filtros });
+    });
   };
 
   componentDidMount() {
     this.setaMeusContratos();
   }
-  // className="coad-tab-panel-contratos-continuos"
 
   render() {
     const { contratos } = this.state;
     return (
-      <Page titulo="Nome Serviço">
+      <Page titulo="Contratos Contínuos">
         <Container icone="pi pi-chart-bar" subtitulo="Vizualizar Contratos">
           <Accordion>
             <AccordionTab

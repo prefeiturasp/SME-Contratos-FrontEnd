@@ -16,7 +16,7 @@ const RoutesConfig = [
         exact: false
     },
     {
-        path: "/painel_selecao",
+        path: "/painel-selecao",
         component: painelSelecao,
         exact: false
     },
@@ -31,10 +31,10 @@ export default RoutesConfig
 
 export const MenuConfig = [
     {
-      label: "Visualizar Contratos",
+      label: "Contratos",
       icon: "pi pi-list",
       items: [
-        { label: "Contratos Contínuos", icon: "pi pi-fw pi-th-large", to: "/contratos-continuos" },
+        { label: "Visualizar", icon: "pi pi-fw pi-th-large", to: "/painel-selecao" },
       ]
     },
     {
