@@ -79,7 +79,7 @@ export class BuscaContratosForm extends Component {
         return (
             <Card footer={footer} className='filtro'>
             <div className="p-grid p-fluid">
-                <div className="card card-w-title">
+                <div className="card card-w-title coad-card-filtro">
 
                     <div className="p-grid">
 

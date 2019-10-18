@@ -1,5 +1,8 @@
 //Suggested location to add your overrides so that migration would be easy by just updating the SASS folder in the future
 $mainColor: #602a2a;
+
+
+
 .layout-wrapper {
   background-color: #f2f2f2;
   
@@ -42,5 +45,14 @@ $mainColor: #602a2a;
     ul > li > button > span {
       color: $mainColor;
     }
+  }
+  .p-button {
+    background-color: $mainColor;
+    border-color: $mainColor;
+  }
+
+  .p-accordion .p-accordion-header:not(.p-disabled).p-highlight:hover a{
+    border: 1px solid $mainColor !important;
+    background-color: $mainColor;
   }
 }

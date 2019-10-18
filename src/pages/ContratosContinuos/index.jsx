@@ -11,12 +11,24 @@ import {
 import "./style.scss";
 import { formatadorDeData } from "../../utils/formatador";
 import { BuscaContratosForm } from "../../components/Coad/BuscaContratosForm";
+import { getUsuario } from "../../service/auth.service";
 
 class ContratosContinuos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      contratos: []
+      contratos: [],
+      filtros: {
+        gestor: getUsuario().user_id,
+        empresa_contratada: "",
+        encerramento_de: "",
+        encerramento_ate: "",
+        equipamento: "",
+        estado_contrato: "",
+        situacao: "",
+        termo_Contrato: "",
+        tipo_servico: ""
+      }
     };
   }
 
@@ -38,6 +50,10 @@ class ContratosContinuos extends Component {
       ...contrato,
       dataFormatada: formatadorDeData(contrato.data_encerramento)
     }));
+  };
+
+  onBuscarClick = filtros => {
+    console.log(filtros);
   };
 
   componentDidMount() {
