@@ -34,19 +34,26 @@ export const MenuConfig = [
       label: "Contratos",
       icon: "pi pi-list",
       items: [
-        { label: "Visualizar", icon: "pi pi-fw pi-th-large", to: "/painel-selecao" },
+        { label: "Consultar", icon: "pi pi-fw pi-th-large", to: "/painel-selecao" },
       ]
     },
     {
-      label: "Planejamento",
-      icon: "pi pi-align-justify",
+      label: "Orçamento",
+      icon: "pi pi-money-bill",
       command: () => {
-        window.location = '#/lista_contratos'
+        window.location = '#'
       }
     },
     {
-      label: "Localizar gestores",
-      icon: "pi pi-map-marker",
+      label: "Estoque / Patrimônio",
+      icon: "pi pi-clone",
+      command: () => {
+        window.location = '#'
+      }
+    },
+    {
+      label: "Obras",
+      icon: "pi pi-users",
       command: () => {
         window.location = '#'
       }
@@ -54,13 +61,6 @@ export const MenuConfig = [
     {
       label: "Relatórios",
       icon: "pi pi-chart-bar",
-      command: () => {
-        window.location = '#'
-      }
-    },
-    {
-      label: "Gestão",
-      icon: "pi pi-users",
       command: () => {
         window.location = '#'
       }

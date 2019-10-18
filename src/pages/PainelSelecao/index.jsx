@@ -6,12 +6,17 @@ import IconeServico from "../../assets/images/icon-servicos.svg";
 import IconeMapa from "../../assets/images/icon-mapa.svg";
 import CardEquipamento from "../../components/CardEquipamento";
 import CardServico from "../../components/CardServico";
-
+import { Button, ButtonGroup } from "reactstrap";
+import { redirect } from "../../utils/redirect";
 
 class PainelSelecao extends Component {
   render() {
     return (
-      <Page titulo="Painel de seleção">
+      <Page titulo="Escolha visualização de painel de contratos">
+        <ButtonGroup className="mb-4">
+          <Button className="btn-coad-background" size="sm"><i className="pi pi-table mx-4"></i></Button>
+          <Button onClick={()=> redirect('#/contratos-continuos')} className="btn-coad-background-outline" size="sm" outline><i className="pi pi-list mx-4"></i></Button>
+        </ButtonGroup>
         <CardSection icone={IconeEquipamento} titulo="Escolha Equipamento">
           <CardEquipamento />
         </CardSection>

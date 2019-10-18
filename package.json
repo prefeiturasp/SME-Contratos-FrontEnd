@@ -31,7 +31,7 @@
         "react-router-dom": "^4.3.1",
         "react-scripts": "3.0.1",
         "react-transition-group": "^2.5.1",
-        "reactstrap": "^8.0.1",
+        "reactstrap": "^8.1.1",
         "redux": "^4.0.4",
         "redux-form": "^8.2.6",
         "redux-multi": "^0.1.12",
