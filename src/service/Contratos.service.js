@@ -24,9 +24,15 @@ export function getContratos(filtro) {
 }
 
 const formataData = datas => {
+<<<<<<< HEAD
   return datas.map(result => ({
     ...result,
     data_encerramento: formatadorDeData(result.data_encerramento)
+=======
+  return datas.map(data => ({
+    ...data,
+    data_encerramento: formatadorDeData(data.data_encerramento)
+>>>>>>> 0.2.1
   }))
 }
 

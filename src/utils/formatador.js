@@ -12,8 +12,15 @@ export const formatadorDeData = data => {
   return formatter.format(date);
 };
 
+<<<<<<< HEAD
 const convertStringToDate = data => {
   const date = data.split("-");
   data = new Date(date[0], date[1] - 1, date[2]);
   return data;
 };
+=======
+const convertStringToDate = data =>{
+  const date = data.split('-');
+  return new Date(date[0],date[1]-1, date[2])
+}
+>>>>>>> 0.2.1
