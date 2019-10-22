@@ -30,7 +30,7 @@ export class TableContrato extends Component {
       { field: "tipo_servico.nome", header: "Tipode de Serviço" },
       { field: "empresa_contratada.nome", header: "Empresa" },
       { field: "estado_contrato", header: "Estado do Contrato" },
-      { field: "dataFormatada", header: "Data Encerramento" }
+      { field: "data_encerramento", header: "Data Encerramento" }
       // { field: "total_mensal", header: "Valor", body: this.formataTotalMensal }
     ];
 

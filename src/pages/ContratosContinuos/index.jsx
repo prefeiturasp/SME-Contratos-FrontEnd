@@ -49,8 +49,8 @@ class ContratosContinuos extends Component {
 
   onBuscarClick = filtros => {
     getContratos(filtros).then(contratos => {
-      const response = this.adicionarDataFormatada(contratos);
-      this.setState({ contratos: response, filtros });
+      // const response = this.adicionarDataFormatada(contratos);
+      this.setState({ contratos, filtros });
     });
   };
 
