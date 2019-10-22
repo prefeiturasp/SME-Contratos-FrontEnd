@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Page from "../../components/Page";
 import Container from "../../components/Container";
-import { BuscaContratosForm } from '../../components/Coad/BuscaContratosForm'
 import { getContratos } from '../../service/Contratos.service'
 
 export default class Home extends Component {

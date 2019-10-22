@@ -6,7 +6,6 @@ import { Accordion, AccordionTab } from "primereact/accordion";
 import { TableContrato } from "../../components/TableContrato";
 import { getContratos } from "../../service/Contratos.service";
 import "./style.scss";
-import { formatadorDeData } from "../../utils/formatador";
 import { BuscaContratosForm } from "../../components/Coad/BuscaContratosForm";
 import { getUsuario } from "../../service/auth.service";
 import { getUrlParams } from "../../utils/params";
@@ -35,21 +34,13 @@ class ContratosContinuos extends Component {
   setaMeusContratos() {
     const { filtros } = this.state;
     getContratos(filtros).then(contratos => {
-      const response = this.adicionarDataFormatada(contratos);
-      this.setState({ contratos: response });
+      this.setState({ contratos });
     });
   }
 
-  adicionarDataFormatada = response => {
-    return response.map(contrato => ({
-      ...contrato,
-      dataFormatada: formatadorDeData(contrato.data_encerramento)
-    }));
-  };
 
   onBuscarClick = filtros => {
     getContratos(filtros).then(contratos => {
-      // const response = this.adicionarDataFormatada(contratos);
       this.setState({ contratos, filtros });
     });
   };
@@ -65,6 +56,7 @@ class ContratosContinuos extends Component {
       case "tipo_servico":
         filtros.tipo_servico = params[key];
         break;
+      default:
     }
 
     this.setState({ filtros });

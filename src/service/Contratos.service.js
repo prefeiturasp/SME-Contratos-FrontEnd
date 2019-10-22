@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getHeaderToken, getUsuario } from "./auth.service";
 import CONFIG from "../configs/config.constants";
+import { formatadorDeData } from "../utils/formatador";
 
 export function getContratos(filtro) {
   const AUTH_HEADER = {
@@ -19,7 +20,14 @@ export function getContratos(filtro) {
 
   return axios
     .get(`${CONFIG.API_URL}/contratos/${parametros}`, AUTH_HEADER)
-    .then(res => res.data);
+    .then(res => formataData(res.data));
+}
+
+const formataData = datas => {
+  return datas.map(result => ({
+    ...result,
+    data_encerramento: formatadorDeData(result.data_encerramento)
+  }))
 }
 
 export function getMeusContratos() {
