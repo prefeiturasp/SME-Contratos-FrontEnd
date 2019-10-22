@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Page from "../../components/Page";
 import Container from "../../components/Container";
 import { getContratos } from '../../service/Contratos.service'
+import { DatePicker } from 'antd';
+
 
 export default class Home extends Component {
   constructor(props) {
