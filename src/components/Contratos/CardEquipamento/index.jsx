@@ -1,8 +1,8 @@
 import React from "react";
-import IconeUE from "../../assets/images/icon-und-educacional.svg";
-import IconeCEU from "../../assets/images/icon-und-centros-unificados.svg";
-import IconeUA from "../../assets/images/icon-und-administrativas.svg";
-import { redirect } from "../../utils/redirect";
+import IconeUE from "../../../assets/images/icon-und-educacional.svg";
+import IconeCEU from "../../../assets/images/icon-und-centros-unificados.svg";
+import IconeUA from "../../../assets/images/icon-und-administrativas.svg";
+import { redirect } from "../../../utils/redirect";
 import { Card, CardBody, CardTitle, CardDeck, CardImg } from "reactstrap";
 
 const styled = {
