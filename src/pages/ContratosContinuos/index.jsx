@@ -57,10 +57,6 @@ class ContratosContinuos extends Component {
         filtros.tipo_servico = params[key];
         break;
       default:
-<<<<<<< HEAD
-=======
-        
->>>>>>> 0.2.1
     }
 
     this.setState({ filtros });
