@@ -69,11 +69,11 @@ export const esqueciMinhaSenha = async username => {
   try {
     const OBJ_REQUEST = {
       headers: authHeader,
-      method: "POST",
+      method: "PATCH",
       body: JSON.stringify({ username })
     };
     const response = await fetch(
-      `${CONFIG.API_URL}/esqueci-minha-senha/`,
+      `${CONFIG.API_URL}/esqueci-minha-senha/${username}/`,
       OBJ_REQUEST
     );
     const json = await response.json();
