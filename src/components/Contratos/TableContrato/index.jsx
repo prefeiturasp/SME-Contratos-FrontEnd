@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { formatadoMonetario } from "../../utils/formatador";
+import { formatadoMonetario } from "../../../utils/formatador";
 import "./style.scss";
 
 export class TableContrato extends Component {

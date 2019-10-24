@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import Page from "../../components/Page";
-import Container from "../../components/Container";
+import Page from "../../components/Global/Page";
+import Container from "../../components/Global/Container";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Accordion, AccordionTab } from "primereact/accordion";
-import { TableContrato } from "../../components/TableContrato";
+import { TableContrato } from "../../components/Contratos/TableContrato";
 import { getContratos } from "../../service/Contratos.service";
 import "./style.scss";
-import { BuscaContratosForm } from "../../components/Coad/BuscaContratosForm";
+import { BuscaContratosForm } from "../../components/Contratos/BuscaContratosForm";
 import { getUsuario } from "../../service/auth.service";
 import { getUrlParams } from "../../utils/params";
 import { Button, ButtonGroup } from "reactstrap";
@@ -57,10 +57,6 @@ class ContratosContinuos extends Component {
         filtros.tipo_servico = params[key];
         break;
       default:
-<<<<<<< HEAD
-=======
-        
->>>>>>> 0.2.1
     }
 
     this.setState({ filtros });

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Card, CardBody, CardTitle, CardDeck } from "reactstrap";
-import { getTiposServicoLookup } from "../../service/TiposServico.service";
-import { redirect } from "../../utils/redirect";
+import { getTiposServicoLookup } from "../../../service/TiposServico.service";
+import { redirect } from "../../../utils/redirect";
 import "./style.scss";
 
 const styled = {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {CarService} from '../service/CarService';
-import {NodeService} from '../service/NodeService';
-import {EventService} from '../service/EventService';
+import {CarService} from '../../service/CarService';
+import {NodeService} from '../../service/NodeService';
+import {EventService} from '../../service/EventService';
 import {OrganizationChart} from 'primereact/organizationchart';
 import {DataTable} from 'primereact/datatable';
 import {FullCalendar} from 'primereact/fullcalendar';

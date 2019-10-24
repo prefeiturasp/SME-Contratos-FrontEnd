@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import Row from "../../components/Row";
+import Row from "../../components/Global/Row";
 import bg from "../../assets/images/bg.svg";
 import logoSP from "../../assets/images/logoSP.svg";
 import logoSME from "../../assets/images/logoSME.svg";
-import Grid from "../../components/Grid";
+import Grid from "../../components/Global/Grid";
 import { Button, Form, Alert, Col } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
-import { InputLabel } from "../../components/InputLabel";
+import { InputLabel } from "../../components/Global/InputLabel";
 import "../Login/style.scss";
 import Login from "../Login";
 import { esqueciMinhaSenha } from "../../service/auth.service";
