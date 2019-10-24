@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Page from "../../components/Page";
-import Container from "../../components/Container";
+import Page from "../../components/Global/Page";
+import Container from "../../components/Global/Container";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { TableContrato } from "../../components/Contratos/TableContrato";

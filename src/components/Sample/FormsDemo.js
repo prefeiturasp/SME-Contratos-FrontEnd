@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {CountryService} from '../service/CountryService';
+import {CountryService} from '../../service/CountryService';
 import {InputText} from 'primereact/inputtext';
 import {InputTextarea} from 'primereact/inputtextarea';
 import {AutoComplete} from 'primereact/autocomplete';

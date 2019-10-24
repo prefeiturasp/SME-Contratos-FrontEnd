@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Page from "../../components/Page";
+import Page from "../../components/Global/Page";
 import CardSection from "../../components/Contratos/CardSection";
 import IconeEquipamento from "../../assets/images/icon-equipamento.svg";
 import IconeServico from "../../assets/images/icon-servicos.svg";

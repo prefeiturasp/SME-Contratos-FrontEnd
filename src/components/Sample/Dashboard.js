@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {CarService} from '../service/CarService';
+import {CarService} from '../../service/CarService';
 import {Panel} from 'primereact/panel';
 import {Checkbox} from 'primereact/checkbox';
 import {Button} from 'primereact/button';

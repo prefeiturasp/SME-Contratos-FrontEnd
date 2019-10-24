@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import classNames from "classnames";
-import { AppTopbar } from "../AppTopbar";
-import { AppMenu } from "../AppMenu";
-import { AppProfile } from "../AppProfile";
+import { AppTopbar } from "../../AppTopbar";
+import { AppMenu } from "../../AppMenu";
+import { AppProfile } from "../../AppProfile";
 import "primereact/resources/themes/nova-light/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -10,11 +10,11 @@ import "primeflex/primeflex.css";
 import "@fullcalendar/core/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
-import "../layout/layout.scss";
-import "../App.scss";
-import LOGO from "../assets/images/logoSGC.svg";
+import "../../layout/layout.scss";
+import "../../App.scss";
+import LOGO from "../../assets/images/logoSGC.svg";
 import { NavLink } from "react-router-dom";
-import { MenuConfig } from "../configs/routes.constants";
+import { MenuConfig } from "../../configs/routes.constants";
 
 class Page extends Component {
   constructor() {
