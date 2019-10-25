@@ -1,27 +1,40 @@
 import React, { Component } from 'react'
-import { Collapse } from 'antd';
+import { Accordion, AccordionTab } from "primereact/accordion";
+import {Button} from 'primereact/button';
+import {BuscaIncrementalServidores} from "../BuscaIncrementalServidores"
 
 export default class DesignacaoCargosCoad extends Component {
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+             userName: null
+        }
+    }
+
+    updateUsername(servidor) {
+        this.setState({userName: servidor.username})
+    }
+    
     render() {
-        const { Panel } = Collapse;
-
-        const text = `
-            A dog is a type of domesticated animal.
-            Known for its loyalty and faithfulness,
-            it can be found as a welcome guest in many households across the world.
-            `;
-
-        function callback(key) {
-            console.log(key);
-            }
-
         return (
             <div>
-                <Collapse defaultActiveKey={['1']} onChange={callback} expandIconPosition={'right'} className="coad-acordion">
-                    <Panel header="COAD" key="COAD">
-                    <p>{text}</p>
-                    </Panel>
-                </Collapse>,                
+                <Accordion>
+                    <AccordionTab header="COAD">
+                        <BuscaIncrementalServidores 
+                            userName={this.state.userName}
+                            onUpdate={(servidor) => this.updateUsername(servidor)}
+                        />    
+                    </AccordionTab>
+                </Accordion>
+                <Button 
+                    label="Teste Admin"
+                    onClick={(e) => this.setState({userName: "admin"})}  
+                />
+                <Button 
+                    label="Teste Ana"
+                    onClick={(e) => this.setState({userName: "000003"})}  
+                />
             </div>
         )
     }
