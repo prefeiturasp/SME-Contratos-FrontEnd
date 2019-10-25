@@ -1,5 +1,10 @@
-/* Place your extensions here to make migration to a new release easier. */
+$mainColor: #602A2A;
 html {
     font-family: 'Roboto', sans-serif;
-}
 
+    .coad-acordion {
+        border-left: 6.42px solid $mainColor !important;
+        border-radius: 3px !important;
+    }
+
+}
