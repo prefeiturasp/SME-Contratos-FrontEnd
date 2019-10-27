@@ -1,5 +1,13 @@
 /* Place your extensions here to make migration to a new release easier. */
+$mainColor: #602A2A;
 html {
     font-family: 'Roboto', sans-serif;
+
+    .coad-card-superior {
+        border: 2px solid $mainColor !important;
+        border-left: 5px solid $mainColor !important;
+        border-radius: 3px !important;
+    }
 }
+
 
