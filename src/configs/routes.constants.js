@@ -32,7 +32,6 @@ const RoutesConfig = [
       component: VisualizarContratos,
       exact: false
     },
-    },
     {
       path: "/designacao-cargos",
       component: DesignacaoCargos,

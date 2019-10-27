@@ -3,8 +3,14 @@ import { Row, Col, Card } from "reactstrap";
 import { formatadoMonetario, formatadorDeData } from "../../utils/formatador";
 
 export default props => {
-  const { tipoServico, situacaoContratual, estadoContrato, totalmensal, dataEncerramento } = props;
-  const styleTipoMensal = {color: '#42474A', fontWeight: 'bold'}
+  const {
+    tipoServico,
+    situacaoContratual,
+    estadoContrato,
+    totalmensal,
+    dataEncerramento
+  } = props;
+  const styleTipoMensal = { color: "#42474A", fontWeight: "bold" };
   return (
     <Row className="w-100">
       <Col sm={12} md={12} xs={12} lg={8} xl={8}>
@@ -19,11 +25,13 @@ export default props => {
               <i className="fas fa-dollar-sign" /> Dados Contratos
               <hr />
               <b>Situação Contratual</b>
-              <h2 style={{color: '#FF7A00', fontWeight: 'bold'}}>
+              <h2 style={{ color: "#FF7A00", fontWeight: "bold" }}>
                 {situacaoContratual}
               </h2>
               <b>Estado de Contrato:</b>{" "}
-              <span style={{ color: "green", fontWeight: "bold" }}>{estadoContrato}</span>
+              <span style={{ color: "green", fontWeight: "bold" }}>
+                {estadoContrato}
+              </span>
             </Col>
             <Col span={8}>
               <i className="fas fa-file-alt" /> Valores

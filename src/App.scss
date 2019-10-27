@@ -1,19 +1,30 @@
 /* Place your extensions here to make migration to a new release easier. */
-$mainColor: #602A2A;
+$mainColor: #602a2a;
 html {
-    font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 
-    .coad-card-superior {
-        border: 2px solid $mainColor !important;
-        border-left: 5px solid $mainColor !important;
-        border-radius: 3px !important;
+  .coad-card-superior {
+    border: 2px solid $mainColor !important;
+    border-left: 5px solid $mainColor !important;
+    border-radius: 3px !important;
+  }
+
+  .coad-acordion {
+    border-left: 6.42px solid $mainColor !important;
+    border-radius: 3px !important;
+  }
+
+  .caod-card-accordion {
+    margin-bottom: 0px !important;
+    padding-bottom: 1px;
+    border: 0px;
+    border-radius: 3px;
+    .coad-card-header-accrodion {
+      border: 1px solid #dadada;
+      border-left: 5px solid $mainColor;
+      border-radius: 4px 0px 0px 4px;
+      padding: 0.45rem 1rem !important;
+      background: #ffffff;
     }
-}
-
-    .coad-acordion {
-        border-left: 6.42px solid $mainColor !important;
-        border-radius: 3px !important;
-    }
-
-
+  }
 }
