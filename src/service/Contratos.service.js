@@ -8,13 +8,13 @@ export function getContratos(filtro) {
     headers: getHeaderToken()
   };
 
-  let parametros = ''
+  let parametros = "";
   for (var prop in filtro) {
     if (Object.prototype.hasOwnProperty.call(filtro, prop)) {
-        if (filtro[prop]){
-          let prefix = parametros ? '&' : '?'
-          parametros += `${prefix}${prop}=${filtro[prop]}`
-        }
+      if (filtro[prop]) {
+        let prefix = parametros ? "&" : "?";
+        parametros += `${prefix}${prop}=${filtro[prop]}`;
+      }
     }
   }
 
@@ -27,15 +27,18 @@ const formataData = datas => {
   return datas.map(data => ({
     ...data,
     data_encerramento: formatadorDeData(data.data_encerramento)
-  }))
-}
+  }));
+};
 
 export function getMeusContratos() {
   const AUTH_HEADER = {
-    headers : getHeaderToken()
-  }
+    headers: getHeaderToken()
+  };
   return axios
-    .get(`${CONFIG.API_URL}/contratos/?gestor=${getUsuario().user_id}`, AUTH_HEADER)
+    .get(
+      `${CONFIG.API_URL}/contratos/?gestor=${getUsuario().user_id}`,
+      AUTH_HEADER
+    )
     .then(res => res.data);
 }
 
@@ -56,5 +59,14 @@ export const getEstadosContrato = () => {
     .get(`${CONFIG.API_URL}/contratos/estados/`, AUTH_HEADER)
     .then(res => res.data);
 };
+
+export const createContrato = payLoad => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  return axios
+    .post(`${CONFIG.API_URL}/contratos/`, payLoad, AUTH_HEADER)
+    .then(res => res.data);
+}
 
 export default getContratos;
