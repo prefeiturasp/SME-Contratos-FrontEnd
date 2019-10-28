@@ -3,6 +3,7 @@ import ListaContrato from "../pages/ListaContrato";
 import painelSelecao from "../pages/PainelSelecao";
 import ContratosContinuos from "../pages/ContratosContinuos";
 import DesignacaoCargos from "../pages/DesignacaoCargos"
+import AtribuicaoTermoContrato from "../pages/AtribuicaoTermoContrato"
 
 
 const RoutesConfig = [
@@ -29,6 +30,11 @@ const RoutesConfig = [
     {
       path: "/designacao-cargos",
       component: DesignacaoCargos,
+      exact: false
+    },
+    {
+      path: "/atribuicao-termo-contrato",
+      component: AtribuicaoTermoContrato,
       exact: false
     },
 ]
@@ -76,6 +82,7 @@ export const MenuConfig = [
       icon: "pi pi-cog",
       items: [
         { label: "Designação de Cargos", icon: "pi pi-cog pi-th-large", to: "/designacao-cargos" },
+        { label: "Atribuição Termo Contratos", icon: "pi pi-cog pi-th-large", to: "/atribuicao-termo-contrato" },
       ]
     },
 ]
