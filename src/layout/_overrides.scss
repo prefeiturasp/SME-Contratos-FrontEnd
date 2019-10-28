@@ -61,6 +61,12 @@ $whiteColor:  #ffffff;
     border-color: $mainColor;
     color: $whiteColor;
   }
+
+  .btn-coad-primary {
+    background-color: $mainColor;
+    border-color: $mainColor;
+    color: $whiteColor;
+  }
   .btn-coad-background-outline {
     border-color: $mainColor;
     color: $mainColor !important;

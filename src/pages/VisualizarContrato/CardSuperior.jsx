@@ -50,6 +50,7 @@ export default props => {
               <i className="fas fa-stopwatch" /> Contagem Venc.
               <hr />
               <h2 style={{ color: "#297805", fontWeight: "bold" }}>XX dias</h2>
+              <br/>
               <b>Data Venc.: {formatadorDeData(dataEncerramento)}</b>
             </Col>
           </Row>

@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import CardSuperior from "./CardSuperior";
-import CoadAccordion from '../../components/Global/CoadAccordion'
+import CoadAccordion from "../../components/Global/CoadAccordion";
+import { Button, Col, Row } from "reactstrap";
+import InformacoesContrato from "../../components/Contratos/InformacoesContrato";
 
 export default class VisualizarContratos extends Component {
   render() {
@@ -15,17 +17,50 @@ export default class VisualizarContratos extends Component {
           totalmensal={"1334755.0"}
           dataEncerramento={"2019-10-31"}
         />
-        <Container
-          icone="fas fa-file-signature"
-          subtitulo="Visualizar/Alterar contrato"
-        >
-          <h1>Teste</h1>
-          <CoadAccordion titulo={'Informações Contrato'}>
-          Anim pariatur cliche reprehenderit,
-           enim eiusmod high life accusamus terry richardson ad squid. Nihil
-           anim keffiyeh helvetica, craft beer labore wes anderson cred
-           nesciunt sapiente ea proident.
+        <Container>
+          <Row>
+            <Col lg={10}>
+              <h2>
+                <i className="fas fa-file-signature"></i> Visualizar/Alterar
+                contrato
+              </h2>
+            </Col>
+            <Col lg={2}>
+              <Button disabled className="btn btn-coad-primary float-right">
+                Editar
+              </Button>
+            </Col>
+          </Row>
+          <CoadAccordion titulo={"Informações Contrato"}>
+            <InformacoesContrato />
           </CoadAccordion>
+          <CoadAccordion titulo={"Empresa Contratada"}>
+            Empresa Contratada
+          </CoadAccordion>
+          <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
+            Informações Orçamentárias de Contrato
+          </CoadAccordion>
+          <CoadAccordion titulo={"Objeto de Contrato"}>
+            Objeto de Contrato
+          </CoadAccordion>
+          <CoadAccordion titulo={"Gestão de Contrato"}>
+            Gestão de Contrato
+          </CoadAccordion>
+          <CoadAccordion titulo={"Observações"}>Observações</CoadAccordion>
+          <CoadAccordion titulo={"Unidade Envolvidas"}>
+            Unidade Envolvidas
+          </CoadAccordion>
+          <CoadAccordion titulo={"Anexos"}>Anexos</CoadAccordion>
+          <Row>
+            <Col lg={12}>
+              <div className='float-right'>
+                <Button className="btn-coad-background-outline mt-3 mb-2">
+                  Cancelar
+                </Button>
+                <Button className="btn btn-coad-primary mt-3 ml-2 mb-2">Aplicar</Button>
+              </div>
+            </Col>
+          </Row>
         </Container>
       </Page>
     );

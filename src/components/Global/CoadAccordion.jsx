@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Collapse, Button, CardBody, Card } from "reactstrap";
+import { Collapse, CardBody, Card } from "reactstrap";
+import { PropTypes } from "prop-types";
 
-export default props => {
+const CoadAccordion = props => {
   const [collapse, setCollapse] = useState(false);
 
   const toggle = () => setCollapse(!collapse);
@@ -33,3 +34,14 @@ export default props => {
     </div>
   );
 };
+
+
+CoadAccordion.prototype = {
+  tiulo: PropTypes.string
+}
+
+CoadAccordion.defaultProps = {
+  titulo : ''
+}
+
+export default CoadAccordion;
