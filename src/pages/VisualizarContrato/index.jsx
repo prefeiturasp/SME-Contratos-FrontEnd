@@ -4,9 +4,20 @@ import Container from "../../components/Global/Container";
 import CardSuperior from "./CardSuperior";
 import CoadAccordion from "../../components/Global/CoadAccordion";
 import { Button, Col, Row, Form } from "reactstrap";
-import InformacoesContrato from "../../components/Contratos/InformacoesContrato";
+import InformacoesContrato from "./InformacoesContrato";
+import EmpresaContratada from "./EmpresaContratada";
+import InformacoesOrcamentaria from "./InformacoesOrcamentaria";
+import { Editor } from "primereact/editor";
+import UnidadeEnvolvidas from "./UnidadesEnvolvidas";
+import Anexos from "./Anexos";
 
 export default class VisualizarContratos extends Component {
+
+  state = {
+    objeto: '',
+    observacoes: ''
+  }
+
   handleSubmit = values => {
     console.log(values);
   };
@@ -41,22 +52,34 @@ export default class VisualizarContratos extends Component {
               <InformacoesContrato />
             </CoadAccordion>
             <CoadAccordion titulo={"Empresa Contratada"}>
-              Empresa Contratada
+              <EmpresaContratada />
             </CoadAccordion>
             <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
-              Informações Orçamentárias de Contrato
+              <InformacoesOrcamentaria />
             </CoadAccordion>
             <CoadAccordion titulo={"Objeto de Contrato"}>
-              Objeto de Contrato
+              <Editor
+                style={{ height: "320px" }}
+                value={this.state.objeto}
+                onTextChange={e => this.setState({ objeto: e.htmlValue })}
+              />
             </CoadAccordion>
             <CoadAccordion titulo={"Gestão de Contrato"}>
               Gestão de Contrato
             </CoadAccordion>
-            <CoadAccordion titulo={"Observações"}>Observações</CoadAccordion>
-            <CoadAccordion titulo={"Unidade Envolvidas"}>
-              Unidade Envolvidas
+            <CoadAccordion titulo={"Observações"}>
+            <Editor
+                style={{ height: "320px" }}
+                value={this.state.observacoes}
+                onTextChange={e => this.setState({ observacoes: e.htmlValue })}
+              />
             </CoadAccordion>
-            <CoadAccordion titulo={"Anexos"}>Anexos</CoadAccordion>
+            <CoadAccordion titulo={"Unidade Envolvidas"}>
+              <UnidadeEnvolvidas />
+            </CoadAccordion>
+            <CoadAccordion titulo={"Anexos"}>
+              <Anexos />
+            </CoadAccordion>
             <Row>
               <Col lg={12}>
                 <div className="float-right">
