@@ -10,9 +10,9 @@ const CoadAccordion = props => {
   const {titulo} = props;
   return (
     <div className="accordion">
-      <div class="card caod-card-accordion px-0">
-        <div class="card-header coad-card-header-accrodion">
-          <h5 class="mb-0  d-flex justify-content-end">
+      <div className="card caod-card-accordion px-0">
+        <div className="card-header coad-card-header-accrodion">
+          <h5 className="mb-0  d-flex justify-content-end">
               <span className="w-100 pt-2">{titulo}</span>
             <button
               className="btn btn-link"
