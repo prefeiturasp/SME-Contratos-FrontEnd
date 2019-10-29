@@ -24,6 +24,7 @@ export class SelecionaSituacaoContrato extends Component {
     render() {
         return (
             <Dropdown 
+                {...this.props}
                 optionLabel="nome"
                 options={this.state.situacoes} 
                 value={this.state.situacaoSelecionada} 

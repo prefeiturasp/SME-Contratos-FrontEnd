@@ -2,6 +2,7 @@ import Home from "../pages/Home";
 import ListaContrato from "../pages/ListaContrato";
 import painelSelecao from "../pages/PainelSelecao";
 import ContratosContinuos from "../pages/ContratosContinuos";
+import VisualizarContratos from "../pages/VisualizarContrato";
 import DesignacaoCargos from "../pages/DesignacaoCargos"
 import AtribuicaoTermoContrato from "../pages/AtribuicaoTermoContrato"
 
@@ -25,6 +26,11 @@ const RoutesConfig = [
     {
       path: "/contratos-continuos",
       component: ContratosContinuos,
+      exact: false
+    },
+    {
+      path: "/visualizar-contrato",
+      component: VisualizarContratos,
       exact: false
     },
     {

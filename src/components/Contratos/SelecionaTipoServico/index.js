@@ -24,6 +24,7 @@ export class SelecionaTipoServico extends Component {
     render() {
         return (
             <Dropdown 
+                {...this.props}
                 optionLabel="nome"
                 options={this.state.tiposServico} 
                 value={this.state.tipoServicoSelecionado} 

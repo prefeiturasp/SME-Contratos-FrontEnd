@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import { TabView, TabPanel } from "primereact/tabview";
-import { Accordion, AccordionTab } from "primereact/accordion";
 import { TableContrato } from "../../components/Contratos/TableContrato";
 import { getContratos } from "../../service/Contratos.service";
 import "./style.scss";
@@ -11,6 +10,7 @@ import { getUsuario } from "../../service/auth.service";
 import { getUrlParams } from "../../utils/params";
 import { Button, ButtonGroup } from "reactstrap";
 import { redirect } from "../../utils/redirect";
+import CoadAccordion from "../../components/Global/CoadAccordion";
 
 class ContratosContinuos extends Component {
   constructor(props) {
@@ -37,7 +37,6 @@ class ContratosContinuos extends Component {
       this.setState({ contratos });
     });
   }
-
 
   onBuscarClick = filtros => {
     getContratos(filtros).then(contratos => {
@@ -71,28 +70,32 @@ class ContratosContinuos extends Component {
     const { contratos } = this.state;
     return (
       <Page titulo="Contratos Contínuos">
-         <ButtonGroup className="mb-4">
-          <Button onClick={()=> redirect('#/painel-selecao')} className="btn-coad-background-outline" size="sm"><i className="pi pi-table mx-4"></i></Button>
-          <Button className="btn-coad-background" size="sm" outline><i className="pi pi-list mx-4"></i></Button>
+        <ButtonGroup className="mb-4">
+          <Button
+            onClick={() => redirect("#/painel-selecao")}
+            className="btn-coad-background-outline"
+            size="sm"
+          >
+            <i className="pi pi-table mx-4"></i>
+          </Button>
+          <Button className="btn-coad-background" size="sm" outline>
+            <i className="pi pi-list mx-4"></i>
+          </Button>
         </ButtonGroup>
         <Container icone="pi pi-chart-bar" subtitulo="Vizualizar Contratos">
-          <Accordion>
-            <AccordionTab
-              contentClassName="coad-accordion-contratos-continuo"
-              header="Personalizar filtro de busca"
-            >
-              <TabView className="coad-tab-panel-contratos-continuos">
-                <TabPanel header="Personalizar Filtros">
-                  <BuscaContratosForm
-                    onBuscarClick={filtros => this.onBuscarClick(filtros)}
-                  />
-                </TabPanel>
-                <TabPanel disabled header="Personalizar Colunas">
-                  Content II
-                </TabPanel>
-              </TabView>
-            </AccordionTab>
-          </Accordion>
+          <CoadAccordion titulo='Personalizar filtro de busca'>
+            <TabView className="coad-tab-panel-contratos-continuos">
+              <TabPanel header="Personalizar Filtros">
+                <BuscaContratosForm
+                  onBuscarClick={filtros => this.onBuscarClick(filtros)}
+                />
+              </TabPanel>
+              <TabPanel disabled header="Personalizar Colunas">
+                Content II
+              </TabPanel>
+            </TabView>
+          </CoadAccordion>
+
           <TableContrato contratos={contratos} />
         </Container>
       </Page>
