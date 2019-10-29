@@ -21,20 +21,45 @@ export default class DesignacaoCargosCoad extends Component {
             <div>
                 <Accordion>
                     <AccordionTab header="COAD">
-                        <BuscaIncrementalServidores 
-                            userName={this.state.userName}
-                            onUpdate={(servidor) => this.updateUsername(servidor)}
-                        />    
+                        <div className="p-grid p-fluid">
+                            <div className="p-grid">
+                                <div className="p-col-12" style={{ margin: '10px 0 0 0' }}>
+                                <h6>Coordenador</h6>
+                                    <BuscaIncrementalServidores 
+                                        userName={this.state.userName}
+                                        onUpdate={(servidor) => this.updateUsername(servidor)}
+                                        placeholder="Selecione o coordenador..."
+                                    />
+                                </div>
+
+                                <div className="p-col-12">
+                                <h6>Assessor do Coordenador</h6>
+                                    <BuscaIncrementalServidores 
+                                        userName={this.state.userName}
+                                        onUpdate={(servidor) => this.updateUsername(servidor)}
+                                        placeholder="Selecione o assessor do coordenador..."
+                                    />
+                                </div>
+                                <div className="p-col-6">
+                                    <Button 
+                                        label="Cancelar"
+                                        onClick={(e) => this.setState({userName: "admin"})}
+                                        className="p-button-secondary"
+                                    />
+                                </div>
+                                <div className="p-col-6">
+                                    <Button 
+                                        label="Aplicar"
+                                        onClick={(e) => this.setState({userName: "000003"})}  
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
                     </AccordionTab>
                 </Accordion>
-                <Button 
-                    label="Teste Admin"
-                    onClick={(e) => this.setState({userName: "admin"})}  
-                />
-                <Button 
-                    label="Teste Ana"
-                    onClick={(e) => this.setState({userName: "000003"})}  
-                />
+                
             </div>
         )
     }

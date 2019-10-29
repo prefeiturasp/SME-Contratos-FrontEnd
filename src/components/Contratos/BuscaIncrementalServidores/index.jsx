@@ -55,18 +55,15 @@ export class BuscaIncrementalServidores extends Component {
 
     render() {
         return (
-            // <div>
-                <AutoComplete 
-                    value={this.state.servidor} 
-                    suggestions={this.state.filteredServidores} 
-                    completeMethod={this.filterServidores} 
-                    field="nome"
-                    size={40} 
-                    placeholder={this.props.placeholder || "Servidor"} 
-                    minLength={1} 
-                    onChange={(e) => this.updateServidor(e.value)} 
-                />
-            // </div>
+            <AutoComplete 
+                value={this.state.servidor} 
+                suggestions={this.state.filteredServidores} 
+                completeMethod={this.filterServidores} 
+                field="nome"
+                placeholder={this.props.placeholder || "Servidor"} 
+                minLength={1} 
+                onChange={(e) => this.updateServidor(e.value)} 
+            />
         )
     }
 }
