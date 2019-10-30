@@ -17,8 +17,7 @@ export class BuscaIncrementalServidores extends Component {
     }
 
     async updateServidorFromProps() {
-        const servidor = (await getUsuarioByUserName(this.props.userName))
-        console.log('A', servidor);
+        const servidor = this.props.userName ? (await getUsuarioByUserName(this.props.userName)) : null
         
         this.setState({servidor})
     }
@@ -38,8 +37,6 @@ export class BuscaIncrementalServidores extends Component {
     }
     
     updateServidor(servidor) {
-        console.log('B: ', servidor);
-        
         this.setState({servidor})
         this.props.onUpdate(servidor)
     }
@@ -62,7 +59,7 @@ export class BuscaIncrementalServidores extends Component {
                 field="nome"
                 placeholder={this.props.placeholder || "Servidor"} 
                 minLength={1} 
-                onChange={(e) => this.updateServidor(e.value)} 
+                onSelect={(e) => this.updateServidor(e.value)} 
             />
         )
     }

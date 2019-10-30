@@ -4,7 +4,7 @@ import Container from "../../components/Global/Container";
 import DesignacaoCargosCoad from "../../components/Contratos/DesignacaoCargosCoad";
 
 export default class DesignacaoCargos extends Component {  
-
+  
   render() {
     return (
       <Page titulo="Designação de Cargos">
