@@ -48,6 +48,12 @@ export default class DesignacaoCargosCoad extends Component {
         updateCoordenadorCoad(this.state.coordenador)
         updateAssessoresCoad(this.state.assessores)
     }
+
+    removeAssessor(idx) {
+        const assessores = this.state.assessores
+        assessores.splice(idx, 1)
+        this.setState({assessores})
+    }
     
     render() {
         return (
@@ -66,9 +72,9 @@ export default class DesignacaoCargosCoad extends Component {
 
                             {this.state.assessores.map(
                                 (assessor, idx) => {
-                                    console.log('Assessor:', assessor, idx)
                                     return (
-                                        <div className="p-col-12">
+                                        <div className="p-grid p-col-12">   
+                                        <div className="p-col-10">
                                             <h6>Assessor do Coordenador</h6>
                                             <BuscaIncrementalServidores
                                                 key={assessor.id}
@@ -77,18 +83,17 @@ export default class DesignacaoCargosCoad extends Component {
                                                 placeholder="Selecione o assessor do coordenador..."
                                             />
                                         </div>
+                                        <div className="p-col-2">
+                                            <Button 
+                                                 style={{marginTop: '28px'}}
+                                                label="Remover"
+                                                onClick={(e) => this.removeAssessor(idx)}
+                                            />
+                                        </div>
+                                        </div>
                                     )
                                 }
                             )}
-                            <div className="p-col-12">
-                            <h6>Assessor do Coordenador</h6>
-                                <BuscaIncrementalServidores 
-                                    userName={this.state.userName}
-                                    onUpdate={(servidor) => this.updateUsername(servidor)}
-                                    placeholder="Selecione o assessor do coordenador..."
-                                />
-                            </div>
-
 
                             <div className="p-col-6">
                                 <Button 
