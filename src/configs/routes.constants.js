@@ -47,6 +47,7 @@ export const MenuConfig = [
       icon: "pi pi-list",
       items: [
         { label: "Consultar", icon: "pi pi-fw pi-th-large", to: "/painel-selecao" },
+        { label: "Atribuição Termo Contratos", icon: "pi pi-cog pi-th-large", to: "/atribuicao-termo-contrato" },
       ]
     },
     {
@@ -82,7 +83,6 @@ export const MenuConfig = [
       icon: "pi pi-cog",
       items: [
         { label: "Designação de Cargos", icon: "pi pi-cog pi-th-large", to: "/designacao-cargos" },
-        { label: "Atribuição Termo Contratos", icon: "pi pi-cog pi-th-large", to: "/atribuicao-termo-contrato" },
       ]
     },
 ]
