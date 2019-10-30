@@ -20,7 +20,10 @@ export function getContratos(filtro) {
 
   return axios
     .get(`${CONFIG.API_URL}/contratos/${parametros}`, AUTH_HEADER)
-    .then(res => formataData(res.data));
+    .then(res => {
+      console.log(res);
+      return formataData(res.data);
+    });
 }
 
 const formataData = datas => {
@@ -39,6 +42,15 @@ export function getMeusContratos() {
       `${CONFIG.API_URL}/contratos/?gestor=${getUsuario().user_id}`,
       AUTH_HEADER
     )
+    .then(res => res.data);
+}
+
+export function getTermo(termo) {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  return axios
+    .get(`${CONFIG.API_URL}/contratos/?termo_contrato=${termo}`, AUTH_HEADER)
     .then(res => res.data);
 }
 
@@ -66,7 +78,36 @@ export const createContrato = payLoad => {
   };
   return axios
     .post(`${CONFIG.API_URL}/contratos/`, payLoad, AUTH_HEADER)
-    .then(res => res.data);
-}
+    .then(
+      res => res.data,
+      res => {
+        return { statusCode: res.statusCode, result: res };
+      }
+    )
+    .catch(error => {
+      return { error: error };
+    });
+};
+
+export const updateContrato = (payLoadAlterar, contratoUuid) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  return axios
+    .put(
+      `${CONFIG.API_URL}/contratos/${contratoUuid}/`,
+      payLoadAlterar,
+      AUTH_HEADER
+    )
+    .then(
+      res => res.data,
+      res => {
+        return { statusCode: res.statusCode, result: res };
+      }
+    )
+    .catch(error => {
+      return { error: error };
+    });
+};
 
 export default getContratos;
