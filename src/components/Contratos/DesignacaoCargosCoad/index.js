@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import CoadAccordion from "../../../components/Global/CoadAccordion";
 import {Button} from 'primereact/button';
+import { Button as AntButton } from 'antd';
 import {BuscaIncrementalServidores} from "../BuscaIncrementalServidores"
 import {getCargosCoad, updateCoordenadorCoad, updateAssessoresCoad} from '../../../service/Cargos.service'
 
@@ -43,8 +44,17 @@ export default class DesignacaoCargosCoad extends Component {
         this.setState({assessores})
     }
 
+    limpaAssessoresVazios() {
+        const assessores = this.state.assessores.filter(
+            (assessor) => {
+                return assessor.assessor.username !== ''
+            }
+        )
 
+        this.setState({assessores})
+    }
     updateCargosCoad() {
+        this.limpaAssessoresVazios()
         updateCoordenadorCoad(this.state.coordenador)
         updateAssessoresCoad(this.state.assessores)
     }
@@ -53,6 +63,23 @@ export default class DesignacaoCargosCoad extends Component {
         const assessores = this.state.assessores
         assessores.splice(idx, 1)
         this.setState({assessores})
+    }
+
+    appendAssessor() {
+        const emptyAssessor = {
+            coad: 1,
+            id: null,
+            assessor: {
+                username: '',
+            }
+        }
+
+        const assessores = this.state.assessores
+        
+        assessores.push(emptyAssessor)
+
+        this.setState(assessores)
+
     }
     
     render() {
@@ -95,21 +122,29 @@ export default class DesignacaoCargosCoad extends Component {
                                 }
                             )}
 
-                            <div className="p-col-6">
-                                <Button 
-                                    label="Cancelar"
-                                    onClick={(e) => this.setState({userName: "admin"})}
-                                    className="p-button-secondary"
-                                />
-                            </div>
-                            <div className="p-col-6">
-                                <Button 
-                                    label="Aplicar"
-                                    onClick={(e) => this.updateCargosCoad()}  
-                                />
+                            <div className="p-col-12" style={{padding: '0px'}} >
+                                <AntButton 
+                                    type="link" 
+                                    size="small"
+                                    onClick={(e) => this.appendAssessor()}
+                                >
+                                    Adicionar Assessor
+                                </AntButton>
                             </div>
                         </div>
                     </div>
+                    <span className="float-right">
+                        <Button 
+                            label="Cancelar"
+                            onClick={(e) => this.setState({userName: "admin"})}
+                            className="p-button-secondary"
+                        />
+                        <Button 
+                            type="link"
+                            label="Aplicar"
+                            onClick={(e) => this.updateCargosCoad()}  
+                        />
+                    </span>
                 </CoadAccordion>
             </div>
         )
