@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import DesignacaoCargosCoad from "../../components/Contratos/DesignacaoCargosCoad";
+import DesignacaoCargosDivisoes from "../../components/Contratos/DesignacaoCargosDivisoes"
 
 export default class DesignacaoCargos extends Component {  
   
@@ -10,9 +11,11 @@ export default class DesignacaoCargos extends Component {
       <Page titulo="Designação de Cargos">
         <Container subtitulo="Editar/Adicionar Designações de Cargos" icone="pi pi-chart-bar">
           <hr/>
-          <p>
+
               <DesignacaoCargosCoad/>
-         </p>
+
+              <DesignacaoCargosDivisoes/>
+
         </Container>
       </Page>
     );
