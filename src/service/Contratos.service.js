@@ -45,6 +45,15 @@ export function getMeusContratos() {
     .then(res => res.data);
 }
 
+export const getContratoByUUID = uuid => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+
+  return axios.get(`${CONFIG.API_URL}/contratos/${uuid}/`, AUTH_HEADER)
+              .then(res => res.data)
+}
+
 export function getTermo(termo) {
   const AUTH_HEADER = {
     headers: getHeaderToken()

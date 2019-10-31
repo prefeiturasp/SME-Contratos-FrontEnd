@@ -14,7 +14,7 @@ const CoadAccordion = props => {
         <div className="card-header coad-card-header-accrodion">
           <h5 className="mb-0  d-flex justify-content-end">
               <span className="w-100 pt-2">{titulo}</span>
-            <button
+            <button type="button"
               className="btn btn-link"
               aria-expanded="true"
               onClick={toggle}

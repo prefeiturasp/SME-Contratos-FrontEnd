@@ -1,4 +1,3 @@
-import axios from 'axios'
 import api from './Api'
 import { getHeaderToken } from "./auth.service";
 

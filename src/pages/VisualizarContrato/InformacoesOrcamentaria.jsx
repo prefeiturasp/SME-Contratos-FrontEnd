@@ -1,7 +1,6 @@
 import React from "react";
 import { FormGroup, Label, Row, Col } from "reactstrap";
 import { InputText } from "primereact/inputtext";
-import { Input } from "antd";
 
 const InformacoesOrcamentaria = props => {
   const { dotacao, valorMensal, valorTotal} = props;

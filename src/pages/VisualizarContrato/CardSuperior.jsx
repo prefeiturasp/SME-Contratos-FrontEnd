@@ -8,7 +8,8 @@ export default props => {
     situacaoContratual,
     estadoContrato,
     totalmensal,
-    dataEncerramento
+    dataEncerramento,
+    diasEncerramento
   } = props;
   const styleTipoMensal = { color: "#42474A", fontWeight: "bold" };
   return (
@@ -49,7 +50,7 @@ export default props => {
             <Col>
               <i className="fas fa-stopwatch" /> Contagem Venc.
               <hr />
-              <h2 style={{ color: "#297805", fontWeight: "bold" }}>XX dias</h2>
+              <h2 style={{ color: "#297805", fontWeight: "bold" }}>{diasEncerramento} dias</h2>
               <br/>
               <b>Data Venc.: {formatadorDeData(dataEncerramento)}</b>
             </Col>
