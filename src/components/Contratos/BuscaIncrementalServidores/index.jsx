@@ -35,6 +35,12 @@ export class BuscaIncrementalServidores extends Component {
             this.updateServidorFromProps()
         }
     }
+
+    onChangeServidor(servidor) {
+        if (!servidor){
+            this.props.onUpdate(null)
+        }
+    }
     
     updateServidor(servidor) {
         this.setState({servidor})
@@ -59,7 +65,8 @@ export class BuscaIncrementalServidores extends Component {
                 field="nome"
                 placeholder={this.props.placeholder || "Servidor"} 
                 minLength={1} 
-                onSelect={(e) => this.updateServidor(e.value)} 
+                onSelect={(e) => this.updateServidor(e.value)}
+                onChange={(e) => this.onChangeServidor(e.value)} 
             />
         )
     }
