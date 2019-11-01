@@ -4,7 +4,6 @@ import Container from "../../components/Global/Container";
 import CardSuperior from "./CardSuperior";
 import CoadAccordion from "../../components/Global/CoadAccordion";
 import { Button, Col, Row, FormGroup, Label, Card } from "reactstrap";
-import EmpresaContratada from "./EmpresaContratada";
 import InformacoesOrcamentaria from "./InformacoesOrcamentaria";
 import { Editor } from "primereact/editor";
 import UnidadeEnvolvidas from "./UnidadesEnvolvidas";
@@ -20,6 +19,11 @@ import { SelecionaTipoServico } from "../../components/Contratos/SelecionaTipoSe
 import { CALENDAR_PT } from "../../configs/config.constants";
 import SituacaoRadio from "../../components/Contratos/SelecionaSituacaoContrato/SituacaoRadio";
 import EstadoRadio from "../../components/Contratos/SelecionaEstadoContrato/EstadoRadio";
+import { formatadorDeData, formatadoMonetario } from "../../utils/formatador";
+import { SelecionaEmpresa } from "../../components/Contratos/SelecionaEmpresa";
+import SelecionarDivisoes from "../../components/Contratos/SelecionarDivisoes";
+import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
+import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -28,11 +32,17 @@ class VisualizarContratos extends Component {
       contrato: {},
       termo_contrato: null,
       tipo_servico: null,
+      data_ordem_inicio: null,
       situacao: null,
+      empresa_contratada: {},
       objeto: "",
       observacoes: "",
       estadoContrato: [],
       situacaoContrato: [],
+      divisao: null,
+      gestor: null,
+      nucleo: null,
+      estado: null,
 
       tipoServico: null,
       nomeEmpresa: null
@@ -48,26 +58,63 @@ class VisualizarContratos extends Component {
     const estadoContrato = await getEstadosContrato();
 
     this.setState({ contrato, estadoContrato });
+    this.propsToState(contrato);
+  }
+
+  propsToState = contrato => {
     this.setState({
       tipoServico: contrato.tipo_servico.nome,
       nomeEmpresa: contrato.empresa_contratada.nome,
-      termo_contrato: contrato.termo_contrato
+      termo_contrato: contrato.termo_contrato,
+      tipo_servico: contrato.tipo_servico,
+      situacao: contrato.situacao,
+      data_ordem_inicio: formatadorDeData(contrato.data_ordem_inicio),
+      data_encerramento: formatadorDeData(contrato.data_encerramento),
+      processo: contrato.processo,
+      empresa_contratada: contrato.empresa_contratada,
+      total_mensal: contrato.total_mensal,
+      objeto: contrato.objeto,
+      observacoes: contrato.observacoes,
+      divisao: contrato.nucleo_responsavel.divisao.uuid,
+      gestor: contrato.gestor,
+      nucleo: contrato.nucleo_responsavel.uuid,
+      estado: contrato.estado_contrato
     });
-
-    console.log(contrato)
-  }
+  };
 
   selecionaTipoServico = value => {
     this.setState({ tipo_servico: value });
   };
 
+  SelecionarEmpresa = value => {
+    this.setState({
+      empresa_contratada: value
+    });
+  };
+
   selecionarSituacao = value => {
-    this.setState({ situacao: value })
-  }
+    this.setState({ situacao: value });
+  };
+
+  selecionarDivisao = value => {
+    this.setState({ divisao: value });
+  };
+
+  selecionarNucleo = value => {
+    this.setState({ nucleo: value });
+  };
+
+  selecionaGestor = gestor => {
+    this.setState({ gestor });
+  };
+
+  selecionarEstado = estado => {
+    this.setState({ estado });
+  };
 
   handleSubmit = () => {
     // e.preventDefault();
-    console.log(this.state.contrato);
+    console.log(this.state);
   };
 
   render() {
@@ -75,10 +122,21 @@ class VisualizarContratos extends Component {
       contrato,
       tipoServico,
       nomeEmpresa,
-      estadoContrato,
       termo_contrato,
-      situacao
+      situacao,
+      processo,
+      data_ordem_inicio,
+      data_encerramento,
+      empresa_contratada,
+      total_mensal,
+      objeto,
+      observacoes,
+      divisao,
+      gestor,
+      nucleo,
+      estado
     } = this.state;
+    console.log(contrato);
     return (
       <Page
         titulo={`Termo de Contrato n. ${contrato.termo_contrato} - ${nomeEmpresa}`}
@@ -107,11 +165,6 @@ class VisualizarContratos extends Component {
             </Col>
           </Row>
           <CoadAccordion titulo={"Informações Contrato"}>
-            {/* <InformacoesContrato
-                contrato={contrato}
-                estadoContrato={this.state.estadoContrato}
-              /> */}
-
             <Row>
               <Col xs={12} sm={12} md={12} lg={4} xl={4}>
                 <FormGroup>
@@ -124,6 +177,7 @@ class VisualizarContratos extends Component {
                     }
                     placeholder={"Ex: 001/002"}
                     className="w-100"
+                    readOnly={true}
                   />
                 </FormGroup>
               </Col>
@@ -143,19 +197,20 @@ class VisualizarContratos extends Component {
                   <Label form="numeroProcesso">Número de Processo</Label>
                   <InputText
                     id="numeroProcesso"
-                    value={contrato.processo}
+                    value={processo}
                     onChange={e => this.setState({ processo: e.target.value })}
                     placeholder={"Ex: 0000.2019/0000000-0"}
                     className="w-100"
+                    readOnly={true}
                   />
                 </FormGroup>
               </Col>
               <Col xs={12} sm={12} md={12} lg={8} xl={8}>
                 <Label form="situacao">Situação de Contrato</Label>
                 <br />
-                <SituacaoRadio 
-                    checado={situacao} 
-                    onSelect={value => this.selecionarSituacao(value)} 
+                <SituacaoRadio
+                  checado={situacao}
+                  onSelect={value => this.selecionarSituacao(value)}
                 />
               </Col>
             </Row>
@@ -173,7 +228,10 @@ class VisualizarContratos extends Component {
               <Col xs={12} sm={12} md={12} lg={8} xl={8}>
                 <Label form="estado">Estado de Contrato</Label>
                 <br />
-                <EstadoRadio checado={contrato.estado_contrato} />
+                <EstadoRadio
+                  onSelect={this.selecionarEstado}
+                  checado={estado}
+                />
               </Col>
             </Row>
             <hr />
@@ -198,7 +256,7 @@ class VisualizarContratos extends Component {
                     <Label>Data Ordem de Início</Label>
                     <br />
                     <Calendar
-                      value={contrato.data_ordem_inicio}
+                      value={data_ordem_inicio}
                       onChange={e =>
                         this.setState({ data_ordem_inicio: e.value })
                       }
@@ -227,7 +285,7 @@ class VisualizarContratos extends Component {
                     <Label>Data Encerramento de Contrato</Label>
                     <br />
                     <Calendar
-                      value={contrato.data_encerramento}
+                      value={data_encerramento}
                       onChange={e =>
                         this.setState({ data_encerramento: e.value })
                       }
@@ -254,25 +312,121 @@ class VisualizarContratos extends Component {
             </Row>
           </CoadAccordion>
           <CoadAccordion titulo={"Empresa Contratada"}>
-            <EmpresaContratada />
+            <Row>
+              <Col lg={6} xl={6} sx={12} md={12} sm={12}>
+                <Row>
+                  <Col>
+                    <FormGroup className="p-grid p-fluid">
+                      <Label>Nome Empresa</Label>
+                      <br />
+                      <SelecionaEmpresa
+                        onSelect={value => this.SelecionarEmpresa(value)}
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+              </Col>
+              <Col lg={6} xl={6} sx={12} md={6} sm={6}>
+                <Row>
+                  <Col>
+                    <FormGroup>
+                      <Label>CNPJ Empresa</Label>
+                      <InputText
+                        value={empresa_contratada.cnpj}
+                        placeholder={"Digite nome da empresa"}
+                        className="w-100 pb-2"
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+              </Col>
+              <Col>
+                <button className="btn coad-color font-weight-bold">
+                  Nova empresa
+                </button>
+              </Col>
+            </Row>
           </CoadAccordion>
           <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
-            <InformacoesOrcamentaria />
+            <InformacoesOrcamentaria totalMensal={total_mensal} />
           </CoadAccordion>
           <CoadAccordion titulo={"Objeto de Contrato"}>
             <Editor
               style={{ height: "320px" }}
-              value={this.state.objeto}
+              value={objeto}
               onTextChange={e => this.setState({ objeto: e.htmlValue })}
             />
           </CoadAccordion>
           <CoadAccordion titulo={"Gestão de Contrato"}>
-            Gestão de Contrato
+            <Row>
+              <Col xs={12} sm={12} md={12} lg={8} xl={8}>
+                <FormGroup>
+                  <Label form="coordenador">Coordenador COAD</Label>
+                  <InputText
+                    id="coordenador"
+                    value={"Teste"}
+                    className="w-100"
+                    disabled={true}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                <SelecionarDivisoes
+                  selected={divisao}
+                  onSelect={this.selecionarDivisao}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} sm={12} md={12} lg={8} xl={8}>
+                <FormGroup className="p-grid p-fluid">
+                  <Label form="gestor">Gestor do Contrato</Label>
+                  <br />
+                  {/* <InputText id="gestor" value={gestor ? gestor.nome : ''} className="w-100" /> */}
+                  <BuscaIncrementalServidores
+                    placeholder={"Selecione o gestor do contrato"}
+                    onUpdate={this.selecionaGestor}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                <SelecionarNucleos
+                  selected={nucleo}
+                  onSelect={this.selecionarNucleo}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} sm={12} md={12} lg={8} xl={8}>
+                <FormGroup>
+                  <Label form="email-gestor">E-mail Gestor do Contrato</Label>
+                  <InputText
+                    id="email-gestor"
+                    value={gestor ? gestor.email : ""}
+                    disabled={true}
+                    className="w-100"
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                <FormGroup>
+                  <Label form="telefone-gestor">
+                    Telefone Gestor do Contrato
+                  </Label>
+                  <InputText
+                    id="telefone-gestor"
+                    value={"(11) 98888-7777"}
+                    className="w-100"
+                    disabled={true}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
           </CoadAccordion>
           <CoadAccordion titulo={"Observações"}>
             <Editor
               style={{ height: "320px" }}
-              value={this.state.observacoes}
+              value={observacoes}
               onTextChange={e => this.setState({ observacoes: e.htmlValue })}
             />
           </CoadAccordion>
@@ -292,7 +446,7 @@ class VisualizarContratos extends Component {
                   Cancelar
                 </Button>
                 <Button
-                  onClick={() => console.log(this.state)}
+                  onClick={() => this.handleSubmit()}
                   className="btn btn-coad-primary mt-3 ml-2 mb-2"
                 >
                   Aplicar

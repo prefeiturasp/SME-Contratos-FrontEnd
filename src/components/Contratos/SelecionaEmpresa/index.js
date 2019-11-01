@@ -31,6 +31,7 @@ export class SelecionaEmpresa extends Component {
                 autoWidth={false} 
                 placeholder="Selecione uma Empresa..."
                 showClear={true}
+                className="pb-1"
             />
         );
     }

@@ -9,8 +9,8 @@ class EstadoRadio extends Component {
   };
 
   selecionaEstado(event) {
-    this.setState({ estadoSelecionada: event.value });
-    this.props.onSelect(event.value);
+    this.setState({ estadoSelecionada: event.target.value });
+    this.props.onSelect(event.target.value);
   }
 
   async componentDidMount() {
@@ -19,16 +19,23 @@ class EstadoRadio extends Component {
   }
 
   render() {
-      const { estados } = this.state;
-      const { checado } = this.props;
+    const { estados } = this.state;
+    const { checado } = this.props;
     return (
       <div>
         {estados.map(value => {
-          const selecionado = value.id === checado ? true: false;
+          const selecionado = value.id === checado ? true : false;
           return (
             <FormGroup check inline>
               <Label check>
-                <Input {...this.props} type="radio" checked={selecionado} name="estado_contrato" value={value.id} onSelect={event => this.selecionaSituacao(event)} />
+                <Input
+                  {...this.props}
+                  type="radio"
+                  checked={selecionado}
+                  name="estado"
+                  value={value.id}
+                  onChange={event => this.selecionaEstado(event)}
+                />
                 {value.nome}
               </Label>
             </FormGroup>
