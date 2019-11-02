@@ -1,4 +1,3 @@
-import axios from 'axios'
 import api from './Api'
 import { getHeaderToken } from "./auth.service";
 
@@ -36,3 +35,22 @@ export const updateAssessoresCoad = (assessores) => {
 
 }
 
+export const getCargosDivisao = async (uuid) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  const url = `divisoes/${uuid}/`
+  return (await api.get(url, AUTH_HEADER)).data[0]
+}
+
+export const updateCargosDivisao = async (uuid, diretor, suplente) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  const url = `divisoes/${uuid}/`
+  const payload = {
+    diretor: diretor.id,
+    suplente_diretor: suplente.id
+  }
+  return (await api.patch(url, payload, AUTH_HEADER)).data[0]
+}
