@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import CoadAccordion from "../../../components/Global/CoadAccordion";
 import { getDivisoes } from '../../../service/Divisoes.service'
+import { CargosDivisao } from './CardDivisaoENucleos'
 
 export default class DesignacaoCargosDivisoes extends Component {
     
@@ -27,9 +27,7 @@ export default class DesignacaoCargosDivisoes extends Component {
                 {divisoes && divisoes.map(
                     (divisao) => {
                         return (
-                            <CoadAccordion titulo={divisao.sigla}>
-                                <p> teste teste teste teste teste </p>
-                            </CoadAccordion>
+                            <CargosDivisao divisao={divisao} ></CargosDivisao>
                         )
                     }
                 )}

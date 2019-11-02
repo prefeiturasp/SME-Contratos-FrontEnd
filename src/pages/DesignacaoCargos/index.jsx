@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import DesignacaoCargosCoad from "../../components/Contratos/DesignacaoCargosCoad";
-import DesignacaoCargosDivisoes from "../../components/Contratos/DesignacaoCargosDivisoes"
+import DesignacaoCargosDivisoes from "../../components/Contratos/DesignacaoCargosDivisoesENucleos"
 
 export default class DesignacaoCargos extends Component {  
   
