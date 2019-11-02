@@ -17,16 +17,8 @@ export default class DesignacaoCargosCoad extends Component {
         }
     }
 
-    async componentDidMount() {
-        const cargosCoad = await getCargosCoad()
-        this.setState(
-            {
-                cargosCoad,
-                coordenador: cargosCoad.coordenador,
-                assessores: cargosCoad.assessores
-            }
-        )
-
+    componentDidMount() {
+        this.resetCargos()
     }
     
 
@@ -57,6 +49,17 @@ export default class DesignacaoCargosCoad extends Component {
         this.limpaAssessoresVazios()
         updateCoordenadorCoad(this.state.coordenador)
         updateAssessoresCoad(this.state.assessores)
+    }
+
+    async resetCargos() {
+        const cargosCoad = await getCargosCoad()
+        this.setState(
+            {
+                cargosCoad,
+                coordenador: cargosCoad.coordenador,
+                assessores: cargosCoad.assessores
+            }
+        )
     }
 
     removeAssessor(idx) {
@@ -136,7 +139,7 @@ export default class DesignacaoCargosCoad extends Component {
                     <span className="float-right">
                         <Button 
                             label="Cancelar"
-                            onClick={(e) => this.setState({userName: "admin"})}
+                            onClick={(e) => this.resetCargos()}
                             className="p-button-secondary"
                         />
                         <Button 
