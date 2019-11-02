@@ -2,25 +2,25 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {BuscaIncrementalServidores} from "../BuscaIncrementalServidores"
 import {Button} from 'primereact/button';
-import {updateCargosDivisao} from '../../../service/Cargos.service'
+import {updateCargosNucleo} from '../../../service/Cargos.service'
 
-export default class DesignacaoCargosDivisao extends Component {
+export class DesignacaoCargosNucleo extends Component {
     constructor(props) {
         super(props)
     
         this.state = {
-            diretor: props.divisao ? props.divisao.diretor : null,
-            suplente: props.divisao ? props.divisao.suplente_diretor : null,
+            chefe: props.nucleo ? props.nucleo.chefe : null,
+            suplente: props.nucleo ? props.nucleo.suplente_chefe : null,
         }
     }
     
     static propTypes = {
-        divisao: PropTypes.object.isRequired
+        nucleo: PropTypes.object.isRequired
 
     }
 
-    updateDiretor(diretor) {
-        this.setState({diretor})
+    updateChefe(chefe) {
+        this.setState({chefe})
     }
 
     updateSuplente(suplente) {
@@ -28,16 +28,18 @@ export default class DesignacaoCargosDivisao extends Component {
     }
 
     updateCargos() {
-        updateCargosDivisao(this.props.divisao.uuid, this.state.diretor, this.state.suplente)
+        updateCargosNucleo(this.props.nucleo.uuid, this.state.chefe, this.state.suplente)
     }
 
     resetCargos() {
-        const diretor = this.props.divisao ? this.props.divisao.diretor : null
-        const suplente = this.props.divisao ? this.props.divisao.suplente_diretor : null
+        const chefe = this.props.nucleo ? this.props.nucleo.chefe : null
+        const suplente = this.props.nucleo ? this.props.nucleo.suplente_chefe : null
+
         this.setState({
-            diretor,
+            chefe,
             suplente
         })
+
     }
 
     render() {
@@ -46,11 +48,11 @@ export default class DesignacaoCargosDivisao extends Component {
                     <div className="p-grid p-fluid">
                         <div className="p-grid">
                             <div className="p-col-12 teste" >
-                                <h6>Diretor(a)</h6>
+                                <h6>Chefe</h6>
                                 <BuscaIncrementalServidores 
-                                    userName={this.state.diretor ? this.state.diretor.username : ''}
-                                    onUpdate={(servidor) => this.updateDiretor(servidor)}
-                                    placeholder="Selecione o diretor..."
+                                    userName={this.state.chefe ? this.state.chefe.username : ''}
+                                    onUpdate={(servidor) => this.updateChefe(servidor)}
+                                    placeholder="Selecione o chefe..."
                                 />
                             </div>
 

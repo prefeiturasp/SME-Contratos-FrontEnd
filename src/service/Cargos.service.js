@@ -54,3 +54,23 @@ export const updateCargosDivisao = async (uuid, diretor, suplente) => {
   }
   return (await api.patch(url, payload, AUTH_HEADER)).data[0]
 }
+
+export const getCargosNucleo = async (uuid) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  const url = `nucleos/${uuid}/`
+  return (await api.get(url, AUTH_HEADER)).data[0]
+}
+
+export const updateCargosNucleo = async (uuid, chefe, suplente) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  const url = `nucleos/${uuid}/`
+  const payload = {
+    chefe: chefe.id,
+    suplente_chefe: suplente.id
+  }
+  return (await api.patch(url, payload, AUTH_HEADER)).data[0]
+}

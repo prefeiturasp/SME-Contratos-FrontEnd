@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import CoadAccordion from "../../Global/CoadAccordion";
 import { TabView, TabPanel } from "primereact/tabview";
 import DesignacaoCargosDivisao, {} from "./DesignacaoCargosDivisao"
+import {DesignacaoCargosNucleos} from './DesignacaoCargosNucleos'
 
 export class CargosDivisao extends Component {
 
@@ -21,7 +22,7 @@ export class CargosDivisao extends Component {
                         <DesignacaoCargosDivisao divisao={this.props.divisao}/>
                     </TabPanel>
                     <TabPanel header="Núcleos da Divisão">
-                        Content II
+                        <DesignacaoCargosNucleos divisao={this.props.divisao}/>
                     </TabPanel>
                 </TabView>
 
