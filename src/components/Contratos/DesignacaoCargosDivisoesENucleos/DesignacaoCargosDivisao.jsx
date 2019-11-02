@@ -28,8 +28,16 @@ export default class DesignacaoCargosDivisao extends Component {
     }
 
     updateCargos() {
-        console.log('Atualiza :', this.state.suplente)
         updateCargosDivisao(this.props.divisao.uuid, this.state.diretor, this.state.suplente)
+    }
+
+    resetCargos() {
+        const diretor = this.props.divisao ? this.props.divisao.diretor : null
+        const suplente = this.props.divisao ? this.props.divisao.suplente_diretor : null
+        this.setState({
+            diretor,
+            suplente
+        })
     }
 
     render() {
@@ -60,7 +68,7 @@ export default class DesignacaoCargosDivisao extends Component {
                     <span className="float-right">
                         <Button 
                             label="Cancelar"
-                            onClick={(e) => this.setState({userName: "admin"})}
+                            onClick={(e) => this.resetCargos()}
                             className="p-button-secondary"
                         />
                         <Button 
