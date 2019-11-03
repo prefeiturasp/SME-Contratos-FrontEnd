@@ -6,7 +6,7 @@ $whiteColor: #ffffff;
   background-color: #f2f2f2;
 
   .layout-topbar {
-    z-index: 10000;
+    z-index: 1000;
     height: 67px;
 
     .layout-topbar-icons {
@@ -96,7 +96,7 @@ $whiteColor: #ffffff;
   }
 
   .coad-color{
-    color: $mainColor;
+    color: $mainColor !important;
   }
   
 }

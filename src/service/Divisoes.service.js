@@ -1,6 +1,6 @@
-
 import api from './Api'
-import { getHeaderToken } from "./auth.service";
+import { getHeaderToken, getUsuario } from "./auth.service";
+import CONFIG from "../configs/config.constants";
 
 export const getDivisoes = async () => {
   const AUTH_HEADER = {
@@ -17,3 +17,4 @@ export const getNucleosDaDivisao = async (uuid) => {
   const url = `divisoes/${uuid}/nucleos/`
   return (await api.get(url, AUTH_HEADER)).data
 }
+
