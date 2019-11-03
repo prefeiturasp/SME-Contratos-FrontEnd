@@ -74,3 +74,26 @@ export const updateCargosNucleo = async (uuid, chefe, suplente) => {
   }
   return (await api.patch(url, payload, AUTH_HEADER)).data[0]
 }
+
+export const getServidoresNucleo = async (uuid) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  const url = `nucleos/${uuid}/servidores/`
+  return (await api.get(url, AUTH_HEADER)).data
+}
+
+export const updateServidoresNucleo = (uuid, servidores) => {
+
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  const payload = {
+    servidores: servidores
+  }
+
+  const url = `nucleos/${uuid}/update-servidores/`
+
+  return api.post(url, payload, AUTH_HEADER) 
+
+}
