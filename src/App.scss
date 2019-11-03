@@ -27,4 +27,15 @@ html {
       background: #ffffff;
     }
   }
+
+  .coad-tab-nav-item {
+    border-bottom: 7px solid $mainColor;
+    width: 48%;
+    font-size: 1.2em;
+    opacity: 0.5;
+  }
+
+  .coad-active {
+    opacity: 1;
+  }
 }
