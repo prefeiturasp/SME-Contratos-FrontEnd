@@ -45,6 +45,7 @@ export default class DesignacaoCargosCoad extends Component {
 
         this.setState({assessores})
     }
+    
     updateCargosCoad() {
         this.limpaAssessoresVazios()
         updateCoordenadorCoad(this.state.coordenador)
@@ -108,7 +109,7 @@ export default class DesignacaoCargosCoad extends Component {
                                             <h6>Assessor do Coordenador</h6>
                                             <BuscaIncrementalServidores
                                                 key={assessor.id}
-                                                userName={assessor.assessor.username}
+                                                userName={assessor.assessor ? assessor.assessor.username : ''}
                                                 onUpdate={(servidor) => this.updateAssessor(servidor, idx)}
                                                 placeholder="Selecione o assessor do coordenador..."
                                             />
