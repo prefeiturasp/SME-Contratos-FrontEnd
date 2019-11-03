@@ -1,25 +1,75 @@
 import React from "react";
 import { Row, Col } from "reactstrap";
 import { Upload } from "antd";
+import { CoadTabs } from "../../components/Contratos/CoadTabs";
 
 const Anexos = props => {
   const { Dragger } = Upload;
   return (
-    <Row>
-      <Col>
-        <Dragger {...props}>
-          <p className="ant-upload-drag-icon">
-            <i className="fas fa-file-upload coad-color"></i>
-          </p>
-          <p className="ant-upload-text">
-          Clique ou arraste arquivos nesta área para upload
-          </p>
-          <p className="ant-upload-hint">
-          Suporte para arquivos .jpeg, .png, .pdf e .docx.
-          </p>
-        </Dragger>
-      </Col>
-    </Row>
+    <CoadTabs
+      titulo1={"Carregar documentos de Fiscais"}
+      titulo2={"Carregar outros documentos"}
+      conteudo1={
+        <div>
+          <Row>
+            <Col className="pb-3">
+              <label className="font-weight-bold">
+                Anexar documentos Fiscal DRE
+              </label>
+              <Dragger {...props}>
+                <p className="ant-upload-drag-icon">
+                  <i className="fas fa-file-upload coad-color"></i>
+                </p>
+                <p className="ant-upload-text">
+                  Clique ou arraste arquivos nesta área para upload
+                </p>
+                <p className="ant-upload-hint">
+                  Suporte para arquivos .jpeg, .png, .pdf e .docx.
+                </p>
+              </Dragger>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="pb-3 mt-5">
+              <label className="font-weight-bold">
+                Anexar documentos Fiscal Unidades
+              </label>
+              <Dragger {...props}>
+                <p className="ant-upload-drag-icon">
+                  <i className="fas fa-file-upload coad-color"></i>
+                </p>
+                <p className="ant-upload-text">
+                  Clique ou arraste arquivos nesta área para upload
+                </p>
+                <p className="ant-upload-hint">
+                  Suporte para arquivos .jpeg, .png, .pdf e .docx.
+                </p>
+              </Dragger>
+            </Col>
+          </Row>
+        </div>
+      }
+      conteudo2={
+        <div>
+          <Row>
+            <Col className="pb-3">
+              <label className="font-weight-bold">Anexar documentos</label>
+              <Dragger {...props}>
+                <p className="ant-upload-drag-icon">
+                  <i className="fas fa-file-upload coad-color"></i>
+                </p>
+                <p className="ant-upload-text">
+                  Clique ou arraste arquivos nesta área para upload
+                </p>
+                <p className="ant-upload-hint">
+                  Suporte para arquivos .jpeg, .png, .pdf e .docx.
+                </p>
+              </Dragger>
+            </Col>
+          </Row>
+        </div>
+      }
+    />
   );
 };
 

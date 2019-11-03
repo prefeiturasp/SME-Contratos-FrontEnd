@@ -24,6 +24,7 @@ import { SelecionaEmpresa } from "../../components/Contratos/SelecionaEmpresa";
 import SelecionarDivisoes from "../../components/Contratos/SelecionarDivisoes";
 import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
 import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
+import { getUnidadeContrato } from "../../service/UnidadeContrato.service copy";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class VisualizarContratos extends Component {
       gestor: null,
       nucleo: null,
       estado: null,
+      unidades: [],
 
       tipoServico: null,
       nomeEmpresa: null
@@ -56,8 +58,9 @@ class VisualizarContratos extends Component {
     const param = getUrlParams();
     const contrato = await getContratoByUUID(param.uuid);
     const estadoContrato = await getEstadosContrato();
+    const unidadeContrato = await getUnidadeContrato(param.uuid);
 
-    this.setState({ contrato, estadoContrato });
+    this.setState({ contrato, estadoContrato, unidades: unidadeContrato });
     this.propsToState(contrato);
   }
 
@@ -134,7 +137,8 @@ class VisualizarContratos extends Component {
       divisao,
       gestor,
       nucleo,
-      estado
+      estado,
+      unidades
     } = this.state;
     console.log(contrato);
     return (
@@ -431,7 +435,7 @@ class VisualizarContratos extends Component {
             />
           </CoadAccordion>
           <CoadAccordion titulo={"Unidade Envolvidas"}>
-            <UnidadeEnvolvidas />
+            <UnidadeEnvolvidas unidadesContrato={unidades} />
           </CoadAccordion>
           <CoadAccordion titulo={"Anexos"}>
             <Anexos />
