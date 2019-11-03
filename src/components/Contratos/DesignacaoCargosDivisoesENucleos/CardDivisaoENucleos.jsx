@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import CoadAccordion from "../../Global/CoadAccordion";
-import { TabView, TabPanel } from "primereact/tabview";
+import { CoadTabs } from "../../../components/Contratos/CoadTabs";
+import { Row, Col } from "reactstrap";
 import DesignacaoCargosDivisao, {} from "./DesignacaoCargosDivisao"
 import {DesignacaoCargosNucleos} from './DesignacaoCargosNucleos'
 
@@ -17,14 +18,28 @@ export class CargosDivisao extends Component {
         return (
             <CoadAccordion titulo={this.props.divisao.sigla}>
       
-                <TabView>
-                    <TabPanel header="Diretor(a) da Divisão e Suplente">
-                        <DesignacaoCargosDivisao divisao={this.props.divisao}/>
-                    </TabPanel>
-                    <TabPanel header="Núcleos da Divisão">
-                        <DesignacaoCargosNucleos divisao={this.props.divisao}/>
-                    </TabPanel>
-                </TabView>
+            <CoadTabs
+                    titulo1={"Diretor(a) da Divisão e Suplente"}
+                    titulo2={"Núcleos da Divisão"}
+                    conteudo1={
+                    <div>
+                        <Row>
+                        <Col sm="12">
+                            <DesignacaoCargosDivisao divisao={this.props.divisao}/>
+                        </Col>
+                        </Row>
+                    </div>
+                    }
+                    conteudo2={
+                    <div>
+                        <Row>
+                        <Col sm="12">
+                            <DesignacaoCargosNucleos divisao={this.props.divisao}/>
+                        </Col>
+                        </Row>
+                    </div>
+                    }
+                />
 
             </CoadAccordion>
         )
