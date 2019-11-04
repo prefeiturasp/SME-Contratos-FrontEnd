@@ -4,9 +4,9 @@ import { Upload } from "antd";
 import { CoadTabs } from "../../components/Contratos/CoadTabs";
 
 const Anexos = props => {
-  const onUpload = e => {
-    props.setDocumentosDre(e.target.files)
-  };
+  // const onUpload = e => {
+  //   props.setDocumentosDre(e.target.files)
+  // };
 
   const { Dragger } = Upload;
   const { disabilitado } = props;

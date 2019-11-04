@@ -21,7 +21,7 @@ export default class SelecionarNucleos extends Component {
   formataOptions(nucleos) {
     const options = this.state.options;
     nucleos.map(value => {
-      options.push({ label: value.sigla, value: value.uuid });
+      return options.push({ label: value.sigla, value: value.uuid });
     });
     this.setState({ options });
   }

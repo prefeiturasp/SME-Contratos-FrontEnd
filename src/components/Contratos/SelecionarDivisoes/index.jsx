@@ -21,7 +21,7 @@ export default class SelecionarDivisoes extends Component {
   formataOptions(divisoes) {
     const options = this.state.options;
     divisoes.map(value => {
-      options.push({ label: value.sigla, value: value.uuid });
+      return options.push({ label: value.sigla, value: value.uuid });
     });
     this.setState({ options });
   }
