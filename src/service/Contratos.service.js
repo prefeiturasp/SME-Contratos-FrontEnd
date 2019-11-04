@@ -21,7 +21,6 @@ export function getContratos(filtro) {
   return axios
     .get(`${CONFIG.API_URL}/contratos/${parametros}`, AUTH_HEADER)
     .then(res => {
-      console.log(res);
       return formataData(res.data);
     });
 }
@@ -72,12 +71,43 @@ export const getEstadosContrato = () => {
     .then(res => res.data);
 };
 
+export const getCamposContrato = () => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  return axios
+    .get(`${CONFIG.API_URL}/colunas-contrato/?usuario=${getUsuario().user_id}`, AUTH_HEADER)
+    .then(res => res.data);
+};
+
 export const createContrato = payLoad => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
   return axios
     .post(`${CONFIG.API_URL}/contratos/`, payLoad, AUTH_HEADER)
+    .then(
+      res => res.data,
+      res => {
+        return { statusCode: res.statusCode, result: res };
+      }
+    )
+    .catch(error => {
+      return { error: error };
+    });
+};
+
+export const updateColunasContrato = (payload) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+
+  return axios
+    .patch(
+      `${CONFIG.API_URL}/colunas-contrato/${payload.uuid}/`,
+      payload,
+      AUTH_HEADER
+    )
     .then(
       res => res.data,
       res => {
