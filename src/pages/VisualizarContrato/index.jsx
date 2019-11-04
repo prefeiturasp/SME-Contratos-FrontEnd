@@ -151,7 +151,6 @@ class VisualizarContratos extends Component {
       unidades,
       disabilitado
     } = this.state;
-    console.log(contrato);
     return (
       <Page
         titulo={`Termo de Contrato n. ${contrato.termo_contrato} - ${nomeEmpresa}`}
