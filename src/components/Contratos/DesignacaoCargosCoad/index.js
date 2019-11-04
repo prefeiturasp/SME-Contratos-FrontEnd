@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import CoadAccordion from "../../../components/Global/CoadAccordion";
 import {Button} from 'primereact/button';
 import { Button as AntButton } from 'antd';
+import { Messages } from "primereact/messages";
 import {BuscaIncrementalServidores} from "../BuscaIncrementalServidores"
 import {getCargosCoad, updateCoordenadorCoad, updateAssessoresCoad} from '../../../service/Cargos.service'
 
@@ -50,6 +51,24 @@ export default class DesignacaoCargosCoad extends Component {
         this.limpaAssessoresVazios()
         updateCoordenadorCoad(this.state.coordenador)
         updateAssessoresCoad(this.state.assessores)
+
+        this.messages.show({
+            severity: "success",
+            life: 5000,
+            detail:
+              "Alterações realizadas com sucesso."
+          });
+    }
+
+    cancelUpdateCargosCoad() {
+        this.resetCargos()
+
+        this.messages.show({
+            severity: "warn",
+            life: 5000,
+            detail:
+              "Edições descartadas."
+          });
     }
 
     async resetCargos() {
@@ -92,7 +111,9 @@ export default class DesignacaoCargosCoad extends Component {
                 <CoadAccordion titulo={"COAD"}>
                     <div className="p-grid p-fluid">
                         <div className="p-grid">
+                            
                             <div className="p-col-12" >
+                            <Messages ref={el => (this.messages = el)}></Messages>
                             <h6>Coordenador</h6>
                                 <BuscaIncrementalServidores 
                                     userName={this.state.coordenador ? this.state.coordenador.username : ''}
@@ -140,7 +161,7 @@ export default class DesignacaoCargosCoad extends Component {
                     <span className="float-right">
                         <Button 
                             label="Cancelar"
-                            onClick={(e) => this.resetCargos()}
+                            onClick={(e) => this.cancelUpdateCargosCoad()}
                             className="p-button-secondary"
                         />
                         <Button 

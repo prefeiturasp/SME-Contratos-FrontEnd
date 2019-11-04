@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {BuscaIncrementalServidores} from "../BuscaIncrementalServidores"
 import {Button} from 'primereact/button';
+import { Messages } from "primereact/messages";
 import {updateCargosDivisao} from '../../../service/Cargos.service'
 
 export default class DesignacaoCargosDivisao extends Component {
@@ -29,6 +30,24 @@ export default class DesignacaoCargosDivisao extends Component {
 
     updateCargos() {
         updateCargosDivisao(this.props.divisao.uuid, this.state.diretor, this.state.suplente)
+
+        this.messages.show({
+            severity: "success",
+            life: 5000,
+            detail:
+              "Alterações realizadas com sucesso."
+          });
+    }
+
+    cancelUpdateCargos() {
+        this.resetCargos()
+
+        this.messages.show({
+            severity: "warn",
+            life: 5000,
+            detail:
+              "Edições descartadas."
+          });
     }
 
     resetCargos() {
@@ -45,7 +64,8 @@ export default class DesignacaoCargosDivisao extends Component {
             <div>
                     <div className="p-grid p-fluid">
                         <div className="p-grid">
-                            <div className="p-col-12 teste" >
+                            <div className="p-col-12" >
+                                <Messages ref={el => (this.messages = el)}></Messages>
                                 <h6>Diretor(a)</h6>
                                 <BuscaIncrementalServidores 
                                     userName={this.state.diretor ? this.state.diretor.username : ''}
@@ -68,7 +88,7 @@ export default class DesignacaoCargosDivisao extends Component {
                     <span className="float-right">
                         <Button 
                             label="Cancelar"
-                            onClick={(e) => this.resetCargos()}
+                            onClick={(e) => this.cancelUpdateCargos()}
                             className="p-button-secondary"
                         />
                         <Button 

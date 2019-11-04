@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {BuscaIncrementalServidores} from "../BuscaIncrementalServidores"
 import {Button} from 'primereact/button';
 import { Button as AntButton } from 'antd';
+import { Messages } from "primereact/messages";
 import {updateCargosNucleo, getServidoresNucleo, updateServidoresNucleo} from '../../../service/Cargos.service'
 
 export class DesignacaoCargosNucleo extends Component {
@@ -50,6 +51,24 @@ export class DesignacaoCargosNucleo extends Component {
         this.limpaServidoresVazios()
         updateCargosNucleo(this.props.nucleo.uuid, this.state.chefe, this.state.suplente)
         updateServidoresNucleo(this.props.nucleo.uuid, this.state.servidores)
+
+        this.messages.show({
+            severity: "success",
+            life: 5000,
+            detail:
+              "Alterações realizadas com sucesso."
+        });
+    }
+
+    cancelUpdateCargos() {
+        this.resetCargos()
+
+        this.messages.show({
+            severity: "warn",
+            life: 5000,
+            detail:
+              "Edições descartadas."
+          });
     }
 
     async resetCargos() {
@@ -93,14 +112,13 @@ export class DesignacaoCargosNucleo extends Component {
 
     }
 
-    
-
     render() {
         return (
             <div>
                     <div className="p-grid p-fluid">
                         <div className="p-grid">
                             <div className="p-col-12 teste" >
+                                <Messages ref={el => (this.messages = el)}></Messages>
                                 <h6>Chefe</h6>
                                 <BuscaIncrementalServidores 
                                     userName={this.state.chefe ? this.state.chefe.username : ''}
@@ -158,7 +176,7 @@ export class DesignacaoCargosNucleo extends Component {
                     <span className="float-right">
                         <Button 
                             label="Cancelar"
-                            onClick={(e) => this.resetCargos()}
+                            onClick={(e) => this.cancelUpdateCargos()}
                             className="p-button-secondary"
                         />
                         <Button 
