@@ -20,7 +20,7 @@ export class TableContrato extends Component {
   };
 
   render() {
-    const { contratos } = this.props;
+    const { contratos, colunas } = this.props;
 
     const total = contratos.reduce(
       (prevVal, value) => prevVal + value.total_mensal,
@@ -37,7 +37,7 @@ export class TableContrato extends Component {
       // { field: "total_mensal", header: "Valor", body: this.formataTotalMensal }
     ];
 
-    let dynamicColumns = cols.map((col, i) => {
+    let dynamicColumns = colunas.map((col, i) => {
       if (col.field !== "row_index") {
         return (
           <Column
@@ -65,6 +65,7 @@ export class TableContrato extends Component {
         <DataTable
           onRowClick={e => this.redirecionaDetalhe(e.data)}
           value={this.props.contratos}
+          rows={15}
           scrollable={true}
           scrollHeight="200px"
           resizableColumns={true}

@@ -3,9 +3,13 @@ import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import { TabView, TabPanel } from "primereact/tabview";
 import { TableContrato } from "../../components/Contratos/TableContrato";
-import { getContratos } from "../../service/Contratos.service";
+import {
+  getContratos,
+  getCamposContrato
+} from "../../service/Contratos.service";
 import "./style.scss";
 import { BuscaContratosForm } from "../../components/Contratos/BuscaContratosForm";
+import { SelecionaColunasContrato } from "../../components/Contratos/SelecionaColunasContrato";
 import { getUsuario } from "../../service/auth.service";
 import { getUrlParams } from "../../utils/params";
 import { Button, ButtonGroup } from "reactstrap";
@@ -16,7 +20,16 @@ class ContratosContinuos extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      uuid: null,
       contratos: [],
+      colunas: [
+        { field: "row_index", header: "#" },
+        { field: "processo", header: "Processo" },
+        { field: "tipo_servico.nome", header: "Tipode de Serviço" },
+        { field: "empresa_contratada.nome", header: "Empresa" },
+        { field: "estado_contrato", header: "Estado do Contrato" },
+        { field: "data_encerramento", header: "Data Encerramento" }
+      ],
       filtros: {
         gestor: getUsuario().user_id,
         empresa_contratada: "",
@@ -30,6 +43,16 @@ class ContratosContinuos extends Component {
       }
     };
   }
+  async setaColunasDefaut() {
+    const colUsuario = await getCamposContrato();
+    const colunasUsuario = colUsuario[0];
+    if (colunasUsuario || colunasUsuario.length != 0) {
+      this.setState({
+        colunas: colunasUsuario.colunas_array,
+        uuid: colunasUsuario.uuid
+      });
+    }
+  }
 
   setaMeusContratos() {
     const { filtros } = this.state;
@@ -42,6 +65,10 @@ class ContratosContinuos extends Component {
     getContratos(filtros).then(contratos => {
       this.setState({ contratos, filtros });
     });
+  };
+
+  onAplicarClick = colunas => {
+    this.setState({ colunas });
   };
 
   pegaParametrosUrl = () => {
@@ -64,10 +91,11 @@ class ContratosContinuos extends Component {
   componentDidMount() {
     this.pegaParametrosUrl();
     this.setaMeusContratos();
+    this.setaColunasDefaut();
   }
 
   render() {
-    const { contratos } = this.state;
+    const { contratos, colunas } = this.state;
     return (
       <Page titulo="Contratos Contínuos">
         <ButtonGroup className="mb-4">
@@ -83,20 +111,23 @@ class ContratosContinuos extends Component {
           </Button>
         </ButtonGroup>
         <Container icone="pi pi-chart-bar" subtitulo="Vizualizar Contratos">
-          <CoadAccordion titulo='Personalizar filtro de busca'>
+          <CoadAccordion titulo="Personalizar filtro de busca">
             <TabView className="coad-tab-panel-contratos-continuos">
               <TabPanel header="Personalizar Filtros">
                 <BuscaContratosForm
                   onBuscarClick={filtros => this.onBuscarClick(filtros)}
                 />
               </TabPanel>
-              <TabPanel disabled header="Personalizar Colunas">
-                Content II
+              <TabPanel header="Personalizar Colunas">
+                <SelecionaColunasContrato
+                  uuid={this.state.uuid}
+                  onAplicarClick={this.onAplicarClick}
+                />
               </TabPanel>
             </TabView>
           </CoadAccordion>
 
-          <TableContrato contratos={contratos} />
+          <TableContrato contratos={contratos} colunas={this.state.colunas} />
         </Container>
       </Page>
     );
