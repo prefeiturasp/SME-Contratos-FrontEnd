@@ -177,7 +177,8 @@ export class DesignacaoCargosNucleo extends Component {
                         <Button 
                             label="Cancelar"
                             onClick={(e) => this.cancelUpdateCargos()}
-                            className="p-button-secondary"
+                            className="btn-coad-background-outline"
+                            style={{ marginRight: ".25em" }}
                         />
                         <Button 
                             type="link"
