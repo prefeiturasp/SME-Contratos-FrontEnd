@@ -1,6 +1,5 @@
 import api from './Api'
-import { getHeaderToken, getUsuario } from "./auth.service";
-import CONFIG from "../configs/config.constants";
+import { getHeaderToken } from "./auth.service";
 
 export const getDivisoes = async () => {
   const AUTH_HEADER = {
