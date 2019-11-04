@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Container from "../../Global/Container";
+import { Row, Col } from "reactstrap";
 import { Messages } from "primereact/messages";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
@@ -88,9 +89,7 @@ export default class AtribuirTermoContrato extends Component {
       detail:
         "Termo de Contrato cadastrado. Gestor e suplente serão nofificados via sistema e e-mail."
     });
-    this.setState({ btnCadastrarVisible: true });
-    this.setState({ btnAlterarVisible: false });
-    this.setState({ btnCancelarVisible: false });
+    this.reset();
   }
 
   onClick() {
@@ -182,10 +181,11 @@ export default class AtribuirTermoContrato extends Component {
         <h6 style={{ marginLeft: 15, fontWeight: "bold" }}>
           Atribuir Termo de Contrato
         </h6>
-        <Card footer={footer}>
-          <div className="p-grid p-fluid">
-            <div className="p-col-6">
+        <Card footer={footer} >
+          <Row>
+            <Col xs={12} sm={12} md={12} lg={6} xl={6} >
               <label for="termo_contrato">Termo de Contrato</label>
+              <br />
               <InputText
                 value={this.state.termo_contrato}
                 onChange={e =>
@@ -193,18 +193,24 @@ export default class AtribuirTermoContrato extends Component {
                 }
                 required="true"
                 placeholder="Ex.: 00/00"
+                className="w-100"
               />
-            </div>
-            <div className="p-col-6">
+            </Col>
+            <Col xs={12} sm={12} md={12} lg={6} xl={6} className="p-fluid">
               <label for="gestor">Nome Gestor de Contrato</label>
+              <br />
               <BuscaIncrementalServidores
                 placeholder="Ex.: Nome e sobrenome"
                 userName={this.state.gestor ? this.state.gestor.username : ""}
                 onUpdate={servidorGestor => this.updateGestor(servidorGestor)}
               />
-            </div>
-            <div className="p-col-6 p-offset-6">
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12} sm={12} md={12} lg={6} xl={6}></Col>
+            <Col xs={12} sm={12} md={12} lg={6} xl={6} className="p-fluid">
               <label for="gestor">Nome Suplente de Contrato</label>
+              <br />
               <BuscaIncrementalServidores
                 placeholder="Ex.: Nome e sobrenome"
                 userName={
@@ -213,9 +219,10 @@ export default class AtribuirTermoContrato extends Component {
                 onUpdate={servidorSuplente =>
                   this.updateSuplente(servidorSuplente)
                 }
+                
               />
-            </div>
-          </div>
+            </Col>
+          </Row>
         </Card>
       </Container>
     );
