@@ -162,12 +162,13 @@ export default class DesignacaoCargosCoad extends Component {
                         <Button 
                             label="Cancelar"
                             onClick={(e) => this.cancelUpdateCargosCoad()}
-                            className="p-button-secondary"
+                            className="btn-coad-background-outline"
+                            style={{ marginRight: ".25em" }}
                         />
                         <Button 
                             type="link"
                             label="Aplicar"
-                            onClick={(e) => this.updateCargosCoad()}  
+                            onClick={(e) => this.updateCargosCoad()}
                         />
                     </span>
                 </CoadAccordion>
