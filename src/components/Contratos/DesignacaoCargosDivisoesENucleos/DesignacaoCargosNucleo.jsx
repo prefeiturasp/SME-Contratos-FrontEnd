@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {BuscaIncrementalServidores} from "../BuscaIncrementalServidores"
 import {Button} from 'primereact/button';
-import {updateCargosNucleo} from '../../../service/Cargos.service'
+import { Button as AntButton } from 'antd';
+import { Messages } from "primereact/messages";
+import {updateCargosNucleo, getServidoresNucleo, updateServidoresNucleo} from '../../../service/Cargos.service'
 
 export class DesignacaoCargosNucleo extends Component {
     constructor(props) {
@@ -11,6 +13,7 @@ export class DesignacaoCargosNucleo extends Component {
         this.state = {
             chefe: props.nucleo ? props.nucleo.chefe : null,
             suplente: props.nucleo ? props.nucleo.suplente_chefe : null,
+            servidores: [],
         }
     }
     
@@ -27,18 +30,85 @@ export class DesignacaoCargosNucleo extends Component {
         this.setState({suplente})
     }
 
-    updateCargos() {
-        updateCargosNucleo(this.props.nucleo.uuid, this.state.chefe, this.state.suplente)
+    updateServidor(servidor, idx) {
+        let servidores = this.state.servidores
+        servidores[idx].servidor = servidor
+        this.setState({servidores})
     }
 
-    resetCargos() {
+    limpaServidoresVazios() {
+        const servidores = this.state.servidores.filter(
+            (servidor) => {
+                return servidor.servidor.username !== ''
+            }
+        )
+
+        this.setState({servidores})
+    }
+
+
+    updateCargos() {
+        this.limpaServidoresVazios()
+        updateCargosNucleo(this.props.nucleo.uuid, this.state.chefe, this.state.suplente)
+        updateServidoresNucleo(this.props.nucleo.uuid, this.state.servidores)
+
+        this.messages.show({
+            severity: "success",
+            life: 5000,
+            detail:
+              "Alterações realizadas com sucesso."
+        });
+    }
+
+    cancelUpdateCargos() {
+        this.resetCargos()
+
+        this.messages.show({
+            severity: "warn",
+            life: 5000,
+            detail:
+              "Edições descartadas."
+          });
+    }
+
+    async resetCargos() {
         const chefe = this.props.nucleo ? this.props.nucleo.chefe : null
         const suplente = this.props.nucleo ? this.props.nucleo.suplente_chefe : null
+        const servidores = this.props.nucleo ? await getServidoresNucleo(this.props.nucleo.uuid) : []
 
         this.setState({
             chefe,
-            suplente
+            suplente,
+            servidores
         })
+
+    }
+
+    componentDidMount() {
+        this.resetCargos()
+    }
+
+    removeServidor(idx) {
+        const servidores = this.state.servidores
+        servidores.splice(idx, 1)
+        this.setState({servidores})
+    }
+
+    appendServidor() {
+        const nucleo = this.props.nucleo ? this.props.nucleo.id : null
+        const emptyServidor = {
+            nucleo: nucleo,
+            id: null,
+            servidor: {
+                username: '',
+            }
+        }
+
+        const servidores = this.state.servidores
+        
+        servidores.push(emptyServidor)
+
+        this.setState(servidores)
 
     }
 
@@ -48,6 +118,7 @@ export class DesignacaoCargosNucleo extends Component {
                     <div className="p-grid p-fluid">
                         <div className="p-grid">
                             <div className="p-col-12 teste" >
+                                <Messages ref={el => (this.messages = el)}></Messages>
                                 <h6>Chefe</h6>
                                 <BuscaIncrementalServidores 
                                     userName={this.state.chefe ? this.state.chefe.username : ''}
@@ -65,12 +136,47 @@ export class DesignacaoCargosNucleo extends Component {
                                 />
                             </div>
 
+                            {this.state.servidores.map(
+                                (servidor, idx) => {
+                                    return (
+                                        <div className="p-grid p-col-12">   
+                                            <div className="p-col-10">
+                                                <h6>Servidor</h6>
+                                                <BuscaIncrementalServidores
+                                                    key={servidor.id}
+                                                    userName={servidor.servidor ? servidor.servidor.username : ''}
+                                                    onUpdate={(servidor) => this.updateServidor(servidor, idx)}
+                                                    placeholder="Selecione o servidor..."
+                                                />
+                                            </div>
+                                            <div className="p-col-2">
+                                                <Button 
+                                                    style={{marginTop: '28px'}}
+                                                    label="Remover"
+                                                    onClick={(e) => this.removeServidor(idx)}
+                                                />
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            )}
+
+                            <div className="p-col-12" style={{padding: '0px'}} >
+                                <AntButton 
+                                    type="link" 
+                                    size="small"
+                                    onClick={(e) => this.appendServidor()}
+                                >
+                                    Adicionar Servidor
+                                </AntButton>
+                            </div>
+
                         </div>
                     </div>
                     <span className="float-right">
                         <Button 
                             label="Cancelar"
-                            onClick={(e) => this.resetCargos()}
+                            onClick={(e) => this.cancelUpdateCargos()}
                             className="p-button-secondary"
                         />
                         <Button 
