@@ -4,6 +4,10 @@ import { Upload } from "antd";
 import { CoadTabs } from "../../components/Contratos/CoadTabs";
 
 const Anexos = props => {
+  const onUpload = e => {
+    props.setDocumentosDre(e.target.files)
+  };
+
   const { Dragger } = Upload;
   return (
     <CoadTabs
@@ -16,6 +20,14 @@ const Anexos = props => {
               <label className="font-weight-bold">
                 Anexar documentos Fiscal DRE
               </label>
+              {/* <br />
+              <input
+                onChange={onUpload}
+                type="file"
+                multiple={true}
+                name="anexos[]"
+              /> */}
+
               <Dragger {...props}>
                 <p className="ant-upload-drag-icon">
                   <i className="fas fa-file-upload coad-color"></i>

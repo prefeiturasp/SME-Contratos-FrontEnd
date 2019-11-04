@@ -24,7 +24,7 @@ import { SelecionaEmpresa } from "../../components/Contratos/SelecionaEmpresa";
 import SelecionarDivisoes from "../../components/Contratos/SelecionarDivisoes";
 import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
 import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
-import { getUnidadeContrato } from "../../service/UnidadeContrato.service copy";
+import { getUnidadeContrato } from "../../service/UnidadeContrato.service";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -45,7 +45,8 @@ class VisualizarContratos extends Component {
       nucleo: null,
       estado: null,
       unidades: [],
-
+      documentoFiscaDre: [],
+      documentoFiscaUnidade: [],
       tipoServico: null,
       nomeEmpresa: null
     };
@@ -113,6 +114,10 @@ class VisualizarContratos extends Component {
 
   selecionarEstado = estado => {
     this.setState({ estado });
+  };
+
+  selecionarDocsDre = files => {
+    console.log(files);
   };
 
   handleSubmit = () => {
@@ -438,7 +443,7 @@ class VisualizarContratos extends Component {
             <UnidadeEnvolvidas unidadesContrato={unidades} />
           </CoadAccordion>
           <CoadAccordion titulo={"Anexos"}>
-            <Anexos />
+            <Anexos setDocumentosDre={this.selecionarDocsDre} />
           </CoadAccordion>
           <Row>
             <Col lg={12}>
