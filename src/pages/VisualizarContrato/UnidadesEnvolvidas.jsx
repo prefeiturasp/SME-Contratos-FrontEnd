@@ -39,6 +39,7 @@ class UnidadeEnvolvidas extends Component {
 
   render() {
     const { unidades, modal } = this.state;
+    const { disabilitado } = this.props;
     return (
       <div>
         <Modal isOpen={modal} toggle={this.toggle} className="mt-5">
@@ -118,7 +119,7 @@ class UnidadeEnvolvidas extends Component {
             </DataTable>
           </Col>
           <Col className="mt-5">
-            <Button onClick={this.toggle} className="btn-coad-primary">
+            <Button disabled={disabilitado} onClick={this.toggle} className="btn-coad-primary">
               <i className="fas fa-plus"></i> Adicionar Unidade
             </Button>
           </Col>

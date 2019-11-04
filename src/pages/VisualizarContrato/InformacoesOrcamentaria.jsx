@@ -29,7 +29,7 @@ export default class InformacoeOrcamentaria extends Component {
   }
 
   render() {
-    const { totalMensal, valorTotal } = this.props;
+    const { totalMensal, valorTotal, disabilitar} = this.props;
     const { dotacao } = this.state;
 
     return (
@@ -42,6 +42,7 @@ export default class InformacoeOrcamentaria extends Component {
                 <InputText
                   placeholder={"Digite a dotação"}
                   className="w-100"
+                  disabled={disabilitar}
                 />
                 {dotacao.map((value, index) => {
                   return (
@@ -59,6 +60,7 @@ export default class InformacoeOrcamentaria extends Component {
                 <button
                   onClick={() => this.appendDotacao()}
                   className="btn bt-link font-weight-bold coad-color"
+                  disabled={disabilitar}
                 >
                   Adicionar Dotação
                 </button>
@@ -75,6 +77,7 @@ export default class InformacoeOrcamentaria extends Component {
                   value={formatadoMonetario(totalMensal)}
                   placeholder={"R$"}
                   className="w-100"
+                  disabled={disabilitar}
                 />
               </FormGroup>
             </Col>
@@ -87,6 +90,7 @@ export default class InformacoeOrcamentaria extends Component {
                   value={valorTotal}
                   placeholder={"R$"}
                   className="w-100"
+                  disabled={disabilitar}
                 />
               </FormGroup>
             </Col>

@@ -39,7 +39,7 @@ export default class SelecionarNucleos extends Component {
     return (
       <FormGroup>
         <Label for="selecionarNucleos">Núcleo Responsável</Label>
-        <Input type="select" onChange={event => this.onSelect(event)} name="nucleo" id="selecionarNucleos">
+        <Input {...this.props} type="select" onChange={event => this.onSelect(event)} name="nucleo" id="selecionarNucleos">
           {options.map((value, key) => {
             const selecionado = selected === value.value ? true : false;
             return (

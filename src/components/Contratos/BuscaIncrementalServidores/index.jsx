@@ -59,6 +59,7 @@ export class BuscaIncrementalServidores extends Component {
     render() {
         return (
             <AutoComplete 
+                {...this.props}
                 value={this.state.servidor} 
                 suggestions={this.state.filteredServidores} 
                 completeMethod={this.filterServidores} 

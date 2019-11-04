@@ -9,6 +9,7 @@ const Anexos = props => {
   };
 
   const { Dragger } = Upload;
+  const { disabilitado } = props;
   return (
     <CoadTabs
       titulo1={"Carregar documentos de Fiscais"}
@@ -20,15 +21,7 @@ const Anexos = props => {
               <label className="font-weight-bold">
                 Anexar documentos Fiscal DRE
               </label>
-              {/* <br />
-              <input
-                onChange={onUpload}
-                type="file"
-                multiple={true}
-                name="anexos[]"
-              /> */}
-
-              <Dragger {...props}>
+              <Dragger disabled={disabilitado}>
                 <p className="ant-upload-drag-icon">
                   <i className="fas fa-file-upload coad-color"></i>
                 </p>
@@ -46,7 +39,7 @@ const Anexos = props => {
               <label className="font-weight-bold">
                 Anexar documentos Fiscal Unidades
               </label>
-              <Dragger {...props}>
+              <Dragger disabled={disabilitado}>
                 <p className="ant-upload-drag-icon">
                   <i className="fas fa-file-upload coad-color"></i>
                 </p>
@@ -66,7 +59,7 @@ const Anexos = props => {
           <Row>
             <Col className="pb-3">
               <label className="font-weight-bold">Anexar documentos</label>
-              <Dragger {...props}>
+              <Dragger disabled={disabilitado}>
                 <p className="ant-upload-drag-icon">
                   <i className="fas fa-file-upload coad-color"></i>
                 </p>

@@ -21,7 +21,6 @@ export function getContratos(filtro) {
   return axios
     .get(`${CONFIG.API_URL}/contratos/${parametros}`, AUTH_HEADER)
     .then(res => {
-      console.log(res);
       return formataData(res.data);
     });
 }
