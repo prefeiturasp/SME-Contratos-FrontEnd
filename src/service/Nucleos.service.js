@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getHeaderToken, getUsuario } from "./auth.service";
+import { getHeaderToken } from "./auth.service";
 import CONFIG from "../configs/config.constants";
 
 export const getNucleos = () => {

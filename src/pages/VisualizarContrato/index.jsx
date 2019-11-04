@@ -19,12 +19,13 @@ import { SelecionaTipoServico } from "../../components/Contratos/SelecionaTipoSe
 import { CALENDAR_PT } from "../../configs/config.constants";
 import SituacaoRadio from "../../components/Contratos/SelecionaSituacaoContrato/SituacaoRadio";
 import EstadoRadio from "../../components/Contratos/SelecionaEstadoContrato/EstadoRadio";
-import { formatadorDeData, formatadoMonetario } from "../../utils/formatador";
+import { formatadorDeData } from "../../utils/formatador";
 import { SelecionaEmpresa } from "../../components/Contratos/SelecionaEmpresa";
 import SelecionarDivisoes from "../../components/Contratos/SelecionarDivisoes";
 import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
 import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
-import { getUnidadeContrato } from "../../service/UnidadeContrato.service copy";
+import { getUnidadeContrato } from "../../service/UnidadeContrato.service";
+import { redirect } from "../../utils/redirect";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -45,9 +46,11 @@ class VisualizarContratos extends Component {
       nucleo: null,
       estado: null,
       unidades: [],
-
+      documentoFiscaDre: [],
+      documentoFiscaUnidade: [],
       tipoServico: null,
-      nomeEmpresa: null
+      nomeEmpresa: null,
+      disabilitado: true
     };
 
     this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
@@ -115,8 +118,15 @@ class VisualizarContratos extends Component {
     this.setState({ estado });
   };
 
+  selecionarDocsDre = files => {
+    console.log(files);
+  };
+
+  habilitarEdicao = () => {
+    this.setState({disabilitado: !this.state.disabilitado})
+  }
+
   handleSubmit = () => {
-    // e.preventDefault();
     console.log(this.state);
   };
 
@@ -138,7 +148,8 @@ class VisualizarContratos extends Component {
       gestor,
       nucleo,
       estado,
-      unidades
+      unidades,
+      disabilitado
     } = this.state;
     console.log(contrato);
     return (
@@ -163,8 +174,11 @@ class VisualizarContratos extends Component {
               </h2>
             </Col>
             <Col lg={2}>
-              <Button disabled className="btn btn-coad-primary float-right">
-                Editar
+              <Button 
+                  className="btn btn-coad-primary float-right"
+                  onClick={()=> this.habilitarEdicao()}
+                >
+                {disabilitado ? 'Editar': 'Editando...'}
               </Button>
             </Col>
           </Row>
@@ -192,6 +206,7 @@ class VisualizarContratos extends Component {
                   onSelect={value => this.selecionaTipoServico(value)}
                   id="tipoServico"
                   className="w-100"
+                  disabilitado={disabilitado}
                 />
               </Col>
             </Row>
@@ -215,6 +230,7 @@ class VisualizarContratos extends Component {
                 <SituacaoRadio
                   checado={situacao}
                   onSelect={value => this.selecionarSituacao(value)}
+                  disabled={disabilitado}
                 />
               </Col>
             </Row>
@@ -224,9 +240,9 @@ class VisualizarContratos extends Component {
                 <InputText
                   id="edital"
                   value={""}
-                  disabled
                   placeholder={"Ex: 00000000"}
                   className="w-100"
+                  disabled={disabilitado}
                 />
               </Col>
               <Col xs={12} sm={12} md={12} lg={8} xl={8}>
@@ -235,6 +251,7 @@ class VisualizarContratos extends Component {
                 <EstadoRadio
                   onSelect={this.selecionarEstado}
                   checado={estado}
+                  disabled={disabilitado}
                 />
               </Col>
             </Row>
@@ -254,6 +271,7 @@ class VisualizarContratos extends Component {
                       locale={CALENDAR_PT}
                       dateFormat="dd/mm/yy"
                       showIcon={true}
+                      disabled={disabilitado}
                     />
                   </Col>
                   <Col xs={12} sm={12} md={12} lg={6} xl={6}>
@@ -267,6 +285,7 @@ class VisualizarContratos extends Component {
                       showIcon={true}
                       locale={CALENDAR_PT}
                       dateFormat="dd/mm/yy"
+                      disabled={disabilitado}
                     />
                   </Col>
                 </Row>
@@ -282,6 +301,7 @@ class VisualizarContratos extends Component {
                         }
                         placeholder={"Ex: 365 dias"}
                         className="w-100"
+                        disabled={disabilitado}
                       />
                     </FormGroup>
                   </Col>
@@ -296,6 +316,7 @@ class VisualizarContratos extends Component {
                       showIcon={true}
                       locale={CALENDAR_PT}
                       dateFormat="dd/mm/yy"
+                      disabled={disabilitado}
                     />
                   </Col>
                 </Row>
@@ -325,6 +346,7 @@ class VisualizarContratos extends Component {
                       <br />
                       <SelecionaEmpresa
                         onSelect={value => this.SelecionarEmpresa(value)}
+                        disabled={disabilitado}
                       />
                     </FormGroup>
                   </Col>
@@ -339,26 +361,34 @@ class VisualizarContratos extends Component {
                         value={empresa_contratada.cnpj}
                         placeholder={"Digite nome da empresa"}
                         className="w-100 pb-2"
+                        readOnly={true}
                       />
                     </FormGroup>
                   </Col>
                 </Row>
               </Col>
               <Col>
-                <button className="btn coad-color font-weight-bold">
+                <button  
+                  className="btn coad-color font-weight-bold"
+                  disabled={disabilitado}
+                  >
                   Nova empresa
                 </button>
               </Col>
             </Row>
           </CoadAccordion>
           <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
-            <InformacoesOrcamentaria totalMensal={total_mensal} />
+            <InformacoesOrcamentaria 
+            totalMensal={total_mensal}
+            disabilitar={disabilitado}
+            />
           </CoadAccordion>
           <CoadAccordion titulo={"Objeto de Contrato"}>
             <Editor
               style={{ height: "320px" }}
               value={objeto}
               onTextChange={e => this.setState({ objeto: e.htmlValue })}
+              disabled={disabilitado}
             />
           </CoadAccordion>
           <CoadAccordion titulo={"Gestão de Contrato"}>
@@ -378,6 +408,7 @@ class VisualizarContratos extends Component {
                 <SelecionarDivisoes
                   selected={divisao}
                   onSelect={this.selecionarDivisao}
+                  disabled={disabilitado}
                 />
               </Col>
             </Row>
@@ -386,10 +417,10 @@ class VisualizarContratos extends Component {
                 <FormGroup className="p-grid p-fluid">
                   <Label form="gestor">Gestor do Contrato</Label>
                   <br />
-                  {/* <InputText id="gestor" value={gestor ? gestor.nome : ''} className="w-100" /> */}
                   <BuscaIncrementalServidores
                     placeholder={"Selecione o gestor do contrato"}
                     onUpdate={this.selecionaGestor}
+                    disabled={disabilitado}
                   />
                 </FormGroup>
               </Col>
@@ -397,6 +428,7 @@ class VisualizarContratos extends Component {
                 <SelecionarNucleos
                   selected={nucleo}
                   onSelect={this.selecionarNucleo}
+                  disabled={disabilitado}
                 />
               </Col>
             </Row>
@@ -435,10 +467,16 @@ class VisualizarContratos extends Component {
             />
           </CoadAccordion>
           <CoadAccordion titulo={"Unidade Envolvidas"}>
-            <UnidadeEnvolvidas unidadesContrato={unidades} />
+            <UnidadeEnvolvidas 
+                disabilitado={disabilitado} 
+                unidadesContrato={unidades} 
+            />
           </CoadAccordion>
           <CoadAccordion titulo={"Anexos"}>
-            <Anexos />
+            <Anexos 
+                disabilitado={disabilitado} 
+                setDocumentosDre={this.selecionarDocsDre} 
+            />
           </CoadAccordion>
           <Row>
             <Col lg={12}>
@@ -446,6 +484,7 @@ class VisualizarContratos extends Component {
                 <Button
                   type="button"
                   className="btn-coad-background-outline mt-3 mb-2"
+                  onClick={() => redirect('/#/contratos-continuos')}
                 >
                   Cancelar
                 </Button>

@@ -4,7 +4,12 @@ import { Upload } from "antd";
 import { CoadTabs } from "../../components/Contratos/CoadTabs";
 
 const Anexos = props => {
+  const onUpload = e => {
+    props.setDocumentosDre(e.target.files)
+  };
+
   const { Dragger } = Upload;
+  const { disabilitado } = props;
   return (
     <CoadTabs
       titulo1={"Carregar documentos de Fiscais"}
@@ -16,7 +21,7 @@ const Anexos = props => {
               <label className="font-weight-bold">
                 Anexar documentos Fiscal DRE
               </label>
-              <Dragger {...props}>
+              <Dragger disabled={disabilitado}>
                 <p className="ant-upload-drag-icon">
                   <i className="fas fa-file-upload coad-color"></i>
                 </p>
@@ -34,7 +39,7 @@ const Anexos = props => {
               <label className="font-weight-bold">
                 Anexar documentos Fiscal Unidades
               </label>
-              <Dragger {...props}>
+              <Dragger disabled={disabilitado}>
                 <p className="ant-upload-drag-icon">
                   <i className="fas fa-file-upload coad-color"></i>
                 </p>
@@ -54,7 +59,7 @@ const Anexos = props => {
           <Row>
             <Col className="pb-3">
               <label className="font-weight-bold">Anexar documentos</label>
-              <Dragger {...props}>
+              <Dragger disabled={disabilitado}>
                 <p className="ant-upload-drag-icon">
                   <i className="fas fa-file-upload coad-color"></i>
                 </p>

@@ -3,9 +3,9 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { formatadoMonetario } from "../../../utils/formatador";
 import "./style.scss";
+import { redirect } from "../../../utils/redirect";
 
 export class TableContrato extends Component {
-
   formataTotalMensal(rowData, column) {
     const formatter = new Intl.NumberFormat("pt-BR", {
       style: "currency",
@@ -14,7 +14,10 @@ export class TableContrato extends Component {
     return formatter.format(rowData.total_mensal);
   }
 
-  
+  redirecionaDetalhe = value => {
+    const url = "/#/visualizar-contrato?uuid=" + value.uuid;
+    redirect(url);
+  };
 
   render() {
     const { contratos } = this.props;
@@ -58,8 +61,9 @@ export class TableContrato extends Component {
     });
 
     return (
-      <div>
+      <div className="h-auto w-100">
         <DataTable
+          onRowClick={e => this.redirecionaDetalhe(e.data)}
           value={this.props.contratos}
           scrollable={true}
           scrollHeight="200px"
