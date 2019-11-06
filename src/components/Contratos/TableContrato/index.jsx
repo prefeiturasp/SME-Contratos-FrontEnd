@@ -27,16 +27,6 @@ export class TableContrato extends Component {
       0
     );
 
-    let cols = [
-      { field: "row_index", header: "#" },
-      { field: "processo", header: "Processo" },
-      { field: "tipo_servico.nome", header: "Tipode de Serviço" },
-      { field: "empresa_contratada.nome", header: "Empresa" },
-      { field: "estado_contrato", header: "Estado do Contrato" },
-      { field: "data_encerramento", header: "Data Encerramento" }
-      // { field: "total_mensal", header: "Valor", body: this.formataTotalMensal }
-    ];
-
     let dynamicColumns = colunas.map((col, i) => {
       if (col.field !== "row_index") {
         return (
@@ -65,9 +55,8 @@ export class TableContrato extends Component {
         <DataTable
           onRowClick={e => this.redirecionaDetalhe(e.data)}
           value={this.props.contratos}
-          rows={15}
           scrollable={true}
-          scrollHeight="200px"
+          scrollHeight="300px"
           resizableColumns={true}
           columnResizeMode="expand"
           className="mt-3"

@@ -3,7 +3,7 @@ import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import CardSuperior from "./CardSuperior";
 import CoadAccordion from "../../components/Global/CoadAccordion";
-import { Button, Col, Row, FormGroup, Label, Card } from "reactstrap";
+import { Button, Col, Row, FormGroup, Label, Card, Input } from "reactstrap";
 import InformacoesOrcamentaria from "./InformacoesOrcamentaria";
 import { Editor } from "primereact/editor";
 import UnidadeEnvolvidas from "./UnidadesEnvolvidas";
@@ -15,7 +15,6 @@ import {
 import { getUrlParams } from "../../utils/params";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
-import { SelecionaTipoServico } from "../../components/Contratos/SelecionaTipoServico";
 import { CALENDAR_PT } from "../../configs/config.constants";
 import SituacaoRadio from "../../components/Contratos/SelecionaSituacaoContrato/SituacaoRadio";
 import EstadoRadio from "../../components/Contratos/SelecionaEstadoContrato/EstadoRadio";
@@ -26,6 +25,7 @@ import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
 import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
 import { getUnidadeContrato } from "../../service/UnidadeContrato.service";
 import { redirect } from "../../utils/redirect";
+import { getTiposServicoLookup } from "../../service/TiposServico.service";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -34,6 +34,8 @@ class VisualizarContratos extends Component {
       contrato: {},
       termo_contrato: null,
       tipo_servico: null,
+      tipoServicoSelecionado: null,
+      tipoServicoOptions: [],
       data_ordem_inicio: null,
       situacao: null,
       empresa_contratada: {},
@@ -58,18 +60,25 @@ class VisualizarContratos extends Component {
   }
 
   async componentDidMount() {
+    const tiposServicos = await getTiposServicoLookup();
     const param = getUrlParams();
     const contrato = await getContratoByUUID(param.uuid);
     const estadoContrato = await getEstadosContrato();
     const unidadeContrato = await getUnidadeContrato(param.uuid);
 
-    this.setState({ contrato, estadoContrato, unidades: unidadeContrato });
+    this.setState({
+      contrato,
+      estadoContrato,
+      unidades: unidadeContrato,
+      tipoServicoOptions: tiposServicos
+    });
     this.propsToState(contrato);
   }
 
   propsToState = contrato => {
     this.setState({
       tipoServico: contrato.tipo_servico.nome,
+      tipoServicoSelecionado: contrato.tipo_servico,
       nomeEmpresa: contrato.empresa_contratada.nome,
       termo_contrato: contrato.termo_contrato,
       tipo_servico: contrato.tipo_servico,
@@ -89,7 +98,7 @@ class VisualizarContratos extends Component {
   };
 
   selecionaTipoServico = value => {
-    this.setState({ tipo_servico: value });
+    this.setState({ tipo_servico: value.target.value });
   };
 
   SelecionarEmpresa = value => {
@@ -123,8 +132,8 @@ class VisualizarContratos extends Component {
   };
 
   habilitarEdicao = () => {
-    this.setState({disabilitado: !this.state.disabilitado})
-  }
+    this.setState({ disabilitado: !this.state.disabilitado });
+  };
 
   handleSubmit = () => {
     console.log(this.state);
@@ -149,7 +158,8 @@ class VisualizarContratos extends Component {
       nucleo,
       estado,
       unidades,
-      disabilitado
+      disabilitado,
+      tipoServicoOptions
     } = this.state;
     return (
       <Page
@@ -164,7 +174,6 @@ class VisualizarContratos extends Component {
           diasEncerramento={contrato.dias_para_o_encerramento}
         />
         <Container>
-          {/* <Form onSubmit={handleSubmit}> */}
           <Row>
             <Col lg={10}>
               <h2>
@@ -173,11 +182,11 @@ class VisualizarContratos extends Component {
               </h2>
             </Col>
             <Col lg={2}>
-              <Button 
-                  className="btn btn-coad-primary float-right"
-                  onClick={()=> this.habilitarEdicao()}
-                >
-                {disabilitado ? 'Editar': 'Editando...'}
+              <Button
+                className="btn btn-coad-primary float-right"
+                onClick={() => this.habilitarEdicao()}
+              >
+                {disabilitado ? "Editar" : "Editando..."}
               </Button>
             </Col>
           </Row>
@@ -199,14 +208,26 @@ class VisualizarContratos extends Component {
                 </FormGroup>
               </Col>
               <Col xs={12} sm={12} md={12} lg={8} xl={8}>
-                <Label form="tipoServico">Tipo de Serviço</Label>
-                <br />
-                <SelecionaTipoServico
-                  onSelect={value => this.selecionaTipoServico(value)}
-                  id="tipoServico"
-                  className="w-100"
-                  disabilitado={disabilitado}
-                />
+                {/* <Label form="tipoServico">Tipo de Serviço</Label> */}
+                <FormGroup>
+                  <Label for="tipo_servico">Selecionar Tipo Serviço</Label>
+                  <Input
+                    id="tipo_servico"
+                    type="select"
+                    onChange={e => this.selecionaTipoServico(e)}
+                    disabled={disabilitado}
+                  >
+                    {tipoServicoOptions.map(value => {
+                      let selecionado =
+                      tipoServico === value.nome ? true : false;
+                      return (
+                        <option selected={selecionado} value={value.uuid}>
+                          {value.nome}
+                        </option>
+                      );
+                    })}
+                  </Input>
+                </FormGroup>
               </Col>
             </Row>
             <Row>
@@ -344,6 +365,7 @@ class VisualizarContratos extends Component {
                       <Label>Nome Empresa</Label>
                       <br />
                       <SelecionaEmpresa
+                        selecionada={empresa_contratada}
                         onSelect={value => this.SelecionarEmpresa(value)}
                         disabled={disabilitado}
                       />
@@ -367,19 +389,19 @@ class VisualizarContratos extends Component {
                 </Row>
               </Col>
               <Col>
-                <button  
+                <button
                   className="btn coad-color font-weight-bold"
                   disabled={disabilitado}
-                  >
+                >
                   Nova empresa
                 </button>
               </Col>
             </Row>
           </CoadAccordion>
           <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
-            <InformacoesOrcamentaria 
-            totalMensal={total_mensal}
-            disabilitar={disabilitado}
+            <InformacoesOrcamentaria
+              totalMensal={total_mensal}
+              disabilitar={disabilitado}
             />
           </CoadAccordion>
           <CoadAccordion titulo={"Objeto de Contrato"}>
@@ -466,15 +488,15 @@ class VisualizarContratos extends Component {
             />
           </CoadAccordion>
           <CoadAccordion titulo={"Unidade Envolvidas"}>
-            <UnidadeEnvolvidas 
-                disabilitado={disabilitado} 
-                unidadesContrato={unidades} 
+            <UnidadeEnvolvidas
+              disabilitado={disabilitado}
+              unidadesContrato={unidades}
             />
           </CoadAccordion>
           <CoadAccordion titulo={"Anexos"}>
-            <Anexos 
-                disabilitado={disabilitado} 
-                setDocumentosDre={this.selecionarDocsDre} 
+            <Anexos
+              disabilitado={disabilitado}
+              setDocumentosDre={this.selecionarDocsDre}
             />
           </CoadAccordion>
           <Row>
@@ -483,7 +505,7 @@ class VisualizarContratos extends Component {
                 <Button
                   type="button"
                   className="btn-coad-background-outline mt-3 mb-2"
-                  onClick={() => redirect('/#/contratos-continuos')}
+                  onClick={() => redirect("/#/contratos-continuos")}
                 >
                   Cancelar
                 </Button>
@@ -496,7 +518,6 @@ class VisualizarContratos extends Component {
               </div>
             </Col>
           </Row>
-          {/* </Form> */}
         </Container>
       </Page>
     );
