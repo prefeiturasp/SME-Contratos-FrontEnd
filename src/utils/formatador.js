@@ -8,7 +8,7 @@ export const formatadoMonetario = valor => {
 
 export const formatadorDeData = data => {
   if (data === undefined || data === "") {
-    return "";
+    return data;
   } else {
     const formatter = new Intl.DateTimeFormat("pt-BR");
     const date = convertStringToDate(data);
@@ -18,5 +18,5 @@ export const formatadorDeData = data => {
 
 const convertStringToDate = data => {
   const date = data.split("-");
-  return new Date(date[0], date[1], date[2]);
+  return new Date(date[0], date[1]-1, date[2]);
 };

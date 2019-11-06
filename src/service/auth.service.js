@@ -1,5 +1,6 @@
 import decode from "jwt-decode";
 import CONFIG from "../configs/config.constants";
+import { redirect } from "../utils/redirect";
 
 export const TOKEN_ALIAS = "TOKEN";
 export const USERNAME_TEMP = "USERNAME_TEMP";
@@ -150,12 +151,13 @@ const validarToken = token => {
 
 export const validarPrimeiroAcesso = () => {
   const decoded = decode(localStorage.getItem(TOKEN_ALIAS));
-  const username = decoded.username;
+  const username = decoded.username;                          
   primeiroAcesso(username).then(response => {
+    console.log(response)
     if (response.alterar) {
       localStorage.removeItem(TOKEN_ALIAS);
       localStorage.setItem(USERNAME_TEMP, username);
-      window.location.href = "/primeiro-acesso";
+      redirect("/#/primeiro-acesso")
     }
   });
 };

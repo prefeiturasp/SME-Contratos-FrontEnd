@@ -17,9 +17,11 @@ class PainelSelecao extends Component {
           <Button className="btn-coad-background" size="sm"><i className="pi pi-table mx-4"></i></Button>
           <Button onClick={()=> redirect('#/contratos-continuos')} className="btn-coad-background-outline" size="sm" outline><i className="pi pi-list mx-4"></i></Button>
         </ButtonGroup>
+
         <CardSection icone={IconeEquipamento} titulo="Escolha Equipamento">
           <CardEquipamento />
         </CardSection>
+        
         <CardSection icone={IconeServico} titulo="Escolha Categoria de Serviço">
           <CardServico />
         </CardSection>

@@ -2,6 +2,7 @@
 $mainColor: #602a2a;
 html {
   font-family: "Roboto", sans-serif;
+  -webkit-scrollbar: horizontal;
 
   .coad-card-superior {
     border: 2px solid $mainColor !important;

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
-import { TabView, TabPanel } from "primereact/tabview";
 import { TableContrato } from "../../components/Contratos/TableContrato";
 import {
   getContratos,
@@ -15,6 +14,7 @@ import { getUrlParams } from "../../utils/params";
 import { Button, ButtonGroup } from "reactstrap";
 import { redirect } from "../../utils/redirect";
 import CoadAccordion from "../../components/Global/CoadAccordion";
+import { CoadTabs } from "../../components/Contratos/CoadTabs";
 
 class ContratosContinuos extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class ContratosContinuos extends Component {
   async setaColunasDefaut() {
     const colUsuario = await getCamposContrato();
     const colunasUsuario = colUsuario[0];
-    if (colunasUsuario || colunasUsuario.length != 0) {
+    if (colunasUsuario || colunasUsuario.length !== 0) {
       this.setState({
         colunas: colunasUsuario.colunas_array,
         uuid: colunasUsuario.uuid
@@ -112,22 +112,20 @@ class ContratosContinuos extends Component {
         </ButtonGroup>
         <Container icone="pi pi-chart-bar" subtitulo="Vizualizar Contratos">
           <CoadAccordion titulo="Personalizar filtro de busca">
-            <TabView className="coad-tab-panel-contratos-continuos">
-              <TabPanel header="Personalizar Filtros">
-                <BuscaContratosForm
-                  onBuscarClick={filtros => this.onBuscarClick(filtros)}
-                />
-              </TabPanel>
-              <TabPanel header="Personalizar Colunas">
-                <SelecionaColunasContrato
-                  uuid={this.state.uuid}
-                  onAplicarClick={this.onAplicarClick}
-                />
-              </TabPanel>
-            </TabView>
+            <CoadTabs
+            titulo1={"Personalizar Filtros"}
+            titulo2={"Personalizar Colunas"}
+            conteudo1={
+            <BuscaContratosForm
+              onBuscarClick={filtros => this.onBuscarClick(filtros)}
+            />}
+            conteudo2={<SelecionaColunasContrato
+              uuid={this.state.uuid}
+              onAplicarClick={this.onAplicarClick}
+            />}
+            />
           </CoadAccordion>
-
-          <TableContrato contratos={contratos} colunas={this.state.colunas} />
+          <TableContrato contratos={contratos} colunas={colunas} />
         </Container>
       </Page>
     );

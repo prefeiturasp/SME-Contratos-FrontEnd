@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardTitle, CardDeck } from "reactstrap";
+import { Card, CardBody, CardTitle, Row, Col } from "reactstrap";
 import { getTiposServicoLookup } from "../../../service/TiposServico.service";
 import { redirect } from "../../../utils/redirect";
 import "./style.scss";
@@ -29,22 +29,28 @@ export class CardServico extends Component {
   render() {
     const { tiposServico } = this.state;
     return (
-      <CardDeck className="container-card tres-colunas">
-        {tiposServico.map((tipoServico, key) => (
-          <Card
-            key={tipoServico.id}
-            className="servico"
-            style={styled}
-            onClick={() =>
-              redirect(`#/contratos-continuos/?tipo_servico=${tipoServico.id}`)
-            }
-          >
-            <CardBody>
-              <CardTitle>{tipoServico.nome}</CardTitle>
-            </CardBody>
-          </Card>
-        ))}
-      </CardDeck>
+      <Row>
+        {tiposServico.map((tipoServico, key) => {
+          return (
+            <Col lg={4} xl={4}>
+              <Card
+                key={tipoServico.id}
+                className="servico h-75"
+                style={styled}
+                onClick={() =>
+                  redirect(
+                    `#/contratos-continuos/?tipo_servico=${tipoServico.id}`
+                  )
+                }
+              >
+                <CardBody>
+                  <CardTitle>{tipoServico.nome}</CardTitle>
+                </CardBody>
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
     );
   }
 }
