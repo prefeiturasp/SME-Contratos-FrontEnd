@@ -32,7 +32,7 @@ export class CardServico extends Component {
       <Row>
         {tiposServico.map((tipoServico, key) => {
           return (
-            <Col lg={4} xl={4}>
+            <Col lg={4} xl={4} md={6}>
               <Card
                 key={tipoServico.id}
                 className="servico h-75"

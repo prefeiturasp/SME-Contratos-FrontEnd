@@ -7,7 +7,6 @@ import {
   Card,
   CardBody,
   CardTitle,
-  CardDeck,
   CardImg,
   Row,
   Col
