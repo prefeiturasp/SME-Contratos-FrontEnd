@@ -8,6 +8,14 @@ const Anexos = props => {
   //   props.setDocumentosDre(e.target.files)
   // };
 
+  const onUpload = info => {
+    const { status } = info.file;
+    if (status === "uploading") {
+      console.log(info.fileList)
+      props.selecionarDocsDre(info.fileList);
+    }
+  };
+
   const { Dragger } = Upload;
   const { disabilitado } = props;
   return (
@@ -17,11 +25,18 @@ const Anexos = props => {
       conteudo1={
         <div>
           <Row>
-            <Col className="pb-3">
+            <Col className="pb-5">
               <label className="font-weight-bold">
                 Anexar documentos Fiscal DRE
               </label>
-              <Dragger disabled={disabilitado}>
+              {/* <input type="file" onChange={e => onUpload(e)} multiple={true} /> */}
+              <Dragger
+                name={"upload_dre"}
+                multiple={true}
+                disabled={disabilitado}
+                onChange={onUpload}
+                showUploadList={false}
+              >
                 <p className="ant-upload-drag-icon">
                   <i className="fas fa-file-upload coad-color"></i>
                 </p>

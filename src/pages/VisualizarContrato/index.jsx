@@ -26,11 +26,13 @@ import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncr
 import { getUnidadeContrato } from "../../service/UnidadeContrato.service";
 import { redirect } from "../../utils/redirect";
 import { getTiposServicoLookup } from "../../service/TiposServico.service";
+import { getCargosCoad } from "../../service/Cargos.service";
 
 class VisualizarContratos extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      coordenador: null,
       contrato: {},
       termo_contrato: null,
       tipo_servico: null,
@@ -65,12 +67,13 @@ class VisualizarContratos extends Component {
     const contrato = await getContratoByUUID(param.uuid);
     const estadoContrato = await getEstadosContrato();
     const unidadeContrato = await getUnidadeContrato(param.uuid);
-
+    const coordenador = await getCargosCoad();
     this.setState({
       contrato,
       estadoContrato,
       unidades: unidadeContrato,
-      tipoServicoOptions: tiposServicos
+      tipoServicoOptions: tiposServicos,
+      coordenador: coordenador.coordenador.nome
     });
     this.propsToState(contrato);
   }
@@ -128,7 +131,8 @@ class VisualizarContratos extends Component {
   };
 
   selecionarDocsDre = files => {
-    console.log(files);
+    const docs = Array.from(files);
+    this.setState({documentoFiscaDre: docs})
   };
 
   habilitarEdicao = () => {
@@ -159,7 +163,8 @@ class VisualizarContratos extends Component {
       estado,
       unidades,
       disabilitado,
-      tipoServicoOptions
+      tipoServicoOptions,
+      coordenador
     } = this.state;
     return (
       <Page
@@ -219,7 +224,7 @@ class VisualizarContratos extends Component {
                   >
                     {tipoServicoOptions.map(value => {
                       let selecionado =
-                      tipoServico === value.nome ? true : false;
+                        tipoServico === value.nome ? true : false;
                       return (
                         <option selected={selecionado} value={value.uuid}>
                           {value.nome}
@@ -419,7 +424,7 @@ class VisualizarContratos extends Component {
                   <Label form="coordenador">Coordenador COAD</Label>
                   <InputText
                     id="coordenador"
-                    value={"Teste"}
+                    value={coordenador}
                     className="w-100"
                     disabled={true}
                   />
@@ -497,6 +502,7 @@ class VisualizarContratos extends Component {
             <Anexos
               disabilitado={disabilitado}
               setDocumentosDre={this.selecionarDocsDre}
+              selecionarDocsDre={this.selecionarDocsDre}
             />
           </CoadAccordion>
           <Row>
