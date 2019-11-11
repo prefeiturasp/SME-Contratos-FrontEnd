@@ -50,6 +50,7 @@ export default class InformacoeOrcamentaria extends Component {
                       <InputText
                         placeholder={value.placeholder}
                         className={value.classe}
+                        onChange={e => console.log(e)}
                       />
                       <button onClick={() => this.removerDotacao(index)} className="btn btn-sm btn-coad-primary">
                         <i className="fas fa-trash"></i>
@@ -74,8 +75,9 @@ export default class InformacoeOrcamentaria extends Component {
               <FormGroup>
                 <Label>Valor mensal do Contrato</Label>
                 <InputText
-                  value={formatadoMonetario(totalMensal)}
+                  value={totalMensal}
                   placeholder={"R$"}
+                  onChange={e => this.props.setTotalMensal(e.target.value)}
                   className="w-100"
                   disabled={disabilitar}
                 />

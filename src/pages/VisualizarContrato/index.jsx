@@ -10,7 +10,8 @@ import UnidadeEnvolvidas from "./UnidadesEnvolvidas";
 import Anexos from "./Anexos";
 import {
   getContratoByUUID,
-  getEstadosContrato
+  getEstadosContrato,
+  updateContrato
 } from "../../service/Contratos.service";
 import { getUrlParams } from "../../utils/params";
 import { InputText } from "primereact/inputtext";
@@ -18,7 +19,6 @@ import { Calendar } from "primereact/calendar";
 import { CALENDAR_PT } from "../../configs/config.constants";
 import SituacaoRadio from "../../components/Contratos/SelecionaSituacaoContrato/SituacaoRadio";
 import EstadoRadio from "../../components/Contratos/SelecionaEstadoContrato/EstadoRadio";
-import { formatadorDeData } from "../../utils/formatador";
 import { SelecionaEmpresa } from "../../components/Contratos/SelecionaEmpresa";
 import SelecionarDivisoes from "../../components/Contratos/SelecionarDivisoes";
 import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
@@ -27,6 +27,7 @@ import { getUnidadeContrato } from "../../service/UnidadeContrato.service";
 import { redirect } from "../../utils/redirect";
 import { getTiposServicoLookup } from "../../service/TiposServico.service";
 import { getCargosCoad } from "../../service/Cargos.service";
+import { mapStateToPayload } from "./helpers";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -39,6 +40,7 @@ class VisualizarContratos extends Component {
       tipoServicoSelecionado: null,
       tipoServicoOptions: [],
       data_ordem_inicio: null,
+      data_assinatura: null,
       situacao: null,
       empresa_contratada: {},
       objeto: "",
@@ -54,11 +56,13 @@ class VisualizarContratos extends Component {
       documentoFiscaUnidade: [],
       tipoServico: null,
       nomeEmpresa: null,
-      disabilitado: true
+      disabilitado: true,
+      processo: null,
+      vigencia_em_dias: null,
+      numero_edital: null
     };
 
     this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
-    this.selecionarSituacao = this.selecionarSituacao.bind(this);
   }
 
   async componentDidMount() {
@@ -85,9 +89,10 @@ class VisualizarContratos extends Component {
       nomeEmpresa: contrato.empresa_contratada.nome,
       termo_contrato: contrato.termo_contrato,
       tipo_servico: contrato.tipo_servico,
+      tipo_servico_uuid: contrato.tipo_servico.uuid,
       situacao: contrato.situacao,
-      data_ordem_inicio: formatadorDeData(contrato.data_ordem_inicio),
-      data_encerramento: formatadorDeData(contrato.data_encerramento),
+      data_ordem_inicio: new Date(contrato.data_ordem_inicio),
+      data_encerramento: new Date(contrato.data_encerramento),
       processo: contrato.processo,
       empresa_contratada: contrato.empresa_contratada,
       total_mensal: contrato.total_mensal,
@@ -96,22 +101,19 @@ class VisualizarContratos extends Component {
       divisao: contrato.nucleo_responsavel.divisao.uuid,
       gestor: contrato.gestor,
       nucleo: contrato.nucleo_responsavel.uuid,
-      estado: contrato.estado_contrato
+      estado: contrato.estado_contrato,
+      vigencia_em_dias: contrato.vigencia_em_dias
     });
   };
 
   selecionaTipoServico = value => {
-    this.setState({ tipo_servico: value.target.value });
+    this.setState({ tipo_servico_uuid: value.target.value });
   };
 
   SelecionarEmpresa = value => {
     this.setState({
       empresa_contratada: value
     });
-  };
-
-  selecionarSituacao = value => {
-    this.setState({ situacao: value });
   };
 
   selecionarDivisao = value => {
@@ -126,21 +128,28 @@ class VisualizarContratos extends Component {
     this.setState({ gestor });
   };
 
-  selecionarEstado = estado => {
-    this.setState({ estado });
-  };
-
   selecionarDocsDre = files => {
     const docs = Array.from(files);
-    this.setState({documentoFiscaDre: docs})
+    this.setState({ documentoFiscaDre: docs });
+  };
+
+  alteraDiasVigencia = dias => {
+    this.setState({ vigencia_em_dias: dias });
   };
 
   habilitarEdicao = () => {
     this.setState({ disabilitado: !this.state.disabilitado });
   };
 
+  setTotalMensal = total_mensal => {
+    this.setState({ total_mensal });
+  };
+
   handleSubmit = () => {
-    console.log(this.state);
+    const { uuid } = this.state.contrato;
+    const payload = mapStateToPayload(this.state);
+    updateContrato(payload, uuid);
+    console.log(payload)
   };
 
   render() {
@@ -164,7 +173,10 @@ class VisualizarContratos extends Component {
       unidades,
       disabilitado,
       tipoServicoOptions,
-      coordenador
+      coordenador,
+      documentoFiscaDre,
+      vigencia_em_dias,
+      numero_edital
     } = this.state;
     return (
       <Page
@@ -172,8 +184,8 @@ class VisualizarContratos extends Component {
       >
         <CardSuperior
           tipoServico={tipoServico}
-          situacaoContratual={contrato.estado_contrato}
-          estadoContrato={contrato.situacao}
+          situacaoContratual={estado}
+          estadoContrato={situacao}
           totalmensal={contrato.total_mensal}
           dataEncerramento={contrato.data_encerramento}
           diasEncerramento={contrato.dias_para_o_encerramento}
@@ -245,7 +257,6 @@ class VisualizarContratos extends Component {
                     onChange={e => this.setState({ processo: e.target.value })}
                     placeholder={"Ex: 0000.2019/0000000-0"}
                     className="w-100"
-                    readOnly={true}
                   />
                 </FormGroup>
               </Col>
@@ -254,7 +265,7 @@ class VisualizarContratos extends Component {
                 <br />
                 <SituacaoRadio
                   checado={situacao}
-                  onSelect={value => this.selecionarSituacao(value)}
+                  onSelect={value => this.setState({ situacao: value })}
                   disabled={disabilitado}
                 />
               </Col>
@@ -264,17 +275,20 @@ class VisualizarContratos extends Component {
                 <Label for="edital">Número do Edital</Label>
                 <InputText
                   id="edital"
-                  value={""}
+                  value={numero_edital}
                   placeholder={"Ex: 00000000"}
                   className="w-100"
                   disabled={disabilitado}
+                  onChange={e =>
+                    this.setState({ numero_edital: e.target.value })
+                  }
                 />
               </Col>
               <Col xs={12} sm={12} md={12} lg={8} xl={8}>
                 <Label form="estado">Estado de Contrato</Label>
                 <br />
                 <EstadoRadio
-                  onSelect={this.selecionarEstado}
+                  onSelect={value => this.setState({ estado: value })}
                   checado={estado}
                   disabled={disabilitado}
                 />
@@ -320,10 +334,8 @@ class VisualizarContratos extends Component {
                       <Label for="vigencia">Vigência de Contrato</Label>
                       <InputText
                         id="vigencia"
-                        value={contrato.vigencia_em_dias}
-                        onChange={e =>
-                          this.setState({ vigencia_em_dias: e.target.value })
-                        }
+                        value={vigencia_em_dias}
+                        onChange={e => this.alteraDiasVigencia(e.target.value)}
                         placeholder={"Ex: 365 dias"}
                         className="w-100"
                         disabled={disabilitado}
@@ -341,7 +353,7 @@ class VisualizarContratos extends Component {
                       showIcon={true}
                       locale={CALENDAR_PT}
                       dateFormat="dd/mm/yy"
-                      disabled={disabilitado}
+                      disabled={true}
                     />
                   </Col>
                 </Row>
@@ -407,6 +419,8 @@ class VisualizarContratos extends Component {
             <InformacoesOrcamentaria
               totalMensal={total_mensal}
               disabilitar={disabilitado}
+              setDotacao={value => console.log(value)}
+              setTotalMensal={this.setTotalMensal}
             />
           </CoadAccordion>
           <CoadAccordion titulo={"Objeto de Contrato"}>
@@ -501,8 +515,8 @@ class VisualizarContratos extends Component {
           <CoadAccordion titulo={"Anexos"}>
             <Anexos
               disabilitado={disabilitado}
-              setDocumentosDre={this.selecionarDocsDre}
               selecionarDocsDre={this.selecionarDocsDre}
+              docsDreSelecionados={documentoFiscaDre}
             />
           </CoadAccordion>
           <Row>

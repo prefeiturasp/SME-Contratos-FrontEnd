@@ -2,22 +2,19 @@ import React from "react";
 import { Row, Col } from "reactstrap";
 import { Upload } from "antd";
 import { CoadTabs } from "../../components/Contratos/CoadTabs";
+import Dropzone from "react-dropzone";
 
 const Anexos = props => {
   // const onUpload = e => {
   //   props.setDocumentosDre(e.target.files)
   // };
 
-  const onUpload = info => {
-    const { status } = info.file;
-    if (status === "uploading") {
-      console.log(info.fileList)
-      props.selecionarDocsDre(info.fileList);
-    }
+  const onUpload = files => {
+    props.selecionarDocsDre(files);
   };
 
   const { Dragger } = Upload;
-  const { disabilitado } = props;
+  const { disabilitado, docsDreSelecionados } = props;
   return (
     <CoadTabs
       titulo1={"Carregar documentos de Fiscais"}
@@ -30,25 +27,30 @@ const Anexos = props => {
                 Anexar documentos Fiscal DRE
               </label>
               {/* <input type="file" onChange={e => onUpload(e)} multiple={true} /> */}
-              <Dragger
-                name={"upload_dre"}
-                multiple={true}
-                disabled={disabilitado}
-                onChange={onUpload}
-                showUploadList={false}
+              <Dropzone
+                // accept="image/*"
+                onDrop={acceptedFiles => onUpload(acceptedFiles)}
               >
-                <p className="ant-upload-drag-icon">
-                  <i className="fas fa-file-upload coad-color"></i>
-                </p>
-                <p className="ant-upload-text">
-                  Clique ou arraste arquivos nesta área para upload
-                </p>
-                <p className="ant-upload-hint">
-                  Suporte para arquivos .jpeg, .png, .pdf e .docx.
-                </p>
-              </Dragger>
+                {({ getRootProps, getInputProps }) => (
+                  <section className="ant-upload ant-upload-drag">
+                    <div {...getRootProps()}>
+                      <input {...getInputProps()} />
+                      <p className="ant-upload-drag-icon">
+                        <i className="fas fa-file-upload coad-color"></i>
+                      </p>
+                      <p className="ant-upload-text">
+                        Clique ou arraste arquivos nesta área para upload
+                      </p>
+                      <p className="ant-upload-hint">
+                        Suporte para arquivos .jpeg, .png, .pdf e .docx.
+                      </p>
+                    </div>
+                  </section>
+                )}
+              </Dropzone>
             </Col>
           </Row>
+
           <Row>
             <Col className="pb-3 mt-5">
               <label className="font-weight-bold">

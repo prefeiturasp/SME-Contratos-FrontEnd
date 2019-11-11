@@ -12,6 +12,7 @@ import {
   Label
 } from "reactstrap";
 import { DataTable, Column } from "primereact/datatable";
+import { getUnidades } from "../../service/Unidades.service";
 
 class UnidadeEnvolvidas extends Component {
   state = {
@@ -24,8 +25,14 @@ class UnidadeEnvolvidas extends Component {
         dre: "",
         lote: ""
       }
-    ]
+    ],
+    unidadesSelect : []
   };
+
+  async componentDidMount() {
+    const unidadesSelect = await getUnidades();
+    this.setState({ unidadesSelect });
+  }
 
   componentDidUpdate(nextProps, nextState) {
     if (nextProps.unidadesContrato !== this.props.unidadesContrato) {
@@ -38,11 +45,11 @@ class UnidadeEnvolvidas extends Component {
   };
 
   render() {
-    const { unidades, modal } = this.state;
+    const { unidades, modal, unidadesSelect } = this.state;
     const { disabilitado } = this.props;
     return (
       <div>
-        <Modal isOpen={modal} toggle={this.toggle} className="mt-5">
+        <Modal isOpen={modal} toggle={this.toggle} className="mt-5 modal-xl">
           <ModalHeader toggle={this.toggle}>
             Adicionar unidade ao Contrato
           </ModalHeader>
@@ -57,7 +64,11 @@ class UnidadeEnvolvidas extends Component {
               <Col lg={8} xl={8}>
                 <FormGroup>
                   <Label>Unidade</Label>
-                  <Input placeholder="informe a unidade" />
+                  <select className="form-control" name="unidade">
+                    {unidadesSelect.map((value, i) => {
+                      return <option key={i} value={value.uuid}>{value.nome}</option>;
+                    })}
+                  </select>
                 </FormGroup>
               </Col>
             </Row>
@@ -119,7 +130,11 @@ class UnidadeEnvolvidas extends Component {
             </DataTable>
           </Col>
           <Col className="mt-5">
-            <Button disabled={disabilitado} onClick={this.toggle} className="btn-coad-primary">
+            <Button
+              disabled={disabilitado}
+              onClick={this.toggle}
+              className="btn-coad-primary"
+            >
               <i className="fas fa-plus"></i> Adicionar Unidade
             </Button>
           </Col>
