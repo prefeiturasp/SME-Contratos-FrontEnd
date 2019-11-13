@@ -1,119 +1,98 @@
 import React from "react";
 import { Row, Col } from "reactstrap";
-import { Upload } from "antd";
 import { CoadTabs } from "../../components/Contratos/CoadTabs";
-import Dropzone from "react-dropzone";
+import CONFIG from "../../configs/config.constants";
+import "react-dropzone-uploader/dist/styles.css";
+import Dropzone from "react-dropzone-uploader";
+import "./style.scss";
 
+// https://github.com/fortana-co/react-dropzone-uploader
 const Anexos = props => {
-  // const onUpload = e => {
-  //   props.setDocumentosDre(e.target.files)
-  // };
+  const uuidContrato = props.contrato.uuid;
+  const url = `${CONFIG.API_URL}/documentos-fiscais/`;
 
-  const onUpload = files => {
-    props.selecionarDocsDre(files);
+  const getUploadParamsDre = ({ file, meta }) => {
+    const fields = {
+      anexo: file,
+      contrato: uuidContrato,
+      tipo_unidade: "FISCAL_DRE"
+    };
+    return { fields, url: url };
   };
 
-  const { Dragger } = Upload;
-  const { disabilitado, docsDreSelecionados } = props;
+  const getUploadParamsUnidade = ({ file, meta }) => {
+    const fields = {
+      anexo: file,
+      contrato: uuidContrato,
+      tipo_unidade: "FISCAL_UNIDADE"
+    };
+    return { fields, url: url };
+  };
+
+  const getUploadParamsOutros = ({ file, meta }) => {
+    const fields = {
+      anexo: file,
+      contrato: uuidContrato,
+      tipo_unidade: "FISCAL_OUTROS"
+    };
+    return { fields, url: url };
+  };
+
+  const { disabilitado } = props;
   return (
-    <CoadTabs
-      titulo1={"Carregar documentos de Fiscais"}
-      titulo2={"Carregar outros documentos"}
-      conteudo1={
-        <div>
+    <div className="coad-anexos">
+      <CoadTabs
+        titulo1={"Carregar documentos de Fiscais"}
+        titulo2={"Carregar outros documentos"}
+        conteudo1={
+          <div>
+            <Row>
+              <Col className="pb-5">
+                <label className="font-weight-bold">
+                  Anexar documentos Fiscal DRE
+                </label>
+                <Dropzone
+                  getUploadParams={getUploadParamsDre}
+                  // onChangeStatus={handleChangeStatus}
+                  inputContent="Clique ou arraste arquivos nesta área para upload"
+                  inputWithFilesContent="Adicionar mais arquivos"
+                />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col className="pb-5">
+                <label className="font-weight-bold">
+                  Anexar documentos Fiscal Unidade
+                </label>
+                <Dropzone
+                  getUploadParams={getUploadParamsUnidade}
+                  // onChangeStatus={handleChangeStatus}
+                  inputContent="Clique ou arraste arquivos nesta área para upload"
+                  inputWithFilesContent="Adicionar mais arquivos"
+                />
+              </Col>
+            </Row>
+          </div>
+        }
+        conteudo2={
           <Row>
             <Col className="pb-5">
               <label className="font-weight-bold">
-                Anexar documentos Fiscal DRE
+                Anexar outros documentos
               </label>
-              {/* <input type="file" onChange={e => onUpload(e)} multiple={true} /> */}
               <Dropzone
-                // accept="image/*"
-                onDrop={acceptedFiles => onUpload(acceptedFiles)}
-              >
-                {({ getRootProps, getInputProps }) => (
-                  <section className="ant-upload ant-upload-drag">
-                    <div {...getRootProps()}>
-                      <input {...getInputProps()} />
-                      <p className="ant-upload-drag-icon">
-                        <i className="fas fa-file-upload coad-color"></i>
-                      </p>
-                      <p className="ant-upload-text">
-                        Clique ou arraste arquivos nesta área para upload
-                      </p>
-                      <p className="ant-upload-hint">
-                        Suporte para arquivos .jpeg, .png, .pdf e .docx.
-                      </p>
-                    </div>
-                  </section>
-                )}
-              </Dropzone>
+                getUploadParams={getUploadParamsOutros}
+                // onChangeStatus={handleChangeStatus}
+                inputContent="Clique ou arraste arquivos nesta área para upload"
+                inputWithFilesContent="Adicionar mais arquivos"
+              />
             </Col>
           </Row>
-
-          <Row>
-            <Col className="pb-3 mt-5">
-              <label className="font-weight-bold">
-                Anexar documentos Fiscal Unidades
-              </label>
-              <Dragger disabled={disabilitado}>
-                <p className="ant-upload-drag-icon">
-                  <i className="fas fa-file-upload coad-color"></i>
-                </p>
-                <p className="ant-upload-text">
-                  Clique ou arraste arquivos nesta área para upload
-                </p>
-                <p className="ant-upload-hint">
-                  Suporte para arquivos .jpeg, .png, .pdf e .docx.
-                </p>
-              </Dragger>
-            </Col>
-          </Row>
-        </div>
-      }
-      conteudo2={
-        <div>
-          <Row>
-            <Col className="pb-3">
-              <label className="font-weight-bold">Anexar documentos</label>
-              <Dragger disabled={disabilitado}>
-                <p className="ant-upload-drag-icon">
-                  <i className="fas fa-file-upload coad-color"></i>
-                </p>
-                <p className="ant-upload-text">
-                  Clique ou arraste arquivos nesta área para upload
-                </p>
-                <p className="ant-upload-hint">
-                  Suporte para arquivos .jpeg, .png, .pdf e .docx.
-                </p>
-              </Dragger>
-            </Col>
-          </Row>
-        </div>
-      }
-    />
+        }
+      />
+    </div>
   );
 };
 
 export default Anexos;
-
-// import { Upload, Icon, message } from "antd";
-
-// const { Dragger } = Upload;
-
-// const props = {
-//   name: "file",
-//   multiple: true,
-//   action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-//   onChange(info) {
-//     const { status } = info.file;
-//     if (status !== "uploading") {
-//       console.log(info.file, info.fileList);
-//     }
-//     if (status === "done") {
-//       message.success(`${info.file.name} file uploaded successfully.`);
-//     } else if (status === "error") {
-//       message.error(`${info.file.name} file upload failed.`);
-//     }
-//   }
-// };

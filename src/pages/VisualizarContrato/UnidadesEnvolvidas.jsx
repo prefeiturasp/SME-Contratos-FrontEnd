@@ -71,7 +71,6 @@ class UnidadeEnvolvidas extends Component {
       lote: lote,
       termo_contrato: termo_contrato,
       tipo_unidade: tipo_unidade,
-      tipo_unidade: tipo_unidade,
       unidade: unidade.uuid,
       valor_mensal: valorMensal,
       valor_total: valorTotal,

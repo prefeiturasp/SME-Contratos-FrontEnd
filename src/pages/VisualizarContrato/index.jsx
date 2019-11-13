@@ -537,6 +537,7 @@ class VisualizarContratos extends Component {
               disabilitado={disabilitado}
               selecionarDocsDre={this.selecionarDocsDre}
               docsDreSelecionados={documentoFiscaDre}
+              contrato={contrato}
             />
           </CoadAccordion>
           <Row>
