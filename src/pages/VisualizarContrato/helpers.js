@@ -19,7 +19,9 @@ export const mapStateToPayload = state => {
       objeto: state.objeto,
       observacoes: state.observacoes,
       documento_fiscal_dre: state.documentoFiscaDre,
-      termo_contrato: state.termo_contrato
+      termo_contrato: state.contrato.termo_contrato,
+      dotacao_orcamentaria: state.dotacao
+      // unidades: state.unidades,
     };
   }
 

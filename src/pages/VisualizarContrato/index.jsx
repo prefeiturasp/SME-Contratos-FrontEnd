@@ -59,7 +59,8 @@ class VisualizarContratos extends Component {
       disabilitado: true,
       processo: null,
       vigencia_em_dias: null,
-      numero_edital: null
+      numero_edital: null,
+      dotacao: []
     };
 
     this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
@@ -102,7 +103,8 @@ class VisualizarContratos extends Component {
       gestor: contrato.gestor,
       nucleo: contrato.nucleo_responsavel.uuid,
       estado: contrato.estado_contrato,
-      vigencia_em_dias: contrato.vigencia_em_dias
+      vigencia_em_dias: contrato.vigencia_em_dias,
+      dotacao: contrato.dotacao_orcamentaria
     });
   };
 
@@ -145,11 +147,25 @@ class VisualizarContratos extends Component {
     this.setState({ total_mensal });
   };
 
+  addUnidades = unidade => {
+    const { unidades } = this.state;
+    unidades.push(unidade);
+    this.setState({ unidades });
+  };
+
+  setDotacao = valor => {
+    const { dotacao } = this.state;
+    if (typeof valor === "string" || valor instanceof String) {
+      dotacao.push(valor);
+      this.setState({ dotacao });
+    }
+  };
+
   handleSubmit = () => {
     const { uuid } = this.state.contrato;
     const payload = mapStateToPayload(this.state);
     updateContrato(payload, uuid);
-    console.log(payload)
+    console.log(payload);
   };
 
   render() {
@@ -176,8 +192,10 @@ class VisualizarContratos extends Component {
       coordenador,
       documentoFiscaDre,
       vigencia_em_dias,
-      numero_edital
+      numero_edital,
+      dotacao
     } = this.state;
+
     return (
       <Page
         titulo={`Termo de Contrato n. ${contrato.termo_contrato} - ${nomeEmpresa}`}
@@ -419,7 +437,8 @@ class VisualizarContratos extends Component {
             <InformacoesOrcamentaria
               totalMensal={total_mensal}
               disabilitar={disabilitado}
-              setDotacao={value => console.log(value)}
+              dotacaoOrcamentaria={dotacao}
+              setDotacao={value => this.setDotacao(value)}
               setTotalMensal={this.setTotalMensal}
             />
           </CoadAccordion>
@@ -510,6 +529,7 @@ class VisualizarContratos extends Component {
             <UnidadeEnvolvidas
               disabilitado={disabilitado}
               unidadesContrato={unidades}
+              AdicionarUnidades={this.addUnidades}
             />
           </CoadAccordion>
           <CoadAccordion titulo={"Anexos"}>

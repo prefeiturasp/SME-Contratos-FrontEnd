@@ -7,8 +7,29 @@ export default class InformacoeOrcamentaria extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dotacao: []
+      dotacao: [],
+      dotacaoOrcamentaria: []
     };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.dotacaoOrcamentaria !== this.props.dotacaoOrcamentaria) {
+      const { dotacaoOrcamentaria } = this.props;
+      const { dotacao } = this.state;
+
+      this.setState({ dotacaoOrcamentaria });
+      if (dotacaoOrcamentaria.length > 0) {
+        dotacaoOrcamentaria.map(valor => {
+          const emptyDotacao = {
+            classe: "w-75 my-2 mr-1 ",
+            placeholder: "Digite nome da dotação",
+            value: valor
+          };
+          dotacao.push(emptyDotacao);
+        });
+        this.setState({ dotacao });
+      }
+    }
   }
 
   appendDotacao() {
@@ -23,13 +44,21 @@ export default class InformacoeOrcamentaria extends Component {
   }
 
   removerDotacao(index) {
-    const dotacao = this.state.dotacao;
+    const { dotacao, dotacaoOrcamentaria } = this.state;
     dotacao.splice(index, 1);
-    this.setState({ dotacao });
+    dotacaoOrcamentaria.splice(index, 1);
+    this.setState({ dotacao, dotacaoOrcamentaria });
   }
 
+  alteraValorDotacao = (index, valor) => {
+    const { dotacaoOrcamentaria } = this.state;
+    dotacaoOrcamentaria[index] = valor;
+    this.setState({ dotacaoOrcamentaria });
+    this.props.setDotacao(dotacaoOrcamentaria);
+  };
+
   render() {
-    const { totalMensal, valorTotal, disabilitar} = this.props;
+    const { totalMensal, valorTotal, disabilitar } = this.props;
     const { dotacao } = this.state;
 
     return (
@@ -39,25 +68,33 @@ export default class InformacoeOrcamentaria extends Component {
             <Col>
               <FormGroup>
                 <Label>Dotação Orçamentária</Label>
-                <InputText
-                  placeholder={"Digite a dotação"}
-                  className="w-100"
-                  disabled={disabilitar}
-                />
-                {dotacao.map((value, index) => {
-                  return (
-                    <div>
-                      <InputText
-                        placeholder={value.placeholder}
-                        className={value.classe}
-                        onChange={e => console.log(e)}
-                      />
-                      <button onClick={() => this.removerDotacao(index)} className="btn btn-sm btn-coad-primary">
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </div>
-                  );
-                })}
+                <br />
+                {dotacao.length ? (
+                  dotacao.map((value, index) => {
+                    return (
+                      <div>
+                        <InputText
+                          placeholder={value.placeholder}
+                          className={value.classe}
+                          onChange={e =>
+                            this.alteraValorDotacao(index, e.target.value)
+                          }
+                          value={value.value}
+                        />
+                        <button
+                          onClick={() => this.removerDotacao(index)}
+                          className="btn btn-sm btn-coad-primary"
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="alert alert-info">
+                    Sem Dotação Orçamentária
+                  </div>
+                )}
                 <button
                   onClick={() => this.appendDotacao()}
                   className="btn bt-link font-weight-bold coad-color"

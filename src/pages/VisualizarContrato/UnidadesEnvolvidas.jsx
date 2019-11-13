@@ -13,6 +13,7 @@ import {
 } from "reactstrap";
 import { DataTable, Column } from "primereact/datatable";
 import { getUnidades } from "../../service/Unidades.service";
+import CurrencyInput from "react-currency-input";
 
 class UnidadeEnvolvidas extends Component {
   state = {
@@ -26,7 +27,12 @@ class UnidadeEnvolvidas extends Component {
         lote: ""
       }
     ],
-    unidadesSelect : []
+    unidadesSelect: [],
+    valorMensal: 0.0,
+    valorTotal: 0.0,
+    unidade: null,
+    lote: null,
+    dre: null
   };
 
   async componentDidMount() {
@@ -44,8 +50,58 @@ class UnidadeEnvolvidas extends Component {
     this.setState({ modal: !this.state.modal });
   };
 
+  handleAddUnidade = () => {
+    const { unidade, unidadesSelect } = this.state;
+
+    const unidadeSelecionada = unidadesSelect.filter(
+      value => value.uuid === unidade
+    );
+
+    this.convertToUnidadeContrato(unidadeSelecionada[0]);
+  };
+
+  convertToUnidadeContrato = unidade => {
+    const { dre, lote, valorTotal, valorMensal, unidades } = this.state;
+    const { contrato, termo_contrato, tipo_unidade } = this.state.unidades[0];
+
+    let unidadeContrato = {
+      codigo_eol: unidade.codigo_eol,
+      contrato: contrato,
+      dre: dre,
+      lote: lote,
+      termo_contrato: termo_contrato,
+      tipo_unidade: tipo_unidade,
+      tipo_unidade: tipo_unidade,
+      unidade: unidade.uuid,
+      valor_mensal: valorMensal,
+      valor_total: valorTotal,
+      equipamento: unidade.equipamento
+    };
+    unidades.push(unidadeContrato);
+
+    this.setState({ unidades });
+  };
+
+  handleValorMensal = (event, maskedValue, floatValue) => {
+    this.setState({ valorMensal: floatValue });
+  };
+
+  handleValorTotal = (event, maskedValue, floatValue) => {
+    this.setState({ valorTotal: floatValue });
+  };
+
+  selecionarUnidade = unidade => {
+    this.setState({ unidade });
+  };
+
   render() {
-    const { unidades, modal, unidadesSelect } = this.state;
+    const {
+      unidades,
+      modal,
+      unidadesSelect,
+      valorMensal,
+      valorTotal
+    } = this.state;
     const { disabilitado } = this.props;
     return (
       <div>
@@ -64,9 +120,18 @@ class UnidadeEnvolvidas extends Component {
               <Col lg={8} xl={8}>
                 <FormGroup>
                   <Label>Unidade</Label>
-                  <select className="form-control" name="unidade">
+                  <select
+                    className="form-control"
+                    name="unidade"
+                    onChange={e => this.selecionarUnidade(e.target.value)}
+                  >
                     {unidadesSelect.map((value, i) => {
-                      return <option key={i} value={value.uuid}>{value.nome}</option>;
+                      return (
+                        <option
+                          key={i}
+                          value={value.uuid}
+                        >{`${value.nome} - ${value.codigo_eol} - ${value.equipamento}`}</option>
+                      );
                     })}
                   </select>
                 </FormGroup>
@@ -76,19 +141,29 @@ class UnidadeEnvolvidas extends Component {
               <Col lg={4} xl={4}>
                 <FormGroup>
                   <Label>Valor Mensal</Label>
-                  <Input placeholder="Valor Mensal" />
+                  <CurrencyInput
+                    value={valorMensal}
+                    onChangeEvent={this.handleValorMensal}
+                    decimalSeparator=","
+                    thousandSeparator="."
+                    prefix="R$ "
+                    className="form-control"
+                    ref="valorMensal"
+                  />
                 </FormGroup>
               </Col>
               <Col lg={4} xl={4}>
                 <FormGroup>
                   <Label>Valor Total</Label>
-                  <Input placeholder="Valor Total" />
-                </FormGroup>
-              </Col>
-              <Col lg={4} xl={4}>
-                <FormGroup>
-                  <Label>Dotação</Label>
-                  <Input placeholder="Dotação" />
+                  <CurrencyInput
+                    value={valorTotal}
+                    onChangeEvent={this.handleValorTotal}
+                    decimalSeparator=","
+                    thousandSeparator="."
+                    prefix="R$ "
+                    className="form-control"
+                    ref="valorTotal"
+                  />
                 </FormGroup>
               </Col>
             </Row>
@@ -96,13 +171,19 @@ class UnidadeEnvolvidas extends Component {
               <Col lg={6} xl={6}>
                 <FormGroup>
                   <Label>Lote</Label>
-                  <Input placeholder="Lote" />
+                  <Input
+                    placeholder="Lote"
+                    onChange={e => this.setState({ lote: e.target.value })}
+                  />
                 </FormGroup>
               </Col>
               <Col lg={6} xl={6}>
                 <FormGroup>
                   <Label>DRE</Label>
-                  <Input placeholder="DRE" />
+                  <Input
+                    placeholder="DRE"
+                    onChange={e => this.setState({ dre: e.target.value })}
+                  />
                 </FormGroup>
               </Col>
             </Row>
@@ -114,7 +195,11 @@ class UnidadeEnvolvidas extends Component {
             >
               Cancelar
             </Button>
-            <Button className="btn-coad-primary" onClick={this.toggle}>
+            <Button
+              danger
+              className="btn-coad-primary"
+              onClick={this.handleAddUnidade}
+            >
               Adicionar Unidade
             </Button>
           </ModalFooter>
