@@ -18,9 +18,8 @@ export const mapStateToPayload = state => {
       total_mensal: state.total_mensal,
       objeto: state.objeto,
       observacoes: state.observacoes,
-      documento_fiscal_dre: state.documentoFiscaDre,
       termo_contrato: state.contrato.termo_contrato,
-      dotacao_orcamentaria: state.dotacao
+      dotacao_orcamentaria: state.dotacao,
       // unidades: state.unidades,
     };
   }

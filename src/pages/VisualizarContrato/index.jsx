@@ -23,7 +23,7 @@ import { SelecionaEmpresa } from "../../components/Contratos/SelecionaEmpresa";
 import SelecionarDivisoes from "../../components/Contratos/SelecionarDivisoes";
 import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
 import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
-import { getUnidadeContrato } from "../../service/UnidadeContrato.service";
+import { getUnidadeContrato, getUnidadesByContrato } from "../../service/UnidadeContrato.service";
 import { redirect } from "../../utils/redirect";
 import { getTiposServicoLookup } from "../../service/TiposServico.service";
 import { getCargosCoad } from "../../service/Cargos.service";
@@ -71,14 +71,12 @@ class VisualizarContratos extends Component {
     const param = getUrlParams();
     const contrato = await getContratoByUUID(param.uuid);
     const estadoContrato = await getEstadosContrato();
-    const unidadeContrato = await getUnidadeContrato(param.uuid);
     const coordenador = await getCargosCoad();
     this.setState({
       contrato,
       estadoContrato,
-      unidades: unidadeContrato,
       tipoServicoOptions: tiposServicos,
-      coordenador: coordenador.coordenador.nome
+      coordenador: coordenador.coordenador.nome,
     });
     this.propsToState(contrato);
   }
@@ -147,12 +145,6 @@ class VisualizarContratos extends Component {
     this.setState({ total_mensal });
   };
 
-  addUnidades = unidade => {
-    const { unidades } = this.state;
-    unidades.push(unidade);
-    this.setState({ unidades });
-  };
-
   setDotacao = valor => {
     const { dotacao } = this.state;
     if (typeof valor === "string" || valor instanceof String) {
@@ -186,7 +178,7 @@ class VisualizarContratos extends Component {
       gestor,
       nucleo,
       estado,
-      unidades,
+      // unidades,
       disabilitado,
       tipoServicoOptions,
       coordenador,
@@ -243,7 +235,6 @@ class VisualizarContratos extends Component {
                 </FormGroup>
               </Col>
               <Col xs={12} sm={12} md={12} lg={8} xl={8}>
-                {/* <Label form="tipoServico">Tipo de Serviço</Label> */}
                 <FormGroup>
                   <Label for="tipo_servico">Selecionar Tipo Serviço</Label>
                   <Input
@@ -528,8 +519,9 @@ class VisualizarContratos extends Component {
           <CoadAccordion titulo={"Unidade Envolvidas"}>
             <UnidadeEnvolvidas
               disabilitado={disabilitado}
-              unidadesContrato={unidades}
               AdicionarUnidades={this.addUnidades}
+              termo={contrato.termo_contrato}
+              contrato={contrato.uuid}
             />
           </CoadAccordion>
           <CoadAccordion titulo={"Anexos"}>

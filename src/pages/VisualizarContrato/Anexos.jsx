@@ -56,6 +56,7 @@ const Anexos = props => {
                   // onChangeStatus={handleChangeStatus}
                   inputContent="Clique ou arraste arquivos nesta área para upload"
                   inputWithFilesContent="Adicionar mais arquivos"
+                  disabled={props.disabilitado}
                 />
               </Col>
             </Row>
@@ -70,6 +71,7 @@ const Anexos = props => {
                   // onChangeStatus={handleChangeStatus}
                   inputContent="Clique ou arraste arquivos nesta área para upload"
                   inputWithFilesContent="Adicionar mais arquivos"
+                  disabled={props.disabilitado}
                 />
               </Col>
             </Row>
@@ -86,6 +88,7 @@ const Anexos = props => {
                 // onChangeStatus={handleChangeStatus}
                 inputContent="Clique ou arraste arquivos nesta área para upload"
                 inputWithFilesContent="Adicionar mais arquivos"
+                disabled={props.disabilitado}
               />
             </Col>
           </Row>

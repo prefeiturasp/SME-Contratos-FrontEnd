@@ -14,6 +14,11 @@ import {
 import { DataTable, Column } from "primereact/datatable";
 import { getUnidades } from "../../service/Unidades.service";
 import CurrencyInput from "react-currency-input";
+import {
+  getUnidadesByContrato,
+  addUnidade
+} from "../../service/UnidadeContrato.service";
+import { getUrlParams } from "../../utils/params";
 
 class UnidadeEnvolvidas extends Component {
   state = {
@@ -32,53 +37,51 @@ class UnidadeEnvolvidas extends Component {
     valorTotal: 0.0,
     unidade: null,
     lote: null,
-    dre: null
+    dre: null,
+    contrato: null
   };
 
   async componentDidMount() {
+    const param = getUrlParams();
     const unidadesSelect = await getUnidades();
-    this.setState({ unidadesSelect });
+    this.setState({
+      unidadesSelect,
+      contrato: param.uuid
+    });
+    this.carregaUnidadesContrato(param.uuid);
   }
 
-  componentDidUpdate(nextProps, nextState) {
-    if (nextProps.unidadesContrato !== this.props.unidadesContrato) {
-      this.setState({ unidades: this.props.unidadesContrato });
-    }
-  }
+  carregaUnidadesContrato = async uuid => {
+    const unidadesContrato = await getUnidadesByContrato(uuid);
+    this.setState({ unidades: unidadesContrato });
+  };
 
   toggle = () => {
     this.setState({ modal: !this.state.modal });
   };
 
-  handleAddUnidade = () => {
-    const { unidade, unidadesSelect } = this.state;
-
-    const unidadeSelecionada = unidadesSelect.filter(
-      value => value.uuid === unidade
-    );
-
-    this.convertToUnidadeContrato(unidadeSelecionada[0]);
-  };
-
-  convertToUnidadeContrato = unidade => {
-    const { dre, lote, valorTotal, valorMensal, unidades } = this.state;
-    const { contrato, termo_contrato, tipo_unidade } = this.state.unidades[0];
-
-    let unidadeContrato = {
-      codigo_eol: unidade.codigo_eol,
-      contrato: contrato,
-      dre: dre,
-      lote: lote,
-      termo_contrato: termo_contrato,
-      tipo_unidade: tipo_unidade,
-      unidade: unidade.uuid,
-      valor_mensal: valorMensal,
-      valor_total: valorTotal,
-      equipamento: unidade.equipamento
+  handleAddUnidade = async () => {
+    const payload = {
+      contrato: this.state.contrato,
+      unidade: this.state.unidade,
+      valor_mensal: this.state.valorMensal,
+      valor_total: this.state.valorTotal,
+      lote: this.state.lote,
+      dre_lote: this.state.dre
     };
-    unidades.push(unidadeContrato);
 
-    this.setState({ unidades });
+    const resultado = await addUnidade(payload);
+    if (resultado.uuid) {
+      this.carregaUnidadesContrato(this.state.contrato);
+      this.setState({
+        modal: false,
+        valorMensal: 0.0,
+        valorTotal: 0.0,
+        unidade: null,
+        lote: null,
+        dre: null
+      });
+    }
   };
 
   handleValorMensal = (event, maskedValue, floatValue) => {
@@ -87,10 +90,6 @@ class UnidadeEnvolvidas extends Component {
 
   handleValorTotal = (event, maskedValue, floatValue) => {
     this.setState({ valorTotal: floatValue });
-  };
-
-  selecionarUnidade = unidade => {
-    this.setState({ unidade });
   };
 
   render() {
@@ -113,7 +112,7 @@ class UnidadeEnvolvidas extends Component {
               <Col lg={4} xl={4}>
                 <FormGroup>
                   <Label>Termo de Contrato</Label>
-                  <Input disabled={true} value={unidades[0].termo_contrato} />
+                  <Input disabled={true} value={this.props.termo} />
                 </FormGroup>
               </Col>
               <Col lg={8} xl={8}>
@@ -122,8 +121,9 @@ class UnidadeEnvolvidas extends Component {
                   <select
                     className="form-control"
                     name="unidade"
-                    onChange={e => this.selecionarUnidade(e.target.value)}
+                    onChange={e => this.setState({ unidade: e.target.value })}
                   >
+                    <option> -- SELECIONE A UNIDADE -- </option>
                     {unidadesSelect.map((value, i) => {
                       return (
                         <option
@@ -205,11 +205,11 @@ class UnidadeEnvolvidas extends Component {
         </Modal>
         <Row>
           <Col lg={12} xl={12}>
-            <DataTable value={unidades}>
-              <Column field="codigo_eol" header="Código EOL" />
-              <Column field="tipo_unidade" header="Un. que Recebem Serviço" />
-              <Column field="equipamento" header="Equip." />
-              <Column field="dre" header="DRE Corresp." />
+            <DataTable value={unidades} scrollable={true} scrollHeight="250px">
+              <Column field="unidade.codigo_eol" header="Código EOL" />
+              <Column field="unidade.nome" header="Un. que Recebem Serviço" />
+              <Column field="unidade.equipamento" header="Equip." />
+              <Column field="dre_lote" header="DRE Corresp." />
               <Column field="lote" header="Lote Corresp." />
             </DataTable>
           </Col>
