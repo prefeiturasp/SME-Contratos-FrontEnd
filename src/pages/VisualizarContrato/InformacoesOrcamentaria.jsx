@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FormGroup, Label, Row, Col } from "reactstrap";
 import { InputText } from "primereact/inputtext";
-import { formatadoMonetario } from "../../utils/formatador";
+import CurrencyInput from "react-currency-input";
 
 export default class InformacoeOrcamentaria extends Component {
   constructor(props) {
@@ -57,6 +57,13 @@ export default class InformacoeOrcamentaria extends Component {
     this.props.setDotacao(dotacaoOrcamentaria);
   };
 
+  alteraTotalMensal = (event, maskedValue, floatValue) => {
+    this.props.setTotalMensal(floatValue)
+  } 
+  alteraTotalContrato = (event, maskedValue, floatValue) => {
+    this.props.setTotalMensal(floatValue)
+  }
+
   render() {
     const { totalMensal, valorTotal, disabilitar } = this.props;
     const { dotacao } = this.state;
@@ -111,13 +118,16 @@ export default class InformacoeOrcamentaria extends Component {
             <Col>
               <FormGroup>
                 <Label>Valor mensal do Contrato</Label>
-                <InputText
-                  value={totalMensal}
-                  placeholder={"R$"}
-                  onChange={e => this.props.setTotalMensal(e.target.value)}
-                  className="w-100"
-                  disabled={disabilitar}
-                />
+                <CurrencyInput
+                    value={totalMensal}
+                    onChangeEvent={this.alteraTotalMensal}
+                    disabled={true}
+                    decimalSeparator=","
+                    thousandSeparator="."
+                    prefix="R$ "
+                    className="form-control"
+                    ref="valorTotal"
+                  />
               </FormGroup>
             </Col>
           </Row>
@@ -125,12 +135,16 @@ export default class InformacoeOrcamentaria extends Component {
             <Col>
               <FormGroup>
                 <Label>Valor total do Contrato</Label>
-                <InputText
-                  value={valorTotal}
-                  placeholder={"R$"}
-                  className="w-100"
-                  disabled={disabilitar}
-                />
+                <CurrencyInput
+                    value={0.00}
+                    onChangeEvent={this.alteraTotalContrato}
+                    decimalSeparator=","
+                    thousandSeparator="."
+                    prefix="R$ "
+                    className="form-control"
+                    ref="valorTotal"
+                    disabled={true}
+                  />
               </FormGroup>
             </Col>
           </Row>
