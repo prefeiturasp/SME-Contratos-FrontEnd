@@ -162,14 +162,14 @@ export const updateColunasContrato = payload => {
     });
 };
 
-export const updateContrato = (payLoadAlterar, contratoUuid) => {
+export const updateContrato = (payload, contratoUuid) => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
   return axios
     .put(
       `${CONFIG.API_URL}/contratos/${contratoUuid}/`,
-      payLoadAlterar,
+      payload,
       AUTH_HEADER
     )
     .then(
