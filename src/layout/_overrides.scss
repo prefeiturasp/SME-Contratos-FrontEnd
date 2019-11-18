@@ -98,5 +98,29 @@ $whiteColor: #ffffff;
   .coad-color{
     color: $mainColor !important;
   }
+
+  .p-messages .p-messages-close {
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+
+  .p-messages .p-messages-icon {
+    font-size: 0em;
+  }
+
+  .p-messages {
+    text-align: center;
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .p-messages-warn  {
+    color: #856404 !important;
+    border: 0.5px solid rgba(133, 100, 4, 0.3) !important;
+  }
+
   
 }
