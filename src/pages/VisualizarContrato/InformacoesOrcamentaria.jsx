@@ -65,7 +65,7 @@ export default class InformacoeOrcamentaria extends Component {
   }
 
   render() {
-    const { totalMensal, valorTotal, disabilitar } = this.props;
+    const { totalMensal, disabilitar } = this.props;
     const { dotacao } = this.state;
 
     return (
