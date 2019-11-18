@@ -2,6 +2,7 @@ import axios from "axios";
 import { getHeaderToken, getUsuario } from "./auth.service";
 import CONFIG from "../configs/config.constants";
 import { formatadorDeData } from "../utils/formatador";
+import moment from "moment";
 
 export function getContratos(filtro) {
   const AUTH_HEADER = {
@@ -49,9 +50,10 @@ export const getContratoByUUID = uuid => {
     headers: getHeaderToken()
   };
 
-  return axios.get(`${CONFIG.API_URL}/contratos/${uuid}/`, AUTH_HEADER)
-              .then(res => res.data)
-}
+  return axios
+    .get(`${CONFIG.API_URL}/contratos/${uuid}/`, AUTH_HEADER)
+    .then(res => res.data);
+};
 
 export function getTermo(termo) {
   const AUTH_HEADER = {
@@ -61,6 +63,35 @@ export function getTermo(termo) {
     .get(`${CONFIG.API_URL}/contratos/?termo_contrato=${termo}`, AUTH_HEADER)
     .then(res => res.data);
 }
+
+export function getTermoByAtribuicao(atribuicao) {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  return axios
+    .get(`${CONFIG.API_URL}/contratos/?atribuido=${atribuicao}`, AUTH_HEADER)
+    .then(res => {
+      return formataDataCriacao(res.data);
+    });
+}
+
+export function getTermosAll() {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  return axios
+    .get(`${CONFIG.API_URL}/contratos/termos`, AUTH_HEADER)
+    .then(res => {
+      return formataDataCriacao(res.data);
+    });
+}
+
+const formataDataCriacao = datas => {
+  return datas.map(data => ({
+    ...data,
+    criado_em: moment(data.criado_em).format("DD/MM/YY - HH:mm:ss")
+  }));
+};
 
 export const getSituacoesContrato = () => {
   const AUTH_HEADER = {
@@ -85,7 +116,10 @@ export const getCamposContrato = () => {
     headers: getHeaderToken()
   };
   return axios
-    .get(`${CONFIG.API_URL}/colunas-contrato/?usuario=${getUsuario().user_id}`, AUTH_HEADER)
+    .get(
+      `${CONFIG.API_URL}/colunas-contrato/?usuario=${getUsuario().user_id}`,
+      AUTH_HEADER
+    )
     .then(res => res.data);
 };
 
@@ -106,7 +140,7 @@ export const createContrato = payLoad => {
     });
 };
 
-export const updateColunasContrato = (payload) => {
+export const updateColunasContrato = payload => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
