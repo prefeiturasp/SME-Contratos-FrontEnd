@@ -1,6 +1,7 @@
 //Suggested location to add your overrides so that migration would be easy by just updating the SASS folder in the future
 $mainColor: #602a2a;
 $whiteColor: #ffffff;
+$hoverColor: #431e1e;
 
 .layout-wrapper {
   background-color: #f2f2f2;
@@ -48,6 +49,7 @@ $whiteColor: #ffffff;
   .p-button {
     background-color: $mainColor;
     border-color: $mainColor;
+    font-weight: bold;
   }
 
   .p-accordion .p-accordion-header:not(.p-disabled).p-highlight:hover a {
@@ -66,10 +68,17 @@ $whiteColor: #ffffff;
     border-color: $mainColor;
     color: $whiteColor;
   }
+
   .btn-coad-background-outline {
     border-color: $mainColor;
     color: $mainColor !important;
     background-color: $whiteColor;
+    font-weight: bold;
+  }
+
+  .p-button:enabled:hover {
+    color: $whiteColor !important;
+    background-color: $hoverColor !important;
   }
 
   .card-deck .card {
@@ -88,15 +97,61 @@ $whiteColor: #ffffff;
   }
 
   .ant-btn-link {
-    color: #602a2a;;
+    color: #602a2a;
     background-color: transparent;
     border-color: transparent;
     -webkit-box-shadow: none;
     box-shadow: none;
   }
 
-  .coad-color{
+  .coad-color {
     color: $mainColor !important;
   }
-  
+
+  .p-paginator {
+    background-color: #ffffff !important;
+    border: 0px;
+    padding: 2.5em !important;
+  }
+
+  .p-paginator-next {
+    height: 4em !important;
+    min-width: 4em !important;
+  }
+
+  .p-paginator-prev {
+    height: 4em !important;
+    min-width: 4em !important;
+  }
+
+  .p-paginator-page {
+    height: 4em !important;
+    min-width: 4em !important;
+    border: 1px solid #dadada !important;
+  }
+
+  .p-highlight {
+    background-color: #602a2a !important;
+  }
+
+  .p-paginator-element {
+    border: 1px solid #dadada !important;
+  }
+
+  .p-dialog-footer {
+    border: none !important;
+  }
+
+  .p-dialog-titlebar {
+    background-color: #ffffff !important;
+    border: none !important;
+    border-bottom: 1px solid #4e4e4e !important;
+    span {
+      font-size: medium;
+    }
+  }
+
+  .p-dialog-content {
+    border: none !important;
+  }
 }
