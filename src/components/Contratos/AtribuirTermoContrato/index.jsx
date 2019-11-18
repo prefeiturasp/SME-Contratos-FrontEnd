@@ -181,9 +181,9 @@ export default class AtribuirTermoContrato extends Component {
         <h6 style={{ marginLeft: 15, fontWeight: "bold" }}>
           Atribuir Termo de Contrato
         </h6>
-        <Card footer={footer} >
+        <Card footer={footer}>
           <Row>
-            <Col xs={12} sm={12} md={12} lg={6} xl={6} >
+            <Col md={12} lg={5} xl={5}>
               <label for="termo_contrato">Termo de Contrato</label>
               <br />
               <InputText
@@ -196,7 +196,7 @@ export default class AtribuirTermoContrato extends Component {
                 className="w-100"
               />
             </Col>
-            <Col xs={12} sm={12} md={12} lg={6} xl={6} className="p-fluid">
+            <Col lg={7} xl={7} className="p-fluid">
               <label for="gestor">Nome Gestor de Contrato</label>
               <br />
               <BuscaIncrementalServidores
@@ -207,8 +207,8 @@ export default class AtribuirTermoContrato extends Component {
             </Col>
           </Row>
           <Row>
-            <Col xs={12} sm={12} md={12} lg={6} xl={6}></Col>
-            <Col xs={12} sm={12} md={12} lg={6} xl={6} className="p-fluid">
+            <Col lg={5} xl={5}></Col>
+            <Col lg={7} xl={7} className="p-fluid">
               <label for="gestor">Nome Suplente de Contrato</label>
               <br />
               <BuscaIncrementalServidores
@@ -219,7 +219,6 @@ export default class AtribuirTermoContrato extends Component {
                 onUpdate={servidorSuplente =>
                   this.updateSuplente(servidorSuplente)
                 }
-                
               />
             </Col>
           </Row>

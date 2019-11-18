@@ -7,7 +7,7 @@ export const formatadoMonetario = valor => {
 };
 
 export const formatadorDeData = data => {
-  if (data === undefined || data === "") {
+  if (data === undefined || data === null) {
     return data;
   } else {
     const formatter = new Intl.DateTimeFormat("pt-BR");
