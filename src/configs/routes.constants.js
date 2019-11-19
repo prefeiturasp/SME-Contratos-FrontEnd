@@ -5,6 +5,8 @@ import ContratosContinuos from "../pages/ContratosContinuos";
 import VisualizarContratos from "../pages/VisualizarContrato";
 import DesignacaoCargos from "../pages/DesignacaoCargos"
 import AtribuicaoTermoContrato from "../pages/AtribuicaoTermoContrato"
+import Teste from "../pages/Teste";
+import CadastrarContrato from "../pages/CadastrarContrato";
 
 
 const RoutesConfig = [
@@ -41,6 +43,16 @@ const RoutesConfig = [
     {
       path: "/atribuicao-termo-contrato",
       component: AtribuicaoTermoContrato,
+      exact: false
+    }, 
+    {
+      path: "/cadastro-unico-contrato",
+      component: CadastrarContrato,
+      exact: false
+    }, 
+    {
+      path: "/teste",
+      component: Teste,
       exact: false
     },
 ]
