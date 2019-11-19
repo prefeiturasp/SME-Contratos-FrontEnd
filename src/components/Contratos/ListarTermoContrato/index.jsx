@@ -100,7 +100,7 @@ export default class ListarTermoContrato extends Component {
 
   render() {
     let cols = [
-      { field: "criado_em", header: "Data/Hora" },
+      { field: "alterado_em", header: "Data/Hora" },
       { field: "termo_contrato", header: "Nº T.C." },
       { field: "gestor.nome", header: "Gestor(a) de Contrato" },
       { field: "suplente.nome", header: "Suplente de Contrato" },
