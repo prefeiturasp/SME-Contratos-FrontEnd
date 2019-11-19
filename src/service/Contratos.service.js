@@ -89,7 +89,7 @@ export function getTermosAll() {
 const formataDataCriacao = datas => {
   return datas.map(data => ({
     ...data,
-    criado_em: moment(data.criado_em).format("DD/MM/YY - HH:mm:ss")
+    alterado_em: moment(data.alterado_em).format("DD/MM/YY - HH:mm:ss")
   }));
 };
 
