@@ -5,7 +5,7 @@ import {getUsuariosLookup, getUsuarioByUserName} from '../../../service/Usuarios
 export class BuscaIncrementalServidores extends Component {
     constructor(props) {
         super(props)
-    
+
         this.state = {
             servidor_digitado: null,
             servidor: null,
@@ -18,10 +18,10 @@ export class BuscaIncrementalServidores extends Component {
 
     async updateServidorFromProps() {
         const servidor = this.props.userName ? (await getUsuarioByUserName(this.props.userName)) : null
-        
+
         this.setState({servidor})
     }
-    
+
     async componentDidMount() {
         const servidores = await getUsuariosLookup()
         this.setState({servidores})
@@ -29,22 +29,24 @@ export class BuscaIncrementalServidores extends Component {
         this.updateServidorFromProps()
     }
 
-    
+
     async componentDidUpdate(prevProps, prevState) {
         if (prevProps.userName !== this.props.userName) {
             this.updateServidorFromProps()
         }
     }
 
-    onChangeServidor(servidor) {
+    onSelectServidor(servidor) {
         if (!servidor){
             this.props.onUpdate(null)
         }
+        else {
+            this.props.onUpdate(servidor)
+        }
     }
-    
+
     updateServidor(servidor) {
         this.setState({servidor})
-        this.props.onUpdate(servidor)
     }
 
     filterServidores(event) {
@@ -66,8 +68,8 @@ export class BuscaIncrementalServidores extends Component {
                 field="nome"
                 placeholder={this.props.placeholder || "Servidor"} 
                 minLength={1} 
-                onSelect={(e) => this.updateServidor(e.value)}
-                onChange={(e) => this.onChangeServidor(e.value)} 
+                onChange={(e) => this.updateServidor(e.value)}
+                onSelect={(e) => this.onSelectServidor(e.value)} 
             />
         )
     }
