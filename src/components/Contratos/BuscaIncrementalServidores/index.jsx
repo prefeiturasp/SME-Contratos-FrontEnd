@@ -36,15 +36,17 @@ export class BuscaIncrementalServidores extends Component {
         }
     }
 
-    onChangeServidor(servidor) {
+    onSelectServidor(servidor) {
         if (!servidor){
             this.props.onUpdate(null)
+        }
+        else {
+            this.props.onUpdate(servidor)
         }
     }
     
     updateServidor(servidor) {
         this.setState({servidor})
-        this.props.onUpdate(servidor)
     }
 
     filterServidores(event) {
@@ -66,8 +68,8 @@ export class BuscaIncrementalServidores extends Component {
                 field="nome"
                 placeholder={this.props.placeholder || "Servidor"} 
                 minLength={1} 
-                onSelect={(e) => this.updateServidor(e.value)}
-                onChange={(e) => this.onChangeServidor(e.value)} 
+                onChange={(e) => this.updateServidor(e.value)}
+                onSelect={(e) => this.onSelectServidor(e.value)} 
             />
         )
     }
