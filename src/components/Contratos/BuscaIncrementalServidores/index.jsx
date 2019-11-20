@@ -5,7 +5,7 @@ import {getUsuariosLookup, getUsuarioByUserName} from '../../../service/Usuarios
 export class BuscaIncrementalServidores extends Component {
     constructor(props) {
         super(props)
-    
+
         this.state = {
             servidor_digitado: null,
             servidor: null,
@@ -18,10 +18,10 @@ export class BuscaIncrementalServidores extends Component {
 
     async updateServidorFromProps() {
         const servidor = this.props.userName ? (await getUsuarioByUserName(this.props.userName)) : null
-        
+
         this.setState({servidor})
     }
-    
+
     async componentDidMount() {
         const servidores = await getUsuariosLookup()
         this.setState({servidores})
@@ -29,7 +29,7 @@ export class BuscaIncrementalServidores extends Component {
         this.updateServidorFromProps()
     }
 
-    
+
     async componentDidUpdate(prevProps, prevState) {
         if (prevProps.userName !== this.props.userName) {
             this.updateServidorFromProps()
@@ -44,7 +44,7 @@ export class BuscaIncrementalServidores extends Component {
             this.props.onUpdate(servidor)
         }
     }
-    
+
     updateServidor(servidor) {
         this.setState({servidor})
     }

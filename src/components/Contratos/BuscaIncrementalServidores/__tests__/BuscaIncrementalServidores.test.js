@@ -1,9 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { shallow, mount, render } from 'enzyme';
 import {BuscaIncrementalServidores} from '../../BuscaIncrementalServidores'
 
-
-it('renders without crashing', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(<BuscaIncrementalServidores />, div);
-});
+describe('<BuscaIncrementalServidores>', () => {
+    it('renders without crashing', () => {
+        shallow(<BuscaIncrementalServidores />)
+    });
+})
