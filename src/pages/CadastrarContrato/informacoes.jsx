@@ -1,17 +1,21 @@
 import React, { Component } from "react";
-import { Row, Col, Card, Label, FormGroup } from "reactstrap";
+import { Row, Col, Card, Label, FormGroup, Input as InputBootstrap } from "reactstrap";
 import CurrencyInput from "react-currency-input";
-import { DatePicker, Select, Input } from "formik-reactstrap-widgets";
-import { Datepicker, Autocomplete } from "react-formik-ui";
-import { CoadTextInput, CoadRadio } from "../../components/Contratos/CoadForm";
+import { Select, Input } from "formik-reactstrap-widgets";
+import {
+  CoadTextInput,
+  CoadRadio,
+  CoadEditor,
+  CoadCalendar,
+  CoadSelect
+} from "../../components/Contratos/CoadForm";
 import { getTiposServicoLookup } from "../../service/TiposServico.service";
 import {
   getEstadosContrato,
   getSituacoesContrato
 } from "../../service/Contratos.service";
 import { getEmpresasLookup } from "../../service/Empresas.service";
-import ReactQuill from "react-quill";
-import { Editor } from "primereact/editor";
+import { Field } from "formik";
 export default class Informacoes extends Component {
   state = {
     situacao: [],
@@ -33,8 +37,9 @@ export default class Informacoes extends Component {
     this.setState({ tipoServicos, estado, situacao, empresas });
   }
 
-  SelecionaEmpresa = value => {
+  SelecionaEmpresa = event => {
     const { empresas } = this.state;
+    const value = event.target.value;
     if (empresas)
       empresas.forEach(empresa => {
         if (empresa.uuid === value) {
@@ -44,20 +49,6 @@ export default class Informacoes extends Component {
   };
 
   render() {
-    const headerTemplate = (
-      <span className="ql-formats">
-        <button className="ql-bold" aria-label="Bold"></button>
-        <button className="ql-italic" aria-label="Italic"></button>
-        <button className="ql-underline" aria-label="Underline"></button>
-        <button className="ql-list" aria-label="ql-list">
-          <i className="fas fa-list"></i>
-        </button>
-        <button className="ql-bullet" aria-label="bullet">
-          <i className="fas fa-list-ol"></i>
-        </button>
-      </span>
-    );
-
     const {
       tipoServicos,
       estado,
@@ -67,15 +58,18 @@ export default class Informacoes extends Component {
     } = this.state;
     return (
       <>
-        <Card className="card">
-          <strong className="mb-3">Informações de Contrato</strong>
+        <strong>
+          <i className="fas fa-lg fa-file-signature" /> Informações
+          Contrato/Empresa
+        </strong>
+        <Card className="mt-3">
           <Row>
             <Col lg={4} xl={4}>
-              <Input
+              <CoadTextInput
                 name="termo_contrato"
                 id="termo_contrato"
                 label="Número Termo de Contrato"
-                placeholder="Ex: 0000000000000"
+                placeholder="Ex: 00/00"
               />
             </Col>
             <Col lg={8} xl={8}>
@@ -144,27 +138,20 @@ export default class Informacoes extends Component {
           <hr />
           <Row>
             <Col lg={4} xl={4}>
-              <DatePicker
+              <Field
+                component={CoadCalendar}
                 name="data_assinatura"
+                id="data_assinatura"
                 label="Data Assinatura de Contrato"
-                dateFormat="dd/MM/yyyy"
-                locale="pt-BR"
               />
             </Col>
             <Col lg={8} xl={8}>
-              <Label>Data Ordem de Início</Label>
-              <br />
-              <div className="input-group">
-                <Datepicker
-                  name="data_ordem_inicio"
-                  dateFormat="dd/MM/yyyy"
-                  className="form-control"
-                  locale="pt-BR"
-                />
-                <button className="btn btn-sx btn-default border border-left-0">
-                  <i className="fas fa-calendar-alt"></i>
-                </button>
-              </div>
+              <Field
+                component={CoadCalendar}
+                name="data_ordem_inicio"
+                id="data_ordem_inicio"
+                label="Data Ordem de Início"
+              />
             </Col>
           </Row>
           <Row className="mt-3">
@@ -193,10 +180,11 @@ export default class Informacoes extends Component {
           <strong className="mb-3">Empresa Contratada</strong>
           <Row>
             <Col lg={12} xl={12}>
-              <Select
+              <CoadSelect
                 label="Empresa Contratada"
                 name="empresa_contratada"
-                onChange={value => this.SelecionaEmpresa(value)}
+                // onChange={value => this.SelecionaEmpresa(value)}
+                onBlur={value => this.SelecionaEmpresa(value)}
               >
                 {empresas
                   ? empresas.map((empresa, i) => {
@@ -207,20 +195,16 @@ export default class Informacoes extends Component {
                       );
                     })
                   : ""}
-              </Select>
+              </CoadSelect>
             </Col>
           </Row>
           <Row>
             <Col lg={12} xl={12}>
               <FormGroup>
                 <Label>CNPJ Empresa</Label>
-                <input
-                  className="form-control"
+                <InputBootstrap
                   value={cnpjEmpresa}
                   disabled={true}
-                  onChange={e => {
-                    console.log(e.target);
-                  }}
                 />
               </FormGroup>
             </Col>
@@ -265,19 +249,13 @@ export default class Informacoes extends Component {
           <strong className="mb-3">Objeto de Contrato</strong>
           <Row>
             <Col lg={12} xl={12}>
-              <FormGroup>
-                <Editor
-                  headerTemplate={headerTemplate}
-                  style={{ height: "320px" }}
-                  name="observacoes"
-                  id="observacoes"
-                  value={this.state.observacoes}
-                  // onTextChange={(e, setFieldValue) =>
-                  //   setFieldValue("observacoes", e.htmlValue)
-                  // }
-                  onTextChange={e=>this.setState({observacoes: e.htmlValue})}
-                />
-              </FormGroup>
+              <Field
+                component={CoadEditor}
+                name="objeto"
+                id="objeto"
+                style={{ height: "320px" }}
+                label="Objeto de Contrato"
+              />
             </Col>
           </Row>
         </Card>

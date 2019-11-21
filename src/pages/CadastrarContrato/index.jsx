@@ -6,6 +6,8 @@ import { Formik, Form } from "formik";
 import StepZilla from "react-stepzilla";
 import { contratoValidations } from "./validations";
 import Gestao from "./Gestao";
+import AnexosContrato from "./AnexosContrato";
+import Finalizar from "./Finalizar";
 
 export default class CadastrarContrato extends Component {
   state = {
@@ -21,7 +23,9 @@ export default class CadastrarContrato extends Component {
   render() {
     const steps = [
       { name: "Informações Contrato/Empresa", component: <Informacoes /> },
-      { name: "Informações Gestão/Unidade", component: <Gestao /> }
+      { name: "Informações Gestão/Unidade", component: <Gestao /> },
+      { name: "Informações Anexos/Observações", component: <AnexosContrato /> },
+      { name: "Contrato cadastrado", component: <Finalizar /> }
     ];
     const { termo_contrato } = this.state;
     return (
@@ -30,7 +34,7 @@ export default class CadastrarContrato extends Component {
         <Container>
           <Formik
             initialValues={{ 
-              termo_contrato: '123456',
+              termo_contrato: '12/34',
               tipo_servico: '',
               numero_processo: '',
               estado_contrato: '',
@@ -38,6 +42,10 @@ export default class CadastrarContrato extends Component {
               data_assinatura: '',
               data_ordem_inicio: '',
               vigencia_em_dias: '',
+              gestor: '',
+              nucleo: '',
+              observacoes: '',
+              objeto: '',
           
           }}
             // validationSchema={contratoValidations}
@@ -57,6 +65,7 @@ export default class CadastrarContrato extends Component {
                   stepsNavigation={false}
                   prevBtnOnLastStep={true}
                   onStepChange={step => console.log(step)}
+                  nextTextOnFinalActionStep={'Cadastrar'}
                 />
               </div>
             </Form>
