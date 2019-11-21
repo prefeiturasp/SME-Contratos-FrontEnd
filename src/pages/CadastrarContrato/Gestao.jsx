@@ -4,6 +4,6 @@ import {Field, ErrorMessage} from 'formik'
 
 export default class Gestao extends Component {
   render() {
-    return <div></div>;
+    return <button type="submit">Submit</button>;
   }
 }

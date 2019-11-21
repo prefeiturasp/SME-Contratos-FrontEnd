@@ -20,8 +20,8 @@ export default class CadastrarContrato extends Component {
 
   render() {
     const steps = [
-        { name: "Informações Contrato/Empresa", component: <Informacoes /> },
-        { name: "Informações Gestão/Unidade", component: <Gestao /> },
+      { name: "Informações Contrato/Empresa", component: <Informacoes /> },
+      { name: "Informações Gestão/Unidade", component: <Gestao /> }
     ];
     const { termo_contrato } = this.state;
     return (
@@ -29,8 +29,18 @@ export default class CadastrarContrato extends Component {
         <h4>Cadastro Único de Contratos</h4>
         <Container>
           <Formik
-            initialValues={{ termo_contrato: termo_contrato }}
-            validationSchema={contratoValidations}
+            initialValues={{ 
+              termo_contrato: '123456',
+              tipo_servico: '',
+              numero_processo: '',
+              estado_contrato: '',
+              situacao: 'RASCUNHO',
+              data_assinatura: '',
+              data_ordem_inicio: '',
+              vigencia_em_dias: '',
+          
+          }}
+            // validationSchema={contratoValidations}
             onSubmit={(values, { setSubmitting }) => {
               this.handleSubmit(values);
               setSubmitting(false);
@@ -40,13 +50,13 @@ export default class CadastrarContrato extends Component {
               <div className="step-progress">
                 <StepZilla
                   steps={steps}
-                  nextButtonCls={"btn btn-coad-primary"}
-                  backButtonCls={"btn btn-coad-background-outline"}
+                  // nextButtonCls={"btn btn-coad-primary"}
+                  // backButtonCls={"btn btn-coad-background-outline"}
                   nextButtonText={"Avançar"}
                   backButtonText={"Voltar"}
-                  onStepChange={step => console.log(step)}
                   stepsNavigation={false}
-                  prevBtnOnLastStep={false}
+                  prevBtnOnLastStep={true}
+                  onStepChange={step => console.log(step)}
                 />
               </div>
             </Form>
