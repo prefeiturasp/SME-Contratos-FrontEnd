@@ -37,6 +37,7 @@ import { getTiposServicoLookup } from "../../service/TiposServico.service";
 import { getCargosCoad } from "../../service/Cargos.service";
 import { mapStateToPayload } from "./helpers";
 import { Dialog } from "primereact/dialog";
+import ListarObrigacoesContratuais from "../../components/Contratos/ListarObrigacoesContratuais";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -484,7 +485,7 @@ class VisualizarContratos extends Component {
               <InformacoesOrcamentaria
                 totalMensal={total_mensal}
                 disabilitar={disabilitado}
-                dotacaoOrcamentaria={dotacao}
+                dotacaoOrcamentaria={[]}
                 setDotacao={value => this.setDotacao(value)}
                 setTotalMensal={this.setTotalMensal}
               />
@@ -496,6 +497,9 @@ class VisualizarContratos extends Component {
                 onTextChange={e => this.setState({ objeto: e.htmlValue })}
                 disabled={disabilitado}
               />
+            </CoadAccordion>
+            <CoadAccordion titulo={"Obrigações Contratuais"}>
+              <ListarObrigacoesContratuais contrato={contrato.uuid} />
             </CoadAccordion>
             <CoadAccordion titulo={"Gestão de Contrato"}>
               <Row>
