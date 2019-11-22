@@ -173,15 +173,31 @@ $hoverColor: #431e1e;
     font-size: 18px;
   }
 
-  .p-messages-warn  {
-    background: #FFF3CD !important;
+  .p-messages-warn {
+    background: #fff3cd !important;
     color: #856404 !important;
     border: 0.5px solid rgba(133, 100, 4, 0.3) !important;
   }
-  
-  .p-messages-success  {
-    background: #D4EDDA !important;
+
+  .p-messages-success {
+    background: #d4edda !important;
     color: #155724 !important;
-    border: 0.5px solid #A4C7AF !important;
+    border: 0.5px solid #a4c7af !important;
+  }
+
+  .p-datatable-thead > tr > th {
+    text-align: left !important;
+  }
+
+  .datatable-footer-coad {
+    .p-datatable-footer {
+      background-color: #ffffff !important;
+      font-weight: normal !important;
+    }
+  }
+  .datatable-strapd-coad {
+    .p-datatable-tbody > tr:nth-child(even) {
+      background-color: #ffffff !important;
+    }
   }
 }
