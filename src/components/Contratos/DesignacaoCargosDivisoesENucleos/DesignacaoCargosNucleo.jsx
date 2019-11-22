@@ -114,54 +114,54 @@ export class DesignacaoCargosNucleo extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{marginLeft: '-1.0em', marginTop: '-1.5em'}}>
                     <div className="p-grid p-fluid">
-                        <div className="p-grid">
-                            <div className="p-col-12 teste" >
-                                <Messages ref={el => (this.messages = el)}></Messages>
-                                <h6>Chefe</h6>
-                                <BuscaIncrementalServidores 
-                                    userName={this.state.chefe ? this.state.chefe.username : ''}
-                                    onUpdate={(servidor) => this.updateChefe(servidor)}
-                                    placeholder="Selecione o chefe..."
-                                />
-                            </div>
 
-                            <div className="p-col-12" >
-                                <h6>Suplente</h6>
-                                <BuscaIncrementalServidores 
-                                    userName={this.state.suplente ? this.state.suplente.username : ''}
-                                    onUpdate={(servidor) => this.updateSuplente(servidor)}
-                                    placeholder="Selecione o suplente..."
-                                />
-                            </div>
+                        <div className="p-col-12" >
+                            <Messages ref={el => (this.messages = el)}></Messages>
+                            <h6>Chefe</h6>
+                            <BuscaIncrementalServidores 
+                                userName={this.state.chefe ? this.state.chefe.username : ''}
+                                onUpdate={(servidor) => this.updateChefe(servidor)}
+                                placeholder="Selecione o chefe..."
+                            />
+                        </div>
 
-                            {this.state.servidores.map(
-                                (servidor, idx) => {
-                                    return (
-                                        <div className="p-grid p-col-12">   
-                                            <div className="p-col-10">
-                                                <h6>Servidor</h6>
-                                                <BuscaIncrementalServidores
-                                                    key={servidor.id}
-                                                    userName={servidor.servidor ? servidor.servidor.username : ''}
-                                                    onUpdate={(servidor) => this.updateServidor(servidor, idx)}
-                                                    placeholder="Selecione o servidor..."
-                                                />
-                                            </div>
-                                            <div className="p-col-2">
-                                                <Button 
-                                                    style={{marginTop: '28px'}}
-                                                    label="Remover"
-                                                    onClick={(e) => this.removeServidor(idx)}
-                                                />
-                                            </div>
+                        <div className="p-col-12" >
+                            <h6>Suplente</h6>
+                            <BuscaIncrementalServidores 
+                                userName={this.state.suplente ? this.state.suplente.username : ''}
+                                onUpdate={(servidor) => this.updateSuplente(servidor)}
+                                placeholder="Selecione o suplente..."
+                            />
+                        </div>
+
+                        {this.state.servidores.map(
+                            (servidor, idx) => {
+                                return (
+                                    <div className="p-grid p-col-12" style={{paddingRight: '0em', paddingBottom: '0em'}}>   
+                                        <div className="p-col-10">
+                                            <h6>Servidor</h6>
+                                            <BuscaIncrementalServidores
+                                                key={servidor.id}
+                                                userName={servidor.servidor ? servidor.servidor.username : ''}
+                                                onUpdate={(servidor) => this.updateServidor(servidor, idx)}
+                                                placeholder="Selecione o servidor..."
+                                            />
                                         </div>
-                                    )
-                                }
-                            )}
+                                        <div className="p-col-2">
+                                            <Button 
+                                                style={{marginTop: '28px', padding: '0px'}}
+                                                label="Remover"
+                                                onClick={(e) => this.removeServidor(idx)}
+                                            />
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        )}
 
-                            <div className="p-col-12" style={{padding: '0px'}} >
+                        <div className="p-col-12" style={{padding: '0px'}} >
                                 <AntButton 
                                     type="link" 
                                     size="small"
@@ -171,7 +171,6 @@ export class DesignacaoCargosNucleo extends Component {
                                 </AntButton>
                             </div>
 
-                        </div>
                     </div>
                     <span className="float-right">
                         <Button 
