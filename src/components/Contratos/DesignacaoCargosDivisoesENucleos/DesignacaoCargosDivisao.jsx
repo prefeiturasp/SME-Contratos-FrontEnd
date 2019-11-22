@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {BuscaIncrementalServidores} from "../BuscaIncrementalServidores"
 import {Button} from 'primereact/button';
-import { Messages } from "primereact/messages";
 import {updateCargosDivisao} from '../../../service/Cargos.service'
 
 export default class DesignacaoCargosDivisao extends Component {
@@ -31,7 +30,7 @@ export default class DesignacaoCargosDivisao extends Component {
     updateCargos() {
         updateCargosDivisao(this.props.divisao.uuid, this.state.diretor, this.state.suplente)
 
-        this.messages.show({
+        this.props.showMessage({
             severity: "success",
             life: 5000,
             detail:
@@ -42,7 +41,7 @@ export default class DesignacaoCargosDivisao extends Component {
     cancelUpdateCargos() {
         this.resetCargos()
 
-        this.messages.show({
+        this.props.showMessage({
             severity: "warn",
             life: 5000,
             detail:
@@ -65,7 +64,6 @@ export default class DesignacaoCargosDivisao extends Component {
                     <div className="p-grid p-fluid">
 
                         <div className="p-col-12" >
-                            <Messages ref={el => (this.messages = el)}></Messages>
                             <h6>Diretor(a)</h6>
                             <BuscaIncrementalServidores 
                                 userName={this.state.diretor ? this.state.diretor.username : ''}

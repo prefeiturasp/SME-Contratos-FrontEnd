@@ -27,7 +27,7 @@ export class CargosDivisao extends Component {
                     <div>
                         <Row>
                         <Col sm="12">
-                            <DesignacaoCargosDivisao divisao={this.props.divisao}/>
+                            <DesignacaoCargosDivisao divisao={this.props.divisao} showMessage={this.props.showMessage}/>
                         </Col>
                         </Row>
                     </div>
@@ -36,7 +36,7 @@ export class CargosDivisao extends Component {
                     <div>
                         <Row>
                         <Col sm="12">
-                            <DesignacaoCargosNucleos divisao={this.props.divisao}/>
+                            <DesignacaoCargosNucleos divisao={this.props.divisao} showMessage={this.props.showMessage}/>
                         </Col>
                         </Row>
                     </div>

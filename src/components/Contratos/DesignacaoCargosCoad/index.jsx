@@ -52,18 +52,19 @@ export default class DesignacaoCargosCoad extends Component {
         updateCoordenadorCoad(this.state.coordenador)
         updateAssessoresCoad(this.state.assessores)
 
-        this.messages.show({
+        this.props.showMessage({
             severity: "success",
             life: 5000,
             detail:
-              "Alterações realizadas com sucesso."
-          });
+                "Alterações realizadas com sucesso."
+        });
+
     }
 
     cancelUpdateCargosCoad() {
         this.resetCargos()
 
-        this.messages.show({
+        this.props.showMessage({
             severity: "warn",
             life: 5000,
             detail:
@@ -107,7 +108,6 @@ export default class DesignacaoCargosCoad extends Component {
     render () {
         return (
             <div>
-                <Messages ref={el => (this.messages = el)}></Messages>
                 <CoadAccordion titulo={"COAD"}>
                 <div className="p-grid p-fluid" style={{marginLeft: '-1.9em'}}>
                     <div className="p-col-12">

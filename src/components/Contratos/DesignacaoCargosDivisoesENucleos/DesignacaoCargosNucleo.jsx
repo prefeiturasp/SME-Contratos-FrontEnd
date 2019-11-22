@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import {BuscaIncrementalServidores} from "../BuscaIncrementalServidores"
 import {Button} from 'primereact/button';
 import { Button as AntButton } from 'antd';
-import { Messages } from "primereact/messages";
 import {updateCargosNucleo, getServidoresNucleo, updateServidoresNucleo} from '../../../service/Cargos.service'
 
 export class DesignacaoCargosNucleo extends Component {
@@ -52,7 +51,7 @@ export class DesignacaoCargosNucleo extends Component {
         updateCargosNucleo(this.props.nucleo.uuid, this.state.chefe, this.state.suplente)
         updateServidoresNucleo(this.props.nucleo.uuid, this.state.servidores)
 
-        this.messages.show({
+        this.props.showMessage({
             severity: "success",
             life: 5000,
             detail:
@@ -63,7 +62,7 @@ export class DesignacaoCargosNucleo extends Component {
     cancelUpdateCargos() {
         this.resetCargos()
 
-        this.messages.show({
+        this.props.showMessage({
             severity: "warn",
             life: 5000,
             detail:
@@ -118,7 +117,7 @@ export class DesignacaoCargosNucleo extends Component {
                     <div className="p-grid p-fluid">
 
                         <div className="p-col-12" >
-                            <Messages ref={el => (this.messages = el)}></Messages>
+
                             <h6>Chefe</h6>
                             <BuscaIncrementalServidores 
                                 userName={this.state.chefe ? this.state.chefe.username : ''}
