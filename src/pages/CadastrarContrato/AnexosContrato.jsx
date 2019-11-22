@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { Row, Col, Card } from "reactstrap";
-import { Select, Input } from "formik-reactstrap-widgets";
+import { Card } from "reactstrap";
 import { Field } from "formik";
-import { CoadTextInput, CoadEditor } from "../../components/Contratos/CoadForm";
+import { CoadEditor } from "../../components/Contratos/CoadForm";
 import Anexos from "../VisualizarContrato/Anexos";
-
+import { Button } from "reactstrap";
 
 export default class AnexosContrato extends Component {
   state = {};
@@ -17,19 +16,40 @@ export default class AnexosContrato extends Component {
         </strong>
         <Card className="mt-3">
           <strong>Anexos</strong>
-            <Anexos />
+          <Anexos />
         </Card>
         <Card>
           <strong>Observações</strong>
           <div className="my-2"></div>
-            <Field
-              component={CoadEditor}
-              name="observacoes"
-              id="observacoes"
-              style={{ height: "200px" }}
-              label="Escreva observações sobre contrato"
-            />
+          <Field
+            component={CoadEditor}
+            name="observacoes"
+            id="observacoes"
+            style={{ height: "200px" }}
+            label="Escreva observações sobre contrato"
+          />
         </Card>
+        <div className="d-flex flex-row-reverse mt-4">
+          <Button
+            onClick={() => this.props.jumpToStep(3)}
+            type="button"
+            className="btn-coad-primary"
+          >
+            Cadastrar
+          </Button>
+          <Button
+            onClick={() => this.props.cancelar()}
+            className="btn-coad-background-outline mx-3"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => this.props.jumpToStep(1)}
+            className="btn-coad-background-outline"
+          >
+            Voltar
+          </Button>
+        </div>
       </>
     );
   }

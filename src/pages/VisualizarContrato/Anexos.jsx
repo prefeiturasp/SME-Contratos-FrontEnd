@@ -108,6 +108,7 @@ class Anexos extends Component {
                                 href={file.href}
                                 target="_blank"
                                 rel="Documentos fiscais DRE"
+                                key={i}
                               >
                                 <i className="fas fa-xl fa-paperclip"></i>{" "}
                                 {file.name}

@@ -5,7 +5,6 @@ $hoverColor: #431e1e;
 
 .layout-wrapper {
   background-color: #f2f2f2;
-
   .layout-topbar {
     z-index: 1000;
     height: 67px;
@@ -173,19 +172,18 @@ $hoverColor: #431e1e;
     font-size: 18px;
   }
 
-  .p-messages-warn  {
-    background: #FFF3CD !important;
+  .p-messages-warn {
+    background: #fff3cd !important;
     color: #856404 !important;
     border: 0.5px solid rgba(133, 100, 4, 0.3) !important;
   }
-  
-  .p-messages-success  {
-    background: #D4EDDA !important;
-    color: #155724 !important;
-    border: 0.5px solid #A4C7AF !important;
-  }
 
-  // .footer-buttons{
-  //   display: none;
-  // }
+  .p-messages-success {
+    background: #d4edda !important;
+    color: #155724 !important;
+    border: 0.5px solid #a4c7af !important;
+  }
+  ol.progtrckr li {
+    line-height: 4.1rem;
+  }
 }

@@ -1,7 +1,14 @@
 import React, { Component } from "react";
-import { Row, Col, Card, Label, FormGroup, Input as InputBootstrap } from "reactstrap";
+import {
+  Row,
+  Col,
+  Card,
+  Label,
+  FormGroup,
+  Input as InputBootstrap,
+  Button
+} from "reactstrap";
 import CurrencyInput from "react-currency-input";
-import { Select, Input } from "formik-reactstrap-widgets";
 import {
   CoadTextInput,
   CoadRadio,
@@ -70,10 +77,12 @@ export default class Informacoes extends Component {
                 id="termo_contrato"
                 label="Número Termo de Contrato"
                 placeholder="Ex: 00/00"
+                disabled={true}
               />
             </Col>
             <Col lg={8} xl={8}>
-              <Select label="Tipo de Serviço" name="tipo_servico">
+              <CoadSelect label="Tipo de Serviço" name="tipo_servico">
+                <option>Selecione</option>
                 {tipoServicos
                   ? tipoServicos.map((value, i) => {
                       return (
@@ -83,15 +92,15 @@ export default class Informacoes extends Component {
                       );
                     })
                   : ""}
-              </Select>
+              </CoadSelect>
             </Col>
           </Row>
           <Row>
             <Col lg={4} xl={4}>
               <CoadTextInput
                 label="Número do Processo"
-                name="numero_processo"
-                id="numero_processo"
+                name="processo"
+                id="processo"
                 placeholder="Ex: 0000000000000"
                 type="text"
               />
@@ -183,9 +192,9 @@ export default class Informacoes extends Component {
               <CoadSelect
                 label="Empresa Contratada"
                 name="empresa_contratada"
-                // onChange={value => this.SelecionaEmpresa(value)}
                 onBlur={value => this.SelecionaEmpresa(value)}
               >
+                <option>Selecione</option>
                 {empresas
                   ? empresas.map((empresa, i) => {
                       return (
@@ -202,10 +211,7 @@ export default class Informacoes extends Component {
             <Col lg={12} xl={12}>
               <FormGroup>
                 <Label>CNPJ Empresa</Label>
-                <InputBootstrap
-                  value={cnpjEmpresa}
-                  disabled={true}
-                />
+                <InputBootstrap value={cnpjEmpresa} disabled={true} />
               </FormGroup>
             </Col>
           </Row>
@@ -259,6 +265,24 @@ export default class Informacoes extends Component {
             </Col>
           </Row>
         </Card>
+        <div className="d-flex flex-row-reverse mt-4">
+          <Button
+            onClick={() => this.props.jumpToStep(1)}
+            type="button"
+            className="btn-coad-primary"
+          >
+            Avançar
+          </Button>
+          <Button
+            onClick={() => this.props.cancelar()}
+            className="btn-coad-background-outline mx-3"
+          >
+            Cancelar
+          </Button>
+          <Button disabled className="btn-coad-background-outline">
+            Voltar
+          </Button>
+        </div>
       </>
     );
   }

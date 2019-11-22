@@ -1,5 +1,5 @@
 import React from "react";
-import { Field, useField, ErrorMessage } from "formik";
+import { Field, useField } from "formik";
 import { FormGroup, Label } from "reactstrap";
 import { Editor } from "primereact/editor";
 import { Calendar } from "primereact/calendar";
@@ -14,30 +14,26 @@ export const CoadTextInput = ({ label, ...props }) => {
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <Field className="form-control" {...field} {...props} />
       {meta.touched && meta.error ? (
-        <div className="invalid-feedback">{meta.error}</div>
+        <div className="alert alert-danger">{meta.error}</div>
       ) : null}
     </FormGroup>
   );
 };
 
 export const CoadSelect = ({ label, ...props }) => {
-  // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
-  // which we can spread on <input> and alse replace ErrorMessage entirely.
   const [field, meta] = useField(props);
   return (
     <FormGroup>
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <Field as="select" className="form-control" {...field} {...props} />
       {meta.touched && meta.error ? (
-        <div className="invalid-feedback">{meta.error}</div>
+        <div className="alert alert-danger text-center">{meta.error}</div>
       ) : null}
     </FormGroup>
   );
 };
 
 export const CoadRadio = ({ label, ...props }) => {
-  // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
-  // which we can spread on <input> and alse replace ErrorMessage entirely.
   const [field, meta] = useField(props);
   return (
     <FormGroup check inline>
@@ -46,7 +42,7 @@ export const CoadRadio = ({ label, ...props }) => {
         {label}
       </Label>
       {meta.touched && meta.error ? (
-        <div className="invalid-feedback">{meta.error}</div>
+        <div className="alert alert-danger text-center">{meta.error}</div>
       ) : null}
     </FormGroup>
   );
@@ -55,6 +51,7 @@ export const CoadRadio = ({ label, ...props }) => {
 export const CoadEditor = ({
   label,
   field,
+  formikKey,
   form: { setFieldValue },
   ...props
 }) => (
@@ -71,6 +68,7 @@ export const CoadEditor = ({
       <Editor
         {...field}
         {...props}
+        formikKey={formikKey}
         headerTemplate={
           <span className="ql-formats">
             <button className="ql-bold" aria-label="Bold"></button>
@@ -99,6 +97,7 @@ export const CoadCalendar = ({
     <Calendar
       {...field}
       {...props}
+      key={field.name}
       onChange={e => setFieldValue(field.name, e.value)}
       locale={CALENDAR_PT}
       dateFormat="dd/mm/yy"

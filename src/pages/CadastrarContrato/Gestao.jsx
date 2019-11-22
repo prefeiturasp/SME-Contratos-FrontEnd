@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Card, Input as InputBootStrap } from "reactstrap";
+import { Row, Col, Card, Input as InputBootStrap, Button } from "reactstrap";
 import { Select, Input } from "formik-reactstrap-widgets";
 import { CoadTextInput, CoadSelect } from "../../components/Contratos/CoadForm";
 import UnidadeEnvolvidas from "../VisualizarContrato/UnidadesEnvolvidas";
@@ -38,14 +38,13 @@ export default class Gestao extends Component {
           <i className="fas fa-lg fa-file-signature" /> Informações
           Gestão/Unidade
         </strong>
-        <Card className="mt-3">
+        <Card className="my-3">
           <strong>Gestão de Contrato</strong>
           <Row>
-            <Col lg={8} xl={8}>
-              <CoadSelect
-                label="Gestor do Contrato"
-                name="gestor"
-                onBlur={value => this.setEmailUsuario(value.target.value)}
+            <Col>
+            <CoadSelect
+                label="Coordenador do Contrato"
+                name="coordenador"
               >
                 <option>Selecione</option>
                 {usuarios
@@ -57,8 +56,25 @@ export default class Gestao extends Component {
                   : ""}
               </CoadSelect>
             </Col>
+          </Row>
+          <Row>
+            <Col lg={8} xl={8}>
+              <CoadSelect
+                label="Gestor do Contrato"
+                name="gestor"
+                onBlur={value => this.setEmailUsuario(value.target.value)}
+              >
+                {usuarios
+                  ? usuarios.map((usuario, i) => (
+                      <option value={usuario.uuid}>
+                        {usuario.nome} ({usuario.username})
+                      </option>
+                    ))
+                  : ""}
+              </CoadSelect>
+            </Col>
             <Col>
-              <CoadSelect label="Núcleo Responsável" name="nucleo">
+              <CoadSelect label="Núcleo Responsável" name="nucleo_responsavel">
                 <option>Selecione</option>
                 {nucleos
                   ? nucleos.map((nucleo, i) => {
@@ -95,8 +111,26 @@ export default class Gestao extends Component {
         <Card>
           <strong>Unidades Envolvidas</strong>
           <div className="my-2"></div>
-          <UnidadeEnvolvidas />
+          <UnidadeEnvolvidas termo={this.props.termo} />
         </Card>
+        <div className="d-flex flex-row-reverse mt-4">
+          <Button
+            onClick={() => this.props.jumpToStep(2)}
+            type="button"
+            className="btn-coad-primary"
+          >
+            Avançar
+          </Button>
+          <Button
+            onClick={() => this.props.cancelar()}
+            className="btn-coad-background-outline mx-3"
+          >
+            Cancelar
+          </Button>
+          <Button onClick={() => this.props.jumpToStep(0)} className="btn-coad-background-outline">
+            Voltar
+          </Button>
+        </div>
       </>
     );
   }

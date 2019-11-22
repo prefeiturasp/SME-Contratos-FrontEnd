@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Card } from "reactstrap";
 import { Select, Input } from "formik-reactstrap-widgets";
 import { Field } from "formik";
-
+import { Dialog } from "primereact/dialog";
 
 export default class Finalizar extends Component {
   state = {};
@@ -10,7 +10,29 @@ export default class Finalizar extends Component {
   render() {
     return (
       <>
-      <button type="submit">Cadastrar</button>
+        <Dialog
+          className="coad-dialog"
+          header="Cadastrar contrato"
+          visible={true}
+          style={{ width: "50vw", "z-index": 1000 }}
+          modal={true}
+          onHide={false}
+          footer={
+            <div className="pb-3">
+              <button
+                className="btn btn-coad-background-outline"
+                onClick={() => this.props.jumpToStep(2)}
+              >
+                Cancelar
+              </button>
+              <button type="submit" className="btn btn-coad-primary">
+                Cadastrar
+              </button>
+            </div>
+          }
+        >
+          Deseja cadastrar contato?
+        </Dialog>
       </>
     );
   }
