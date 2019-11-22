@@ -9,10 +9,10 @@ export const CoadTabs = props => {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
-  const { titulo1, titulo2 } = props;
+  const { titulo1, titulo2, className } = props;
 
   return (
-    <div>
+    <div className={className}>
       <Nav tabs className="border-0">
         <NavItem
           className={`coad-tab-nav-item text-center font-weight-bold coad-color mr-1 ${
