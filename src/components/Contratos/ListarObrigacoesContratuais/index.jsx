@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import {
-  getObrigacaoContratualByContrato,
-} from "../../../service/ObrigacoesContratuais.service";
+import { getObrigacaoContratualByContrato } from "../../../service/ObrigacoesContratuais.service";
 
 export default class ListarObrigacoesContratuais extends Component {
   constructor(props) {
