@@ -27,7 +27,7 @@ export default class DesignacaoCargosDivisoes extends Component {
                 {divisoes && divisoes.map(
                     (divisao) => {
                         return (
-                            <CargosDivisao divisao={divisao} ></CargosDivisao>
+                            <CargosDivisao divisao={divisao} showMessage={this.props.showMessage}></CargosDivisao>
                         )
                     }
                 )}
