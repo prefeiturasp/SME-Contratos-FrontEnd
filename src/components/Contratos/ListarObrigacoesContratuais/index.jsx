@@ -2,7 +2,14 @@ import React, { Component } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { getObrigacaoContratualByContrato } from "../../../service/ObrigacoesContratuais.service";
+import { Row, Col } from "reactstrap";
+import { InputText } from "primereact/inputtext";
+import { Editor } from "primereact/editor";
+import {
+  getObrigacaoContratualByContrato,
+  addObrigacaoContratual
+} from "../../../service/ObrigacoesContratuais.service";
+import { Dialog } from "primereact/dialog";
 
 export default class ListarObrigacoesContratuais extends Component {
   constructor(props) {
@@ -12,11 +19,17 @@ export default class ListarObrigacoesContratuais extends Component {
       uuid: null,
       contrato: null,
       item: "",
-      obrigacao: ""
+      obrigacao: "",
+      adicionarVisible: false
     };
   }
-  setaContrato() {
-    this.setState({ contrato: this.props.contrato });
+  salvaObrigacao() {
+    const payload = {
+      contrato: this.state.contrato,
+      item: this.state.item,
+      obrigacao: this.state.obrigacao
+    };
+    addObrigacaoContratual(payload);
   }
 
   onClickEditar(value) {
@@ -42,6 +55,22 @@ export default class ListarObrigacoesContratuais extends Component {
             this.onClickEditar(column.uuid);
           }}
         />
+      </div>
+    );
+  }
+
+  renderHeader() {
+    return (
+      <div>
+        <span className="ql-formats">
+          <button className="ql-bold" aria-label="Bold"></button>
+          <button className="ql-italic" aria-label="Italic"></button>
+          <button className="ql-underline" aria-label="Underline"></button>
+        </span>
+        <span className="ql-formats">
+          <button className="ql-list" value="bullet"></button>
+          <button className="ql-list" value="ordered"></button>
+        </span>
       </div>
     );
   }
@@ -90,13 +119,48 @@ export default class ListarObrigacoesContratuais extends Component {
           );
       }
     });
+    const footerModalAdicionar = (
+      <div>
+        <Button
+          label="Cancelar"
+          style={{ marginRight: ".25em" }}
+          onClick={() => {
+            this.setState({ adicionarVisible: false });
+          }}
+          className="btn-coad-background-outline"
+        />
+        <Button
+          label="Adicionar"
+          style={{ marginRight: ".25em" }}
+          // onClick={this.handleClickCadastratar.bind(this)}
+        />
+      </div>
+    );
     const { obrigacoes } = this.state;
     const rowsPerPage = 5;
+    const header = this.renderHeader();
     return (
       <div>
-        <h6 style={{ fontWeight: "bold" }}>
-          Obrigações Contratuais já adicionadas
-        </h6>
+        <Row>
+          <Col lg={6} xl={6}>
+            <h6 style={{ fontWeight: "bold" }}>
+              Obrigações Contratuais já adicionadas
+            </h6>
+          </Col>
+          <Col lg={6} xl={6}>
+            <span className="float-right">
+              <Button
+                icon="pi pi-file"
+                label="Adicionar Obrigação"
+                style={{ marginBottom: ".80em" }}
+                onClick={() => {
+                  this.setState({ adicionarVisible: true });
+                }}
+                className="btn-coad-background-outline"
+              />
+            </span>
+          </Col>
+        </Row>
         {obrigacoes.length > 0 ? (
           <DataTable
             value={obrigacoes}
@@ -121,6 +185,50 @@ export default class ListarObrigacoesContratuais extends Component {
             </DataTable>
           </div>
         )}
+
+        <Dialog
+          header="Adicionar Obrigações Contratuais"
+          visible={this.state.adicionarVisible}
+          style={{ width: "60vw" }}
+          footer={footerModalAdicionar}
+          onHide={() => {
+            this.setState({ adicionarVisible: false });
+          }}
+        >
+          <p>
+            Adicione Item e obrigações em seus respectivos campos. Caso queira
+            adicionar sub-item (Ex: 01.1), insira no campo “Obrigações
+            Contratuais” do item principal.
+            <br />
+          </p>
+          <Row>
+            <Col lg={4} xl={4}>
+              <label for="item">Item</label>
+              <br />
+              <InputText
+                value={this.state.item}
+                onChange={e =>
+                  this.setState({
+                    item: e.target.value
+                  })
+                }
+                placeholder="Digitar item"
+                className="w-100"
+              />
+            </Col>
+            <Col lg={8} xl={8} className="p-fluid">
+              <label for="obrigacao">Obrigações Contratuais</label>
+              <br />
+              <Editor
+                headerTemplate={header}
+                style={{ height: "120px" }}
+                value={this.state.obrigacao}
+                onTextChange={e => this.setState({ obrigacao: e.htmlValue })}
+                className="editor-coad"
+              />
+            </Col>
+          </Row>
+        </Dialog>
       </div>
     );
   }
