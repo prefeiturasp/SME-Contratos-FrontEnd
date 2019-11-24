@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import $ from "jquery";
 import {
   Row,
   Col,
@@ -42,7 +43,50 @@ export default class Informacoes extends Component {
     const situacao = await getSituacoesContrato();
     const empresas = await getEmpresasLookup();
     this.setState({ tipoServicos, estado, situacao, empresas });
+    $("#avancar-1").click(e => {
+      e.preventDefault();
+      let error = 0;
+      if (!$("#tipo_servico").val()) {
+        $("#tipo_servico").addClass("is-invalid");
+        error++;
+      }
+
+      if (!$("[name=processo]").val()) {
+        $("[name=processo]").addClass("is-invalid");
+        error++;
+      }
+
+      if (!$("[name=empresa_contratada]").val()) {
+        $("[name=empresa_contratada]").addClass("is-invalid");
+        error++;
+      }
+
+      if (!$("[name=vigencia_em_dias]").val()) {
+        $("[name=vigencia_em_dias]").addClass("is-invalid");
+        error++;
+      }
+
+      if (!$("[name=data_assinatura]").val()) {
+        $("[name=data_assinatura]").css("border-color", "red");
+        error++;
+      }
+      if (!$("[name=data_ordem_inicio]").val()) {
+        $("[name=data_ordem_inicio]").css("border-color", "red");
+        error++;
+      }
+
+      if (error === 0) {
+        this.props.jumpToStep(1);
+      } else {
+        $(".alerta").removeClass("d-none");
+      }
+    });
   }
+
+  cancelar = () => {
+    this.props.cancelar();
+    this.props.jumpToStep(0);
+  };
 
   SelecionaEmpresa = event => {
     const { empresas } = this.state;
@@ -81,8 +125,12 @@ export default class Informacoes extends Component {
               />
             </Col>
             <Col lg={8} xl={8}>
-              <CoadSelect label="Tipo de Serviço" name="tipo_servico">
-                <option>Selecione</option>
+              <CoadSelect
+                label="Tipo de Serviço"
+                name="tipo_servico"
+                id="tipo_servico"
+              >
+                <option value="">Selecione</option>
                 {tipoServicos
                   ? tipoServicos.map((value, i) => {
                       return (
@@ -194,7 +242,7 @@ export default class Informacoes extends Component {
                 name="empresa_contratada"
                 onBlur={value => this.SelecionaEmpresa(value)}
               >
-                <option>Selecione</option>
+                <option value="">Selecione</option>
                 {empresas
                   ? empresas.map((empresa, i) => {
                       return (
@@ -265,23 +313,24 @@ export default class Informacoes extends Component {
             </Col>
           </Row>
         </Card>
+        <div className="alerta text-center alert alert-danger d-none">
+          <strong>Para avançar, preencha os campos obrigatórios</strong>
+        </div>
         <div className="d-flex flex-row-reverse mt-4">
-          <Button
-            onClick={() => this.props.jumpToStep(1)}
-            type="button"
-            className="btn-coad-primary"
-          >
+          <Button id="avancar-1" type="button" className="btn-coad-primary">
             Avançar
           </Button>
           <Button
-            onClick={() => this.props.cancelar()}
+            type="button"
+            onClick={() => this.cancelar()}
             className="btn-coad-background-outline mx-3"
           >
             Cancelar
           </Button>
-          <Button disabled className="btn-coad-background-outline">
+          {/* <Button disabled className="btn-coad-background-outline">
             Voltar
-          </Button>
+          </Button> */}
+          <br />
         </div>
       </>
     );

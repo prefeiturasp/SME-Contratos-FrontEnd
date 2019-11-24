@@ -1,7 +1,7 @@
 import React, { Component } from "react";
+import $ from "jquery";
 import { Row, Col, Card, Input as InputBootStrap, Button } from "reactstrap";
-import { Select, Input } from "formik-reactstrap-widgets";
-import { CoadTextInput, CoadSelect } from "../../components/Contratos/CoadForm";
+import { CoadSelect } from "../../components/Contratos/CoadForm";
 import UnidadeEnvolvidas from "../VisualizarContrato/UnidadesEnvolvidas";
 import { getNucleos } from "../../service/Nucleos.service";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
@@ -17,6 +17,26 @@ export default class Gestao extends Component {
     const nucleos = await getNucleos();
     const usuarios = await getUsuariosLookup();
     this.setState({ nucleos, usuarios });
+    $("#avancar-2").click(() => {
+      let error = 0;
+      if (!$("[name=coordenador]").val()) {
+        $("[name=coordenador]").addClass("is-invalid");
+        error++;
+      }
+      if (!$("[name=gestor]").val()) {
+        $("[name=gestor]").addClass("is-invalid");
+        error++;
+      } 
+      if (!$("[name=nucleo_responsavel]").val()) {
+        $("[name=nucleo_responsavel]").addClass("is-invalid");
+        error++;
+      }
+      if (error === 0) {
+        this.props.jumpToStep(2);
+      } else {
+        $(".alerta").removeClass("d-none");
+      }
+    });
   }
 
   setEmailUsuario = uuid => {
@@ -28,6 +48,11 @@ export default class Gestao extends Component {
       }
     });
     this.setState({ emailUsuario });
+  };
+
+  cancelar = () => {
+    this.props.cancelar();
+    this.props.jumpToStep(0);
   };
 
   render() {
@@ -42,11 +67,8 @@ export default class Gestao extends Component {
           <strong>Gestão de Contrato</strong>
           <Row>
             <Col>
-            <CoadSelect
-                label="Coordenador do Contrato"
-                name="coordenador"
-              >
-                <option>Selecione</option>
+              <CoadSelect label="Coordenador do Contrato" name="coordenador">
+                <option value="">Selecione</option>
                 {usuarios
                   ? usuarios.map((usuario, i) => (
                       <option value={usuario.uuid}>
@@ -75,7 +97,7 @@ export default class Gestao extends Component {
             </Col>
             <Col>
               <CoadSelect label="Núcleo Responsável" name="nucleo_responsavel">
-                <option>Selecione</option>
+                <option value="">Selecione</option>
                 {nucleos
                   ? nucleos.map((nucleo, i) => {
                       return (
@@ -99,7 +121,7 @@ export default class Gestao extends Component {
               />
             </Col>
             <Col>
-            <label>Telefone Gestor de Contrato</label>
+              <label>Telefone Gestor de Contrato</label>
               <InputBootStrap
                 name="email_gestor"
                 disabled={true}
@@ -113,21 +135,28 @@ export default class Gestao extends Component {
           <div className="my-2"></div>
           <UnidadeEnvolvidas termo={this.props.termo} />
         </Card>
+        <div className="alerta text-center alert alert-danger d-none">
+          <strong>Para avançar, preencha os campos obrigatórios</strong>
+        </div>
         <div className="d-flex flex-row-reverse mt-4">
           <Button
-            onClick={() => this.props.jumpToStep(2)}
+            id="avancar-2"
             type="button"
             className="btn-coad-primary"
           >
             Avançar
           </Button>
           <Button
-            onClick={() => this.props.cancelar()}
             className="btn-coad-background-outline mx-3"
+            type="button"
+            onClick={() => this.cancelar()}
           >
             Cancelar
           </Button>
-          <Button onClick={() => this.props.jumpToStep(0)} className="btn-coad-background-outline">
+          <Button
+            onClick={() => this.props.jumpToStep(0)}
+            className="btn-coad-background-outline"
+          >
             Voltar
           </Button>
         </div>

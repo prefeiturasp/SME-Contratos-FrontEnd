@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import $ from "jquery";
 import moment from "moment";
 import { Formik, Form } from "formik";
 import StepZilla from "react-stepzilla";
@@ -13,10 +14,12 @@ import Finalizar from "./Finalizar";
 import { getUrlParams } from "../../utils/params";
 import {
   getContratoByUUID,
-  updateContrato
+  updateContrato,
+  CancelarContrato
 } from "../../service/Contratos.service";
 import { redirect } from "../../utils/redirect";
 import { getCargosCoad } from "../../service/Cargos.service";
+import { Messages } from "primereact/messages";
 
 export default class CadastrarContrato extends Component {
   state = {
@@ -25,7 +28,8 @@ export default class CadastrarContrato extends Component {
     gestor: null,
     visible: false,
     visibleCancelar: false,
-    coordenador: null
+    coordenador: null,
+    alertaCancelamento: false
   };
 
   async componentDidMount() {
@@ -46,16 +50,30 @@ export default class CadastrarContrato extends Component {
       uuid_contrato: uuid,
       coordenador: coordenador.uuid
     });
+    $("#cancelar-contrato").click(function() {
+      $(".form-cadastrar-contrato")
+        .get(0)
+        .reset();
+    });
   }
 
-  cancelarCadastro = () => {
-    console.log("CANCELAR CONTRATO");
-    this.setState({ visibleCancelar: true });
+  cancelarCadastro = async () => {
+    const { uuid_contrato } = this.state;
+    const resultado = await CancelarContrato(uuid_contrato);
+    if (resultado.status === 200) {
+      this.setState({ visibleCancelar: false });
+      window.scrollTo(0, 0);
+      this.messages.show({
+        severity: "warn",
+        life: 10000,
+        detail: "Cadastro de contrato cancelado"
+      });
+    }
   };
 
   esconderCancelar = () => {
-    this.setState({visibleCancelar: false})
-  }
+    this.setState({ visibleCancelar: false });
+  };
 
   handleSubmit = async values => {
     const { uuid_contrato } = this.state;
@@ -68,10 +86,9 @@ export default class CadastrarContrato extends Component {
     values["dotacao_orcamentaria"] = [values.dotacao_orcamentaria];
 
     const cadastro = await updateContrato(values, uuid_contrato);
-    if(cadastro.criado_em){
-      // contratos-continuos
-      // Contrato cadastrado com sucesso
-      redirect('/#/contratos-continuos?cadastro=ok')
+    if (cadastro.criado_em) {
+      redirect("/#/contratos-continuos?cadastro=ok");
+    } else {
     }
   };
 
@@ -79,27 +96,32 @@ export default class CadastrarContrato extends Component {
     redirect("/");
   };
 
+  mostrarModalCancelar = () => {
+    this.setState({ visibleCancelar: true });
+  };
+
   render() {
     const { termo_contrato, gestor, visible, coordenador } = this.state;
     const steps = [
       {
         name: "Informações Contrato/Empresa",
-        component: <Informacoes cancelar={this.cancelarCadastro} />
+        component: <Informacoes cancelar={this.mostrarModalCancelar} />
       },
       {
         name: "Informações Gestão/Unidade",
         component: (
-          <Gestao termo={termo_contrato} cancelar={this.cancelarCadastro} />
+          <Gestao termo={termo_contrato} cancelar={this.mostrarModalCancelar} />
         )
       },
       {
         name: "Informações Anexos/Observações",
-        component: <AnexosContrato cancelar={this.cancelarCadastro} />
+        component: <AnexosContrato cancelar={this.mostrarModalCancelar} />
       },
       { name: "Contrato cadastrado", component: <Finalizar /> }
     ];
     return (
       <Page>
+        <Messages ref={el => (this.messages = el)}></Messages>
         <Dialog
           header="Cancelar cadastro de contrato"
           visible={this.state.visibleCancelar}
@@ -109,17 +131,24 @@ export default class CadastrarContrato extends Component {
           footer={
             <div className="pb-3">
               <button
+                onClick={this.cancelarCadastro}
                 className="btn btn-coad-background-outline"
+                id="cancelar-contrato"
               >
                 Cancelar cadastro
               </button>
-              <button onClick={() => this.esconderCancelar()} type="button" className="btn btn-coad-primary">
+              <button
+                onClick={() => this.esconderCancelar()}
+                type="button"
+                className="btn btn-coad-primary"
+              >
                 Voltar
               </button>
             </div>
           }
         >
-          Deseja cancelar cadastro de contato? Se prosseguir, todos os dados serão perdidos.
+          Deseja cancelar cadastro de contato? Se prosseguir, todos os dados
+          serão perdidos.
         </Dialog>
 
         <Dialog
@@ -164,12 +193,13 @@ export default class CadastrarContrato extends Component {
                 empresa_contratada: ""
               }}
               validationSchema={contratoValidations}
+              onReset={this.mostrarModalCancelar}
               onSubmit={(values, { setSubmitting }) => {
+                setSubmitting(true);
                 this.handleSubmit(values);
-                setSubmitting(false);
               }}
             >
-              <Form>
+              <Form className="form-cadastrar-contrato">
                 <div className="step-progress">
                   <StepZilla
                     steps={steps}
@@ -182,6 +212,7 @@ export default class CadastrarContrato extends Component {
                     // prevBtnOnLastStep={true}
                     // onStepChange={step => console.log(step)}
                     // nextTextOnFinalActionStep={"Cadastrar"}
+                    preventEnterSubmission={true}
                   />
                 </div>
               </Form>

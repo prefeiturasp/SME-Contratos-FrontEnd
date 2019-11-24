@@ -20,7 +20,7 @@ export const mapStateToPayload = state => {
       observacoes: state.observacoes,
       termo_contrato: state.contrato.termo_contrato,
       dotacao_orcamentaria: state.dotacao,
-      // unidades: state.unidades,
+      coordenador: state.coordenador
     };
   }
 

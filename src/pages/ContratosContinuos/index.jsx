@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Messages } from "primereact/messages";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import { TableContrato } from "../../components/Contratos/TableContrato";
@@ -89,6 +90,15 @@ class ContratosContinuos extends Component {
   };
 
   componentDidMount() {
+
+    const param = getUrlParams();
+    if (param.cadastro) {
+      this.messages.show({
+        severity: "success",
+        life: 10000,
+        detail: "Contrato cadastrado com sucesso"
+      });
+    }
     this.pegaParametrosUrl();
     this.setaMeusContratos();
     this.setaColunasDefaut();
@@ -97,7 +107,9 @@ class ContratosContinuos extends Component {
   render() {
     const { contratos, colunas } = this.state;
     return (
-      <Page titulo="Contratos Contínuos">
+      <Page>
+        <Messages ref={el => (this.messages = el)}></Messages>
+        <h4>Contratos Contínuos</h4>
         <ButtonGroup className="mb-4">
           <Button
             onClick={() => redirect("#/painel-selecao")}
@@ -113,16 +125,19 @@ class ContratosContinuos extends Component {
         <Container icone="pi pi-chart-bar" subtitulo="Vizualizar Contratos">
           <CoadAccordion titulo="Personalizar filtro de busca">
             <CoadTabs
-            titulo1={"Personalizar Filtros"}
-            titulo2={"Personalizar Colunas"}
-            conteudo1={
-            <BuscaContratosForm
-              onBuscarClick={filtros => this.onBuscarClick(filtros)}
-            />}
-            conteudo2={<SelecionaColunasContrato
-              uuid={this.state.uuid}
-              onAplicarClick={this.onAplicarClick}
-            />}
+              titulo1={"Personalizar Filtros"}
+              titulo2={"Personalizar Colunas"}
+              conteudo1={
+                <BuscaContratosForm
+                  onBuscarClick={filtros => this.onBuscarClick(filtros)}
+                />
+              }
+              conteudo2={
+                <SelecionaColunasContrato
+                  uuid={this.state.uuid}
+                  onAplicarClick={this.onAplicarClick}
+                />
+              }
             />
           </CoadAccordion>
           <TableContrato contratos={contratos} colunas={colunas} />

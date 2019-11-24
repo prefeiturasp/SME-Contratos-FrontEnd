@@ -29,7 +29,6 @@ import { CALENDAR_PT } from "../../configs/config.constants";
 import SituacaoRadio from "../../components/Contratos/SelecionaSituacaoContrato/SituacaoRadio";
 import EstadoRadio from "../../components/Contratos/SelecionaEstadoContrato/EstadoRadio";
 import { SelecionaEmpresa } from "../../components/Contratos/SelecionaEmpresa";
-import SelecionarDivisoes from "../../components/Contratos/SelecionarDivisoes";
 import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
 import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
 import { redirect } from "../../utils/redirect";
@@ -37,6 +36,7 @@ import { getTiposServicoLookup } from "../../service/TiposServico.service";
 import { getCargosCoad } from "../../service/Cargos.service";
 import { mapStateToPayload } from "./helpers";
 import { Dialog } from "primereact/dialog";
+import { getUsuariosLookup } from "../../service/Usuarios.service";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -70,7 +70,8 @@ class VisualizarContratos extends Component {
       dotacao: [],
       visible: false,
       usernameGestor: null,
-      alert: false
+      alert: false,
+      usuarios: []
     };
 
     this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
@@ -81,13 +82,14 @@ class VisualizarContratos extends Component {
     const param = getUrlParams();
     const contrato = await getContratoByUUID(param.uuid);
     const estadoContrato = await getEstadosContrato();
-    const coordenador = await getCargosCoad();
+    const usuarios = await getUsuariosLookup();
     this.setState({
       contrato,
       estadoContrato,
       tipoServicoOptions: tiposServicos,
-      coordenador: coordenador.coordenador.nome,
-      usernameGestor: contrato.gestor.username
+      coordenador: contrato.coordenador,
+      usernameGestor: contrato.gestor.username,
+      usuarios
     });
     this.propsToState(contrato);
   }
@@ -113,7 +115,7 @@ class VisualizarContratos extends Component {
       nucleo: contrato.nucleo_responsavel.uuid,
       estado: contrato.estado_contrato,
       vigencia_em_dias: contrato.vigencia_em_dias,
-      dotacao: contrato.dotacao_orcamentaria
+      dotacao: contrato.dotacao_orcamentaria,
     });
   };
 
@@ -133,6 +135,10 @@ class VisualizarContratos extends Component {
 
   selecionarNucleo = value => {
     this.setState({ nucleo: value });
+  };
+
+  selecionaCoordenador = coordenador => {
+    this.setState({ coordenador });
   };
 
   selecionaGestor = gestor => {
@@ -208,16 +214,22 @@ class VisualizarContratos extends Component {
       dotacao,
       visible,
       alert,
-      usernameGestor
+      usernameGestor,
+      usuarios
     } = this.state;
     return (
       <>
         <Page
           titulo={`Termo de Contrato n. ${contrato.termo_contrato} - ${nomeEmpresa}`}
         >
-        <Alert color="success" className="text-center font-weight-bold" isOpen={alert} toggle={() => this.setState({alert: false})}>
-        Alterações realizadas com sucesso
-        </Alert>
+          <Alert
+            color="success"
+            className="text-center font-weight-bold"
+            isOpen={alert}
+            toggle={() => this.setState({ alert: false })}
+          >
+            Alterações realizadas com sucesso
+          </Alert>
           <CardSuperior
             tipoServico={tipoServico}
             situacaoContratual={estado}
@@ -499,28 +511,33 @@ class VisualizarContratos extends Component {
             </CoadAccordion>
             <CoadAccordion titulo={"Gestão de Contrato"}>
               <Row>
-                <Col xs={12} sm={12} md={12} lg={8} xl={8}>
+                <Col lg={12} xl={12}>
                   <FormGroup>
                     <Label form="coordenador">Coordenador COAD</Label>
-                    <InputText
-                      id="coordenador"
+                    <Input
+                      type="select"
+                      disabled={disabilitado}
+                      onChange={e => this.selecionaCoordenador(e.target.value)}
                       value={coordenador}
-                      className="w-100"
-                      disabled={true}
-                    />
+                    >
+                      {usuarios
+                        ? usuarios.map((usuario, i) => {
+                            let selecionado = null;
+                            
+                            return (
+                              <option key={i} value={usuario.uuid}>
+                                {usuario.nome}
+                              </option>
+                            );
+                          })
+                        : ""}
+                    </Input>
                   </FormGroup>
-                </Col>
-                <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                  <SelecionarDivisoes
-                    selected={divisao}
-                    onSelect={this.selecionarDivisao}
-                    disabled={disabilitado}
-                  />
                 </Col>
               </Row>
               <Row>
                 <Col xs={12} sm={12} md={12} lg={8} xl={8}>
-                  <FormGroup className="p-grid p-fluid">
+                  <FormGroup className="p-grid p-fluid pt-2 ml-1">
                     <Label form="gestor">Gestor do Contrato</Label>
                     <br />
                     <BuscaIncrementalServidores

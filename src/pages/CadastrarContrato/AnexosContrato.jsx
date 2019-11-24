@@ -8,6 +8,15 @@ import { Button } from "reactstrap";
 export default class AnexosContrato extends Component {
   state = {};
 
+  cancelar = () => {
+    this.props.cancelar();
+    this.props.jumpToStep(0);
+  };
+
+  cadastrar = () => {
+    this.props.jumpToStep(3)
+  }
+
   render() {
     return (
       <>
@@ -31,14 +40,15 @@ export default class AnexosContrato extends Component {
         </Card>
         <div className="d-flex flex-row-reverse mt-4">
           <Button
-            onClick={() => this.props.jumpToStep(3)}
+            onClick={() => this.cadastrar()}
             type="button"
             className="btn-coad-primary"
           >
             Cadastrar
           </Button>
           <Button
-            onClick={() => this.props.cancelar()}
+            type="button"
+            onClick={() => this.cancelar()}
             className="btn-coad-background-outline mx-3"
           >
             Cancelar

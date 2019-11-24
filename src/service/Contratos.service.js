@@ -182,5 +182,24 @@ export const updateContrato = (payload, contratoUuid) => {
       return { error: error };
     });
 };
+export const CancelarContrato = (uuid) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  return axios
+    .delete(
+      `${CONFIG.API_URL}/contratos/${uuid}/cancelar-cadastro-unico/`,
+      AUTH_HEADER
+    )
+    .then(
+      res => res.data,
+      res => {
+        return { statusCode: res.statusCode, result: res };
+      }
+    )
+    .catch(error => {
+      return { error: error };
+    });
+};
 
 export default getContratos;

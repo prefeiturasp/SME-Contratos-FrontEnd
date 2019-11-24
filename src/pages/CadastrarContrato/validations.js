@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import $ from "jquery";
 
 export const contratoValidations = Yup.object({
   termo_contrato: Yup.string()
@@ -17,6 +18,4 @@ export const contratoValidations = Yup.object({
     .required('Selecione um Coordenador'),
     processo: Yup.string()
     .required('Número de processo deve ser preenchido')
-  
-  
 });
