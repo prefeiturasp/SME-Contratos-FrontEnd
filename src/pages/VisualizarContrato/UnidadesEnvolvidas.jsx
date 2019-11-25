@@ -1,16 +1,5 @@
 import React, { Component } from "react";
-import {
-  Row,
-  Col,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  FormGroup,
-  Input,
-  Label
-} from "reactstrap";
+import { Row, Col, Button, FormGroup, Input, Label } from "reactstrap";
 import { DataTable, Column } from "primereact/datatable";
 import { getUnidades } from "../../service/Unidades.service";
 import CurrencyInput from "react-currency-input";
@@ -19,6 +8,7 @@ import {
   addUnidade
 } from "../../service/UnidadeContrato.service";
 import { getUrlParams } from "../../utils/params";
+import { Dialog } from "primereact/dialog";
 
 class UnidadeEnvolvidas extends Component {
   state = {
@@ -58,6 +48,21 @@ class UnidadeEnvolvidas extends Component {
 
   toggle = () => {
     this.setState({ modal: !this.state.modal });
+  };
+
+  novaUnidade = () => {
+    this.toggle();
+    this.setState({
+      unidade: null,
+      valor_mensal: 0.00,
+      valor_total: 0.00,
+      lote: null,
+      dre_lote: null
+    });
+  };
+
+  disaparecerModal = () => {
+    this.setState({ modal: false });
   };
 
   handleAddUnidade = async () => {
@@ -103,11 +108,34 @@ class UnidadeEnvolvidas extends Component {
     const { disabilitado } = this.props;
     return (
       <div>
-        <Modal isOpen={modal} toggle={this.toggle} className="mt-5 modal-xl">
-          <ModalHeader toggle={this.toggle}>
-            Adicionar unidade ao Contrato
-          </ModalHeader>
-          <ModalBody>
+        <Dialog
+          header="Adicionar Unidade"
+          visible={modal}
+          style={{ width: "70vw" }}
+          modal={true}
+          onHide={this.disaparecerModal}
+          footer={
+            <div className="py-2">
+              <Button
+                className="btn-coad-background-outline"
+                onClick={this.disaparecerModal}
+              >
+                Cancelar
+              </Button>
+              <Button
+                danger
+                className="btn-coad-primary"
+                onClick={this.handleAddUnidade}
+              >
+                Adicionar Unidade
+              </Button>
+            </div>
+          }
+        >
+          <div className="px-2">
+            <span>Preencha os campos para adicionar unidade a tabela.</span>
+            <br />
+            <br />
             <Row>
               <Col lg={4} xl={4}>
                 <FormGroup>
@@ -118,7 +146,8 @@ class UnidadeEnvolvidas extends Component {
               <Col lg={8} xl={8}>
                 <FormGroup>
                   <Label>Unidade</Label>
-                  <select
+                  <Input
+                    type="select"
                     className="form-control"
                     name="unidade"
                     onChange={e => this.setState({ unidade: e.target.value })}
@@ -132,7 +161,7 @@ class UnidadeEnvolvidas extends Component {
                         >{`${value.nome} - ${value.codigo_eol} - ${value.equipamento}`}</option>
                       );
                     })}
-                  </select>
+                  </Input>
                 </FormGroup>
               </Col>
             </Row>
@@ -186,23 +215,8 @@ class UnidadeEnvolvidas extends Component {
                 </FormGroup>
               </Col>
             </Row>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              className="btn-coad-background-outline"
-              onClick={this.toggle}
-            >
-              Cancelar
-            </Button>
-            <Button
-              danger
-              className="btn-coad-primary"
-              onClick={this.handleAddUnidade}
-            >
-              Adicionar Unidade
-            </Button>
-          </ModalFooter>
-        </Modal>
+          </div>
+        </Dialog>
         <Row>
           <Col lg={12} xl={12}>
             <DataTable value={unidades} scrollable={true} scrollHeight="250px">
@@ -216,7 +230,7 @@ class UnidadeEnvolvidas extends Component {
           <Col className="mt-5">
             <Button
               disabled={disabilitado}
-              onClick={this.toggle}
+              onClick={this.novaUnidade}
               className="btn-coad-primary"
             >
               <i className="fas fa-plus"></i> Adicionar Unidade

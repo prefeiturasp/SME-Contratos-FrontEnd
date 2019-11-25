@@ -29,7 +29,9 @@ export function getContratos(filtro) {
 const formataData = datas => {
   return datas.map(data => ({
     ...data,
-    data_encerramento: formatadorDeData(data.data_encerramento)
+    data_encerramento: data.data_encerramento ? moment(data.data_encerramento).format('DD/MM/YYYY') : '',
+    data_ordem_inicio : data.data_ordem_inicio ? moment(data.data_ordem_inicio).format('DD/MM/YYYY') : '',
+    data_assinatura: data.data_assinatura ? moment(data.data_assinatura).format('DD/MM/YYYY') : '',
   }));
 };
 
@@ -170,6 +172,25 @@ export const updateContrato = (payload, contratoUuid) => {
     .put(
       `${CONFIG.API_URL}/contratos/${contratoUuid}/`,
       payload,
+      AUTH_HEADER
+    )
+    .then(
+      res => res.data,
+      res => {
+        return { statusCode: res.statusCode, result: res };
+      }
+    )
+    .catch(error => {
+      return { error: error };
+    });
+};
+export const CancelarContrato = (uuid) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  return axios
+    .delete(
+      `${CONFIG.API_URL}/contratos/${uuid}/cancelar-cadastro-unico/`,
       AUTH_HEADER
     )
     .then(

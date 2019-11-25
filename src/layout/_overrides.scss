@@ -5,7 +5,6 @@ $hoverColor: #431e1e;
 
 .layout-wrapper {
   background-color: #f2f2f2;
-
   .layout-topbar {
     z-index: 1000;
     height: 67px;
@@ -205,6 +204,8 @@ $hoverColor: #431e1e;
     color: #155724 !important;
     border: 0.5px solid #a4c7af !important;
   }
+ol.progtrckr li {
+    line-height: 4.1rem;
 
   .p-datatable-thead > tr > th {
     text-align: left !important;

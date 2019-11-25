@@ -21,7 +21,7 @@ export default class SelecionarNucleos extends Component {
   formataOptions(nucleos) {
     const options = this.state.options;
     nucleos.map(value => {
-      return options.push({ label: value.sigla, value: value.uuid });
+      return options.push({ label: `${value.sigla} (${value.divisao.sigla})`, value: value.uuid });
     });
     this.setState({ options });
   }
@@ -34,8 +34,7 @@ export default class SelecionarNucleos extends Component {
 
   render() {
     const { selected } = this.props;
-    const { options } = this.state;
-
+    const { options, nucleos } = this.state;
     return (
       <FormGroup>
         <Label for="selecionarNucleos">Núcleo Responsável</Label>
