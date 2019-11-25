@@ -29,7 +29,9 @@ export function getContratos(filtro) {
 const formataData = datas => {
   return datas.map(data => ({
     ...data,
-    data_encerramento: formatadorDeData(data.data_encerramento)
+    data_encerramento: data.data_encerramento ? moment(data.data_encerramento).format('DD/MM/YYYY') : '',
+    data_ordem_inicio : data.data_ordem_inicio ? moment(data.data_ordem_inicio).format('DD/MM/YYYY') : '',
+    data_assinatura: data.data_assinatura ? moment(data.data_assinatura).format('DD/MM/YYYY') : '',
   }));
 };
 
