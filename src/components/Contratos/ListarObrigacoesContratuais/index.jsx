@@ -7,7 +7,8 @@ import { InputText } from "primereact/inputtext";
 import { Editor } from "primereact/editor";
 import {
   getObrigacaoContratualByContrato,
-  addObrigacaoContratual
+  addObrigacaoContratual,
+  updateObrigacaoContratual
 } from "../../../service/ObrigacoesContratuais.service";
 import { Dialog } from "primereact/dialog";
 
@@ -27,8 +28,15 @@ export default class ListarObrigacoesContratuais extends Component {
       contrato: null,
       item: "",
       obrigacao: "",
-      adicionarVisible: false
+      tituloModal: "",
+      descricaoModal: "",
+      modalVisible: false,
+      opereracao: "",
+      adicionarVisible: false,
+      editarVisible: false,
+      confirmarVisible: false
     };
+    this.obrigacaoTemplate = this.obrigacaoTemplate.bind(this);
   }
 
   handleAdicionarObrigacao = async () => {
@@ -41,7 +49,9 @@ export default class ListarObrigacoesContratuais extends Component {
     const resultado = await addObrigacaoContratual(payload);
     if (resultado.uuid) {
       this.setState({
-        obrigacoesSelect: await getObrigacaoContratualByContrato(this.state.contrato)
+        obrigacoesSelect: await getObrigacaoContratualByContrato(
+          this.state.contrato
+        )
       });
       this.setState({
         adicionarVisible: false,
@@ -52,16 +62,43 @@ export default class ListarObrigacoesContratuais extends Component {
   };
 
   onClickEditar(value) {
-    this.state.obrigacoes.forEach(obrigacao => {
+    this.setState({
+      tituloModal: "Editar Obrigações Contratuais",
+      descricaoModal: ""
+    });
+    this.state.obrigacoesSelect.forEach(obrigacao => {
       if (obrigacao.uuid === value) {
         this.setState({
           uuid: obrigacao.uuid,
-          contrato: obrigacao.contrato.uuid,
+          contrato: obrigacao.contrato,
           item: obrigacao.item,
           obrigacao: obrigacao.obrigacao
         });
       }
     });
+    this.setState({ adicionarVisible: true, opereracao: "edicao" });
+  }
+
+  async handleClickConfirmar() {
+    const payload = {
+      contrato: this.state.contrato,
+      item: this.state.item,
+      obrigacao: this.state.obrigacao ? this.state.obrigacao : null
+    };
+    console.log(payload, this.state.contrato, this.state.item);
+    const result = await updateObrigacaoContratual(payload, this.state.uuid);
+    if (result) {
+      this.setState({
+        obrigacoesSelect: await getObrigacaoContratualByContrato(
+          this.state.contrato
+        )
+      });
+      this.setState({ confirmarVisible: false });
+    }
+  }
+
+  obrigacaoTemplate(rowData, column) {
+    return <div dangerouslySetInnerHTML={{ __html: rowData.obrigacao }} />;
   }
 
   actionTemplate(rowData, column) {
@@ -125,7 +162,7 @@ export default class ListarObrigacoesContratuais extends Component {
               header={col.header}
               style={{ width: "10%" }}
             />
-          ); 
+          );
         case "editar":
           return (
             <Column
@@ -136,10 +173,33 @@ export default class ListarObrigacoesContratuais extends Component {
 
         default:
           return (
-            <Column key={col.field} field={col.field} header={col.header} />
+            <Column
+              key={col.field}
+              field={col.field}
+              header={col.header}
+              body={this.obrigacaoTemplate}
+            />
           );
       }
     });
+    const footerModalConfirmar = (
+      <div>
+        <Button
+          label="Confirmar"
+          style={{ marginRight: ".25em" }}
+          onClick={this.handleClickConfirmar.bind(this)}
+          className="btn-coad-background-outline"
+        />
+        <Button
+          label="Descartar"
+          style={{ marginRight: ".25em" }}
+          onClick={() => {
+            this.setState({ confirmarVisible: false, item: "", obrigacao: "" });
+          }}
+        />
+      </div>
+    );
+
     const footerModalAdicionar = (
       <div>
         <Button
@@ -157,9 +217,52 @@ export default class ListarObrigacoesContratuais extends Component {
         />
       </div>
     );
-    const { obrigacoesSelect } = this.state;
+
+    const footerModalEditar = (
+      <div>
+        <Button
+          label="Excluir"
+          style={{ marginRight: ".25em" }}
+          // onClick={() => {
+          //   this.setState({ adicionarVisible: false, item: "", obrigacao: "" });
+          // }}
+          className="btn-coad-background-outline"
+        />
+        <Button
+          label="editar"
+          style={{ marginRight: ".25em" }}
+          onClick={() => {
+            this.setState({ adicionarVisible: false, confirmarVisible: true });
+          }}
+          className="btn-coad-background-outline"
+        />
+        <Button
+          label="cancelar"
+          style={{ marginRight: ".25em" }}
+          onClick={() => {
+            this.setState({ adicionarVisible: false, item: "", obrigacao: "" });
+          }}
+        />
+      </div>
+    );
+
+    let footer = null;
+    if (this.state.opereracao === "inclusao") {
+      footer = footerModalAdicionar;
+    } else {
+      footer = footerModalEditar;
+    }
+
+    const {
+      obrigacoesSelect,
+      tituloModal,
+      descricaoModal,
+      adicionarVisible,
+      confirmarVisible
+    } = this.state;
     const rowsPerPage = 5;
     const header = this.renderHeader();
+
     return (
       <div>
         <Row>
@@ -175,7 +278,15 @@ export default class ListarObrigacoesContratuais extends Component {
                 label="Adicionar Obrigação"
                 style={{ marginBottom: ".80em" }}
                 onClick={() => {
-                  this.setState({ adicionarVisible: true });
+                  this.setState({
+                    tituloModal: "Adicionar Obrigações Contratuais",
+                    descricaoModal:
+                      "Adicione Item e obrigações em seus respectivos campos. Caso queira adicionar sub-item (Ex: 01.1), insira no campo “Obrigações Contratuais” do item principal.",
+                    adicionarVisible: true,
+                    opereracao: "inclusao",
+                    item: "",
+                    obrigacao: ""
+                  });
                 }}
                 className="btn-coad-background-outline"
               />
@@ -208,20 +319,16 @@ export default class ListarObrigacoesContratuais extends Component {
         )}
 
         <Dialog
-          header="Adicionar Obrigações Contratuais"
-          visible={this.state.adicionarVisible}
+          header={tituloModal}
+          visible={adicionarVisible}
           style={{ width: "60vw" }}
-          footer={footerModalAdicionar}
+          footer={footer}
           onHide={() => {
             this.setState({ adicionarVisible: false });
           }}
         >
-          <p>
-            Adicione Item e obrigações em seus respectivos campos. Caso queira
-            adicionar sub-item (Ex: 01.1), insira no campo “Obrigações
-            Contratuais” do item principal.
-            <br />
-          </p>
+          {descricaoModal}
+          <br />
           <Row>
             <Col lg={4} xl={4}>
               <label for="item">Item</label>
@@ -249,6 +356,19 @@ export default class ListarObrigacoesContratuais extends Component {
               />
             </Col>
           </Row>
+        </Dialog>
+        <Dialog
+          header="Confirmar edição de Obrigação Contratual?"
+          visible={confirmarVisible}
+          style={{ width: "60vw" }}
+          footer={footerModalConfirmar}
+          onHide={() => {
+            this.setState({ confirmarVisible: false });
+          }}
+        >
+          <div>
+            <p>Deseja confirmar edição de obrigação contratual?</p>
+          </div>
         </Dialog>
       </div>
     );
