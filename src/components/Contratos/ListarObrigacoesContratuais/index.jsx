@@ -15,7 +15,14 @@ export default class ListarObrigacoesContratuais extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      obrigacoes: [],
+      obrigacoesSelect: [],
+      obrigacoes: [
+        {
+          contrato: "",
+          item: "",
+          obrigacao: ""
+        }
+      ],
       uuid: null,
       contrato: null,
       item: "",
@@ -23,14 +30,26 @@ export default class ListarObrigacoesContratuais extends Component {
       adicionarVisible: false
     };
   }
-  salvaObrigacao() {
+
+  handleAdicionarObrigacao = async () => {
     const payload = {
       contrato: this.state.contrato,
       item: this.state.item,
       obrigacao: this.state.obrigacao
     };
-    addObrigacaoContratual(payload);
-  }
+
+    const resultado = await addObrigacaoContratual(payload);
+    if (resultado.uuid) {
+      this.setState({
+        obrigacoesSelect: await getObrigacaoContratualByContrato(this.state.contrato)
+      });
+      this.setState({
+        adicionarVisible: false,
+        item: "",
+        obrigacao: ""
+      });
+    }
+  };
 
   onClickEditar(value) {
     this.state.obrigacoes.forEach(obrigacao => {
@@ -79,7 +98,9 @@ export default class ListarObrigacoesContratuais extends Component {
     if (prevProps.contrato !== this.props.contrato) {
       this.setState({ contrato: this.props.contrato });
       this.setState({
-        obrigacoes: await getObrigacaoContratualByContrato(this.props.contrato)
+        obrigacoesSelect: await getObrigacaoContratualByContrato(
+          this.props.contrato
+        )
       });
     }
   }
@@ -104,7 +125,7 @@ export default class ListarObrigacoesContratuais extends Component {
               header={col.header}
               style={{ width: "10%" }}
             />
-          );
+          ); 
         case "editar":
           return (
             <Column
@@ -125,18 +146,18 @@ export default class ListarObrigacoesContratuais extends Component {
           label="Cancelar"
           style={{ marginRight: ".25em" }}
           onClick={() => {
-            this.setState({ adicionarVisible: false });
+            this.setState({ adicionarVisible: false, item: "", obrigacao: "" });
           }}
           className="btn-coad-background-outline"
         />
         <Button
           label="Adicionar"
           style={{ marginRight: ".25em" }}
-          // onClick={this.handleClickCadastratar.bind(this)}
+          onClick={this.handleAdicionarObrigacao.bind(this)}
         />
       </div>
     );
-    const { obrigacoes } = this.state;
+    const { obrigacoesSelect } = this.state;
     const rowsPerPage = 5;
     const header = this.renderHeader();
     return (
@@ -161,12 +182,12 @@ export default class ListarObrigacoesContratuais extends Component {
             </span>
           </Col>
         </Row>
-        {obrigacoes.length > 0 ? (
+        {obrigacoesSelect.length > 0 ? (
           <DataTable
-            value={obrigacoes}
+            value={obrigacoesSelect}
             resizableColumns={true}
             columnResizeMode="fit"
-            paginator={obrigacoes.length > rowsPerPage}
+            paginator={obrigacoesSelect.length > rowsPerPage}
             rows={rowsPerPage}
             paginatorTemplate="PrevPageLink PageLinks NextPageLink"
             className="datatable-strapd-coad"
