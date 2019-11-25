@@ -45,10 +45,27 @@ $hoverColor: #431e1e;
       color: $mainColor;
     }
   }
+
+  .btn-link {
+    color: $mainColor;
+  }
+
+  .btn-link:hover {
+    color: $hoverColor;
+  }
+
   .p-button {
     background-color: $mainColor;
     border-color: $mainColor;
     font-weight: bold;
+  }
+  
+  .p-button:enabled:hover {
+    border-color: $mainColor !important;
+  }
+
+  .p-button:enabled:focus {
+    box-shadow: 0 0 0 0.1em $mainColor;
   }
 
   .p-accordion .p-accordion-header:not(.p-disabled).p-highlight:hover a {
@@ -93,6 +110,10 @@ $hoverColor: #431e1e;
     outline-offset: 0;
     box-shadow: 0 0 0 0.2em $mainColor;
     border-color: $mainColor;
+  }
+
+  .ant-btn-link:hover {
+    color: $hoverColor;
   }
 
   .ant-btn-link {
@@ -183,7 +204,36 @@ $hoverColor: #431e1e;
     color: #155724 !important;
     border: 0.5px solid #a4c7af !important;
   }
-  ol.progtrckr li {
+ol.progtrckr li {
     line-height: 4.1rem;
+
+  .p-datatable-thead > tr > th {
+    text-align: left !important;
+  }
+
+  .datatable-footer-coad {
+    .p-datatable-footer {
+      background-color: #ffffff !important;
+      font-weight: normal !important;
+    }
+  }
+  .datatable-strapd-coad {
+    .p-datatable-tbody > tr:nth-child(even) {
+      background-color: #ffffff !important;
+    }
+  }
+
+  .p-editor-container {
+    border-radius: 3px !important;
+    border: 1px solid #a6a6a6 !important;
+  }
+
+  .p-editor-content {
+    border: none !important;
+  }
+
+  .p-editor-toolbar {
+    background-color: #ffffff !important;
+    border: none !important;
   }
 }

@@ -5,6 +5,7 @@ import { CoadTabs } from "../../../components/Contratos/CoadTabs";
 import { Row, Col } from "reactstrap";
 import DesignacaoCargosDivisao, {} from "./DesignacaoCargosDivisao"
 import {DesignacaoCargosNucleos} from './DesignacaoCargosNucleos'
+import './style.scss'
 
 export class CargosDivisao extends Component {
 
@@ -19,13 +20,14 @@ export class CargosDivisao extends Component {
             <CoadAccordion titulo={this.props.divisao.sigla}>
       
             <CoadTabs
+                    className="coad-tabs-designacao-cargos-divisao"
                     titulo1={"Diretor(a) da Divisão e Suplente"}
                     titulo2={"Núcleos da Divisão"}
                     conteudo1={
                     <div>
                         <Row>
                         <Col sm="12">
-                            <DesignacaoCargosDivisao divisao={this.props.divisao}/>
+                            <DesignacaoCargosDivisao divisao={this.props.divisao} showMessage={this.props.showMessage}/>
                         </Col>
                         </Row>
                     </div>
@@ -34,7 +36,7 @@ export class CargosDivisao extends Component {
                     <div>
                         <Row>
                         <Col sm="12">
-                            <DesignacaoCargosNucleos divisao={this.props.divisao}/>
+                            <DesignacaoCargosNucleos divisao={this.props.divisao} showMessage={this.props.showMessage}/>
                         </Col>
                         </Row>
                     </div>
