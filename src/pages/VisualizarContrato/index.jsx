@@ -56,7 +56,7 @@ class VisualizarContratos extends Component {
       observacoes: "",
       estadoContrato: [],
       situacaoContrato: [],
-      divisao: null,
+      // divisao: null,
       gestor: null,
       nucleo: null,
       estado: null,
@@ -110,9 +110,8 @@ class VisualizarContratos extends Component {
       total_mensal: contrato.total_mensal,
       objeto: contrato.objeto,
       observacoes: contrato.observacoes,
-      divisao: contrato.nucleo_responsavel.divisao.uuid,
       gestor: contrato.gestor,
-      nucleo: contrato.nucleo_responsavel.uuid,
+      nucleo: contrato.nucleo_responsavel ? contrato.nucleo_responsavel.uuid : '',
       estado: contrato.estado_contrato,
       vigencia_em_dias: contrato.vigencia_em_dias,
       dotacao: contrato.dotacao_orcamentaria,
@@ -127,10 +126,6 @@ class VisualizarContratos extends Component {
     this.setState({
       empresa_contratada: value
     });
-  };
-
-  selecionarDivisao = value => {
-    this.setState({ divisao: value });
   };
 
   selecionarNucleo = value => {
@@ -201,7 +196,6 @@ class VisualizarContratos extends Component {
       total_mensal,
       objeto,
       observacoes,
-      divisao,
       gestor,
       nucleo,
       estado,

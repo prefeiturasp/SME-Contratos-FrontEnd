@@ -1,16 +1,5 @@
 import React, { Component } from "react";
-import {
-  Row,
-  Col,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  FormGroup,
-  Input,
-  Label
-} from "reactstrap";
+import { Row, Col, Button, FormGroup, Input, Label } from "reactstrap";
 import { DataTable, Column } from "primereact/datatable";
 import { getUnidades } from "../../service/Unidades.service";
 import CurrencyInput from "react-currency-input";
@@ -59,6 +48,17 @@ class UnidadeEnvolvidas extends Component {
 
   toggle = () => {
     this.setState({ modal: !this.state.modal });
+  };
+
+  novaUnidade = () => {
+    this.toggle();
+    this.setState({
+      unidade: null,
+      valor_mensal: 0.00,
+      valor_total: 0.00,
+      lote: null,
+      dre_lote: null
+    });
   };
 
   disaparecerModal = () => {
@@ -146,7 +146,8 @@ class UnidadeEnvolvidas extends Component {
               <Col lg={8} xl={8}>
                 <FormGroup>
                   <Label>Unidade</Label>
-                  <select
+                  <Input
+                    type="select"
                     className="form-control"
                     name="unidade"
                     onChange={e => this.setState({ unidade: e.target.value })}
@@ -160,7 +161,7 @@ class UnidadeEnvolvidas extends Component {
                         >{`${value.nome} - ${value.codigo_eol} - ${value.equipamento}`}</option>
                       );
                     })}
-                  </select>
+                  </Input>
                 </FormGroup>
               </Col>
             </Row>
@@ -229,7 +230,7 @@ class UnidadeEnvolvidas extends Component {
           <Col className="mt-5">
             <Button
               disabled={disabilitado}
-              onClick={this.toggle}
+              onClick={this.novaUnidade}
               className="btn-coad-primary"
             >
               <i className="fas fa-plus"></i> Adicionar Unidade
