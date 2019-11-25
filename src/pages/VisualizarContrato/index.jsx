@@ -89,7 +89,7 @@ class VisualizarContratos extends Component {
       estadoContrato,
       tipoServicoOptions: tiposServicos,
       coordenador: contrato.coordenador,
-      usernameGestor: contrato.gestor.username,
+      usernameGestor: contrato.gestor ? contrato.gestor.username : '',
       usuarios
     });
     this.propsToState(contrato);
