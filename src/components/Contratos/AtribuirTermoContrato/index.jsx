@@ -53,7 +53,7 @@ export default class AtribuirTermoContrato extends Component {
         severity: "success",
         life: 5000,
         detail:
-          "Termo de Contrato cadastrado. Gestor e suplente serão nofificados via sistema e e-mail."
+          "Termo de Contrato cadastrado. Gestor e suplente serão notificados via sistema e e-mail."
       });
 
       this.reset();
