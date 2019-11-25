@@ -23,7 +23,7 @@ class Anexos extends Component {
     const param = getUrlParams();
     this.setState({ uuidContrato: param.uuid });
     const docs = await getDocumentosFiscaisByContrato(param.uuid);
-    docs.filter(value => {
+    docs.forEach(value => {
       if (value.tipo_unidade === "FISCAL_DRE") {
         const fileName = value.anexo.split("/").slice(-1)[0];
         docsDres.push({ href: value.anexo, name: fileName });

@@ -42,7 +42,7 @@ export default class Gestao extends Component {
   setEmailUsuario = uuid => {
     const { usuarios } = this.state;
     let emailUsuario = null;
-    usuarios.map(usuario => {
+    usuarios.forEach(usuario => {
       if (usuario.uuid === uuid) {
         emailUsuario = usuario.email;
       }

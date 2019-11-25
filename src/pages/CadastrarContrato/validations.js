@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import $ from "jquery";
 
 export const contratoValidations = Yup.object({
   termo_contrato: Yup.string()

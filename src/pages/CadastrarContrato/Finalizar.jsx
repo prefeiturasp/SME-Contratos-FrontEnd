@@ -1,7 +1,4 @@
 import React, { Component } from "react";
-import { Row, Col, Card } from "reactstrap";
-import { Select, Input } from "formik-reactstrap-widgets";
-import { Field } from "formik";
 import { Dialog } from "primereact/dialog";
 
 export default class Finalizar extends Component {

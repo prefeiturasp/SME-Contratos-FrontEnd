@@ -33,7 +33,6 @@ import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
 import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
 import { redirect } from "../../utils/redirect";
 import { getTiposServicoLookup } from "../../service/TiposServico.service";
-import { getCargosCoad } from "../../service/Cargos.service";
 import { mapStateToPayload } from "./helpers";
 import { Dialog } from "primereact/dialog";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
@@ -112,7 +111,7 @@ class VisualizarContratos extends Component {
       total_mensal: contrato.total_mensal,
       objeto: contrato.objeto,
       observacoes: contrato.observacoes,
-      gestor: contrato.gestor,
+      gestor: contrato.gestor ? contrato.gestor.uuid : '',
       nucleo: contrato.nucleo_responsavel ? contrato.nucleo_responsavel.uuid : '',
       estado: contrato.estado_contrato,
       vigencia_em_dias: contrato.vigencia_em_dias,
@@ -207,7 +206,6 @@ class VisualizarContratos extends Component {
       documentoFiscaDre,
       vigencia_em_dias,
       numero_edital,
-      dotacao,
       visible,
       alert,
       usernameGestor,
@@ -521,8 +519,6 @@ class VisualizarContratos extends Component {
                     >
                       {usuarios
                         ? usuarios.map((usuario, i) => {
-                            let selecionado = null;
-                            
                             return (
                               <option key={i} value={usuario.uuid}>
                                 {usuario.nome}

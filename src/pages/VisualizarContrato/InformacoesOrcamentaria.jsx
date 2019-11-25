@@ -19,7 +19,7 @@ export default class InformacoeOrcamentaria extends Component {
 
       this.setState({ dotacaoOrcamentaria });
       if (dotacaoOrcamentaria.length > 0) {
-        dotacaoOrcamentaria.map(valor => {
+        dotacaoOrcamentaria.forEach(valor => {
           const emptyDotacao = {
             classe: "w-75 my-2 mr-1 ",
             placeholder: "Digite nome da dotação",

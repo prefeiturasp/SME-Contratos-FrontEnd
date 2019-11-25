@@ -1,7 +1,6 @@
 import axios from "axios";
 import { getHeaderToken, getUsuario } from "./auth.service";
 import CONFIG from "../configs/config.constants";
-import { formatadorDeData } from "../utils/formatador";
 import moment from "moment";
 
 export function getContratos(filtro) {

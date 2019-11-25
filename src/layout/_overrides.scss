@@ -59,7 +59,7 @@ $hoverColor: #431e1e;
     border-color: $mainColor;
     font-weight: bold;
   }
-  
+
   .p-button:enabled:hover {
     border-color: $mainColor !important;
   }
@@ -204,8 +204,9 @@ $hoverColor: #431e1e;
     color: #155724 !important;
     border: 0.5px solid #a4c7af !important;
   }
-ol.progtrckr li {
+  ol.progtrckr li {
     line-height: 4.1rem;
+  }
 
   .p-datatable-thead > tr > th {
     text-align: left !important;

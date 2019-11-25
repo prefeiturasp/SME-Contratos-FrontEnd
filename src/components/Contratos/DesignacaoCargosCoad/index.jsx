@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import CoadAccordion from "../../Global/CoadAccordion";
 import {Button} from 'primereact/button';
 import { Button as AntButton } from 'antd';
-import { Messages } from "primereact/messages";
 import {BuscaIncrementalServidores} from "../BuscaIncrementalServidores"
 import {getCargosCoad, updateCoordenadorCoad, updateAssessoresCoad} from '../../../service/Cargos.service'
 
