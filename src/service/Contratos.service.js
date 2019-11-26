@@ -81,7 +81,7 @@ export function getTermosAll() {
     headers: getHeaderToken()
   };
   return axios
-    .get(`${CONFIG.API_URL}/contratos/termos`, AUTH_HEADER)
+    .get(`${CONFIG.API_URL}/contratos/termos/`, AUTH_HEADER)
     .then(res => {
       return formataDataCriacao(res.data);
     });
