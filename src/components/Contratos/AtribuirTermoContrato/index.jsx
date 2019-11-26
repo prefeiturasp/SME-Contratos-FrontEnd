@@ -73,6 +73,7 @@ export default class AtribuirTermoContrato extends Component {
       this.setState({ btnCancelarVisible: true });
     }
     this.setState({ visible: false });
+    window.location.reload(true);
   }
 
   handleClickAlterar() {
@@ -114,6 +115,7 @@ export default class AtribuirTermoContrato extends Component {
   }
 
   render() {
+    const btnHabilitado = this.state.termo_contrato.length > 0;
     const footer = (
       <span className="float-right">
         {this.state.btnCadastrarVisible && (
@@ -121,6 +123,7 @@ export default class AtribuirTermoContrato extends Component {
             label="Cadastrar"
             style={{ marginRight: ".25em" }}
             onClick={this.onClick}
+            disabled={!btnHabilitado}
           />
         )}
 
