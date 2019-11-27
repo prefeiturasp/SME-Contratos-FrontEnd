@@ -8,7 +8,8 @@ import { InputText } from "primereact/inputtext";
 import {
   getTermosAll,
   getTermoByAtribuicao,
-  updateContrato
+  updateContrato,
+  getContratos
 } from "../../../service/Contratos.service";
 import { BuscaIncrementalServidores } from "../BuscaIncrementalServidores";
 import { Dialog } from "primereact/dialog";
@@ -44,9 +45,15 @@ export default class ListarTermoContrato extends Component {
 
   handleClickPesquisar() {
     if (this.state.atribuicao !== "" || this.state.atribuicao.length !== 0) {
-      getTermoByAtribuicao(this.state.atribuicao).then(termos => {
-        this.setState({ termos });
-      });
+      if (isNaN(this.state.atribuicao[0]))
+        getTermoByAtribuicao(this.state.atribuicao).then(termos => {
+          this.setState({ termos });
+        });
+      else {
+        getContratos({ termo_contrato: this.state.atribuicao }).then(termos => {
+          this.setState({ termos });
+        });
+      }
     } else {
       this.buscaTermos();
     }
@@ -232,17 +239,18 @@ export default class ListarTermoContrato extends Component {
         <div style={{ paddingBottom: 10 }}>
           <Messages ref={el => (this.messages = el)}></Messages>
           <Row>
-            <Col xs={12} sm={12} md={12} lg={6} xl={6}>
+            <Col lg={6} xl={6}>
               <h6 style={{ marginLeft: 15, fontWeight: "bold" }}>
                 Últimos Cadastros
               </h6>
             </Col>
             <Col lg={6} xl={6}>
-              <div className="p-inputgroup float-right">
+              <div className="p-inputgroup w-75 float-right">
                 <InputText
                   value={this.state.atribuicao}
                   onChange={e => this.setState({ atribuicao: e.target.value })}
-                  placeholder="Buscar Gestor(a)/Suplente"
+                  placeholder="Buscar Gestor(a) / Suplente / Termo de contrato"
+                  style={{ width: "100%" }}
                 />
                 <Button
                   icon="pi pi-search"
@@ -258,6 +266,7 @@ export default class ListarTermoContrato extends Component {
           paginator={true}
           rows={10}
           paginatorTemplate="PrevPageLink PageLinks NextPageLink"
+          responsive={true}
         >
           {dynamicColumns}
         </DataTable>
