@@ -84,6 +84,7 @@ export const Grupo = props => {
 
   useEffect(() => {
     setMensagem("Ainda não existem itens de verificação adicionados no ateste");
+    console.log(mensagem)
   });
 
   const addItens = () => {
