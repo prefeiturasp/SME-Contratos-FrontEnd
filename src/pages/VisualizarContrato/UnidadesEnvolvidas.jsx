@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Row, Col, Button, FormGroup, Input, Label } from "reactstrap";
 import { DataTable, Column } from "primereact/datatable";
-import { getUnidades } from "../../service/Unidades.service";
-import CurrencyInput from "react-currency-input";
+import { Button as AntButton } from 'antd';
+import { getUnidades, getUnidade } from "../../service/Unidades.service";
 import {
   getUnidadesByContrato,
   addUnidade
@@ -28,7 +28,11 @@ class UnidadeEnvolvidas extends Component {
     unidade: null,
     lote: null,
     dre: null,
-    contrato: null
+    contrato: null,
+    codigo_eol: "",
+    unidadeNome: "",
+    unidadeEquipamento: "",
+    unidadeDRE: ""
   };
 
   async componentDidMount() {
@@ -56,12 +60,12 @@ class UnidadeEnvolvidas extends Component {
       unidade: null,
       valor_mensal: 0.00,
       valor_total: 0.00,
-      lote: null,
-      dre_lote: null
+      lote: null
     });
   };
 
   disaparecerModal = () => {
+    this.resetForm()
     this.setState({ modal: false });
   };
 
@@ -71,13 +75,13 @@ class UnidadeEnvolvidas extends Component {
       unidade: this.state.unidade,
       valor_mensal: this.state.valorMensal,
       valor_total: this.state.valorTotal,
-      lote: this.state.lote,
-      dre_lote: this.state.dre
+      lote: this.state.lote
     };
 
     const resultado = await addUnidade(payload);
     if (resultado.uuid) {
       this.carregaUnidadesContrato(this.state.contrato);
+      this.resetForm()
       this.setState({
         modal: false,
         valorMensal: 0.0,
@@ -97,13 +101,37 @@ class UnidadeEnvolvidas extends Component {
     this.setState({ valorTotal: floatValue });
   };
 
+  handleOnChangeCodigoEol = async (event) => {
+    const codigoEol = event.target.value
+    if (codigoEol.length >= 6) {
+      const unidade = await getUnidade(codigoEol)
+      this.setState(
+        {
+          unidade: unidade.uuid,
+          unidadeNome: unidade.nome,
+          unidadeEquipamento: unidade.equipamento,
+          unidadeDRE: unidade.dre ? unidade.dre.nome : "Sem DRE vinculada"
+        } 
+      )
+    }
+
+    this.setState({ codigo_eol: codigoEol})
+  }
+
+  resetForm = () => {
+    this.setState({ 
+      codigo_eol: "",
+      unidadeNome: "",
+      unidadeEquipamento: "",
+      unidadeDRE: "",
+      lote: ""
+    })
+  }
+
   render() {
     const {
       unidades,
       modal,
-      unidadesSelect,
-      valorMensal,
-      valorTotal
     } = this.state;
     const { disabilitado } = this.props;
     return (
@@ -139,78 +167,45 @@ class UnidadeEnvolvidas extends Component {
             <Row>
               <Col lg={4} xl={4}>
                 <FormGroup>
-                  <Label>Termo de Contrato</Label>
-                  <Input disabled={true} value={this.props.termo} />
+                  <Label>Código EOL</Label>
+                  <Input placeholder="Digite o código EOL" value={this.state.codigo_eol} onChange={this.handleOnChangeCodigoEol.bind(this)} />
                 </FormGroup>
               </Col>
               <Col lg={8} xl={8}>
                 <FormGroup>
-                  <Label>Unidade</Label>
-                  <Input
-                    type="select"
-                    className="form-control"
-                    name="unidade"
-                    onChange={e => this.setState({ unidade: e.target.value })}
-                  >
-                    <option> -- SELECIONE A UNIDADE -- </option>
-                    {unidadesSelect.map((value, i) => {
-                      return (
-                        <option
-                          key={i}
-                          value={value.uuid}
-                        >{`${value.nome} - ${value.codigo_eol} - ${value.equipamento}`}</option>
-                      );
-                    })}
-                  </Input>
+                  <Label>Unidade que Recebe Serviço</Label>
+                  <Input disabled={true} value={this.state.unidadeNome} />
                 </FormGroup>
               </Col>
             </Row>
             <Row>
               <Col lg={4} xl={4}>
                 <FormGroup>
-                  <Label>Valor Mensal</Label>
-                  <CurrencyInput
-                    value={valorMensal}
-                    onChangeEvent={this.handleValorMensal}
-                    decimalSeparator=","
-                    thousandSeparator="."
-                    prefix="R$ "
-                    className="form-control"
-                    ref="valorMensal"
-                  />
-                </FormGroup>
-              </Col>
-              <Col lg={4} xl={4}>
-                <FormGroup>
-                  <Label>Valor Total</Label>
-                  <CurrencyInput
-                    value={valorTotal}
-                    onChangeEvent={this.handleValorTotal}
-                    decimalSeparator=","
-                    thousandSeparator="."
-                    prefix="R$ "
-                    className="form-control"
-                    ref="valorTotal"
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={6} xl={6}>
-                <FormGroup>
-                  <Label>Lote</Label>
+                  <Label>Lote Correspondente</Label>
                   <Input
-                    placeholder="Lote"
+                    value={this.state.lote}
+                    placeholder="Digite Número do Lote"
                     onChange={e => this.setState({ lote: e.target.value })}
                   />
                 </FormGroup>
               </Col>
-              <Col lg={6} xl={6}>
+              <Col lg={4} xl={4}>
                 <FormGroup>
-                  <Label>DRE</Label>
+                  <Label>Equipamento</Label>
                   <Input
-                    placeholder="DRE"
-                    onChange={e => this.setState({ dre: e.target.value })}
+                    value={this.state.unidadeEquipamento}
+                    disabled={true}
+                    placeholder="Equipamento Correspondente"
+                  />
+                </FormGroup>
+              </Col>
+              <Col lg={4} xl={4}>
+                <FormGroup>
+                  <Label>DRE Correspondente</Label>
+                  <Input
+                    value={this.state.unidadeDRE}
+                    disabled={true}
+                    placeholder=""
                   />
                 </FormGroup>
               </Col>
@@ -223,18 +218,18 @@ class UnidadeEnvolvidas extends Component {
               <Column field="unidade.codigo_eol" header="Código EOL" />
               <Column field="unidade.nome" header="Un. que Recebem Serviço" />
               <Column field="unidade.equipamento" header="Equip." />
-              <Column field="dre_lote" header="DRE Corresp." />
+              <Column field="unidade.dre.nome" header="DRE Corresp." />
               <Column field="lote" header="Lote Corresp." />
             </DataTable>
-          </Col>
-          <Col className="mt-5">
-            <Button
-              disabled={disabilitado}
-              onClick={this.novaUnidade}
-              className="btn-coad-primary"
+            <AntButton 
+                style={{marginTop: '5px'}}
+                type="link" 
+                disabled={disabilitado}
+                size="small"
+                onClick={this.novaUnidade}
             >
-              <i className="fas fa-plus"></i> Adicionar Unidade
-            </Button>
+                Adicionar Unidade
+            </AntButton>
           </Col>
         </Row>
       </div>
