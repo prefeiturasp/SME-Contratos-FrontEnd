@@ -6,7 +6,7 @@ import Modelo from "./Modelo";
 import { getUrlParams } from "../../utils/params";
 
 const ModeloAteste = props => {
-  const [modelo, setModelo] = useState([]);
+  const [modelo, setModelo] = useState({});
 
   useEffect(() => {
     const param = getUrlParams();

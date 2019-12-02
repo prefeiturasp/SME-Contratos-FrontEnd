@@ -85,7 +85,7 @@ export default class ListarObrigacoesContratuais extends Component {
       item: this.state.item,
       obrigacao: this.state.obrigacao ? this.state.obrigacao : null
     };
-    console.log(payload, this.state.contrato, this.state.item);
+    // console.log(payload, this.state.contrato, this.state.item);
     const result = await updateObrigacaoContratual(payload, this.state.uuid);
     if (result) {
       this.setState({
