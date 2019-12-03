@@ -7,6 +7,7 @@ import DesignacaoCargos from "../pages/DesignacaoCargos"
 import AtribuicaoTermoContrato from "../pages/AtribuicaoTermoContrato"
 import Teste from "../pages/Teste";
 import CadastrarContrato from "../pages/CadastrarContrato";
+import ListarModelosAteste from "../pages/ListarModelosAteste";
 
 
 const RoutesConfig = [
@@ -48,6 +49,11 @@ const RoutesConfig = [
     {
       path: "/cadastro-unico-contrato",
       component: CadastrarContrato,
+      exact: false
+    }, 
+    {
+      path: "/listar-modelos-ateste",
+      component: ListarModelosAteste,
       exact: false
     }, 
     {
@@ -101,6 +107,7 @@ export const MenuConfig = [
       icon: "pi pi-cog",
       items: [
         { label: "Designação de Cargos", icon: "pi pi-cog pi-th-large", to: "/designacao-cargos" },
+        { label: "Modelos de Ateste", icon: "pi pi-cog pi-th-large", to: "/listar-modelos-ateste" },
       ]
     },
 ]
