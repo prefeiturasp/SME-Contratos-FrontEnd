@@ -7,6 +7,7 @@ import DesignacaoCargos from "../pages/DesignacaoCargos"
 import AtribuicaoTermoContrato from "../pages/AtribuicaoTermoContrato"
 import Teste from "../pages/Teste";
 import CadastrarContrato from "../pages/CadastrarContrato";
+import ModeloAteste from "../pages/ModeloAteste"
 import ListarModelosAteste from "../pages/ListarModelosAteste";
 
 
@@ -51,6 +52,11 @@ const RoutesConfig = [
       component: CadastrarContrato,
       exact: false
     }, 
+    {
+      path: "/modelo-ateste",
+      component: ModeloAteste,
+      exact: false
+    },
     {
       path: "/listar-modelos-ateste",
       component: ListarModelosAteste,
