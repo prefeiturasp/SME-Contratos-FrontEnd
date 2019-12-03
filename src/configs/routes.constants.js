@@ -8,6 +8,7 @@ import AtribuicaoTermoContrato from "../pages/AtribuicaoTermoContrato"
 import Teste from "../pages/Teste";
 import CadastrarContrato from "../pages/CadastrarContrato";
 import ModeloAteste from "../pages/ModeloAteste"
+import ListarModelosAteste from "../pages/ListarModelosAteste";
 
 
 const RoutesConfig = [
@@ -56,6 +57,11 @@ const RoutesConfig = [
       component: ModeloAteste,
       exact: false
     },
+    {
+      path: "/listar-modelos-ateste",
+      component: ListarModelosAteste,
+      exact: false
+    }, 
     {
       path: "/teste",
       component: Teste,
@@ -107,6 +113,7 @@ export const MenuConfig = [
       icon: "pi pi-cog",
       items: [
         { label: "Designação de Cargos", icon: "pi pi-cog pi-th-large", to: "/designacao-cargos" },
+        { label: "Modelos de Ateste", icon: "pi pi-cog pi-th-large", to: "/listar-modelos-ateste" },
       ]
     },
 ]
