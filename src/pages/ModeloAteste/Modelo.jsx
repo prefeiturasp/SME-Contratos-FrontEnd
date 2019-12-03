@@ -1,14 +1,16 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useCallback } from "react";
 import { FormGroup, Input, Label, Card } from "reactstrap";
 import { Button } from "primereact/button";
 import Grupo from "./Grupo";
+import { Button as AntButton } from "antd";
+import { criaModeloAteste } from "../../service/ModeloAteste.service";
 
 const Modelo = props => {
   const [modelo, setModelo] = useState({});
 
   useEffect(() => {
     setModelo(props.modelo);
-  },[props.modelo]);
+  }, [props.modelo]);
 
   const alteraTitulo = value => {
     modelo.titulo = value;
@@ -27,12 +29,16 @@ const Modelo = props => {
 
   const addGrupo = () => {
     modelo.grupos_de_verificacao.push({ nome: "" });
-    setModelo({...modelo})
+    setModelo({ ...modelo });
   };
 
-  const confirmaModelo = () => {
-    console.log(modelo)
-  }
+  const confirmaModelo = async () => {
+    const resultado = criaModeloAteste(modelo)
+  };
+
+  const mostraAlertaContainer = useCallback(event => {
+    props.mostraAlerta();
+  }, []);
 
   const habilitaBotao =
     modelo.titulo && modelo.grupos_de_verificacao ? false : true;
@@ -52,35 +58,44 @@ const Modelo = props => {
         {modelo.grupos_de_verificacao ? (
           modelo.grupos_de_verificacao.map((grupo, i) => (
             <Card>
-              <Grupo key={i} grupo={grupo} editar={editaGrupo} index={i} />
+              <Grupo
+                key={i}
+                grupo={grupo}
+                editar={editaGrupo}
+                index={i}
+                mostraAlerta={mostraAlertaContainer}
+              />
             </Card>
           ))
         ) : (
           <Card>
-            <Grupo grupo={{}} editar={editaGrupo} index={0} />
+            <Grupo
+              grupo={{}}
+              editar={editaGrupo}
+              index={0}
+              mostraAlerta={mostraAlertaContainer}
+            />
           </Card>
         )}
         <div>
-          <button
-            onClick={addGrupo}
+          <AntButton
             disabled={habilitaBotao}
-            className="btn btn-link font-weight-bold"
+            type="link"
+            size="small"
+            onClick={addGrupo}
           >
             Adicionar novo grupo
-          </button>
+          </AntButton>
         </div>
       </FormGroup>
       <FormGroup className="d-flex flex-row-reverse mt-3">
         <Button
           disabled={habilitaBotao}
-          className="btn-coad-primary p-2"
+          className="btn-coad-primary"
           label="Confirmar"
           onClick={confirmaModelo}
         />
-        <Button
-          className="btn-coad-background-outline p-2 mx-2"
-          label="Cancelar"
-        />
+        <Button className="btn-coad-background-outline mx-2" label="Cancelar" />
       </FormGroup>
     </Fragment>
   );

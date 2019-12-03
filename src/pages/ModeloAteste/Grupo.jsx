@@ -1,10 +1,18 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, {
+  useState,
+  useEffect,
+  Fragment,
+  useContext,
+  createContext
+} from "react";
 import { FormGroup, Input, Label } from "reactstrap";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Editor } from "primereact/editor";
+import { Button as AntButton } from "antd";
+// import { Alert } from 'reactstrap';
 
 const Grupo = props => {
   const [grupo, setGrupo] = useState({});
@@ -13,6 +21,8 @@ const Grupo = props => {
   const [descricao, setDescricao] = useState("");
   const [item, setItem] = useState("");
   const [adicionar, setAdicionar] = useState(true);
+  const [alerta, setAlerta] = useState(false);
+
 
   useEffect(() => {
     if (props.grupo) {
@@ -21,7 +31,7 @@ const Grupo = props => {
         setItens(grupo.itens_de_verificacao);
       }
     }
-  });
+  }, [props.grupo, grupo.itens_de_verificacao]);
 
   const editaNomeGrupo = value => {
     grupo.nome = value;
@@ -48,11 +58,14 @@ const Grupo = props => {
 
   const fecharDialog = () => {
     setVisivel(false);
+    setAdicionar(true);
   };
 
   const abrirDialog = () => {
     setVisivel(true);
   };
+
+  // const fechaAlerta = () => setAlerta(false);
 
   const iconTemplate = (rowData, column) => {
     return (
@@ -62,29 +75,43 @@ const Grupo = props => {
     );
   };
 
+  const adicionarItem = () => {
+    const index = itens.length + 1;
+    itens.push({ descricao: descricao, item: index });
+    atualizaEstadoItens(itens);
+    props.mostraAlerta();
+  };
+
   const alterarItem = () => {
     itens.filter(value => {
       if (item === value.item) {
         value.descricao = descricao;
+        return value;
       }
+      return itens;
     });
+    atualizaEstadoItens(itens);
+  };
+
+  const atualizaEstadoItens = itens => {
     setItens([...itens]);
     setDescricao("");
+    setItem("");
     fecharDialog();
     grupo.itens_de_verificacao = itens;
     setGrupo({ ...grupo });
     props.editar(props.index, grupo);
   };
 
-  const adicionarItem = () => {
-    const index = itens.length + 1;
-    itens.push({ descricao: descricao, item: index });
-    setItens([...itens]);
-    setDescricao("");
-    fecharDialog();
-    grupo.itens_de_verificacao = itens;
-    setGrupo({ ...grupo });
-    props.editar(props.index, grupo);
+  const excluirItem = () => {
+    itens.filter((value, i) => {
+      if (item === value.item) {
+        itens.splice(i, 1);
+      }
+      return itens;
+    });
+    atualizaEstadoItens(itens);
+    setAdicionar(true);
   };
 
   const descricaoTemplate = (rowData, column) => {
@@ -92,8 +119,15 @@ const Grupo = props => {
   };
 
   const habilitaBotao = grupo.nome ? false : true;
+  const habilitarBotaoExcluir = adicionar ? true : false;
+  const habilitaBotaoAdicionar =
+    descricao === "" || descricao === null ? true : false;
+
   return (
     <Fragment>
+      {/* <Alert color="success" isOpen={alerta} toggle={fechaAlerta}>
+        Item de verificação adicionado com sucesso
+      </Alert> */}
       <Dialog
         header={
           adicionar
@@ -132,25 +166,28 @@ const Grupo = props => {
             {adicionar ? (
               <Button
                 onClick={adicionarItem}
-                className="btn-coad-primary p-1"
+                className="btn-coad-primary"
                 label="Adicionar"
+                disabled={habilitaBotaoAdicionar}
               />
             ) : (
               <Button
                 onClick={alterarItem}
-                className="btn-coad-primary p-1"
+                className="btn-coad-primary"
                 label="Alterar"
+                disabled={habilitaBotaoAdicionar}
               />
             )}
             <Button
               onClick={fecharDialog}
-              className="btn-coad-background-outline p-1 mx-2"
+              className="btn-coad-background-outline mx-2"
               label="Cancelar"
             />
             <Button
-              className="btn-coad-background-outline p-1 mx-2"
+              className="btn-coad-background-outline mx-2"
               label="Excluir"
-              disabled={true}
+              disabled={habilitarBotaoExcluir}
+              onClick={excluirItem}
             />
           </FormGroup>
         </FormGroup>
@@ -170,6 +207,7 @@ const Grupo = props => {
           reorderableColumns={true}
           scrollable={true}
           scrollHeight={"300px"}
+          className="datatable-strapd-coad"
         >
           <Column
             body={iconTemplate}
@@ -184,13 +222,15 @@ const Grupo = props => {
         </DataTable>
       </FormGroup>
       <div>
-        <button
+        <AntButton
           disabled={habilitaBotao}
+          type="link"
+          size="small"
           onClick={abrirDialog}
-          className="btn btn-link font-weight-bold"
+          className="text-weigth-bold"
         >
           Adicionar novo item de verificação
-        </button>
+        </AntButton>
       </div>
     </Fragment>
   );
