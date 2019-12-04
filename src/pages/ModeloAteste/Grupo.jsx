@@ -45,6 +45,7 @@ const Grupo = props => {
         onClick={evet => populaModal(rowData, column)}
         className="btn-coad-background-outline"
         label="Editar"
+        disabled={props.modoVisualizacao}
       />
     );
   };
@@ -118,10 +119,11 @@ const Grupo = props => {
     return <div dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
   };
 
-  const habilitaBotao = grupo.nome ? false : true;
+  const habilitaBotao = props.modoVisualizacao === false && grupo.nome ? false : true;
   const habilitarBotaoExcluir = adicionar ? true : false;
   const habilitaBotaoAdicionar =
     descricao === "" || descricao === null ? true : false;
+  const footerVazio= "Ainda não existem itens de verificação adicionados no ateste"
 
   return (
     <Fragment>
@@ -198,10 +200,12 @@ const Grupo = props => {
           value={grupo ? grupo.nome : ""}
           onChange={e => editaNomeGrupo(e.target.value)}
           autocomplete="Off"
+          disabled={props.modoVisualizacao}
         />
       </FormGroup>
       <FormGroup>
         <Label>Lista de itens de verificação </Label>
+        {itens.length > 0 ? (
         <DataTable
           value={itens}
           reorderableColumns={true}
@@ -220,6 +224,19 @@ const Grupo = props => {
           />
           <Column body={actionTemplate} style={{ width: "7em" }} />
         </DataTable>
+        ) : (
+          <div>
+            <DataTable
+              footer={footerVazio}
+              className="datatable-footer-coad "
+            >
+              <Column header="" style={{ width: "5em" }} />
+              <Column header="Itens de verificação" />
+              <Column header="" style={{ width: "7em" }} />
+            </DataTable>
+          </div>
+        )
+        }
       </FormGroup>
       <div>
         <AntButton
