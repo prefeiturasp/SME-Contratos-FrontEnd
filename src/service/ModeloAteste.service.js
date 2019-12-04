@@ -6,7 +6,7 @@ export const getModeloAteste = async uuid => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  const url = "modelo-ateste/";
+  const url = `modelo-ateste/${uuid}/`
   return (await api.get(url, AUTH_HEADER)).data;
 };
 
@@ -16,6 +16,14 @@ export const getModeloAtesteLookup = async () => {
   };
   const url = "modelo-ateste/titulos-modelo-ateste/";
   return formataData((await api.get(url, AUTH_HEADER)).data);
+};
+
+export const criaModeloAteste = async (payload) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  const url = "modelo-ateste/";
+  return await (api.post(url, payload, AUTH_HEADER));
 };
 
 const formataData = datas => {

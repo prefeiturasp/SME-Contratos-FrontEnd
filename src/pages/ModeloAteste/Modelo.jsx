@@ -1,12 +1,17 @@
 import React, { useState, useEffect, Fragment, useCallback } from "react";
 import { FormGroup, Input, Label, Card } from "reactstrap";
 import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
 import Grupo from "./Grupo";
 import { Button as AntButton } from "antd";
 import { criaModeloAteste } from "../../service/ModeloAteste.service";
+import { CREATED } from "http-status-codes";
+import { redirect } from "../../utils/redirect";
+import { setFlashMessage } from "../../utils/flashMessages";
 
 const Modelo = props => {
   const [modelo, setModelo] = useState({});
+  const [visivel, setVisivel] = useState(false);
 
   useEffect(() => {
     setModelo(props.modelo);
@@ -15,6 +20,14 @@ const Modelo = props => {
   const alteraTitulo = value => {
     modelo.titulo = value;
     setModelo({ ...modelo });
+  };
+
+  const fechaDialog = () => {
+    setVisivel(false);
+  };
+
+  const exibeDialog = () => {
+    setVisivel(true);
   };
 
   const editaGrupo = (index, grupo) => {
@@ -33,7 +46,11 @@ const Modelo = props => {
   };
 
   const confirmaModelo = async () => {
-    const resultado = criaModeloAteste(modelo)
+    const resultado = await criaModeloAteste(modelo);
+    if (resultado.status === CREATED) {
+      setFlashMessage("Modelo de ateste criado com sucesso","sucesso")
+      redirect("#/listar-modelos-ateste")
+    }
   };
 
   const mostraAlertaContainer = useCallback(event => {
@@ -45,6 +62,29 @@ const Modelo = props => {
 
   return (
     <Fragment>
+      <Dialog
+        header={"Confirmar"}
+        visible={visivel}
+        style={{ width: "60vw" }}
+        modal={true}
+        onHide={fechaDialog}
+      >
+        <span>Deseja confirmar criação de novo modelo de ateste?</span>
+        <FormGroup className="pt-4 d-flex justify-content-end">
+          <Button
+            className="btn-coad-background-outline mx-2"
+            onClick={fechaDialog}
+            label="Cancelar"
+          />
+
+          <Button
+            disabled={habilitaBotao}
+            className="btn-coad-primary"
+            label="Confirmar"
+            onClick={confirmaModelo}
+          />
+        </FormGroup>
+      </Dialog>
       <FormGroup>
         <Label className="font-weight-bold">Título do modelo de ateste</Label>
         <Input
@@ -93,7 +133,7 @@ const Modelo = props => {
           disabled={habilitaBotao}
           className="btn-coad-primary"
           label="Confirmar"
-          onClick={confirmaModelo}
+          onClick={exibeDialog}
         />
         <Button className="btn-coad-background-outline mx-2" label="Cancelar" />
       </FormGroup>

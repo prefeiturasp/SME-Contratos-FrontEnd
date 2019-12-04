@@ -12,19 +12,21 @@ const ModeloAteste = props => {
 
   useEffect(() => {
     const param = getUrlParams();
-    const modelosService = async () => {
-      const modelo = await getModeloAteste(param.uuid);
-      setModelo(modelo);
-    };
-    modelosService();
+    if (param.uuid) {
+      const modelosService = async () => {
+        const modelo = await getModeloAteste(param.uuid);
+        setModelo(modelo);
+      };
+      modelosService();
+    }
   }, [setModelo]);
 
   const mostraAlerta = useCallback(
     event => {
       setAlerta(true);
       setTimeout(() => {
-        setAlerta(false)
-      },5000)
+        setAlerta(false);
+      }, 5000);
     },
     [alerta]
   );
@@ -35,18 +37,13 @@ const ModeloAteste = props => {
     <Fragment>
       <Page>
         <Alert color="success" isOpen={alerta} toggle={fechaAlerta}>
-          <span className="font-weight-bold d-flex justify-content-center">Item de verificação adicionado com sucesso</span>
+          <span className="font-weight-bold d-flex justify-content-center">
+            Item de verificação adicionado com sucesso
+          </span>
         </Alert>
         <h3>Criar Modelo de Ateste</h3>
         <Container>
-          {modelo ? (
-            <Modelo
-              modelo={modelo}
-              mostraAlerta={mostraAlerta}
-            />
-          ) : (
-            ""
-          )}
+          {modelo ? <Modelo modelo={modelo} mostraAlerta={mostraAlerta} /> : ""}
         </Container>
       </Page>
     </Fragment>

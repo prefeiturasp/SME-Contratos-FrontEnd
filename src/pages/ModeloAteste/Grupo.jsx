@@ -2,8 +2,6 @@ import React, {
   useState,
   useEffect,
   Fragment,
-  useContext,
-  createContext
 } from "react";
 import { FormGroup, Input, Label } from "reactstrap";
 import { DataTable } from "primereact/datatable";
@@ -12,7 +10,6 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Editor } from "primereact/editor";
 import { Button as AntButton } from "antd";
-// import { Alert } from 'reactstrap';
 
 const Grupo = props => {
   const [grupo, setGrupo] = useState({});
@@ -21,7 +18,6 @@ const Grupo = props => {
   const [descricao, setDescricao] = useState("");
   const [item, setItem] = useState("");
   const [adicionar, setAdicionar] = useState(true);
-  const [alerta, setAlerta] = useState(false);
 
 
   useEffect(() => {
@@ -64,8 +60,6 @@ const Grupo = props => {
   const abrirDialog = () => {
     setVisivel(true);
   };
-
-  // const fechaAlerta = () => setAlerta(false);
 
   const iconTemplate = (rowData, column) => {
     return (
@@ -125,9 +119,6 @@ const Grupo = props => {
 
   return (
     <Fragment>
-      {/* <Alert color="success" isOpen={alerta} toggle={fechaAlerta}>
-        Item de verificação adicionado com sucesso
-      </Alert> */}
       <Dialog
         header={
           adicionar
