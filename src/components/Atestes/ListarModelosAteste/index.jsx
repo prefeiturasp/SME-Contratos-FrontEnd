@@ -4,8 +4,9 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Row, Col } from "reactstrap";
 import { getModeloAtesteLookup } from "../../../service/ModeloAteste.service";
+import { redirect } from "../../../utils/redirect";
 
-export default class ListarObrigacoesContratuais extends Component {
+export default class ListarModelosAteste extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,9 +21,11 @@ export default class ListarObrigacoesContratuais extends Component {
         <Button
           label="Visualizar"
           className="btn-coad-background-outline"
-          //   onClick={event => {
-          //     this.onClickVisualizar(column.uuid);
-          //   }}
+            onClick={event => {
+              redirect(
+                `#/modelo-ateste/?uuid=${column.uuid}`
+              )
+            }}
         />
       </div>
     );
@@ -39,6 +42,7 @@ export default class ListarObrigacoesContratuais extends Component {
 
   render() {
     const { modelos } = this.state;
+    const rowsPerPage = 5;
     return (
       <div>
         <Row>
@@ -58,11 +62,22 @@ export default class ListarObrigacoesContratuais extends Component {
                 label="Criar Modelo de Ateste"
                 style={{ marginBottom: ".80em" }}
                 className="btn-coad-background-outline"
+                onClick={event => {
+                  redirect(
+                    `#/modelo-ateste/`
+                  )
+                }}
               />
             </span>
           </Col>
         </Row>
-        <DataTable value={modelos} className="datatable-strapd-coad">
+        <DataTable
+          value={modelos}
+          className="datatable-strapd-coad"
+          paginator={modelos.length > rowsPerPage}
+          rows={rowsPerPage}
+          paginatorTemplate="PrevPageLink PageLinks NextPageLink"
+        >
           <Column field="titulo" header="Modelos de ateste" />
           <Column
             field="criado_em"
@@ -70,7 +85,7 @@ export default class ListarObrigacoesContratuais extends Component {
             style={{ textAlign: "center", width: "10em" }}
           />
           <Column
-            body={this.actionTemplate.bind(this)}
+            body={this.actionTemplate.bind(this, modelos)}
             style={{ textAlign: "center", width: "10em" }}
           />
         </DataTable>

@@ -26,6 +26,14 @@ export const criaModeloAteste = async (payload) => {
   return await (api.post(url, payload, AUTH_HEADER));
 };
 
+export const alteraModeloAteste = async (payload) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  const url = `modelo-ateste/${payload.uuid}/`;
+  return await (api.patch(url, payload, AUTH_HEADER));
+};
+
 const formataData = datas => {
   return datas.map(data => ({
     ...data,

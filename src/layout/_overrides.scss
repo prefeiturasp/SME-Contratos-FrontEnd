@@ -1,5 +1,7 @@
 //Suggested location to add your overrides so that migration would be easy by just updating the SASS folder in the future
 $mainColor: #602a2a;
+$blue: #086397;;
+$blueHight: #064F79;;
 $whiteColor: #ffffff;
 $hoverColor: #431e1e;
 
@@ -85,10 +87,29 @@ $hoverColor: #431e1e;
     color: $whiteColor;
   }
 
+  .btn-coad-primary-small {
+    background-color: $mainColor;
+    border-color: $mainColor;
+    color: $whiteColor;
+    font-size: 12px !important;
+  }
+
   .btn-coad-background-outline {
     border-color: $mainColor;
     color: $mainColor !important;
     background-color: $whiteColor;
+    font-weight: bold;
+  } 
+  .btn-coad-blue {
+    border-color: $blue;
+    color: $blue !important;
+    background-color: $whiteColor;
+    font-weight: bold;
+  }
+  .btn-coad-blue:enabled:hover {
+    border-color: $blueHight !important;
+    color: $whiteColor !important;
+    background-color: $blueHight !important;
     font-weight: bold;
   }
 

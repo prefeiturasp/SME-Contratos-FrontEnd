@@ -9,6 +9,7 @@ import { Alert } from "reactstrap";
 const ModeloAteste = props => {
   const [modelo, setModelo] = useState({});
   const [alerta, setAlerta] = useState(false);
+  const [tituloPagina, setTituloPagina] = useState("Criar Modelo de Ateste");
 
   useEffect(() => {
     const param = getUrlParams();
@@ -18,6 +19,7 @@ const ModeloAteste = props => {
         setModelo(modelo);
       };
       modelosService();
+      setTituloPagina('Visualizar Modelo de Ateste')
     }
   }, [setModelo]);
 
@@ -41,7 +43,7 @@ const ModeloAteste = props => {
             Item de verificação adicionado com sucesso
           </span>
         </Alert>
-        <h3>Criar Modelo de Ateste</h3>
+        <h3>{tituloPagina}</h3>
         <Container>
           {modelo ? <Modelo modelo={modelo} mostraAlerta={mostraAlerta} /> : ""}
         </Container>

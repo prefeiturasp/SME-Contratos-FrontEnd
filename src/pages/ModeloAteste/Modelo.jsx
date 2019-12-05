@@ -8,13 +8,19 @@ import { criaModeloAteste } from "../../service/ModeloAteste.service";
 import { CREATED } from "http-status-codes";
 import { redirect } from "../../utils/redirect";
 import { setFlashMessage } from "../../utils/flashMessages";
+import { getUrlParams } from "../../utils/params";
 
 const Modelo = props => {
   const [modelo, setModelo] = useState({});
+  const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [visivel, setVisivel] = useState(false);
 
   useEffect(() => {
-    setModelo(props.modelo);
+    setModelo(props.modelo); 
+    const parametro = getUrlParams();
+    if(!parametro.uuid){
+      setModoVisualizacao(false)
+    }
   }, [props.modelo]);
 
   const alteraTitulo = value => {
@@ -45,6 +51,10 @@ const Modelo = props => {
     setModelo({ ...modelo });
   };
 
+  const ativaModoEdicao = () => {
+    setModoVisualizacao(false);
+  };
+
   const confirmaModelo = async () => {
     const resultado = await criaModeloAteste(modelo);
     if (resultado.status === CREATED) {
@@ -58,7 +68,9 @@ const Modelo = props => {
   }, []);
 
   const habilitaBotao =
-    modelo.titulo && modelo.grupos_de_verificacao ? false : true;
+    modoVisualizacao === false && modelo.titulo && modelo.grupos_de_verificacao
+      ? false
+      : true;
 
   return (
     <Fragment>
@@ -91,6 +103,7 @@ const Modelo = props => {
           value={modelo ? modelo.titulo : ""}
           onChange={e => alteraTitulo(e.target.value)}
           autoComplete={false}
+          disabled={modoVisualizacao}
         />
       </FormGroup>
       <FormGroup>
@@ -104,6 +117,7 @@ const Modelo = props => {
                 editar={editaGrupo}
                 index={i}
                 mostraAlerta={mostraAlertaContainer}
+                modoVisualizacao={modoVisualizacao}
               />
             </Card>
           ))
@@ -114,6 +128,7 @@ const Modelo = props => {
               editar={editaGrupo}
               index={0}
               mostraAlerta={mostraAlertaContainer}
+              modoVisualizacao={modoVisualizacao}
             />
           </Card>
         )}
