@@ -4,13 +4,18 @@ import { Button } from "primereact/button";
 import Grupo from "./Grupo";
 import { Button as AntButton } from "antd";
 import { criaModeloAteste } from "../../service/ModeloAteste.service";
+import { getUrlParams } from "../../utils/params";
 
 const Modelo = props => {
   const [modelo, setModelo] = useState({});
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
 
   useEffect(() => {
-    setModelo(props.modelo);
+    setModelo(props.modelo); 
+    const parametro = getUrlParams();
+    if(!parametro.uuid){
+      setModoVisualizacao(false)
+    }
   }, [props.modelo]);
 
   const alteraTitulo = value => {
