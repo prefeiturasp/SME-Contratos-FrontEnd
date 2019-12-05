@@ -4,12 +4,18 @@ import { Button } from "primereact/button";
 import Grupo from "./Grupo";
 import { Button as AntButton } from "antd";
 import { criaModeloAteste } from "../../service/ModeloAteste.service";
+import { getUrlParams } from "../../utils/params";
 
 const Modelo = props => {
   const [modelo, setModelo] = useState({});
+  const [modoVisualizacao, setModoVisualizacao] = useState(true);
 
   useEffect(() => {
-    setModelo(props.modelo);
+    setModelo(props.modelo); 
+    const parametro = getUrlParams();
+    if(!parametro.uuid){
+      setModoVisualizacao(false)
+    }
   }, [props.modelo]);
 
   const alteraTitulo = value => {
@@ -32,8 +38,12 @@ const Modelo = props => {
     setModelo({ ...modelo });
   };
 
+  const ativaModoEdicao = () => {
+    setModoVisualizacao(false);
+  };
+
   const confirmaModelo = async () => {
-    const resultado = criaModeloAteste(modelo)
+    const resultado = criaModeloAteste(modelo);
   };
 
   const mostraAlertaContainer = useCallback(event => {
@@ -41,7 +51,9 @@ const Modelo = props => {
   }, []);
 
   const habilitaBotao =
-    modelo.titulo && modelo.grupos_de_verificacao ? false : true;
+    modoVisualizacao === false && modelo.titulo && modelo.grupos_de_verificacao
+      ? false
+      : true;
 
   return (
     <Fragment>
@@ -51,6 +63,7 @@ const Modelo = props => {
           value={modelo ? modelo.titulo : ""}
           onChange={e => alteraTitulo(e.target.value)}
           autoComplete={false}
+          disabled={modoVisualizacao}
         />
       </FormGroup>
       <FormGroup>
@@ -64,6 +77,7 @@ const Modelo = props => {
                 editar={editaGrupo}
                 index={i}
                 mostraAlerta={mostraAlertaContainer}
+                modoVisualizacao={modoVisualizacao}
               />
             </Card>
           ))
@@ -74,6 +88,7 @@ const Modelo = props => {
               editar={editaGrupo}
               index={0}
               mostraAlerta={mostraAlertaContainer}
+              modoVisualizacao={modoVisualizacao}
             />
           </Card>
         )}
