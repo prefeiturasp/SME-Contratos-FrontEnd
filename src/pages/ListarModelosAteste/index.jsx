@@ -15,6 +15,14 @@ export default class ListarModelosAtestePage extends Component {
         detail: getFlashMessage("sucesso")
       });
     }
+
+    if (hasFlashMessage("error")) {
+      this.messages.show({
+        severity: "error",
+        life: 10000,
+        detail: getFlashMessage("error")
+      });
+    }
     
     if (hasFlashMessage("warning")) {
       this.messages.show({

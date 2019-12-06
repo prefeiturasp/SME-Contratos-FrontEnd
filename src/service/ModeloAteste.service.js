@@ -42,3 +42,11 @@ const formataData = datas => {
       : ""
   }));
 };
+
+export const excluiModeloAteste = async uuid => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  const url = `modelo-ateste/${uuid}/`
+  return (await api.delete(url, AUTH_HEADER).catch(err => {return false}));
+};

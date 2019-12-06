@@ -12,9 +12,10 @@ import Grupo from "./Grupo";
 import { Button as AntButton, Switch } from "antd";
 import {
   criaModeloAteste,
-  alteraModeloAteste
+  alteraModeloAteste,
+  excluiModeloAteste
 } from "../../service/ModeloAteste.service";
-import { CREATED, OK } from "http-status-codes";
+import { CREATED, OK, NO_CONTENT } from "http-status-codes";
 import { redirect } from "../../utils/redirect";
 import { setFlashMessage } from "../../utils/flashMessages";
 import { getUrlParams } from "../../utils/params";
@@ -26,6 +27,7 @@ const Modelo = props => {
   const [modelo, setModelo] = useState({});
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [incluir, setIncluir] = useState(true);
+  const [modalExcluir, setmodalExcluir] = useState(false);
 
   useEffect(() => {
     setModelo(props.modelo);
@@ -69,6 +71,14 @@ const Modelo = props => {
     setModelo({ ...modelo });
   };
 
+  const exibeModalExcluir = () => {
+    setmodalExcluir(true);
+  };
+
+  const ocultaModalExcluir = () => {
+    setmodalExcluir(false);
+  };
+
   const confirmaModelo = async () => {
     const resultado = await criaModeloAteste(modelo);
     if (resultado.status === CREATED) {
@@ -85,6 +95,20 @@ const Modelo = props => {
     }
   };
 
+  const excluirModelo = async () => {
+    const resultado = await excluiModeloAteste(modelo.uuid);
+    if (resultado.status === NO_CONTENT) {
+      setFlashMessage("Modelo de Ateste excluído com sucesso", "sucesso");
+      redirect("#/listar-modelos-ateste/");
+    } else {
+      redirect("#/listar-modelos-ateste/");
+      setFlashMessage(
+        "Modelo de ateste não pode ser excluido! Este modelo está vinculado a um ou mais contratos.",
+        "error"
+      );
+    }
+  };
+
   const mostraAlertaContainer = useCallback(event => {
     props.mostraAlerta();
   }, []);
@@ -96,6 +120,24 @@ const Modelo = props => {
   const mensagemConfirmacao = !incluir
     ? "Deseja confirmar criação de novo modelo de ateste?"
     : "Deseja confirmar alteração deste modelo de ateste?";
+
+  const footerModalExcluir = (
+    <div>
+      <Button
+        label="Excluir"
+        style={{ marginRight: ".25em" }}
+        onClick={excluirModelo}
+        className="btn-coad-background-outline"
+      />
+
+      <Button
+        label="cancelar"
+        style={{ marginRight: ".25em" }}
+        onClick={ocultaModalExcluir}
+      />
+    </div>
+  );
+
   return (
     <Fragment>
       <FormGroup className="d-flex flex-row-reverse mt-3">
@@ -105,6 +147,16 @@ const Modelo = props => {
           label="Salvar"
           onClick={exibeDialog}
         />
+        {modoVisualizacao === false && incluir===true ? (
+          <Button
+            disabled={modoVisualizacao}
+            className="btn-coad-background-outline mr-2"
+            label="Excluir Modelo"
+            onClick={exibeModalExcluir}
+          />
+        ) : (
+          ""
+        )}
         <Button
           disabled={habilitaBotao}
           className="btn-coad-background-outline mr-2"
@@ -257,10 +309,20 @@ const Modelo = props => {
       <FormGroup className="d-flex flex-row-reverse mt-3">
         <Button
           disabled={habilitaBotao}
-          className="btn-coad-primary"
+          className="btn-coad-primary mr-1"
           label="Salvar"
           onClick={exibeDialog}
         />
+        {modoVisualizacao === false && incluir===true ? (
+          <Button
+            disabled={modoVisualizacao}
+            className="btn-coad-background-outline mr-2"
+            label="Excluir Modelo"
+            onClick={exibeModalExcluir}
+          />
+        ) : (
+          ""
+        )}
 
         <Button
           disabled={habilitaBotao}
@@ -268,6 +330,7 @@ const Modelo = props => {
           label="Cancelar"
           onClick={() => setVisivelCancelar(true)}
         />
+
         <ButtonBootstrap
           onClick={() => redirect("#/listar-modelos-ateste")}
           className="btn-coad-blue mx-2"
@@ -275,6 +338,17 @@ const Modelo = props => {
           <i className="fas fa-arrow-left" /> Voltar
         </ButtonBootstrap>
       </FormGroup>
+      <Dialog
+        header="Excluir"
+        visible={modalExcluir}
+        style={{ width: "60vw" }}
+        footer={footerModalExcluir}
+        onHide={ocultaModalExcluir}
+      >
+        <div>
+          <p>Deseja excluir modelo de ateste? </p>
+        </div>
+      </Dialog>
     </Fragment>
   );
 };
