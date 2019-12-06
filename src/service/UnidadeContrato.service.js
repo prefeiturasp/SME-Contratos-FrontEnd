@@ -31,3 +31,21 @@ export const addUnidade = payload => {
     .post(`${CONFIG.API_URL}/unidades-contratos/`, payload, AUTH_HEADER)
     .then(res => res.data);
 };
+
+export const updateUnidade = (payload, uuid) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  return axios
+    .put(
+      `${CONFIG.API_URL}/unidades-contratos/${uuid}/`,
+      payload,
+      AUTH_HEADER
+    )
+    .then(
+      res => res.data,
+      res => {
+        return { statusCode: res.statusCode, result: res };
+      }
+    );
+};

@@ -6,11 +6,13 @@ import {Button as PrimeButton} from 'primereact/button';
 import { getUnidades, getUnidade } from "../../service/Unidades.service";
 import {
   getUnidadesByContrato,
-  addUnidade
+  addUnidade,
+  updateUnidade
 } from "../../service/UnidadeContrato.service";
 import { getUrlParams } from "../../utils/params";
 import { Dialog } from "primereact/dialog";
 import {getUsuarioByUserName} from '../../service/Usuarios.service'
+import { NONAME } from "dns";
 
 const cursorPointer = {
   cursor: "pointer"
@@ -39,6 +41,7 @@ class UnidadeEnvolvidas extends Component {
     unidadeNome: "",
     unidadeEquipamento: "",
     unidadeDRE: "",
+    unidadeContratoUUID: null,
     fiscalTitular: {
       rf: "",
       nome: "",
@@ -46,7 +49,13 @@ class UnidadeEnvolvidas extends Component {
       tipo_fiscal: 'TITULAR'
     },
     fiscaisSuplentes: [],
-    podeAddSuplente: true
+    podeAddSuplente: true,
+    modalMode: '',
+    headerByModalMode: {
+      ADD: 'Adicionar Unidade à tabela',
+      EDIT: 'Editar Unidade da tabela',
+      VIEW: 'Visualizar Unidade da tabela'
+    }
   };
 
   async componentDidMount() {
@@ -74,7 +83,8 @@ class UnidadeEnvolvidas extends Component {
       unidade: null,
       valor_mensal: 0.00,
       valor_total: 0.00,
-      lote: null
+      lote: null,
+      modalMode: 'ADD'
     });
   };
 
@@ -110,8 +120,15 @@ class UnidadeEnvolvidas extends Component {
       fiscais
     };
 
+    let resultado = null
 
-    const resultado = await addUnidade(payload);
+    if (this.state.modalMode === 'ADD') {
+      resultado = await addUnidade(payload);
+    }
+    else {
+      resultado = await updateUnidade(payload, this.state.unidadeContratoUUID);
+    }
+
     if (resultado.uuid) {
       this.carregaUnidadesContrato(this.state.contrato);
       this.resetForm()
@@ -225,20 +242,66 @@ class UnidadeEnvolvidas extends Component {
   }
 
   editUnidade = (data) => {
-    // console.log('Data:', data)
-    // this.toggle();
+    console.log('Data:', data)
+
+    let fiscalTitular = {
+      rf: "",
+      nome: "",
+      uuid: "",
+      tipo_fiscal: 'TITULAR'
+    }
+    let fiscaisSuplentes = []
+
+    data.fiscais.forEach(
+      (fiscal) => {
+        if (fiscal.tipo_fiscal === 'TITULAR') {
+          fiscalTitular = {
+            rf: fiscal.fiscal.username,
+            nome: fiscal.fiscal.nome,
+            uuid: fiscal.fiscal.uuid,
+            tipo_fiscal: 'TITULAR' 
+          }
+        }
+        else {
+          fiscaisSuplentes.push({
+            rf: fiscal.fiscal.username,
+            nome: fiscal.fiscal.nome,
+            uuid: fiscal.fiscal.uuid,
+            tipo_fiscal: 'SUPLENTE' 
+          })
+
+        }
+      }
+    )
+
+    this.setState({
+      codigo_eol: data.unidade ? data.unidade.codigo_eol : '',
+      unidadeNome: data.unidade ? data.unidade.nome : '',
+      unidadeEquipamento: data.unidade ? data.unidade.equipamento : '',
+      unidadeDRE: data.unidade.dre ? data.unidade.dre.nome : '',
+      unidadeContratoUUID: data.uuid,
+      unidade: data.unidade.uuid,
+      lote: data.lote,
+      fiscalTitular,
+      fiscaisSuplentes,
+      modalMode: this.props.disabilitado ? 'VIEW' : 'EDIT'
+    })
+    
+    this.toggle();
   };
 
   render() {
     const {
       unidades,
       modal,
+      modalMode,
+      headerByModalMode
     } = this.state;
     const { disabilitado } = this.props;
     return (
       <div>
         <Dialog
-          header="Adicionar Unidade à tabela"
+          header={headerByModalMode[modalMode]}
           visible={modal}
           style={{ width: "70vw" }}
           modal={true}
@@ -251,25 +314,25 @@ class UnidadeEnvolvidas extends Component {
               >
                 Cancelar
               </Button>
-              <Button
-                danger
-                className="btn-coad-primary"
-                onClick={this.handleAddUnidade}
-              >
-                Adicionar Unidade
-              </Button>
+
+              { !disabilitado &&
+                <Button
+                  danger
+                  className="btn-coad-primary"
+                  onClick={this.handleAddUnidade}
+                >
+                  Salvar
+                </Button>
+              }
             </div>
           }
         >
           <div className="px-2">
-            {/* <span>Preencha os campos para adicionar unidade a tabela.</span>
-            <br />
-            <br /> */}
             <Row>
               <Col lg={4} xl={4}>
                 <FormGroup>
                   <Label>Código EOL</Label>
-                  <Input placeholder="Digite o código EOL" value={this.state.codigo_eol} onChange={this.handleOnChangeCodigoEol.bind(this)} />
+                  <Input placeholder="Digite o código EOL" value={this.state.codigo_eol} onChange={this.handleOnChangeCodigoEol.bind(this)} disabled={disabilitado} />
                 </FormGroup>
               </Col>
               <Col lg={8} xl={8}>
@@ -284,6 +347,7 @@ class UnidadeEnvolvidas extends Component {
                 <FormGroup>
                   <Label>Lote Correspondente</Label>
                   <Input
+                    disabled={disabilitado}
                     value={this.state.lote}
                     placeholder="Digite Número do Lote"
                     onChange={e => this.setState({ lote: e.target.value })}
@@ -311,12 +375,11 @@ class UnidadeEnvolvidas extends Component {
                 </FormGroup>
               </Col>
             </Row>
-            {/* <Row><Col><hr></hr></Col></Row> */}
             <Row>
               <Col lg={4} xl={4}>
                 <FormGroup>
                   <Label>RF Fiscal do Contrato</Label>
-                  <Input placeholder="Digite o número do RF" value={this.state.fiscalTitular.rf} onChange={(event) => this.handleChangeTitular(event)} />
+                  <Input placeholder="Digite o número do RF" value={this.state.fiscalTitular.rf} onChange={(event) => this.handleChangeTitular(event)}  disabled={disabilitado}/>
                 </FormGroup>
               </Col>
               <Col lg={8} xl={8}>
@@ -334,7 +397,7 @@ class UnidadeEnvolvidas extends Component {
                         <Col lg={4} xl={4}>
                           <FormGroup>
                             <Label>RF Suplente de Fiscal do Contrato</Label>
-                            <Input placeholder="Digite o número do RF" value={this.state.fiscaisSuplentes[idx].rf} onChange={(event) => this.handleChangeSuplente(event, idx)} />
+                            <Input placeholder="Digite o número do RF" value={this.state.fiscaisSuplentes[idx].rf} onChange={(event) => this.handleChangeSuplente(event, idx)}  disabled={disabilitado}/>
                           </FormGroup>
                         </Col>
                         <Col lg={6} xl={6}>
@@ -345,6 +408,7 @@ class UnidadeEnvolvidas extends Component {
                         </Col>
                         <Col lg={2} xl={2} style={{padding: '0px', paddingRight: '15px'}}>
                           <PrimeButton
+                              disabled={disabilitado}
                               style={{marginTop: '33px', width: '100%'}}
                               label="Remover"
                               onClick={(e) => this.removeSuplente(idx)}
@@ -356,7 +420,7 @@ class UnidadeEnvolvidas extends Component {
             )}
             <div className="p-col-12" style={{padding: '0px', marginLeft: '-0.5em'}} >
                 <AntButton
-                    disabled={!this.state.podeAddSuplente}
+                    disabled={!this.state.podeAddSuplente || disabilitado}
                     type="link"
                     size="small"
                     onClick={(e) => this.appendSuplente()}
@@ -370,8 +434,7 @@ class UnidadeEnvolvidas extends Component {
         </Dialog>
         <Row>
           <Col lg={12} xl={12}>
-            {/* style={cursorPointer} */}
-            <DataTable value={unidades} scrollable={true} scrollHeight="250px" onRowClick={e => this.editUnidade(e.data)}>
+            <DataTable value={unidades} scrollable={true} scrollHeight="250px" onRowClick={e => this.editUnidade(e.data)} style={cursorPointer}>
               <Column field="unidade.codigo_eol" header="Código EOL" />
               <Column field="unidade.nome" header="Un. que Recebem Serviço" />
               <Column field="unidade.equipamento" header="Equip." />
