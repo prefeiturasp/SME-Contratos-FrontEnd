@@ -13,7 +13,7 @@ export const getUsuarioByUserName = (userName) => {
   const AUTH_HEADER = {
       headers: getHeaderToken()
     };
-  return axios.get(`${CONFIG.API_URL}/usuarios/${userName}/`, AUTH_HEADER).then(res => res.data)
+  return axios.get(`${CONFIG.API_URL}/usuarios/${userName}/`, AUTH_HEADER).then(res => res.data).catch(res => null)
 }
 
 export function getMeuProfile() {
