@@ -28,6 +28,7 @@ const Modelo = props => {
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [incluir, setIncluir] = useState(true);
   const [modalExcluir, setmodalExcluir] = useState(false);
+  const [modalDuplicar, setmodalDuplicar] = useState(false);
 
   useEffect(() => {
     setModelo(props.modelo);
@@ -71,14 +72,6 @@ const Modelo = props => {
     setModelo({ ...modelo });
   };
 
-  const exibeModalExcluir = () => {
-    setmodalExcluir(true);
-  };
-
-  const ocultaModalExcluir = () => {
-    setmodalExcluir(false);
-  };
-
   const confirmaModelo = async () => {
     const resultado = await criaModeloAteste(modelo);
     if (resultado.status === CREATED) {
@@ -109,6 +102,19 @@ const Modelo = props => {
     }
   };
 
+  const duplicaModelo = async () => {
+    delete modelo.uuid;
+    delete modelo.criado_em;
+    delete modelo.alterado_em;
+    modelo.titulo = modelo.titulo + " (Cópia)";
+    setmodalDuplicar(false);
+    const resultado = await criaModeloAteste(modelo);
+    if (resultado.status === CREATED) {
+      setFlashMessage("Modelo de ateste duplicado com sucesso", "sucesso");
+      redirect(`#/modelo-ateste/?uuid=${resultado.data.uuid}`);
+    }
+  };
+
   const mostraAlertaContainer = useCallback(event => {
     props.mostraAlerta();
   }, []);
@@ -133,7 +139,24 @@ const Modelo = props => {
       <Button
         label="cancelar"
         style={{ marginRight: ".25em" }}
-        onClick={ocultaModalExcluir}
+        onClick={() => setmodalExcluir(false)}
+      />
+    </div>
+  );
+
+  const footerModaDuplicar = (
+    <div>
+      <Button
+        label="Duplicar"
+        style={{ marginRight: ".25em" }}
+        onClick={duplicaModelo}
+        className="btn-coad-background-outline"
+      />
+
+      <Button
+        label="cancelar"
+        style={{ marginRight: ".25em" }}
+        onClick={() => setmodalDuplicar(false)}
       />
     </div>
   );
@@ -147,16 +170,23 @@ const Modelo = props => {
           label="Salvar"
           onClick={exibeDialog}
         />
-        {modoVisualizacao === false && incluir===true ? (
+        {modoVisualizacao === false && incluir === true ? (
           <Button
             disabled={modoVisualizacao}
             className="btn-coad-background-outline mr-2"
             label="Excluir Modelo"
-            onClick={exibeModalExcluir}
+            onClick={() => setmodalExcluir(true)}
           />
         ) : (
           ""
         )}
+        {modoVisualizacao === true && incluir === true ? (
+          <Button
+          className="btn-coad-background-outline mr-2"
+          label="Duplicar"
+          onClick={() => setmodalDuplicar(true)}
+        />
+        ) : ("")}
         <Button
           disabled={habilitaBotao}
           className="btn-coad-background-outline mr-2"
@@ -313,16 +343,23 @@ const Modelo = props => {
           label="Salvar"
           onClick={exibeDialog}
         />
-        {modoVisualizacao === false && incluir===true ? (
+        {modoVisualizacao === false && incluir === true ? (
           <Button
             disabled={modoVisualizacao}
             className="btn-coad-background-outline mr-2"
             label="Excluir Modelo"
-            onClick={exibeModalExcluir}
+            onClick={() => setmodalExcluir(true)}
           />
         ) : (
           ""
         )}
+        {modoVisualizacao === true && incluir === true ? (
+          <Button
+          className="btn-coad-background-outline mr-2"
+          label="Duplicar"
+          onClick={() => setmodalDuplicar(true)}
+        />
+        ) : ("")}
 
         <Button
           disabled={habilitaBotao}
@@ -343,10 +380,21 @@ const Modelo = props => {
         visible={modalExcluir}
         style={{ width: "60vw" }}
         footer={footerModalExcluir}
-        onHide={ocultaModalExcluir}
+        onHide={() => setmodalExcluir(false)}
       >
         <div>
           <p>Deseja excluir modelo de ateste? </p>
+        </div>
+      </Dialog>
+      <Dialog
+        header="Duplicar"
+        visible={modalDuplicar}
+        style={{ width: "60vw" }}
+        footer={footerModaDuplicar}
+        onHide={() => setmodalDuplicar(false)}
+      >
+        <div>
+          <p>Deseja duplicar modelo de ateste?</p>
         </div>
       </Dialog>
     </Fragment>
