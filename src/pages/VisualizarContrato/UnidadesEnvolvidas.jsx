@@ -12,7 +12,6 @@ import {
 import { getUrlParams } from "../../utils/params";
 import { Dialog } from "primereact/dialog";
 import {getUsuarioByUserName} from '../../service/Usuarios.service'
-import { NONAME } from "dns";
 
 const cursorPointer = {
   cursor: "pointer"
@@ -251,7 +250,6 @@ class UnidadeEnvolvidas extends Component {
   }
 
   editUnidade = (data) => {
-    console.log('Data:', data)
 
     let fiscalTitular = {
       rf: "",
