@@ -3,18 +3,24 @@ import { FormGroup, Input, Label, Card } from "reactstrap";
 import { Button } from "primereact/button";
 import Grupo from "./Grupo";
 import { Button as AntButton } from "antd";
-import { criaModeloAteste } from "../../service/ModeloAteste.service";
+import {
+  criaModeloAteste,
+  excluiModeloAteste
+} from "../../service/ModeloAteste.service";
 import { getUrlParams } from "../../utils/params";
+import { Dialog } from "primereact/dialog";
+import { redirect } from "../../utils/redirect";
 
 const Modelo = props => {
   const [modelo, setModelo] = useState({});
-  const [modoVisualizacao, setModoVisualizacao] = useState(true);
+  const [modoVisualizacao, setModoVisualizacao] = useState(false);
+  const [modalExcluir, setmodalExcluir] = useState(false);
 
   useEffect(() => {
-    setModelo(props.modelo); 
+    setModelo(props.modelo);
     const parametro = getUrlParams();
-    if(!parametro.uuid){
-      setModoVisualizacao(false)
+    if (!parametro.uuid) {
+      setModoVisualizacao(false);
     }
   }, [props.modelo]);
 
@@ -42,8 +48,26 @@ const Modelo = props => {
     setModoVisualizacao(false);
   };
 
+  const exibeModalExcluir = () => {
+    setmodalExcluir(true);
+  };
+
+  const ocultaModalExcluir = () => {
+    setmodalExcluir(false);
+  };
+
   const confirmaModelo = async () => {
     const resultado = criaModeloAteste(modelo);
+  };
+
+  const excluirModelo = () => {
+    excluiModeloAteste(modelo.uuid)
+      .then(redirect("#/listar-modelos-ateste/"))
+      .catch(err =>
+        alert(
+          "Modelo de ateste não pode ser excluido! Este modelo está vinculado a um ou mais contratos."
+        )
+      );
   };
 
   const mostraAlertaContainer = useCallback(event => {
@@ -54,6 +78,23 @@ const Modelo = props => {
     modoVisualizacao === false && modelo.titulo && modelo.grupos_de_verificacao
       ? false
       : true;
+
+  const footerModalExcluir = (
+    <div>
+      <Button
+        label="Excluir"
+        style={{ marginRight: ".25em" }}
+        onClick={excluirModelo}
+        className="btn-coad-background-outline"
+      />
+
+      <Button
+        label="cancelar"
+        style={{ marginRight: ".25em" }}
+        onClick={ocultaModalExcluir}
+      />
+    </div>
+  );
 
   return (
     <Fragment>
@@ -111,7 +152,28 @@ const Modelo = props => {
           onClick={confirmaModelo}
         />
         <Button className="btn-coad-background-outline mx-2" label="Cancelar" />
+        {modoVisualizacao === false ? (
+          <Button
+            disabled={modoVisualizacao}
+            className="btn-coad-background-outline mx-2"
+            label="Excluir Modelo"
+            onClick={exibeModalExcluir}
+          />
+        ) : (
+          ""
+        )}
       </FormGroup>
+      <Dialog
+        header="Excluir"
+        visible={modalExcluir}
+        style={{ width: "60vw" }}
+        footer={footerModalExcluir}
+        onHide={ocultaModalExcluir}
+      >
+        <div>
+          <p>Deseja excluir modelo de ateste? </p>
+        </div>
+      </Dialog>
     </Fragment>
   );
 };
