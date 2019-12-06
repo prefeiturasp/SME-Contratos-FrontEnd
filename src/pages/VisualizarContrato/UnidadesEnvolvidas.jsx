@@ -207,10 +207,15 @@ class UnidadeEnvolvidas extends Component {
     const rfTitular = event.target.value
     const fiscalTitular = this.state.fiscalTitular
 
+    fiscalTitular.nome = ''
+    fiscalTitular.uuid = ''
+
     if (rfTitular.length >= 6) {
       const titular = await getUsuarioByUserName(rfTitular)
-      fiscalTitular.nome = titular.nome
-      fiscalTitular.uuid = titular.uuid
+      if (titular && titular.uuid) {
+        fiscalTitular.nome = titular.nome
+        fiscalTitular.uuid = titular.uuid        
+      }
     }
 
     fiscalTitular.rf = rfTitular
@@ -222,11 +227,15 @@ class UnidadeEnvolvidas extends Component {
     const rfSuplente = event.target.value
     const fiscaisSuplentes = this.state.fiscaisSuplentes
 
+    fiscaisSuplentes[idx].nome = ''
+    fiscaisSuplentes[idx].uuid = ''
+
     if (rfSuplente.length >= 6) {
       const suplente = await getUsuarioByUserName(rfSuplente)
-      fiscaisSuplentes[idx].nome = suplente.nome
-      fiscaisSuplentes[idx].nome = suplente.nome
-      fiscaisSuplentes[idx].uuid = suplente.uuid
+      if (suplente && suplente.uuid) {
+        fiscaisSuplentes[idx].nome = suplente.nome
+        fiscaisSuplentes[idx].uuid = suplente.uuid
+      }
     }
 
     fiscaisSuplentes[idx].rf = rfSuplente
