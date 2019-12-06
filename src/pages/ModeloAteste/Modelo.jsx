@@ -14,7 +14,7 @@ import {
   criaModeloAteste,
   alteraModeloAteste
 } from "../../service/ModeloAteste.service";
-import { CREATED } from "http-status-codes";
+import { CREATED, OK } from "http-status-codes";
 import { redirect } from "../../utils/redirect";
 import { setFlashMessage } from "../../utils/flashMessages";
 import { getUrlParams } from "../../utils/params";
@@ -22,6 +22,7 @@ import { Row, Col } from "reactstrap";
 
 const Modelo = props => {
   const [visivel, setVisivel] = useState(false);
+  const [visivelCancelar, setVisivelCancelar] = useState(false);
   const [modelo, setModelo] = useState({});
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [incluir, setIncluir] = useState(true);
@@ -78,6 +79,10 @@ const Modelo = props => {
 
   const alteraModelo = async () => {
     const resultado = await alteraModeloAteste(modelo);
+    if (resultado.status === OK) {
+      setFlashMessage("Modelo de ateste alterado com sucesso", "sucesso");
+      redirect("#/listar-modelos-ateste");
+    }
   };
 
   const mostraAlertaContainer = useCallback(event => {
@@ -88,7 +93,9 @@ const Modelo = props => {
     modoVisualizacao === false && modelo.titulo && modelo.grupos_de_verificacao
       ? false
       : true;
-  const mensagemConfirmacao = incluir ? 'Deseja confirmar criação de novo modelo de ateste?' : 'Deseja confirmar alteração deste modelo de ateste?'
+  const mensagemConfirmacao = !incluir
+    ? "Deseja confirmar criação de novo modelo de ateste?"
+    : "Deseja confirmar alteração deste modelo de ateste?";
   return (
     <Fragment>
       <FormGroup className="d-flex flex-row-reverse mt-3">
@@ -98,6 +105,12 @@ const Modelo = props => {
           label="Salvar"
           onClick={exibeDialog}
         />
+        <Button
+          disabled={habilitaBotao}
+          className="btn-coad-background-outline mr-2"
+          label="Cancelar"
+          onClick={() => setVisivelCancelar(true)}
+        />
         <ButtonBootstrap
           onClick={() => redirect("#/listar-modelos-ateste")}
           className="btn-coad-blue mx-2"
@@ -106,13 +119,43 @@ const Modelo = props => {
         </ButtonBootstrap>
       </FormGroup>
       <Dialog
+        header={"Cancelar "}
+        visible={visivelCancelar}
+        style={{ width: "60vw" }}
+        modal={true}
+        onHide={() => setVisivelCancelar(false)}
+        footer={
+          <FormGroup className="pt-4 d-flex justify-content-end">
+            <Button
+              disabled={habilitaBotao}
+              className="btn-coad-background-outline"
+              label="Cancelar"
+              onClick={() => {
+                setFlashMessage(
+                  "Alterações em modelo de ateste canceladas",
+                  "warning"
+                );
+                redirect("/#/listar-modelos-ateste");
+              }}
+            />
+            <Button
+              className="btn-coad-primary mx-2"
+              onClick={() => setVisivelCancelar(false)}
+              label="Continuar"
+            />
+          </FormGroup>
+        }
+      >
+        <span>Deseja cancelar alterações em modelo de ateste?</span>
+      </Dialog>
+      <Dialog
         header={"Confirmar"}
         visible={visivel}
         style={{ width: "60vw" }}
         modal={true}
         onHide={fechaDialog}
       >
-<span>{mensagemConfirmacao}</span>
+        <span>{mensagemConfirmacao}</span>
         <FormGroup className="pt-4 d-flex justify-content-end">
           <Button
             className="btn-coad-background-outline mx-2"
@@ -142,14 +185,17 @@ const Modelo = props => {
             <i className="fas fa-sm fa-file-signature" /> Modelo de Ateste
           </h6>
         </Col>
-        <Col className="d-flex justify-content-end">
-          <Label className="px-3">Modo de edição</Label>
-          <Switch
-            // size="small"
-            defaultChecked={!modoVisualizacao}
-            onChange={() => setModoVisualizacao(!modoVisualizacao)}
-          />
-        </Col>
+        {incluir ? (
+          <Col className="d-flex justify-content-end">
+            <Label className="px-3">Modo de edição</Label>
+            <Switch
+              defaultChecked={!modoVisualizacao}
+              onChange={() => setModoVisualizacao(!modoVisualizacao)}
+            />
+          </Col>
+        ) : (
+          ""
+        )}
       </Row>
       <br />
       <FormGroup>
@@ -162,7 +208,7 @@ const Modelo = props => {
         />
       </FormGroup>
       <FormGroup>
-        <Label>Grupo(s) de verificação</Label>
+        <Label className="font-weight-bold">Grupo(s) de verificação</Label>
         {modelo.grupos_de_verificacao ? (
           modelo.grupos_de_verificacao.map((grupo, i) => (
             <Card>
@@ -214,6 +260,13 @@ const Modelo = props => {
           className="btn-coad-primary"
           label="Salvar"
           onClick={exibeDialog}
+        />
+
+        <Button
+          disabled={habilitaBotao}
+          className="btn-coad-background-outline mr-2"
+          label="Cancelar"
+          onClick={() => setVisivelCancelar(true)}
         />
         <ButtonBootstrap
           onClick={() => redirect("#/listar-modelos-ateste")}

@@ -189,7 +189,7 @@ const Grupo = props => {
         </FormGroup>
       </Dialog>
       <FormGroup>
-        <Label>Nome de grupo</Label>
+        <Label className="font-weight-bold">Nome de grupo</Label>
         <Input
           value={grupo ? grupo.nome : ""}
           onChange={e => editaNomeGrupo(e.target.value)}
@@ -200,7 +200,7 @@ const Grupo = props => {
       <FormGroup>
         <Row>
           <Col>
-            <Label>Lista de itens de verificação </Label>
+            <Label className="font-weight-bold">Lista de itens de verificação </Label>
           </Col>
           <Col className="d-flex justify-content-end">
             <Button
