@@ -9,22 +9,26 @@ import { Alert } from "reactstrap";
 const ModeloAteste = props => {
   const [modelo, setModelo] = useState({});
   const [alerta, setAlerta] = useState(false);
+  const [tituloPagina, setTituloPagina] = useState("Criar Modelo de Ateste");
 
   useEffect(() => {
     const param = getUrlParams();
-    const modelosService = async () => {
-      const modelo = await getModeloAteste(param.uuid);
-      setModelo(modelo);
-    };
-    modelosService();
+    if (param.uuid) {
+      const modelosService = async () => {
+        const modelo = await getModeloAteste(param.uuid);
+        setModelo(modelo);
+      };
+      modelosService();
+      setTituloPagina('Visualizar Modelo de Ateste')
+    }
   }, [setModelo]);
 
   const mostraAlerta = useCallback(
     event => {
       setAlerta(true);
       setTimeout(() => {
-        setAlerta(false)
-      },5000)
+        setAlerta(false);
+      }, 5000);
     },
     [alerta]
   );
@@ -35,18 +39,13 @@ const ModeloAteste = props => {
     <Fragment>
       <Page>
         <Alert color="success" isOpen={alerta} toggle={fechaAlerta}>
-          <span className="font-weight-bold d-flex justify-content-center">Item de verificação adicionado com sucesso</span>
+          <span className="font-weight-bold d-flex justify-content-center">
+            Item de verificação adicionado com sucesso
+          </span>
         </Alert>
-        <h3>Criar Modelo de Ateste</h3>
+        <h3>{tituloPagina}</h3>
         <Container>
-          {modelo ? (
-            <Modelo
-              modelo={modelo}
-              mostraAlerta={mostraAlerta}
-            />
-          ) : (
-            ""
-          )}
+          {modelo ? <Modelo modelo={modelo} mostraAlerta={mostraAlerta} /> : ""}
         </Container>
       </Page>
     </Fragment>

@@ -16,6 +16,7 @@
         "classnames": "^2.2.6",
         "formik": "^2.0.3",
         "formik-reactstrap-widgets": "^0.8.0",
+        "http-status-codes": "^1.4.0",
         "jquery": "^3.4.1",
         "jwt-decode": "^2.2.0",
         "moment": "^2.24.0",

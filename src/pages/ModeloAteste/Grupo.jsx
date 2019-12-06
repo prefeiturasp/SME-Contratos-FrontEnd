@@ -1,18 +1,16 @@
-import React, {
-  useState,
-  useEffect,
-  Fragment,
-  useContext,
-  createContext
-} from "react";
-import { FormGroup, Input, Label } from "reactstrap";
+import React, { useState, useEffect, Fragment } from "react";
+import {
+  FormGroup,
+  Input,
+  Label,
+  Row,
+  Col,
+} from "reactstrap";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Editor } from "primereact/editor";
-import { Button as AntButton } from "antd";
-// import { Alert } from 'reactstrap';
 
 const Grupo = props => {
   const [grupo, setGrupo] = useState({});
@@ -21,8 +19,6 @@ const Grupo = props => {
   const [descricao, setDescricao] = useState("");
   const [item, setItem] = useState("");
   const [adicionar, setAdicionar] = useState(true);
-  const [alerta, setAlerta] = useState(false);
-
 
   useEffect(() => {
     if (props.grupo) {
@@ -65,8 +61,6 @@ const Grupo = props => {
   const abrirDialog = () => {
     setVisivel(true);
   };
-
-  // const fechaAlerta = () => setAlerta(false);
 
   const iconTemplate = (rowData, column) => {
     return (
@@ -119,17 +113,17 @@ const Grupo = props => {
     return <div dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
   };
 
-  const habilitaBotao = props.modoVisualizacao === false && grupo.nome ? false : true;
+
+  const habilitaBotao =
+    props.modoVisualizacao === false && grupo.nome ? false : true;
   const habilitarBotaoExcluir = adicionar ? true : false;
   const habilitaBotaoAdicionar =
     descricao === "" || descricao === null ? true : false;
-  const footerVazio= "Ainda não existem itens de verificação adicionados no ateste"
+  const footerVazio =
+    "Ainda não existem itens de verificação adicionados no ateste";
 
   return (
     <Fragment>
-      {/* <Alert color="success" isOpen={alerta} toggle={fechaAlerta}>
-        Item de verificação adicionado com sucesso
-      </Alert> */}
       <Dialog
         header={
           adicionar
@@ -195,7 +189,7 @@ const Grupo = props => {
         </FormGroup>
       </Dialog>
       <FormGroup>
-        <Label>Nome de grupo</Label>
+        <Label className="font-weight-bold">Nome de grupo</Label>
         <Input
           value={grupo ? grupo.nome : ""}
           onChange={e => editaNomeGrupo(e.target.value)}
@@ -204,51 +198,49 @@ const Grupo = props => {
         />
       </FormGroup>
       <FormGroup>
-        <Label>Lista de itens de verificação </Label>
+        <Row>
+          <Col>
+            <Label className="font-weight-bold">Lista de itens de verificação </Label>
+          </Col>
+          <Col className="d-flex justify-content-end">
+            <Button
+              style={{ fontSize: "11px" }}
+              className="px-1 mb-2"
+              disabled={habilitaBotao}
+              label="Adicionar Item"
+              onClick={abrirDialog}
+            />
+          </Col>
+        </Row>
         {itens.length > 0 ? (
-        <DataTable
-          value={itens}
-          reorderableColumns={true}
-          scrollable={true}
-          scrollHeight={"300px"}
-          className="datatable-strapd-coad"
-        >
-          <Column
-            body={iconTemplate}
-            style={{ width: "5em", align: "center" }}
-          />
-          <Column
-            field="descricao"
-            header="Itens de verificação"
-            body={descricaoTemplate}
-          />
-          <Column body={actionTemplate} style={{ width: "7em" }} />
-        </DataTable>
+          <DataTable
+            value={itens}
+            reorderableColumns={true}
+            scrollable={true}
+            scrollHeight={"300px"}
+            className="datatable-strapd-coad"
+          >
+            <Column
+              body={iconTemplate}
+              style={{ width: "5em", align: "center" }}
+            />
+            <Column
+              field="descricao"
+              header="Itens de verificação"
+              body={descricaoTemplate}
+            />
+            <Column body={actionTemplate} style={{ width: "7em" }} />
+          </DataTable>
         ) : (
           <div>
-            <DataTable
-              footer={footerVazio}
-              className="datatable-footer-coad "
-            >
+            <DataTable footer={footerVazio} className="datatable-footer-coad ">
               <Column header="" style={{ width: "5em" }} />
               <Column header="Itens de verificação" />
               <Column header="" style={{ width: "7em" }} />
             </DataTable>
           </div>
-        )
-        }
+        )}
       </FormGroup>
-      <div>
-        <AntButton
-          disabled={habilitaBotao}
-          type="link"
-          size="small"
-          onClick={abrirDialog}
-          className="text-weigth-bold"
-        >
-          Adicionar novo item de verificação
-        </AntButton>
-      </div>
     </Fragment>
   );
 };
