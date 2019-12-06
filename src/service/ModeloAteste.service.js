@@ -6,7 +6,7 @@ export const getModeloAteste = async uuid => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  const url = "modelo-ateste/";
+  const url = `modelo-ateste/${uuid}/`
   return (await api.get(url, AUTH_HEADER)).data;
 };
 
@@ -25,4 +25,12 @@ const formataData = datas => {
       ? moment(data.criado_em).format("DD/MM/YY - HH:mm")
       : ""
   }));
+};
+
+export const excluiModeloAteste = async uuid => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  const url = `modelo-ateste/${uuid}/`
+  return (await api.delete(url, AUTH_HEADER)).data;
 };
