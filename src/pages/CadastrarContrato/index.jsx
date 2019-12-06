@@ -3,6 +3,7 @@ import $ from "jquery";
 import moment from "moment";
 import { Formik, Form } from "formik";
 import StepZilla from "react-stepzilla";
+import 'react-stepzilla/src/css/main.css'
 import { Dialog } from "primereact/dialog";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
