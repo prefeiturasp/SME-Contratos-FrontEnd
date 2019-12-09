@@ -16,6 +16,6 @@ export const getUnidade = (codigoEol) => {
     headers: getHeaderToken()
   };
   return api
-    .get(`unidades/${codigoEol}`, AUTH_HEADER)
+    .get(`unidades/${codigoEol}/`, AUTH_HEADER)
     .then(res => res.data);
 };
