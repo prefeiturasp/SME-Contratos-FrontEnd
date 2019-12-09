@@ -1,11 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import {
-  FormGroup,
-  Input,
-  Label,
-  Row,
-  Col,
-} from "reactstrap";
+import { FormGroup, Input, Label, Row, Col } from "reactstrap";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
@@ -113,7 +107,6 @@ const Grupo = props => {
     return <div dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
   };
 
-
   const habilitaBotao =
     props.modoVisualizacao === false && grupo.nome ? false : true;
   const habilitarBotaoExcluir = adicionar ? true : false;
@@ -179,12 +172,15 @@ const Grupo = props => {
               className="btn-coad-background-outline mx-2"
               label="Cancelar"
             />
-            <Button
-              className="btn-coad-background-outline mx-2"
-              label="Excluir"
-              disabled={habilitarBotaoExcluir}
-              onClick={excluirItem}
-            />
+            {!habilitarBotaoExcluir ? (
+              <Button
+                className="btn-coad-background-outline mx-2"
+                label="Excluir"
+                onClick={excluirItem}
+              />
+            ) : (
+              ""
+            )}
           </FormGroup>
         </FormGroup>
       </Dialog>
@@ -200,7 +196,9 @@ const Grupo = props => {
       <FormGroup>
         <Row>
           <Col>
-            <Label className="font-weight-bold">Lista de itens de verificação </Label>
+            <Label className="font-weight-bold">
+              Lista de itens de verificação{" "}
+            </Label>
           </Col>
           <Col className="d-flex justify-content-end">
             <Button

@@ -21,11 +21,9 @@ export default class ListarModelosAteste extends Component {
         <Button
           label="Visualizar"
           className="btn-coad-background-outline"
-            onClick={event => {
-              redirect(
-                `#/modelo-ateste/?uuid=${column.uuid}`
-              )
-            }}
+          onClick={event => {
+            redirect(`#/modelo-ateste/?uuid=${column.uuid}`);
+          }}
         />
       </div>
     );
@@ -63,9 +61,7 @@ export default class ListarModelosAteste extends Component {
                 style={{ marginBottom: ".80em" }}
                 className="btn-coad-background-outline"
                 onClick={event => {
-                  redirect(
-                    `#/modelo-ateste/`
-                  )
+                  redirect(`#/modelo-ateste/`);
                 }}
               />
             </span>
@@ -82,7 +78,7 @@ export default class ListarModelosAteste extends Component {
           <Column
             field="criado_em"
             header="Data criação"
-            style={{ textAlign: "center", width: "10em" }}
+            style={{ width: "10em" }}
           />
           <Column
             body={this.actionTemplate.bind(this, modelos)}
