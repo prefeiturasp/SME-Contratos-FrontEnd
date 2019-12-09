@@ -110,8 +110,10 @@ const Modelo = props => {
     setmodalDuplicar(false);
     const resultado = await criaModeloAteste(modelo);
     if (resultado.status === CREATED) {
+      const modelo = resultado.data
+      setModelo({...modelo})
       setFlashMessage("Modelo de ateste duplicado com sucesso", "sucesso");
-      redirect(`#/modelo-ateste/?uuid=${resultado.data.uuid}`);
+      redirect(`#/modelo-ateste/?uuid=${modelo.uuid}`);
     }
   };
 
