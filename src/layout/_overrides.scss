@@ -1,7 +1,7 @@
 //Suggested location to add your overrides so that migration would be easy by just updating the SASS folder in the future
 $mainColor: #602a2a;
-$blue: #086397;;
-$blueHight: #064F79;;
+$blue: #086397;
+$blueHight: #064f79;
 $whiteColor: #ffffff;
 $hoverColor: #431e1e;
 
@@ -99,7 +99,7 @@ $hoverColor: #431e1e;
     color: $mainColor !important;
     background-color: $whiteColor;
     font-weight: bold;
-  } 
+  }
   .btn-coad-blue {
     border-color: $blue;
     color: $blue !important;
@@ -248,6 +248,8 @@ $hoverColor: #431e1e;
   .p-editor-container {
     border-radius: 3px !important;
     border: 1px solid #a6a6a6 !important;
+    display: flex;
+    flex-direction: column-reverse;
   }
 
   .p-editor-content {
