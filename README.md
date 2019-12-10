@@ -1,12 +1,25 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/2bd24906130d0f900ec8/maintainability)](https://codeclimate.com/github/prefeiturasp/SME-Contratos-FrontEnd/maintainability)
-
-[![Test Coverage](https://api.codeclimate.com/v1/badges/2bd24906130d0f900ec8/test_coverage)](https://codeclimate.com/github/prefeiturasp/SME-Contratos-FrontEnd/test_coverage)
-
 # SME-Contratos-FrontEnd
 
 Projeto de Frontend com REACT JS
 
 ## Release Notes ##
+### 0.5.0 - 09/12/2019 - Sprint 5
+* Cadastro de Modelos de Ateste
+* Duplicar um Modelo de Ateste
+* Registro de fiscais e suplentes de um contrato
+
+### 0.4.0 - 22/11/2019 - Sprint 4
+* Cadastro único de contratos
+* Consulta e Edição de Termos de Contrato
+* Notificações por e-mail de atribuição de contrato
+* Notificações por e-mail e tela de vencimento de contratos
+* Cadastro de Obrigações Contratuais
+
+### 0.3.0 - 04/11/2019 - Sprint 3
+* Consulta de detalhes de um contrato
+* Atribuição de um contrato a um gestor e suplente
+* Designação de cargos COAD, Divisões e Núcleos
+
 ### 0.2.1 - 22/10/2019 ###
 * Correção de formato de data na lista de contratos 
 
