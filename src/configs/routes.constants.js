@@ -2,6 +2,13 @@ import Home from "../pages/Home";
 import ListaContrato from "../pages/ListaContrato";
 import painelSelecao from "../pages/PainelSelecao";
 import ContratosContinuos from "../pages/ContratosContinuos";
+import VisualizarContratos from "../pages/VisualizarContrato";
+import DesignacaoCargos from "../pages/DesignacaoCargos"
+import AtribuicaoTermoContrato from "../pages/AtribuicaoTermoContrato"
+import Teste from "../pages/Teste";
+import CadastrarContrato from "../pages/CadastrarContrato";
+import ModeloAteste from "../pages/ModeloAteste"
+import ListarModelosAteste from "../pages/ListarModelosAteste";
 
 
 const RoutesConfig = [
@@ -24,7 +31,42 @@ const RoutesConfig = [
       path: "/contratos-continuos",
       component: ContratosContinuos,
       exact: false
-  },
+    },
+    {
+      path: "/visualizar-contrato",
+      component: VisualizarContratos,
+      exact: false
+    },
+    {
+      path: "/designacao-cargos",
+      component: DesignacaoCargos,
+      exact: false
+    },
+    {
+      path: "/atribuicao-termo-contrato",
+      component: AtribuicaoTermoContrato,
+      exact: false
+    }, 
+    {
+      path: "/cadastro-unico-contrato",
+      component: CadastrarContrato,
+      exact: false
+    }, 
+    {
+      path: "/modelo-ateste",
+      component: ModeloAteste,
+      exact: false
+    },
+    {
+      path: "/listar-modelos-ateste",
+      component: ListarModelosAteste,
+      exact: false
+    }, 
+    {
+      path: "/teste",
+      component: Teste,
+      exact: false
+    },
 ]
 
 export default RoutesConfig
@@ -35,6 +77,7 @@ export const MenuConfig = [
       icon: "pi pi-list",
       items: [
         { label: "Consultar", icon: "pi pi-fw pi-th-large", to: "/painel-selecao" },
+        { label: "Atribuição Termo Contratos", icon: "pi pi-cog pi-th-large", to: "/atribuicao-termo-contrato" },
       ]
     },
     {
@@ -68,19 +111,9 @@ export const MenuConfig = [
     {
       label: "Configurações",
       icon: "pi pi-cog",
-      command: () => {
-        window.location = '#'
-      }
+      items: [
+        { label: "Designação de Cargos", icon: "pi pi-cog pi-th-large", to: "/designacao-cargos" },
+        { label: "Modelos de Ateste", icon: "pi pi-cog pi-th-large", to: "/listar-modelos-ateste" },
+      ]
     },
 ]
-// items: [
-//     { label: "Sample Page", icon: "pi pi-fw pi-th-large", to: "/sample" },
-//     { label: "Forms", icon: "pi pi-fw pi-file", to: "/forms" },
-//     { label: "Data", icon: "pi pi-fw pi-table", to: "/data" },
-//     { label: "Panels", icon: "pi pi-fw pi-list", to: "/panels" },
-//     { label: "Overlays", icon: "pi pi-fw pi-clone", to: "/overlays" },
-//     { label: "Menus", icon: "pi pi-fw pi-plus", to: "/menus" },
-//     { label: "Messages", icon: "pi pi-fw pi-spinner", to: "/messages" },
-//     { label: "Charts", icon: "pi pi-fw pi-chart-bar", to: "/charts" },
-//     { label: "Misc", icon: "pi pi-fw pi-upload", to: "/misc" }
-//   ]

@@ -1,13 +1,14 @@
 //Suggested location to add your overrides so that migration would be easy by just updating the SASS folder in the future
 $mainColor: #602a2a;
-$whiteColor:  #ffffff;
-
+$blue: #086397;
+$blueHight: #064f79;
+$whiteColor: #ffffff;
+$hoverColor: #431e1e;
 
 .layout-wrapper {
   background-color: #f2f2f2;
-  
   .layout-topbar {
-    z-index: 10000;
+    z-index: 1000;
     height: 67px;
 
     .layout-topbar-icons {
@@ -19,7 +20,7 @@ $whiteColor:  #ffffff;
   }
   .layout-sidebar-dark {
     .layout-logo {
-      background-color:$whiteColor;
+      background-color: $whiteColor;
     }
     .w-coad-logo {
       width: 15.7rem;
@@ -35,7 +36,7 @@ $whiteColor:  #ffffff;
   }
 
   .active-menuitem {
-    background-color:$whiteColor;
+    background-color: $whiteColor;
     li > a > span {
       color: $mainColor;
     }
@@ -46,12 +47,30 @@ $whiteColor:  #ffffff;
       color: $mainColor;
     }
   }
+
+  .btn-link {
+    color: $mainColor;
+  }
+
+  .btn-link:hover {
+    color: $hoverColor;
+  }
+
   .p-button {
     background-color: $mainColor;
     border-color: $mainColor;
+    font-weight: bold;
   }
 
-  .p-accordion .p-accordion-header:not(.p-disabled).p-highlight:hover a{
+  .p-button:enabled:hover {
+    border-color: $mainColor !important;
+  }
+
+  .p-button:enabled:focus {
+    box-shadow: 0 0 0 0.1em $mainColor;
+  }
+
+  .p-accordion .p-accordion-header:not(.p-disabled).p-highlight:hover a {
     border: 1px solid $mainColor !important;
     background-color: $mainColor;
   }
@@ -61,14 +80,184 @@ $whiteColor:  #ffffff;
     border-color: $mainColor;
     color: $whiteColor;
   }
+
+  .btn-coad-primary {
+    background-color: $mainColor;
+    border-color: $mainColor;
+    color: $whiteColor;
+  }
+
+  .btn-coad-primary-small {
+    background-color: $mainColor;
+    border-color: $mainColor;
+    color: $whiteColor;
+    font-size: 12px !important;
+  }
+
   .btn-coad-background-outline {
     border-color: $mainColor;
     color: $mainColor !important;
     background-color: $whiteColor;
+    font-weight: bold;
+  }
+  .btn-coad-blue {
+    border-color: $blue;
+    color: $blue !important;
+    background-color: $whiteColor;
+    font-weight: bold;
+  }
+  .btn-coad-blue:enabled:hover {
+    border-color: $blueHight !important;
+    color: $whiteColor !important;
+    background-color: $blueHight !important;
+    font-weight: bold;
+  }
+
+  .p-button:enabled:hover {
+    color: $whiteColor !important;
+    background-color: $hoverColor !important;
   }
 
   .card-deck .card {
     margin-bottom: 15px !important;
-}
+  }
 
+  .p-inputtext:enabled:hover {
+    border-color: $mainColor;
+  }
+
+  .p-inputtext:enabled:focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.2em $mainColor;
+    border-color: $mainColor;
+  }
+
+  .ant-btn-link:hover {
+    color: $hoverColor;
+  }
+
+  .ant-btn-link {
+    color: #602a2a;
+    background-color: transparent;
+    border-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .coad-color {
+    color: $mainColor !important;
+  }
+
+  .p-paginator {
+    background-color: #ffffff !important;
+    border: 0px;
+    padding: 2.5em !important;
+  }
+
+  .p-paginator-next {
+    height: 4em !important;
+    min-width: 4em !important;
+  }
+
+  .p-paginator-prev {
+    height: 4em !important;
+    min-width: 4em !important;
+  }
+
+  .p-paginator-page {
+    height: 4em !important;
+    min-width: 4em !important;
+    border: 1px solid #dadada !important;
+  }
+
+  .p-highlight {
+    background-color: #602a2a !important;
+  }
+
+  .p-paginator-element {
+    border: 1px solid #dadada !important;
+  }
+
+  .p-dialog-footer {
+    border: none !important;
+  }
+
+  .p-dialog-titlebar {
+    background-color: #ffffff !important;
+    border: none !important;
+    border-bottom: 1px solid #4e4e4e !important;
+    span {
+      font-size: medium;
+    }
+  }
+
+  .p-dialog-content {
+    border: none !important;
+  }
+
+  .p-messages .p-messages-close {
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+
+  .p-messages .p-messages-icon {
+    font-size: 0em;
+  }
+
+  .p-messages {
+    text-align: center;
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .p-messages-warn {
+    background: #fff3cd !important;
+    color: #856404 !important;
+    border: 0.5px solid rgba(133, 100, 4, 0.3) !important;
+  }
+
+  .p-messages-success {
+    background: #d4edda !important;
+    color: #155724 !important;
+    border: 0.5px solid #a4c7af !important;
+  }
+  ol.progtrckr li {
+    line-height: 4.1rem;
+  }
+
+  .p-datatable-thead > tr > th {
+    text-align: left !important;
+  }
+
+  .datatable-footer-coad {
+    .p-datatable-footer {
+      background-color: #ffffff !important;
+      font-weight: normal !important;
+    }
+  }
+  .datatable-strapd-coad {
+    .p-datatable-tbody > tr:nth-child(even) {
+      background-color: #ffffff !important;
+    }
+  }
+
+  .p-editor-container {
+    border-radius: 3px !important;
+    border: 1px solid #a6a6a6 !important;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .p-editor-content {
+    border: none !important;
+  }
+
+  .p-editor-toolbar {
+    background-color: #ffffff !important;
+    border: none !important;
+  }
 }

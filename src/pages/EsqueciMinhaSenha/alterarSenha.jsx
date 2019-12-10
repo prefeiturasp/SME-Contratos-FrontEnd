@@ -1,18 +1,18 @@
 import React, { Component } from "react";
-import Row from "../../components/Row";
-import Container from "../../components/Container";
+import Row from "../../components/Global/Row";
+import Container from "../../components/Global/Container";
 import bg from "../../assets/images/bg.svg";
 import logoSP from "../../assets/images/logoSP.svg";
 import logoSME from "../../assets/images/logoSME.svg";
-import Grid from "../../components/Grid";
+import Grid from "../../components/Global/Grid";
 import { Button, Form, Alert, Col } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
-import { InputLabel } from "../../components/InputLabel";
+import { InputLabel } from "../../components/Global/InputLabel";
 import "../Login/style.scss";
-import { getParams } from "../Login/helpers";
 import { redefinirSenha } from "../../service/auth.service";
 import Login from "../Login";
+import { getUrlParams } from "../../utils/params";
 
 class AlterarSenha extends Component {
   constructor(props) {
@@ -27,10 +27,10 @@ class AlterarSenha extends Component {
   }
 
   componentDidMount() {
-    const hash = getParams("hash");
-    if (hash) {
+    const param = getUrlParams();
+    if (param.hash) {
       this.setState({
-        hash: hash
+        hash: param.hash
       });
     } else {
       this.setState({

@@ -1,16 +1,17 @@
 import React, { Component } from "react";
-import Row from "../../components/Row";
+import Row from "../../components/Global/Row";
 import bg from "../../assets/images/bg.svg";
 import logoSP from "../../assets/images/logoSP.svg";
 import logoSME from "../../assets/images/logoSME.svg";
-import Grid from "../../components/Grid";
+import Grid from "../../components/Global/Grid";
 import { Button, Form, Alert, Col } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
-import { InputLabel } from "../../components/InputLabel";
+import { InputLabel } from "../../components/Global/InputLabel";
 import "./style.scss";
 import { login } from "../../service/auth.service";
 import { getParams } from "./helpers";
+import { redirect } from "../../utils/redirect";
 
 export class Login extends Component {
   constructor(props) {
@@ -33,8 +34,7 @@ export class Login extends Component {
     const { username, password } = values;
     login(username, password).then(resposta => {
       if (resposta) {
-        console.log(resposta);
-        window.location.href = "/";
+        redirect("/")
       } else {
         this.setState({ alerta: true });
       }

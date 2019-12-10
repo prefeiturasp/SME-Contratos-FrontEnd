@@ -1,0 +1,16 @@
+$mainColor: #602a2a;
+.coad-anexos {
+  .dzu-dropzone {
+      padding: 9%;
+      background: #fafafa;
+      border-style: dotted;
+      overflow: hidden;
+    .dzu-inputLabel {
+      color: $mainColor;
+    }
+    .dzu-inputLabelWithFiles {
+        background-color: $mainColor;
+        color: #fff;
+    }
+  }
+}

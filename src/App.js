@@ -28,6 +28,7 @@ import "./layout/layout.scss";
 import "./App.scss";
 import LOGO from "./assets/images/logoSGC.svg";
 import { NavLink } from "react-router-dom";
+import 'moment-timezone';
 
 class App extends Component {
   constructor() {
