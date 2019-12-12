@@ -42,3 +42,17 @@ export const updateObrigacaoContratual = (payload, uuid) => {
       }
     );
 };
+
+export const excluirObrigacaoContratual = async uuid => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken()
+  };
+  return await axios
+    .delete(
+      `${CONFIG.API_URL}/obrigacoes-contratuais/${uuid}/`,
+      AUTH_HEADER
+    )
+    .catch(err => {
+      return false;
+    });
+};

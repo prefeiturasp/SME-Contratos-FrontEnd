@@ -8,9 +8,11 @@ import { Editor } from "primereact/editor";
 import {
   getObrigacaoContratualByContrato,
   addObrigacaoContratual,
-  updateObrigacaoContratual
+  updateObrigacaoContratual,
+  excluirObrigacaoContratual
 } from "../../../service/ObrigacoesContratuais.service";
 import { Dialog } from "primereact/dialog";
+import { getUrlParams } from "../../../utils/params";
 
 export default class ListarObrigacoesContratuais extends Component {
   constructor(props) {
@@ -34,7 +36,8 @@ export default class ListarObrigacoesContratuais extends Component {
       opereracao: "",
       adicionarVisible: false,
       editarVisible: false,
-      confirmarVisible: false
+      confirmarVisible: false,
+      excluirVisible: false
     };
     this.obrigacaoTemplate = this.obrigacaoTemplate.bind(this);
   }
@@ -45,7 +48,7 @@ export default class ListarObrigacoesContratuais extends Component {
       item: this.state.item,
       obrigacao: this.state.obrigacao
     };
-
+    console.log(this.state.contrato);
     const resultado = await addObrigacaoContratual(payload);
     if (resultado.uuid) {
       this.setState({
@@ -85,7 +88,6 @@ export default class ListarObrigacoesContratuais extends Component {
       item: this.state.item,
       obrigacao: this.state.obrigacao ? this.state.obrigacao : null
     };
-    // console.log(payload, this.state.contrato, this.state.item);
     const result = await updateObrigacaoContratual(payload, this.state.uuid);
     if (result) {
       this.setState({
@@ -96,6 +98,18 @@ export default class ListarObrigacoesContratuais extends Component {
       this.setState({ confirmarVisible: false });
     }
   }
+
+  handleExcluirObrigacao = async () => {
+    const resultado = await excluirObrigacaoContratual(this.state.uuid);
+    if (resultado) {
+      this.setState({
+        obrigacoesSelect: await getObrigacaoContratualByContrato(
+          this.state.contrato
+        )
+      });
+    }
+    this.setState({ excluirVisible: false });
+  };
 
   obrigacaoTemplate(rowData, column) {
     return <div dangerouslySetInnerHTML={{ __html: rowData.obrigacao }} />;
@@ -131,15 +145,14 @@ export default class ListarObrigacoesContratuais extends Component {
     );
   }
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (prevProps.contrato !== this.props.contrato) {
-      this.setState({ contrato: this.props.contrato });
-      this.setState({
-        obrigacoesSelect: await getObrigacaoContratualByContrato(
-          this.props.contrato
-        )
-      });
-    }
+  async componentDidMount() {
+    const uuid_contrato = getUrlParams();
+    this.setState({ contrato: uuid_contrato.uuid });
+    this.setState({
+      obrigacoesSelect: await getObrigacaoContratualByContrato(
+        uuid_contrato.uuid
+      )
+    });
   }
 
   render() {
@@ -223,9 +236,9 @@ export default class ListarObrigacoesContratuais extends Component {
         <Button
           label="Excluir"
           style={{ marginRight: ".25em" }}
-          // onClick={() => {
-          //   this.setState({ adicionarVisible: false, item: "", obrigacao: "" });
-          // }}
+          onClick={() => {
+            this.setState({ adicionarVisible: false, excluirVisible: true });
+          }}
           className="btn-coad-background-outline"
         />
         <Button
@@ -246,6 +259,24 @@ export default class ListarObrigacoesContratuais extends Component {
       </div>
     );
 
+    const footerModalExcluir = (
+      <div>
+        <Button
+          label="Excluir"
+          style={{ marginRight: ".25em" }}
+          onClick={this.handleExcluirObrigacao.bind(this)}
+          className="btn-coad-background-outline"
+        />
+        <Button
+          label="Voltar"
+          style={{ marginRight: ".25em" }}
+          onClick={() => {
+            this.setState({ excluirVisible: false });
+          }}
+        />
+      </div>
+    );
+
     let footer = null;
     if (this.state.opereracao === "inclusao") {
       footer = footerModalAdicionar;
@@ -258,7 +289,8 @@ export default class ListarObrigacoesContratuais extends Component {
       tituloModal,
       descricaoModal,
       adicionarVisible,
-      confirmarVisible
+      confirmarVisible,
+      excluirVisible
     } = this.state;
     const rowsPerPage = 5;
     const header = this.renderHeader();
@@ -368,6 +400,19 @@ export default class ListarObrigacoesContratuais extends Component {
         >
           <div>
             <p>Deseja confirmar edição de obrigação contratual?</p>
+          </div>
+        </Dialog>
+        <Dialog
+          header="Excluir Obrigação Contratual?"
+          visible={excluirVisible}
+          style={{ width: "60vw" }}
+          footer={footerModalExcluir}
+          onHide={() => {
+            this.setState({ excluirVisible: false });
+          }}
+        >
+          <div>
+            <p>Deseja excluir obrigação contratual?</p>
           </div>
         </Dialog>
       </div>
