@@ -5,11 +5,6 @@ import { formatadoMonetario } from "../../../utils/formatador";
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
 
-const styled = {
-  cursor: "pointer"
-};
-
-
 export class TableContrato extends Component {
   formataTotalMensal(rowData, column) {
     const formatter = new Intl.NumberFormat("pt-BR", {
@@ -24,15 +19,20 @@ export class TableContrato extends Component {
     redirect(url);
   };
 
+  onIndexTemplate(data, props) {
+    return props.rowIndex + 1;
+  }
+
   render() {
     const { contratos, colunas } = this.props;
-
     const total = contratos.reduce(
       (prevVal, value) => prevVal + value.total_mensal,
       0
     );
 
-    let dynamicColumns = colunas.map((col, i) => {
+    let novaColuna = [{ field: "row_index", header: "" }, ...colunas];
+
+    let dynamicColumns = novaColuna.map((col, i) => {
       if (col.field !== "row_index") {
         return (
           <Column
@@ -46,9 +46,9 @@ export class TableContrato extends Component {
       } else {
         return (
           <Column
-            key={col.field}
-            field={col.field}
-            header={col.header}
+            field="Index"
+            header=""
+            body={this.onIndexTemplate.bind(this)}
             style={{ width: "50px" }}
           />
         );
@@ -57,18 +57,35 @@ export class TableContrato extends Component {
 
     return (
       <div className="h-auto w-100">
-        <DataTable
-          onRowClick={e => this.redirecionaDetalhe(e.data)}
-          value={this.props.contratos}
-          scrollable={true}
-          scrollHeight="300px"
-          resizableColumns={true}
-          columnResizeMode="expand"
-          className="mt-3"
-          style={styled}
-        >
-          {dynamicColumns}
-        </DataTable>
+        {this.props.contratos.length > 0 ? (
+          <DataTable
+            onRowClick={e => this.redirecionaDetalhe(e.data)}
+            value={this.props.contratos}
+            scrollable={true}
+            scrollHeight="300px"
+            resizableColumns={true}
+            columnResizeMode="expand"
+            className="mt-3 datatable-strapd-coad"
+            selectionMode="single"
+          >
+            {dynamicColumns}
+          </DataTable>
+        ) : (
+          <DataTable
+            value={this.props.contratos}
+            footer={
+              "Não existem contratos atribuidos ao seu usuário até o momento."
+            }
+            columnResizeMode="expand"
+            className="mt-3 datatable-footer-coad"
+          >
+            <Column header="TC" />
+            <Column header="Sit. Contrato" />
+            <Column header="Empresa" />
+            <Column header="Vigência" />
+            <Column header="Data" />
+          </DataTable>
+        )}
 
         <table className="table">
           <tbody>
