@@ -3,7 +3,7 @@ import $ from "jquery";
 import moment from "moment";
 import { Formik, Form } from "formik";
 import StepZilla from "react-stepzilla";
-import 'react-stepzilla/src/css/main.css'
+import "react-stepzilla/src/css/main.css";
 import { Dialog } from "primereact/dialog";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
@@ -21,6 +21,7 @@ import {
 import { redirect } from "../../utils/redirect";
 import { getCargosCoad } from "../../service/Cargos.service";
 import { Messages } from "primereact/messages";
+import { NO_CONTENT } from "http-status-codes";
 
 export default class CadastrarContrato extends Component {
   state = {
@@ -30,13 +31,29 @@ export default class CadastrarContrato extends Component {
     visible: false,
     visibleCancelar: false,
     coordenador: null,
-    alertaCancelamento: false
+    alertaCancelamento: false,
+    cancelamento: false,
+    situacaoContrato: "RASCUNHO",
+    contrato: null,
+    dotacao: []
   };
 
   async componentDidMount() {
     const param = getUrlParams();
     const contrato = await getContratoByUUID(param.uuid);
     const cargo = await getCargosCoad();
+
+    this.setState({
+      contrato: contrato,
+      dotacao: contrato.dotacao_orcamentaria
+    });
+
+    if (contrato.situacao !== "RASCUNHO") {
+      this.setState({
+        cancelamento: true,
+        situacaoContrato: contrato.situacao
+      });
+    }
 
     if (!param.uuid) {
       this.setState({ visible: true });
@@ -47,7 +64,7 @@ export default class CadastrarContrato extends Component {
     const { termo_contrato, gestor, uuid } = contrato;
     this.setState({
       termo_contrato,
-      gestor: gestor.uuid,
+      gestor: gestor ? gestor.uuid : null,
       uuid_contrato: uuid,
       coordenador: coordenador.uuid
     });
@@ -61,7 +78,7 @@ export default class CadastrarContrato extends Component {
   cancelarCadastro = async () => {
     const { uuid_contrato } = this.state;
     const resultado = await CancelarContrato(uuid_contrato);
-    if (resultado.status === 200) {
+    if (resultado.status === NO_CONTENT) {
       this.setState({ visibleCancelar: false });
       window.scrollTo(0, 0);
       this.messages.show({
@@ -76,21 +93,32 @@ export default class CadastrarContrato extends Component {
     this.setState({ visibleCancelar: false });
   };
 
+  removeEmpty = lista => {
+    const novaLista = lista.filter((valor, i) => {
+      if (valor !== null || valor !== undefined || valor !== "empty") {
+        return valor;
+      } else {
+        delete lista[i];
+      }
+    });
+    return novaLista;
+  };
+
   handleSubmit = async values => {
-    const { uuid_contrato } = this.state;
+    const { uuid_contrato, dotacao } = this.state;
     values["data_assinatura"] = moment(values.data_assinatura).format(
       "YYYY-MM-DD"
     );
     values["data_ordem_inicio"] = moment(values.data_ordem_inicio).format(
       "YYYY-MM-DD"
     );
-    values["dotacao_orcamentaria"] = [values.dotacao_orcamentaria];
+    values["dotacao_orcamentaria"] = this.removeEmpty(dotacao);
 
-    const cadastro = await updateContrato(values, uuid_contrato);
-    if (cadastro.criado_em) {
-      redirect("/#/contratos-continuos?cadastro=ok");
-    } else {
-    }
+    // const cadastro = await updateContrato(values, uuid_contrato);
+    // if (cadastro.criado_em) {
+    //   redirect("/#/contratos-continuos?cadastro=ok");
+    // } 
+    console.log(values)
   };
 
   handleVisible = () => {
@@ -101,22 +129,50 @@ export default class CadastrarContrato extends Component {
     this.setState({ visibleCancelar: true });
   };
 
+  getDotacaoOrcamentaria = dotacao => {
+    this.setState({ dotacao: dotacao });
+  };
+
   render() {
-    const { termo_contrato, gestor, visible, coordenador } = this.state;
+    const {
+      termo_contrato,
+      gestor,
+      visible,
+      coordenador,
+      cancelamento,
+      contrato,
+      dotacao
+    } = this.state;
     const steps = [
       {
         name: "Informações Contrato/Empresa",
-        component: <Informacoes cancelar={this.mostrarModalCancelar} />
+        component: (
+          <Informacoes
+            cancelar={this.mostrarModalCancelar}
+            cancelamento={cancelamento}
+            dotacao={dotacao}
+            getDotacao={this.getDotacaoOrcamentaria}
+          />
+        )
       },
       {
         name: "Informações Gestão/Unidade",
         component: (
-          <Gestao termo={termo_contrato} cancelar={this.mostrarModalCancelar} />
+          <Gestao
+            termo={termo_contrato}
+            cancelar={this.mostrarModalCancelar}
+            cancelamento={cancelamento}
+          />
         )
       },
       {
         name: "Informações Anexos/Observações",
-        component: <AnexosContrato cancelar={this.mostrarModalCancelar} />
+        component: (
+          <AnexosContrato
+            cancelar={this.mostrarModalCancelar}
+            cancelamento={cancelamento}
+          />
+        )
       },
       { name: "Contrato cadastrado", component: <Finalizar /> }
     ];
@@ -179,19 +235,40 @@ export default class CadastrarContrato extends Component {
             <Formik
               initialValues={{
                 termo_contrato: termo_contrato,
-                tipo_servico: "",
-                processo: "",
-                estado_contrato: "VIGENTE",
-                situacao: "RASCUNHO",
-                data_assinatura: new Date(),
-                data_ordem_inicio: new Date(),
-                vigencia_em_dias: "",
+                tipo_servico: contrato.tipo_servico
+                  ? contrato.tipo_servico.uuid
+                  : "",
+                processo: contrato.processo ? contrato.processo : "",
+                estado_contrato: contrato.estado_contrato
+                  ? contrato.estado_contrato
+                  : "VIGENTE",
+                situacao: this.state.situacaoContrato,
+                data_assinatura: contrato.data_assinatura
+                  ? new Date(
+                      moment(contrato.data_assinatura).format("DD/MM/YYYY")
+                    )
+                  : new Date(),
+                data_ordem_inicio: contrato.data_ordem_inicio
+                  ? new Date(
+                      moment(contrato.data_ordem_inicio).format("YYYY-MM-DD")
+                    )
+                  : new Date(),
+                vigencia_em_dias: contrato.vigencia_em_dias
+                  ? contrato.vigencia_em_dias
+                  : "",
                 gestor: gestor,
+                dotacao_orcamentaria: contrato.dotacao_orcamentaria
+                  ? contrato.dotacao_orcamentaria
+                  : [],
                 coordenador: coordenador,
-                nucleo_responsavel: "",
-                observacoes: "",
-                objeto: "",
-                empresa_contratada: ""
+                nucleo_responsavel: contrato.nucleo_responsavel
+                  ? contrato.nucleo_responsavel.uuid
+                  : "",
+                observacoes: contrato.observacoes ? contrato.observacoes : "",
+                objeto: contrato.objeto ? contrato.objeto : "",
+                empresa_contratada: contrato.empresa_contratada
+                  ? contrato.empresa_contratada.uuid
+                  : ""
               }}
               validationSchema={contratoValidations}
               onReset={this.mostrarModalCancelar}
@@ -204,15 +281,8 @@ export default class CadastrarContrato extends Component {
                 <div className="step-progress">
                   <StepZilla
                     steps={steps}
-                    // nextButtonCls={"btn btn-coad-primary"}
-                    // backButtonCls={"btn btn-coad-background-outline"}
-                    // nextButtonText={"Avançar"}
-                    // backButtonText={"Voltar"}
                     stepsNavigation={false}
                     showNavigation={false}
-                    // prevBtnOnLastStep={true}
-                    // onStepChange={step => console.log(step)}
-                    // nextTextOnFinalActionStep={"Cadastrar"}
                     preventEnterSubmission={true}
                   />
                 </div>

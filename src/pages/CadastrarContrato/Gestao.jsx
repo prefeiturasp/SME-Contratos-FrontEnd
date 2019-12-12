@@ -150,6 +150,7 @@ export default class Gestao extends Component {
             className="btn-coad-background-outline mx-3"
             type="button"
             onClick={() => this.cancelar()}
+            disabled={this.props.cancelamento}
           >
             Cancelar
           </Button>
