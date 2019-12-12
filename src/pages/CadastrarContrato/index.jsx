@@ -21,6 +21,7 @@ import {
 import { redirect } from "../../utils/redirect";
 import { getCargosCoad } from "../../service/Cargos.service";
 import { Messages } from "primereact/messages";
+import ListarObrigacoesContratuais from "./ObrigacoesContratuais";
 import { NO_CONTENT } from "http-status-codes";
 
 export default class CadastrarContrato extends Component {
@@ -153,6 +154,12 @@ export default class CadastrarContrato extends Component {
             dotacao={dotacao}
             getDotacao={this.getDotacaoOrcamentaria}
           />
+        )
+      },
+      {
+        name: "Obrigações Contratuais",
+        component: (
+          <ListarObrigacoesContratuais cancelar={this.mostrarModalCancelar} />
         )
       },
       {

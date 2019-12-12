@@ -14,7 +14,7 @@ export default class AnexosContrato extends Component {
   };
 
   cadastrar = () => {
-    this.props.jumpToStep(3)
+    this.props.jumpToStep(4)
   }
 
   render() {
@@ -54,7 +54,7 @@ export default class AnexosContrato extends Component {
             Cancelar
           </Button>
           <Button
-            onClick={() => this.props.jumpToStep(1)}
+            onClick={() => this.props.jumpToStep(2)}
             className="btn-coad-background-outline"
           >
             Voltar
