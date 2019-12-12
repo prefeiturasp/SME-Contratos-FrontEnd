@@ -241,8 +241,16 @@ $hoverColor: #431e1e;
   }
   .datatable-strapd-coad {
     .p-datatable-tbody > tr:nth-child(even) {
-      background-color: #ffffff !important;
+      background-color: transparent;
     }
+  }
+
+  .p-datatable.p-datatable-hoverable-rows
+    .p-datatable-tbody
+    > tr:not(.p-highlight):not(.p-highlight-contextmenu):hover {
+    cursor: pointer;
+    background-color: $mainColor;
+    color: #ffffff;
   }
 
   .p-editor-container {
