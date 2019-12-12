@@ -21,6 +21,7 @@ import {
 import { redirect } from "../../utils/redirect";
 import { getCargosCoad } from "../../service/Cargos.service";
 import { Messages } from "primereact/messages";
+import ListarObrigacoesContratuais from "./ObrigacoesContratuais";
 
 export default class CadastrarContrato extends Component {
   state = {
@@ -107,6 +108,12 @@ export default class CadastrarContrato extends Component {
       {
         name: "Informações Contrato/Empresa",
         component: <Informacoes cancelar={this.mostrarModalCancelar} />
+      },
+      {
+        name: "Obrigações Contratuais",
+        component: (
+          <ListarObrigacoesContratuais cancelar={this.mostrarModalCancelar} />
+        )
       },
       {
         name: "Informações Gestão/Unidade",
