@@ -32,7 +32,7 @@ class ContratosContinuos extends Component {
         { field: "data_encerramento", header: "Data Encerramento" }
       ],
       filtros: {
-        gestor: getUsuario().user_id,
+        // gestor: getUsuario().user_id,
         empresa_contratada: "",
         encerramento_de: "",
         encerramento_ate: "",
@@ -41,7 +41,8 @@ class ContratosContinuos extends Component {
         situacao: "",
         termo_Contrato: "",
         tipo_servico: ""
-      }
+      },
+      loading: true
     };
   }
   async setaColunasDefaut() {
@@ -55,16 +56,20 @@ class ContratosContinuos extends Component {
     }
   }
 
-  setaMeusContratos() {
+  async setaMeusContratos() {
     const { filtros } = this.state;
-    getContratos(filtros).then(contratos => {
+    await getContratos(filtros).then(contratos => {
       this.setState({ contratos });
+    });
+    this.setState({
+      loading: false
     });
   }
 
   onBuscarClick = filtros => {
+    this.setState({ loading: true });
     getContratos(filtros).then(contratos => {
-      this.setState({ contratos, filtros });
+      this.setState({ contratos, filtros, loading: false });
     });
   };
 
@@ -90,7 +95,6 @@ class ContratosContinuos extends Component {
   };
 
   componentDidMount() {
-
     const param = getUrlParams();
     if (param.cadastro) {
       this.messages.show({
@@ -105,7 +109,7 @@ class ContratosContinuos extends Component {
   }
 
   render() {
-    const { contratos, colunas } = this.state;
+    const { contratos, colunas, loading } = this.state;
     return (
       <Page>
         <Messages ref={el => (this.messages = el)}></Messages>
@@ -140,7 +144,11 @@ class ContratosContinuos extends Component {
               }
             />
           </CoadAccordion>
-          <TableContrato contratos={contratos} colunas={colunas} />
+          <TableContrato
+            contratos={contratos}
+            colunas={colunas}
+            loading={loading}
+          />
         </Container>
       </Page>
     );
