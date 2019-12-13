@@ -500,13 +500,6 @@ class VisualizarContratos extends Component {
               </Row>
             </CoadAccordion>
             <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
-              {/* <InformacoesOrcamentaria
-                totalMensal={total_mensal}
-                disabilitar={disabilitado}
-                dotacaoOrcamentaria={dotacao}
-                setDotacao={value => this.setDotacao(value)}
-                setTotalMensal={this.setTotalMensal}
-              /> */}
               <DotacaoOrcamentaria
                 dotacao={dotacao}
                 getDotacao={value => this.setDotacao(value)}
