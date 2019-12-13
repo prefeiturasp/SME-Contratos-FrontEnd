@@ -23,6 +23,7 @@ import { getCargosCoad } from "../../service/Cargos.service";
 import { Messages } from "primereact/messages";
 import ListarObrigacoesContratuais from "./ObrigacoesContratuais";
 import { NO_CONTENT } from "http-status-codes";
+import { setFlashMessage } from "../../utils/flashMessages";
 
 export default class CadastrarContrato extends Component {
   state = {
@@ -107,19 +108,15 @@ export default class CadastrarContrato extends Component {
 
   handleSubmit = async values => {
     const { uuid_contrato, dotacao } = this.state;
-    values["data_assinatura"] = moment(values.data_assinatura).format(
-      "YYYY-MM-DD"
-    );
-    values["data_ordem_inicio"] = moment(values.data_ordem_inicio).format(
-      "YYYY-MM-DD"
-    );
+    values["data_assinatura"] = moment(values.data_assinatura).format("YYYY-MM-DD")
+    values["data_ordem_inicio"] = moment(values.data_ordem_inicio).format("YYYY-MM-DD");
     values["dotacao_orcamentaria"] = this.removeEmpty(dotacao);
 
-    // const cadastro = await updateContrato(values, uuid_contrato);
-    // if (cadastro.criado_em) {
-    //   redirect("/#/contratos-continuos?cadastro=ok");
-    // } 
-    console.log(values)
+    const cadastro = await updateContrato(values, uuid_contrato);
+    if (cadastro.criado_em) {
+      setFlashMessage("Contrato cadastrado com sucesso", "sucesso");
+      redirect("/#/contratos-continuos");
+    }
   };
 
   handleVisible = () => {
@@ -146,7 +143,7 @@ export default class CadastrarContrato extends Component {
     } = this.state;
     const steps = [
       {
-        name: "Informações Contrato/Empresa",
+        name: "Contrato/Empresa",
         component: (
           <Informacoes
             cancelar={this.mostrarModalCancelar}
@@ -159,11 +156,14 @@ export default class CadastrarContrato extends Component {
       {
         name: "Obrigações Contratuais",
         component: (
-          <ListarObrigacoesContratuais cancelar={this.mostrarModalCancelar} />
+          <ListarObrigacoesContratuais
+            cancelamento={cancelamento}
+            cancelar={this.mostrarModalCancelar}
+          />
         )
       },
       {
-        name: "Informações Gestão/Unidade",
+        name: "Gestão/Unidade",
         component: (
           <Gestao
             termo={termo_contrato}
@@ -173,7 +173,7 @@ export default class CadastrarContrato extends Component {
         )
       },
       {
-        name: "Informações Anexos/Observações",
+        name: "Anexos/Observações",
         component: (
           <AnexosContrato
             cancelar={this.mostrarModalCancelar}
@@ -252,7 +252,7 @@ export default class CadastrarContrato extends Component {
                 situacao: this.state.situacaoContrato,
                 data_assinatura: contrato.data_assinatura
                   ? new Date(
-                      moment(contrato.data_assinatura).format("DD/MM/YYYY")
+                      moment(contrato.data_assinatura).format("YYYY-MM-DD")
                     )
                   : new Date(),
                 data_ordem_inicio: contrato.data_ordem_inicio

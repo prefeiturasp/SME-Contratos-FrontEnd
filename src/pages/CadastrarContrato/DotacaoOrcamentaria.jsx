@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useMemo } from "react";
 import { Row, Col, Label, Input, FormGroup } from "reactstrap";
 import CurrencyInput from "react-currency-input";
 
@@ -14,6 +14,8 @@ const DotacaoOrcamentaria = props => {
     setDotacao([...dotacao]);
     props.getDotacao(dotacao);
   };
+
+  const sizeDotacao = useMemo(()=>dotacao.length, [dotacao])
 
   const addNovoInput = () => {
     dotacao.push("");
@@ -65,7 +67,7 @@ const DotacaoOrcamentaria = props => {
           <button
             type="button"
             className="btn btn-link coad-color font-weight-bold"
-            disabled={dotacao.length > 1 ? false : true}
+            disabled={sizeDotacao > 2 ? false : true}
             onClick={removeDotacao}
           >
             Remover Dotação
