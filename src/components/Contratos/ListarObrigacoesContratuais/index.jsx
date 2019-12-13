@@ -118,6 +118,7 @@ export default class ListarObrigacoesContratuais extends Component {
     return (
       <div>
         <Button
+          type="button"
           label="Editar"
           className="btn-coad-background-outline"
           onClick={event => {
@@ -197,12 +198,14 @@ export default class ListarObrigacoesContratuais extends Component {
     const footerModalConfirmar = (
       <div>
         <Button
+          type="button"
           label="Confirmar"
           style={{ marginRight: ".25em" }}
           onClick={this.handleClickConfirmar.bind(this)}
           className="btn-coad-background-outline"
         />
         <Button
+          type="button"
           label="Descartar"
           style={{ marginRight: ".25em" }}
           onClick={() => {
@@ -215,6 +218,7 @@ export default class ListarObrigacoesContratuais extends Component {
     const footerModalAdicionar = (
       <div>
         <Button
+          type="button"
           label="Cancelar"
           style={{ marginRight: ".25em" }}
           onClick={() => {
@@ -223,6 +227,7 @@ export default class ListarObrigacoesContratuais extends Component {
           className="btn-coad-background-outline"
         />
         <Button
+          type="button"
           label="Adicionar"
           style={{ marginRight: ".25em" }}
           onClick={this.handleAdicionarObrigacao.bind(this)}
@@ -233,6 +238,7 @@ export default class ListarObrigacoesContratuais extends Component {
     const footerModalEditar = (
       <div>
         <Button
+          type="button"
           label="Excluir"
           style={{ marginRight: ".25em" }}
           onClick={() => {
@@ -241,6 +247,7 @@ export default class ListarObrigacoesContratuais extends Component {
           className="btn-coad-background-outline"
         />
         <Button
+          type="button"
           label="editar"
           style={{ marginRight: ".25em" }}
           onClick={() => {
@@ -249,6 +256,7 @@ export default class ListarObrigacoesContratuais extends Component {
           className="btn-coad-background-outline"
         />
         <Button
+          type="button"
           label="cancelar"
           style={{ marginRight: ".25em" }}
           onClick={() => {
@@ -261,12 +269,14 @@ export default class ListarObrigacoesContratuais extends Component {
     const footerModalExcluir = (
       <div>
         <Button
+          type="button"
           label="Excluir"
           style={{ marginRight: ".25em" }}
           onClick={this.handleExcluirObrigacao.bind(this)}
           className="btn-coad-background-outline"
         />
         <Button
+          type="button"
           label="Voltar"
           style={{ marginRight: ".25em" }}
           onClick={() => {
@@ -309,7 +319,7 @@ export default class ListarObrigacoesContratuais extends Component {
                 type="button"
                 label="Adicionar Obrigação"
                 style={{ marginBottom: ".80em" }}
-                onClick={() => {
+                onClick={e => {
                   this.setState({
                     tituloModal: "Adicionar Obrigações Contratuais",
                     descricaoModal:

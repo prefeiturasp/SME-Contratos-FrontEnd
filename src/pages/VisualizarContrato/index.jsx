@@ -37,7 +37,7 @@ import { mapStateToPayload } from "./helpers";
 import { Dialog } from "primereact/dialog";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
 import ListarObrigacoesContratuais from "../../components/Contratos/ListarObrigacoesContratuais";
-
+import DotacaoOrcamentaria from "../CadastrarContrato/DotacaoOrcamentaria";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -57,7 +57,6 @@ class VisualizarContratos extends Component {
       observacoes: "",
       estadoContrato: [],
       situacaoContrato: [],
-      // divisao: null,
       gestor: null,
       nucleo: null,
       estado: null,
@@ -89,7 +88,7 @@ class VisualizarContratos extends Component {
       estadoContrato,
       tipoServicoOptions: tiposServicos,
       coordenador: contrato.coordenador,
-      usernameGestor: contrato.gestor ? contrato.gestor.username : '',
+      usernameGestor: contrato.gestor ? contrato.gestor.username : "",
       usuarios
     });
     this.propsToState(contrato);
@@ -104,18 +103,27 @@ class VisualizarContratos extends Component {
       tipo_servico: contrato.tipo_servico,
       tipo_servico_uuid: contrato.tipo_servico.uuid,
       situacao: contrato.situacao,
-      data_ordem_inicio: new Date(contrato.data_ordem_inicio),
-      data_encerramento: new Date(contrato.data_encerramento),
+      data_ordem_inicio: contrato.data_ordem_inicio
+        ? new Date(contrato.data_ordem_inicio)
+        : null,
+      data_encerramento: contrato.data_encerramento
+        ? new Date(contrato.data_encerramento)
+        : null,
+      data_assinatura: contrato.data_assinatura
+        ? new Date(contrato.data_assinatura)
+        : null,
       processo: contrato.processo,
       empresa_contratada: contrato.empresa_contratada,
       total_mensal: contrato.total_mensal,
       objeto: contrato.objeto,
       observacoes: contrato.observacoes,
-      gestor: contrato.gestor ? contrato.gestor.uuid : '',
-      nucleo: contrato.nucleo_responsavel ? contrato.nucleo_responsavel.uuid : '',
+      gestor: contrato.gestor ? contrato.gestor.uuid : "",
+      nucleo: contrato.nucleo_responsavel
+        ? contrato.nucleo_responsavel.uuid
+        : "",
       estado: contrato.estado_contrato,
       vigencia_em_dias: contrato.vigencia_em_dias,
-      dotacao: contrato.dotacao_orcamentaria,
+      dotacao: contrato.dotacao_orcamentaria
     });
   };
 
@@ -169,10 +177,11 @@ class VisualizarContratos extends Component {
   handleSubmit = () => {
     const { uuid } = this.state.contrato;
     const payload = mapStateToPayload(this.state);
-    updateContrato(payload, uuid);
-    this.setState({ disabilitado: true, alert: true });
-    this.cancelaAtualizacao();
-    window.scrollTo(0, 0);
+    console.log(payload);
+    // updateContrato(payload, uuid);
+    // this.setState({ disabilitado: true, alert: true });
+    // this.cancelaAtualizacao();
+    // window.scrollTo(0, 0);
   };
 
   handleConfimar = () => {
@@ -193,6 +202,7 @@ class VisualizarContratos extends Component {
       processo,
       data_ordem_inicio,
       data_encerramento,
+      data_assinatura,
       empresa_contratada,
       total_mensal,
       objeto,
@@ -209,7 +219,8 @@ class VisualizarContratos extends Component {
       visible,
       alert,
       usernameGestor,
-      usuarios
+      usuarios,
+      dotacao
     } = this.state;
     return (
       <>
@@ -372,7 +383,9 @@ class VisualizarContratos extends Component {
                       <br />
 
                       <Calendar
-                        value={contrato.data_assinatura}
+                        value={
+                          data_assinatura ? new Date(data_assinatura) : null
+                        }
                         onChange={e =>
                           this.setState({ data_assinatura: e.value })
                         }
@@ -487,12 +500,19 @@ class VisualizarContratos extends Component {
               </Row>
             </CoadAccordion>
             <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
-              <InformacoesOrcamentaria
+              {/* <InformacoesOrcamentaria
                 totalMensal={total_mensal}
                 disabilitar={disabilitado}
-                dotacaoOrcamentaria={[]}
+                dotacaoOrcamentaria={dotacao}
                 setDotacao={value => this.setDotacao(value)}
                 setTotalMensal={this.setTotalMensal}
+              /> */}
+              <DotacaoOrcamentaria
+                dotacao={dotacao}
+                getDotacao={value => this.setDotacao(value)}
+                disabilitar={disabilitado}
+                setTotalMensal={this.setTotalMensal}
+                totalMensal={total_mensal}
               />
             </CoadAccordion>
             <CoadAccordion titulo={"Objeto de Contrato"}>
@@ -501,6 +521,18 @@ class VisualizarContratos extends Component {
                 value={objeto}
                 onTextChange={e => this.setState({ objeto: e.htmlValue })}
                 disabled={disabilitado}
+                headerTemplate={
+                  <span className="ql-formats">
+                    <button className="ql-bold" aria-label="Bold"></button>
+                    <button className="ql-italic" aria-label="Italic"></button>
+                    <button
+                      className="ql-underline"
+                      aria-label="Underline"
+                    ></button>
+                    <button className="ql-list" value="ordered"></button>
+                    <button className="ql-list" value="bullet"></button>
+                  </span>
+                }
               />
             </CoadAccordion>
             <CoadAccordion titulo={"Obrigações Contratuais"}>
@@ -584,6 +616,18 @@ class VisualizarContratos extends Component {
                 style={{ height: "320px" }}
                 value={observacoes}
                 onTextChange={e => this.setState({ observacoes: e.htmlValue })}
+                headerTemplate={
+                  <span className="ql-formats">
+                    <button className="ql-bold" aria-label="Bold"></button>
+                    <button className="ql-italic" aria-label="Italic"></button>
+                    <button
+                      className="ql-underline"
+                      aria-label="Underline"
+                    ></button>
+                    <button className="ql-list" value="ordered"></button>
+                    <button className="ql-list" value="bullet"></button>
+                  </span>
+                }
               />
             </CoadAccordion>
             <CoadAccordion titulo={"Unidade Envolvidas"}>

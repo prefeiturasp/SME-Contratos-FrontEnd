@@ -12,6 +12,7 @@ export const mapStateToPayload = state => {
       estado_contrato: state.estado,
       data_ordem_inicio: moment(state.data_ordem_inicio).format('YYYY-MM-DD'),
       data_encerramento: moment(state.data_encerramento).format('YYYY-MM-DD'),
+      data_assinatura: moment(state.data_assinatura).format('YYYY-MM-DD'),
       vigencia_em_dias: state.vigencia_em_dias,
       processo: state.processo,
       numero_edital: state.numero_edital,

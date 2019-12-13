@@ -10,7 +10,6 @@ import {
 import "./style.scss";
 import { BuscaContratosForm } from "../../components/Contratos/BuscaContratosForm";
 import { SelecionaColunasContrato } from "../../components/Contratos/SelecionaColunasContrato";
-import { getUsuario } from "../../service/auth.service";
 import { getUrlParams } from "../../utils/params";
 import { Button, ButtonGroup } from "reactstrap";
 import { redirect } from "../../utils/redirect";
