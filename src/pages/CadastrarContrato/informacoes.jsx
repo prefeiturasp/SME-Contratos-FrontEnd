@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import $ from "jquery";
+import { Field } from "formik";
 import {
   Row,
   Col,
@@ -9,7 +10,6 @@ import {
   Input as InputBootstrap,
   Button
 } from "reactstrap";
-import CurrencyInput from "react-currency-input";
 import {
   CoadTextInput,
   CoadRadio,
@@ -23,7 +23,7 @@ import {
   getSituacoesContrato
 } from "../../service/Contratos.service";
 import { getEmpresasLookup } from "../../service/Empresas.service";
-import { Field } from "formik";
+import DotacaoOrcamentaria from "./DotacaoOrcamentaria";
 export default class Informacoes extends Component {
   state = {
     situacao: [],
@@ -44,33 +44,40 @@ export default class Informacoes extends Component {
     const empresas = await getEmpresasLookup();
     this.setState({ tipoServicos, estado, situacao, empresas });
     $("#avancar-1").click(e => {
+      const situacaoRadio = $("[name=situacao]:checked").val();
       e.preventDefault();
       let error = 0;
-      if (!$("#tipo_servico").val()) {
+      if (!$("#tipo_servico").val() && situacaoRadio !== "RASCUNHO") {
         $("#tipo_servico").addClass("is-invalid");
         error++;
       }
 
-      if (!$("[name=processo]").val()) {
+      if (!$("[name=processo]").val() && situacaoRadio !== "RASCUNHO") {
         $("[name=processo]").addClass("is-invalid");
         error++;
       }
 
-      if (!$("[name=empresa_contratada]").val()) {
+      if (
+        !$("[name=empresa_contratada]").val() &&
+        situacaoRadio !== "RASCUNHO"
+      ) {
         $("[name=empresa_contratada]").addClass("is-invalid");
         error++;
       }
 
-      if (!$("[name=vigencia_em_dias]").val()) {
+      if (!$("[name=vigencia_em_dias]").val() && situacaoRadio !== "RASCUNHO") {
         $("[name=vigencia_em_dias]").addClass("is-invalid");
         error++;
       }
 
-      if (!$("[name=data_assinatura]").val()) {
+      if (!$("[name=data_assinatura]").val() && situacaoRadio !== "RASCUNHO") {
         $("[name=data_assinatura]").css("border-color", "red");
         error++;
       }
-      if (!$("[name=data_ordem_inicio]").val()) {
+      if (
+        !$("[name=data_ordem_inicio]").val() &&
+        situacaoRadio !== "RASCUNHO"
+      ) {
         $("[name=data_ordem_inicio]").css("border-color", "red");
         error++;
       }
@@ -181,15 +188,23 @@ export default class Informacoes extends Component {
             <Col lg={8} xl={8}>
               <Label className="pb-2">Situação de Contrato</Label>
               <br />
-              {situacao.map((value, i) => (
-                <CoadRadio
-                  label={value.nome}
-                  name="situacao"
-                  type="radio"
-                  value={value.id}
-                  key={i}
-                />
-              ))}
+              {situacao.map((value, i) => {
+                let desabilitar = false;
+                if (this.props.cancelamento) {
+                  desabilitar = value.id === "RASCUNHO" ? true : false;
+                }
+
+                return (
+                  <CoadRadio
+                    label={value.nome}
+                    name="situacao"
+                    type="radio"
+                    value={value.id}
+                    key={i}
+                    disabled={desabilitar}
+                  />
+                );
+              })}
             </Col>
           </Row>
           <hr />
@@ -265,39 +280,10 @@ export default class Informacoes extends Component {
           </Row>
         </Card>
         <Card>
-          <strong className="mb-3">
-            Informações Orçamentárias de Contrato
-          </strong>
-          <Row>
-            <Col lg={8} xl={8}>
-              <CoadTextInput
-                label="Dotação Orçamentária"
-                name="dotacao_orcamentaria"
-                id="dotacao_orcamentaria"
-                placeholder="Digitar dotação"
-              />
-              <button
-                type="button"
-                className="btn btn-link coad-color font-weight-bold"
-              >
-                Adicionar Dotação
-              </button>
-            </Col>
-            <Col lg={4} xl={4}>
-              <Label>Valor mensal do Contrato</Label>
-              <CurrencyInput
-                disabled={true}
-                decimalSeparator=","
-                thousandSeparator="."
-                prefix="R$ "
-                className="form-control"
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={8} xl={8}></Col>
-            <Col lg={4} xl={4}></Col>
-          </Row>
+          <DotacaoOrcamentaria
+            dotacao={this.props.dotacao}
+            getDotacao={value => this.props.getDotacao(value)}
+          />
         </Card>
         <Card>
           <strong className="mb-3">Objeto de Contrato</strong>
@@ -324,12 +310,10 @@ export default class Informacoes extends Component {
             type="button"
             onClick={() => this.cancelar()}
             className="btn-coad-background-outline mx-3"
+            disabled={this.props.cancelamento}
           >
             Cancelar
           </Button>
-          {/* <Button disabled className="btn-coad-background-outline">
-            Voltar
-          </Button> */}
           <br />
         </div>
       </>

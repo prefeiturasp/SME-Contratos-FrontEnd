@@ -50,6 +50,7 @@ export default class AnexosContrato extends Component {
             type="button"
             onClick={() => this.cancelar()}
             className="btn-coad-background-outline mx-3"
+            disabled={this.props.cancelamento}
           >
             Cancelar
           </Button>

@@ -27,6 +27,7 @@ const ObrigacoesContratuais = props => {
             type="button"
             onClick={() => cancelar()}
             className="btn-coad-background-outline mx-3"
+            disabled={props.cancelamento}
           >
             Cancelar
           </Button>

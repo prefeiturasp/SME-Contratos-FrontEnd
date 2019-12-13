@@ -48,7 +48,6 @@ export default class ListarObrigacoesContratuais extends Component {
       item: this.state.item,
       obrigacao: this.state.obrigacao
     };
-    console.log(this.state.contrato);
     const resultado = await addObrigacaoContratual(payload);
     if (resultado.uuid) {
       this.setState({
@@ -307,6 +306,7 @@ export default class ListarObrigacoesContratuais extends Component {
             <span className="float-right">
               <Button
                 icon="pi pi-file"
+                type="button"
                 label="Adicionar Obrigação"
                 style={{ marginBottom: ".80em" }}
                 onClick={() => {

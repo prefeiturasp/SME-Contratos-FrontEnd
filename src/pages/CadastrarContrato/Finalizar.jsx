@@ -18,7 +18,7 @@ export default class Finalizar extends Component {
             <div className="pb-3">
               <button
                 className="btn btn-coad-background-outline"
-                onClick={() => this.props.jumpToStep(2)}
+                onClick={() => this.props.jumpToStep(0)}
               >
                 Cancelar
               </button>
