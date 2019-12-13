@@ -24,7 +24,7 @@ export class TableContrato extends Component {
   }
 
   render() {
-    const { contratos, colunas } = this.props;
+    const { contratos, colunas, loading } = this.props;
     const total = contratos.reduce(
       (prevVal, value) => prevVal + value.total_mensal,
       0
@@ -57,7 +57,7 @@ export class TableContrato extends Component {
 
     return (
       <div className="h-auto w-100">
-        {this.props.contratos.length > 0 ? (
+        {this.props.contratos.length > 0 || loading ? (
           <DataTable
             onRowClick={e => this.redirecionaDetalhe(e.data)}
             value={this.props.contratos}
@@ -67,6 +67,7 @@ export class TableContrato extends Component {
             columnResizeMode="expand"
             className="mt-3 datatable-strapd-coad"
             selectionMode="single"
+            loading={loading}
           >
             {dynamicColumns}
           </DataTable>
