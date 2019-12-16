@@ -5,7 +5,7 @@ export const mapStateToPayload = state => {
   if (state) {
     payload = {
       gestor: state.gestor.uuid,
-      divisao: state.divisao,
+      nucleo_responsavel: state.nucleo_responsavel,
       tipo_servico: state.tipo_servico_uuid,
       situacao: state.situacao,
       empresa_contratada: state.empresa_contratada.uuid,
@@ -16,7 +16,7 @@ export const mapStateToPayload = state => {
       vigencia_em_dias: state.vigencia_em_dias,
       processo: state.processo,
       numero_edital: state.numero_edital,
-      total_mensal: state.total_mensal,
+      total_mensal: state.totalMensal,
       objeto: state.objeto,
       observacoes: state.observacoes,
       termo_contrato: state.contrato.termo_contrato,

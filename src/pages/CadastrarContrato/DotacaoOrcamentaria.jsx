@@ -85,7 +85,7 @@ const DotacaoOrcamentaria = props => {
         <Col lg={4} xl={4}>
           <Label>Valor mensal do Contrato</Label>
           <CurrencyInput
-            disabled={props.desabilitar ? true : false}
+            disabled={true}
             decimalSeparator=","
             thousandSeparator="."
             prefix="R$ "
