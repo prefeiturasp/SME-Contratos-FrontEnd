@@ -41,7 +41,7 @@ const ModeloAteste = props => {
         setAlerta(false);
       }, 5000);
     },
-    [alerta]
+    []
   );
 
   const fechaAlerta = () => setAlerta(false);
@@ -52,7 +52,7 @@ const ModeloAteste = props => {
         {hasFlashMessage("sucesso") ? (
           <Alert
             color="success"
-            isOpen={() => setAlertaDuplicar(true)}
+            isOpen={alertaDuplicar}
             toggle={() => setAlertaDuplicar(false)}
             id="alerta-duplicidade"
           >

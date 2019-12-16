@@ -101,6 +101,7 @@ export default class CadastrarContrato extends Component {
         return valor;
       } else {
         delete lista[i];
+        return null;
       }
     });
     return novaLista;

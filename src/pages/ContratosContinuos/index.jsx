@@ -10,12 +10,12 @@ import {
 import "./style.scss";
 import { BuscaContratosForm } from "../../components/Contratos/BuscaContratosForm";
 import { SelecionaColunasContrato } from "../../components/Contratos/SelecionaColunasContrato";
-import { getUsuario } from "../../service/auth.service";
 import { getUrlParams } from "../../utils/params";
 import { Button, ButtonGroup } from "reactstrap";
 import { redirect } from "../../utils/redirect";
 import CoadAccordion from "../../components/Global/CoadAccordion";
 import { CoadTabs } from "../../components/Contratos/CoadTabs";
+import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
 
 class ContratosContinuos extends Component {
   constructor(props) {
@@ -32,7 +32,6 @@ class ContratosContinuos extends Component {
         { field: "data_encerramento", header: "Data Encerramento" }
       ],
       filtros: {
-        // gestor: getUsuario().user_id,
         empresa_contratada: "",
         encerramento_de: "",
         encerramento_ate: "",
@@ -101,6 +100,14 @@ class ContratosContinuos extends Component {
         severity: "success",
         life: 10000,
         detail: "Contrato cadastrado com sucesso"
+      });
+    }
+
+    if (hasFlashMessage("sucesso")) {
+      this.messages.show({
+        severity: "success",
+        life: 10000,
+        detail: getFlashMessage("sucesso")
       });
     }
     this.pegaParametrosUrl();

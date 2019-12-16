@@ -4,10 +4,12 @@ import CurrencyInput from "react-currency-input";
 
 const DotacaoOrcamentaria = props => {
   const [dotacao, setDotacao] = useState([]);
+  const [total, setTotal] = useState([]);
 
   useEffect(() => {
     setDotacao(props.dotacao);
-  });
+    setTotal(props.totalMensal);
+  }, [props.dotacao, props.totalMensal]);
 
   const alteraInput = (value, index) => {
     dotacao[index] = value;
@@ -15,7 +17,7 @@ const DotacaoOrcamentaria = props => {
     props.getDotacao(dotacao);
   };
 
-  const sizeDotacao = useMemo(()=>dotacao.length, [dotacao])
+  const sizeDotacao = useMemo(() => dotacao.length, [dotacao]);
 
   const addNovoInput = () => {
     dotacao.push("");
@@ -27,6 +29,11 @@ const DotacaoOrcamentaria = props => {
     dotacao.pop();
     setDotacao([...dotacao]);
     props.getDotacao(dotacao);
+  };
+
+  const handleTotalMensal = (value, floatValue) => {
+    setTotal(floatValue);
+    props.setTotalMensal(floatValue);
   };
 
   return (
@@ -42,6 +49,7 @@ const DotacaoOrcamentaria = props => {
                   className="mb-2"
                   value={value}
                   key={i}
+                  disabled={props.desabilitar ? true : false}
                   onChange={e => alteraInput(e.target.value, i)}
                 />
               </FormGroup>
@@ -52,6 +60,7 @@ const DotacaoOrcamentaria = props => {
                 className="mb-2"
                 value=""
                 onChange={e => alteraInput(e.target.value, 1)}
+                disabled={props.desabilitar ? true : false}
               />
             </FormGroup>
           )}
@@ -81,6 +90,8 @@ const DotacaoOrcamentaria = props => {
             thousandSeparator="."
             prefix="R$ "
             className="form-control"
+            onChange={handleTotalMensal}
+            value={total}
           />
         </Col>
       </Row>

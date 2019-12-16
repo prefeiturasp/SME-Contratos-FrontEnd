@@ -11,7 +11,7 @@ const CoadAccordion = props => {
   return (
     <div className="accordion">
       <div className="card caod-card-accordion px-0">
-        <div className="card-header coad-card-header-accrodion">
+        <div className="card-header coad-card-header-accrodion" onClick={toggle} style={{cursor: 'pointer'}}>
           <h5 className="mb-0  d-flex justify-content-end">
               <span className="w-100 pt-2">{titulo}</span>
             <button type="button"
