@@ -1,31 +1,108 @@
-.card-login {
-  padding: 0;
-  margin: 0;
-  background-color: #ffffff;
-  border-radius: 3px;
-}
-.login {
-  overflow: hidden;
-  position: fixed;
+.p-button {
+  background-color: #602a2a !important;
+  border-color: #602a2a !important;
+  font-weight: bold;
 }
 
-
-.block-logo {
-  height: 15%;
+.p-button:enabled:hover {
+  border-color: #602a2a !important;
 }
 
-.ml-5-2 {
-  margin-left: 5.5rem !important;
+.p-button:enabled:focus {
+  box-shadow: 0 0 0 0.1em #602a2a !important;
 }
 
-label {
-  font-family: Roboto;
+.p-inputtext:enabled:hover {
+  border-color: #602a2a !important;
 }
 
-.link{
-  color: #6a6a6a !important;
+.p-inputtext:enabled:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2em #602a2a !important;
+  border-color: #602a2a !important;
 }
 
-.btn-login {
-    background-color: #6A6A6A !important;
+.ant-btn-link:hover {
+  color: #431e1e !important;
+}
+
+.ant-btn-link {
+  color: #602a2a !important;
+  background-color: transparent;
+  border-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.login-bg {
+  background: url("../../assets/images/login.svg");
+  width: 50%;
+  position: absolute;
+  height: 100%;
+  left: 0px;
+  object-fit: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.right-half {
+  background-color: #fffffd;
+  position: absolute;
+  right: 0px;
+  width: 50%;
+  height: 100%;
+  text-align: center;
+  .container {
+    position: absolute;
+    left: 50%;
+    height: 100%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    padding: 0 85px;
+    text-align: left;
+    div.form {
+      .login {
+        div[class*="col-"] {
+          padding: 0;
+        }
+      }
+    }
+    .logo-safi {
+      text-align: center;
+      @media screen and (max-height: 610px) {
+        padding-top: 2rem;
+        img {
+          height: auto;
+          width: 300px;
+        }
+      }
+      @media screen and (min-height: 611px) {
+        padding-top: 5rem;
+        img {
+          height: 105px;
+          width: 427px;
+        }
+      }
+    }
+    .logo-prefeitura {
+      text-align: center;
+      @media screen and (max-height: 610px) {
+        padding-top: 1rem;
+        img {
+          height: auto;
+          width: 100px;
+        }
+      }
+      @media screen and (min-height: 611px) {
+        padding-top: 2rem;
+        img {
+          height: 65px;
+          width: 171px;
+        }
+      }
+    }
+  }
 }
