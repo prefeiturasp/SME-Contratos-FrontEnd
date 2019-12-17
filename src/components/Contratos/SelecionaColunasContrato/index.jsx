@@ -43,10 +43,6 @@ export class SelecionaColunasContrato extends Component {
           header: "Núcleo Responsável"
         },
         {
-          field: "objeto",
-          header: "Objeto"
-        },
-        {
           field: "data_assinatura",
           header: "Data Assinatura"
         },
@@ -71,8 +67,8 @@ export class SelecionaColunasContrato extends Component {
           header: "Suplente"
         },
         {
-          field: "observacoes",
-          header: "Observações"
+          field: "dres",
+          header: "DREs"
         }
       ],
       selectedCols: []
