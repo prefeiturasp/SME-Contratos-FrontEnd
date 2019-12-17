@@ -43,7 +43,7 @@ class ContratosContinuos extends Component {
       },
       loading: true
     };
-  }
+  }  
   async setaColunasDefaut() {
     const colUsuario = await getCamposContrato();
     const colunasUsuario = colUsuario[0];
@@ -145,6 +145,7 @@ class ContratosContinuos extends Component {
               }
               conteudo2={
                 <SelecionaColunasContrato
+                  colunasInit={colunas}
                   uuid={this.state.uuid}
                   onAplicarClick={this.onAplicarClick}
                 />

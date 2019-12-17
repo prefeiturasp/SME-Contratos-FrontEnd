@@ -71,19 +71,27 @@ export class SelecionaColunasContrato extends Component {
           header: "DREs"
         }
       ],
-      selectedCols: []
+      selectedCols: props.colunasInit
     };
 
     this.onColunasChange = this.onColunasChange.bind(this);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.colunasInit !== this.props.colunasInit) {
+      this.setState({
+        selectedCols: this.props.colunasInit
+      })
+    }
+  }
+
   onColunasChange(e) {
     let colunasSelecionadas = [...this.state.selectedCols];
-
     if (e.checked) colunasSelecionadas.push(e.value);
-    else colunasSelecionadas.splice(colunasSelecionadas.indexOf(e.value), 1);
+    else colunasSelecionadas.splice(colunasSelecionadas.indexOf(colunasSelecionadas.find(col => { return col.field === e.value.field})), 1)
 
     this.setState({ selectedCols: colunasSelecionadas });
+    console.log('Selecionadas Depois', colunasSelecionadas)
   }
   updateColunas() {
     const payLoad = {
@@ -116,7 +124,7 @@ export class SelecionaColunasContrato extends Component {
                 inputId={cols.field}
                 value={cols}
                 onChange={this.onColunasChange}
-                checked={this.state.selectedCols.indexOf(cols) !== -1}
+                checked={this.state.selectedCols.find(col => { return col.field === cols.field})}
               ></Checkbox>
               <label htmlFor={cols.field} className="p-checkbox-label">
                 {cols.header}
