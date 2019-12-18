@@ -96,7 +96,7 @@ class VisualizarContratos extends Component {
       usuarios,
       gestor: contrato.gestor,
       dataEncerramento: contrato.data_encerramento
-        ? moment(contrato.data_encerramento).format("DD/MM/YYY")
+        ? moment(contrato.data_encerramento).format("DD/MM/YYYY")
         : null
     });
     this.propsToState(contrato);
