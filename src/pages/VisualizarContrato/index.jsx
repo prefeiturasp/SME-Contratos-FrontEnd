@@ -38,6 +38,7 @@ import { getUsuariosLookup } from "../../service/Usuarios.service";
 import ListarObrigacoesContratuais from "../../components/Contratos/ListarObrigacoesContratuais";
 import DotacaoOrcamentaria from "../CadastrarContrato/DotacaoOrcamentaria";
 import { Switch } from "antd";
+import $ from "jquery";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -72,7 +73,7 @@ class VisualizarContratos extends Component {
       usernameGestor: null,
       alert: false,
       usuarios: [],
-      totalMensal: 0.00
+      totalMensal: 0.0
     };
 
     this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
@@ -90,7 +91,8 @@ class VisualizarContratos extends Component {
       tipoServicoOptions: tiposServicos,
       coordenador: contrato.coordenador,
       usernameGestor: contrato.gestor ? contrato.gestor.username : "",
-      usuarios
+      usuarios,
+      gestor: contrato.gestor
     });
     this.propsToState(contrato);
   }
@@ -132,10 +134,6 @@ class VisualizarContratos extends Component {
     this.setState({ tipo_servico_uuid: value.target.value });
   };
 
-  selecionaGestor = gestor => {
-    this.setState({ gestor });
-  };
-
   selecionarDocsDre = files => {
     const docs = Array.from(files);
     this.setState({ documentoFiscaDre: docs });
@@ -147,13 +145,16 @@ class VisualizarContratos extends Component {
 
   habilitarEdicao = () => {
     this.setState({ disabilitado: !this.state.disabilitado });
+    $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
+
+    // console.log(this.state.disabilitado.toString())
   };
 
   handleSubmit = () => {
     const { uuid } = this.state.contrato;
     const payload = mapStateToPayload(this.state);
-    updateContrato(payload, uuid);
     this.setState({ disabilitado: true, alert: true });
+    updateContrato(payload, uuid);
     setTimeout(() => {
       this.setState({ alert: false });
     }, 10000);
@@ -167,6 +168,10 @@ class VisualizarContratos extends Component {
 
   cancelaAtualizacao = () => {
     this.setState({ visible: false });
+  };
+
+  teste = () => {
+    return this.state.disabilitado;
   };
 
   render() {
@@ -283,7 +288,7 @@ class VisualizarContratos extends Component {
                 <Col className="d-flex justify-content-end">
                   <Label className="px-3">Modo de edição</Label>
                   <Switch
-                    defaultChecked={!disabilitado}
+                    defaultChecked={false}
                     onChange={() => this.habilitarEdicao()}
                   />
                 </Col>
@@ -340,6 +345,7 @@ class VisualizarContratos extends Component {
                       }
                       placeholder={"Ex: 0000.2019/0000000-0"}
                       className="w-100"
+                      disabled={disabilitado}
                     />
                   </FormGroup>
                 </Col>
@@ -464,7 +470,7 @@ class VisualizarContratos extends Component {
               <Row>
                 <Col lg={6} xl={6} sx={12} md={12} sm={12}>
                   <Row>
-                    <Col>
+                    <Col style={{ paddingTop: "0.4rem" }}>
                       <FormGroup className="p-grid p-fluid">
                         <Label>Nome Empresa</Label>
                         <br />
@@ -488,19 +494,11 @@ class VisualizarContratos extends Component {
                           value={empresa_contratada.cnpj}
                           placeholder={"Digite nome da empresa"}
                           className="w-100 pb-2"
-                          readOnly={true}
+                          disabled={true}
                         />
                       </FormGroup>
                     </Col>
                   </Row>
-                </Col>
-                <Col>
-                  <button
-                    className="btn coad-color font-weight-bold"
-                    disabled={disabilitado}
-                  >
-                    Nova empresa
-                  </button>
                 </Col>
               </Row>
             </CoadAccordion>
@@ -508,8 +506,8 @@ class VisualizarContratos extends Component {
               <DotacaoOrcamentaria
                 dotacao={dotacao}
                 getDotacao={value => this.setState({ dotacao: value })}
-                disabilitar={disabilitado}
-                setTotalMensal={(value) => this.setState({ totalMensal: value })}
+                disableded={disabilitado}
+                setTotalMensal={value => this.setState({ totalMensal: value })}
                 totalMensal={totalMensal}
               />
             </CoadAccordion>
@@ -517,8 +515,8 @@ class VisualizarContratos extends Component {
               <Editor
                 style={{ height: "320px" }}
                 value={objeto}
+                readOnly={disabilitado}
                 onTextChange={e => this.setState({ objeto: e.htmlValue })}
-                disabled={disabilitado}
                 headerTemplate={
                   <span className="ql-formats">
                     <button className="ql-bold" aria-label="Bold"></button>
@@ -569,7 +567,7 @@ class VisualizarContratos extends Component {
                     <br />
                     <BuscaIncrementalServidores
                       placeholder={"Selecione o gestor do contrato"}
-                      onUpdate={this.selecionaGestor}
+                      onUpdate={valor => this.setState({ gestor: valor })}
                       disabled={disabilitado}
                       userName={usernameGestor}
                       onClear={true}
@@ -617,6 +615,7 @@ class VisualizarContratos extends Component {
               <Editor
                 style={{ height: "320px" }}
                 value={observacoes}
+                readOnly={disabilitado}
                 onTextChange={e => this.setState({ observacoes: e.htmlValue })}
                 headerTemplate={
                   <span className="ql-formats">

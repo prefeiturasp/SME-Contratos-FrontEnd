@@ -10,13 +10,14 @@ export default class Gestao extends Component {
   state = {
     nucleos: [],
     usuarios: [],
-    emailUsuario: null
+    emailUsuario: null,
   };
 
   async componentDidMount() {
     const nucleos = await getNucleos();
     const usuarios = await getUsuariosLookup();
-    this.setState({ nucleos, usuarios });
+    this.setState({ nucleos, usuarios, emailUsuario: this.props.contrato.gestor.email });
+    
     $("#avancar-2").click(() => {
       let error = 0;
       if (!$("[name=coordenador]").val()) {
