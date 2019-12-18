@@ -77,8 +77,8 @@ export const esqueciMinhaSenha = async username => {
       `${CONFIG.API_URL}/esqueci-minha-senha/${username}/`,
       OBJ_REQUEST
     );
-    const json = await response.json();
-    return json;
+    const json = await response
+    return json
   } catch (error) {
     return false;
   }
