@@ -49,7 +49,7 @@ const DotacaoOrcamentaria = props => {
                   className="mb-2"
                   value={value}
                   key={i}
-                  disabled={props.desabilitar ? true : false}
+                  disabled={props.disableded}
                   onChange={e => alteraInput(e.target.value, i)}
                 />
               </FormGroup>
@@ -60,7 +60,7 @@ const DotacaoOrcamentaria = props => {
                 className="mb-2"
                 value=""
                 onChange={e => alteraInput(e.target.value, 1)}
-                disabled={props.desabilitar ? true : false}
+                disabled={props.disableded}
               />
             </FormGroup>
           )}
@@ -76,7 +76,7 @@ const DotacaoOrcamentaria = props => {
           <button
             type="button"
             className="btn btn-link coad-color font-weight-bold"
-            disabled={sizeDotacao > 2 ? false : true}
+            disabled={sizeDotacao > 1 ? false : true}
             onClick={removeDotacao}
           >
             Remover Dotação

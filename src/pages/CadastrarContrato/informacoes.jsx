@@ -8,7 +8,8 @@ import {
   Label,
   FormGroup,
   Input as InputBootstrap,
-  Button
+  Button,
+  Input
 } from "reactstrap";
 import {
   CoadTextInput,
@@ -24,6 +25,7 @@ import {
 } from "../../service/Contratos.service";
 import { getEmpresasLookup } from "../../service/Empresas.service";
 import DotacaoOrcamentaria from "./DotacaoOrcamentaria";
+import moment from "moment";
 export default class Informacoes extends Component {
   state = {
     situacao: [],
@@ -34,15 +36,26 @@ export default class Informacoes extends Component {
     observacoes: null,
     tipoServicos: [],
     empresas: [],
-    cnpjEmpresa: null
+    cnpjEmpresa: null,
+    dataEncerramento: null,
   };
 
   async componentDidMount() {
+    const contrato = this.props.contrato;
     const tipoServicos = await getTiposServicoLookup();
     const estado = await getEstadosContrato();
     const situacao = await getSituacoesContrato();
     const empresas = await getEmpresasLookup();
-    this.setState({ tipoServicos, estado, situacao, empresas });
+    this.setState({
+      tipoServicos,
+      estado,
+      situacao,
+      empresas,
+      dataEncerramento: contrato.data_encerramento
+        ? moment(contrato.data_encerramento).format("DD/MM/YYYY")
+        : null,
+      cnpjEmpresa: contrato.empresa_contratada.cnpj
+    });
     $("#avancar-1").click(e => {
       const situacaoRadio = $("[name=situacao]:checked").val();
       e.preventDefault();
@@ -88,7 +101,27 @@ export default class Informacoes extends Component {
         $(".alerta").removeClass("d-none");
       }
     });
+
+    $("#vigencia_em_dias").change(() => {
+      let dataAssinatura = $("[name=data_assinatura]").val();
+      const vigenciaContrato = $("#vigencia_em_dias").val();
+      this.calculaEncerramento(dataAssinatura, vigenciaContrato);
+    });
+
+    $("[name=data_assinatura]").on("blur", () => {
+      let dataAssinatura = $("[name=data_assinatura]").val();
+      const vigenciaContrato = $("#vigencia_em_dias").val();
+      this.calculaEncerramento(dataAssinatura, vigenciaContrato);
+    });
   }
+
+  calculaEncerramento = (data, dias) => {
+    const novaData = moment(data, "DD/MM/YYYY")
+      .add(dias, "days")
+      .calendar();
+
+    this.setState({dataEncerramento: moment(novaData).format('DD/MM/YYYY')})
+  };
 
   cancelar = () => {
     this.props.cancelar();
@@ -112,7 +145,8 @@ export default class Informacoes extends Component {
       estado,
       situacao,
       empresas,
-      cnpjEmpresa
+      cnpjEmpresa, 
+      dataEncerramento
     } = this.state;
     return (
       <>
@@ -237,13 +271,14 @@ export default class Informacoes extends Component {
               />
             </Col>
             <Col lg={8} xl={8}>
-              <CoadTextInput
+              <Label>Data Encerramento de Contrato</Label>
+              <Input
                 label="Data Encerramento de Contrato"
-                type="text"
                 id="data_encerramento"
                 name="data_encerramento"
                 disabled={true}
-                placeholder="Ex: 365 dias"
+                value={dataEncerramento}
+                placeholder={"01/01/2030"}
               />
             </Col>
           </Row>

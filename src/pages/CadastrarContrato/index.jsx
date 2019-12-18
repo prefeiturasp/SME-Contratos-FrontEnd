@@ -151,6 +151,7 @@ export default class CadastrarContrato extends Component {
             cancelamento={cancelamento}
             dotacao={dotacao}
             getDotacao={this.getDotacaoOrcamentaria}
+            contrato={contrato}
           />
         )
       },
@@ -170,6 +171,7 @@ export default class CadastrarContrato extends Component {
             termo={termo_contrato}
             cancelar={this.mostrarModalCancelar}
             cancelamento={cancelamento}
+            contrato={contrato}
           />
         )
       },
@@ -251,6 +253,7 @@ export default class CadastrarContrato extends Component {
                   ? contrato.estado_contrato
                   : "VIGENTE",
                 situacao: this.state.situacaoContrato,
+                data_encerramento: contrato.data_encerramento ? new Date(moment(contrato.data_encerramento).format("YYYY-MM-DD")) : new Date(),
                 data_assinatura: contrato.data_assinatura
                   ? new Date(
                       moment(contrato.data_assinatura).format("YYYY-MM-DD")
