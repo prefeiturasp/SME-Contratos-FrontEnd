@@ -22,10 +22,10 @@ const Login = props => {
   return (
     <Fragment>
       <Row className="my-3">
-        <label>RF ou CPF</label>
+        <label>Usuário</label>
         <InputText
           value={userName}
-          placeholder="Insira seu RF ou CPF"
+          placeholder="Insira seu Usuário"
           id={"username"}
           type={"text"}
           style={{ width: "100%" }}
@@ -56,7 +56,7 @@ const Login = props => {
           <AntButton
             type="link"
             size="small"
-            onClick={e => redirect("#/esqueci-minha-senha/")}
+            onClick={() => props.ativaEsqueciSenha()}
           >
             Esqueci minha senha
           </AntButton>
