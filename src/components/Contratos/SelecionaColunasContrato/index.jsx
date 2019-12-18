@@ -24,7 +24,7 @@ export class SelecionaColunasContrato extends Component {
         },
         {
           field: "tipo_servico.nome",
-          header: "Tipode de Serviço"
+          header: "Tipo de Serviço"
         },
         {
           field: "empresa_contratada.nome",
@@ -36,7 +36,7 @@ export class SelecionaColunasContrato extends Component {
         },
         {
           field: "data_encerramento",
-          header: "Data Encerramento"
+          header: "Data de Encerramento"
         },
         {
           field: "nucleo_responsavel.sigla",
@@ -44,15 +44,15 @@ export class SelecionaColunasContrato extends Component {
         },
         {
           field: "data_assinatura",
-          header: "Data Assinatura"
+          header: "Data de Assinatura"
         },
         {
           field: "data_ordem_inicio",
-          header: "Data Ordem de Inicio"
+          header: "Data Ordem de Início"
         },
         {
           field: "vigencia_em_dias",
-          header: "Vigencia"
+          header: "Vigência"
         },
         {
           field: "situacao",
