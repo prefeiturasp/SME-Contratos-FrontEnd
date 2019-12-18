@@ -39,6 +39,7 @@ import ListarObrigacoesContratuais from "../../components/Contratos/ListarObriga
 import DotacaoOrcamentaria from "../CadastrarContrato/DotacaoOrcamentaria";
 import { Switch } from "antd";
 import $ from "jquery";
+import moment from "moment";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -73,15 +74,16 @@ class VisualizarContratos extends Component {
       usernameGestor: null,
       alert: false,
       usuarios: [],
-      totalMensal: 0.0
+      totalMensal: 0.0,
+      dataEncerramento: null
     };
 
     this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
   }
 
   async componentDidMount() {
-    const tiposServicos = await getTiposServicoLookup();
     const param = getUrlParams();
+    const tiposServicos = await getTiposServicoLookup();
     const contrato = await getContratoByUUID(param.uuid);
     const estadoContrato = await getEstadosContrato();
     const usuarios = await getUsuariosLookup();
@@ -92,7 +94,10 @@ class VisualizarContratos extends Component {
       coordenador: contrato.coordenador,
       usernameGestor: contrato.gestor ? contrato.gestor.username : "",
       usuarios,
-      gestor: contrato.gestor
+      gestor: contrato.gestor,
+      dataEncerramento: contrato.data_encerramento
+        ? moment(contrato.data_encerramento).format("DD/MM/YYY")
+        : null
     });
     this.propsToState(contrato);
   }
@@ -141,13 +146,38 @@ class VisualizarContratos extends Component {
 
   alteraDiasVigencia = dias => {
     this.setState({ vigencia_em_dias: dias });
+
+    this.calculaEncerramento(
+      this.state.data_assinatura,
+      this.state.vigencia_em_dias
+    );
+  };
+
+  alteraDataAssinatura = data => {
+    const data_assinatura = moment(data).format("YYYY-MM-DD");
+    this.setState({ data_assinatura });
+    this.calculaEncerramento(
+      data_assinatura,
+      this.state.vigencia_em_dias
+    );
+  };
+
+  calculaEncerramento = (data, dias) => {
+    if (data) {
+      data = moment(data).format("DD/MM/YYYY");
+      const novaData = moment(data, "DD/MM/YYYY")
+        .add(dias, "days")
+        .calendar();
+
+      this.setState({
+        dataEncerramento: moment(novaData).format("DD/MM/YYYY")
+      });
+    }
   };
 
   habilitarEdicao = () => {
     this.setState({ disabilitado: !this.state.disabilitado });
     $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
-
-    // console.log(this.state.disabilitado.toString())
   };
 
   handleSubmit = () => {
@@ -183,7 +213,6 @@ class VisualizarContratos extends Component {
       situacao,
       processo,
       data_ordem_inicio,
-      data_encerramento,
       data_assinatura,
       empresa_contratada,
       totalMensal,
@@ -202,7 +231,8 @@ class VisualizarContratos extends Component {
       alert,
       usernameGestor,
       usuarios,
-      dotacao
+      dotacao,
+      dataEncerramento
     } = this.state;
     return (
       <>
@@ -395,13 +425,12 @@ class VisualizarContratos extends Component {
                         value={
                           data_assinatura ? new Date(data_assinatura) : null
                         }
-                        onChange={e =>
-                          this.setState({ data_assinatura: e.value })
-                        }
+                        onChange={e => this.alteraDataAssinatura(e.value)}
                         locale={CALENDAR_PT}
                         dateFormat="dd/mm/yy"
                         showIcon={true}
                         disabled={disabilitado}
+                        id="data_assinatura"
                       />
                     </Col>
                     <Col xs={12} sm={12} md={12} lg={6} xl={6}>
@@ -436,18 +465,10 @@ class VisualizarContratos extends Component {
                       </FormGroup>
                     </Col>
                     <Col sm={12} xs={12} md={12} lg={6} xl={6}>
-                      <Label>Data Encerramento de Contrato</Label>
-                      <br />
-                      <Calendar
-                        value={data_encerramento}
-                        onChange={e =>
-                          this.setState({ data_encerramento: e.value })
-                        }
-                        showIcon={true}
-                        locale={CALENDAR_PT}
-                        dateFormat="dd/mm/yy"
-                        disabled={true}
-                      />
+                      <FormGroup>
+                        <Label>Data Encerramento de Contrato</Label>
+                        <Input value={dataEncerramento} disabled={true} />
+                      </FormGroup>
                     </Col>
                   </Row>
                 </Col>

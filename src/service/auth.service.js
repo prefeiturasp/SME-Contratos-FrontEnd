@@ -153,7 +153,6 @@ export const validarPrimeiroAcesso = () => {
   const decoded = decode(localStorage.getItem(TOKEN_ALIAS));
   const username = decoded.username;                          
   primeiroAcesso(username).then(response => {
-    console.log(response)
     if (response.alterar) {
       localStorage.removeItem(TOKEN_ALIAS);
       localStorage.setItem(USERNAME_TEMP, username);
