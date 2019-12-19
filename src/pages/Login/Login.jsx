@@ -9,7 +9,6 @@ import { InputText } from "primereact/inputtext";
 import { Row, Alert } from "reactstrap";
 import { Button } from "primereact/button";
 import { Button as AntButton } from "antd";
-import { redirect } from "../../utils/redirect";
 
 const Login = props => {
   const [userName, setUserName] = useState("");
@@ -49,10 +48,10 @@ const Login = props => {
           label="Acessar"
           disabled={password.length > 0 && userName.length > 0 ? false : true}
           style={{ width: "100%" }}
-          className="mt-3"
+          className="mt-4"
           onClick={autenticar}
         />
-        <div className="mt-2 w-100 d-flex justify-content-center">
+        <div className="mt-4 w-100 d-flex justify-content-center">
           <AntButton
             type="link"
             size="small"
@@ -62,8 +61,12 @@ const Login = props => {
           </AntButton>
         </div>
         <div className="mt-3 d-flex justify-content-center w-100">
-          <Alert color="danger" isOpen={props.isInvalid}>
-            Usuário e/ou senha inválidos.
+          <Alert
+            color="danger"
+            isOpen={props.isInvalid}
+            className="w-100 text-center"
+          >
+            {props.mensagem}
           </Alert>
         </div>
       </Row>
