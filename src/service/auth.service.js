@@ -47,9 +47,9 @@ const primeiroAcesso = async username => {
   }
 };
 
-export const trocarSenha = async (password, password2) => {
+export const trocarSenha = async (password, password2, username) => {
   try {
-    const username = localStorage.getItem(USERNAME_TEMP);
+    // const username = localStorage.getItem(USERNAME_TEMP);
     const OBJ_REQUEST = {
       headers: authHeader,
       method: "PATCH",
@@ -149,16 +149,9 @@ const validarToken = token => {
   return true;
 };
 
-export const validarPrimeiroAcesso = () => {
-  const decoded = decode(localStorage.getItem(TOKEN_ALIAS));
-  const username = decoded.username;                          
-  primeiroAcesso(username).then(response => {
-    if (response.alterar) {
-      localStorage.removeItem(TOKEN_ALIAS);
-      localStorage.setItem(USERNAME_TEMP, username);
-      redirect("/#/primeiro-acesso")
-    }
-  });
+export const validarPrimeiroAcesso = async (username) => {                    
+  const response = await primeiroAcesso(username);
+  return response.alterar
 };
 
 export const removerUsernameTemp = () => {
