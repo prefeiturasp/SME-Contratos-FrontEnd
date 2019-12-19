@@ -68,7 +68,7 @@ export default class CadastrarContrato extends Component {
       termo_contrato,
       gestor: gestor ? gestor.uuid : null,
       uuid_contrato: uuid,
-      coordenador: coordenador.uuid
+      coordenador: coordenador ? coordenador.uuid : null
     });
     $("#cancelar-contrato").click(function() {
       $(".form-cadastrar-contrato")
