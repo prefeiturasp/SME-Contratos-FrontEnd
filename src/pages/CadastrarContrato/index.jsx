@@ -22,7 +22,7 @@ import { redirect } from "../../utils/redirect";
 import { getCargosCoad } from "../../service/Cargos.service";
 import { Messages } from "primereact/messages";
 import ListarObrigacoesContratuais from "./ObrigacoesContratuais";
-import { NO_CONTENT } from "http-status-codes";
+import { NO_CONTENT, OK } from "http-status-codes";
 import { setFlashMessage } from "../../utils/flashMessages";
 
 export default class CadastrarContrato extends Component {
@@ -111,10 +111,12 @@ export default class CadastrarContrato extends Component {
     const { uuid_contrato, dotacao } = this.state;
     values["data_assinatura"] = moment(values.data_assinatura).format("YYYY-MM-DD")
     values["data_ordem_inicio"] = moment(values.data_ordem_inicio).format("YYYY-MM-DD");
+    values["data_encerramento"] = moment(values.data_encerramento).format("YYYY-MM-DD");
     values["dotacao_orcamentaria"] = this.removeEmpty(dotacao);
 
-    const cadastro = await updateContrato(values, uuid_contrato);
-    if (cadastro.criado_em) {
+    const resultado = await updateContrato(values, uuid_contrato);
+    
+    if (resultado.status === OK) {
       setFlashMessage("Contrato cadastrado com sucesso", "sucesso");
       redirect("/#/contratos-continuos");
     }
@@ -281,7 +283,7 @@ export default class CadastrarContrato extends Component {
                   ? contrato.empresa_contratada.uuid
                   : ""
               }}
-              validationSchema={contratoValidations}
+              // validationSchema={contratoValidations}
               onReset={this.mostrarModalCancelar}
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true);

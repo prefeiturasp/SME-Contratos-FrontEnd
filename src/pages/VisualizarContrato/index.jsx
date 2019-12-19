@@ -40,6 +40,7 @@ import DotacaoOrcamentaria from "../CadastrarContrato/DotacaoOrcamentaria";
 import { Switch } from "antd";
 import $ from "jquery";
 import moment from "moment";
+import { OK } from "http-status-codes";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -178,17 +179,21 @@ class VisualizarContratos extends Component {
     $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
   };
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const { uuid } = this.state.contrato;
     const payload = mapStateToPayload(this.state);
     this.setState({ disabilitado: true, alert: true });
     $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
-    updateContrato(payload, uuid);
-    setTimeout(() => {
-      this.setState({ alert: false });
-    }, 10000);
-    this.cancelaAtualizacao();
-    window.scrollTo(0, 0);
+    const resultado = await updateContrato(payload, uuid);
+    if (resultado.status === OK) {
+      setTimeout(() => {
+        this.setState({ alert: false });
+      }, 10000);
+      this.cancelaAtualizacao();
+      window.scrollTo(0, 0);
+    } else {
+      alert("Ocorreu um erro, tente novamente!");
+    }
   };
 
   handleConfimar = () => {
@@ -393,11 +398,11 @@ class VisualizarContratos extends Component {
                 <Col xs={12} sm={12} md={12} lg={4} xl={4}>
                   <Label for="edital">Número do Edital</Label>
                   <InputText
+                    disabled={true}
                     id="edital"
                     value={numero_edital}
                     placeholder={"Ex: 00000000"}
                     className="w-100"
-                    disabled={disabilitado}
                     onChange={e =>
                       this.setState({ numero_edital: e.target.value })
                     }
