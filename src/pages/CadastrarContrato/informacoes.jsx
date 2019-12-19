@@ -54,7 +54,7 @@ export default class Informacoes extends Component {
       dataEncerramento: contrato.data_encerramento
         ? moment(contrato.data_encerramento).format("DD/MM/YYYY")
         : null,
-      cnpjEmpresa: contrato.empresa_contratada.cnpj
+      cnpjEmpresa: contrato.empresa_contratada ? contrato.empresa_contratada.cnpj : null
     });
     $("#avancar-1").click(e => {
       const situacaoRadio = $("[name=situacao]:checked").val();
