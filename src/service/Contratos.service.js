@@ -164,25 +164,12 @@ export const updateColunasContrato = payload => {
     });
 };
 
-export const updateContrato = (payload, contratoUuid) => {
+export const updateContrato = async (payload, contratoUuid) => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
-    .put(
-      `${CONFIG.API_URL}/contratos/${contratoUuid}/`,
-      payload,
-      AUTH_HEADER
-    )
-    .then(
-      res => res.data,
-      res => {
-        return { statusCode: res.statusCode, result: res };
-      }
-    )
-    .catch(error => {
-      return { error: error };
-    });
+  const response = axios.put(`${CONFIG.API_URL}/contratos/${contratoUuid}/`,payload,AUTH_HEADER)
+  return response;
 };
 export const CancelarContrato = (uuid) => {
   const AUTH_HEADER = {
