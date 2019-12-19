@@ -3,9 +3,6 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { isAuthenticated } from "./service/auth.service";
 import RoutesConfig from './configs/routes.constants'
 import Login from "./pages/Login";
-import PrimeroAcesso from "./pages/PrimeroAcesso";
-import EsqueciMinhaSenha from "./pages/EsqueciMinhaSenha";
-import AlterarSenha from "./pages/EsqueciMinhaSenha/alterarSenha";
 
 const PrivateRoute = ({ component: Componet, ...rest }) => {
   return (
@@ -27,9 +24,6 @@ const PrivateRoute = ({ component: Componet, ...rest }) => {
 export const Routers = () => (
   <Switch>
     <Route exact path="/login" component={Login} />
-    <Route exact path="/primeiro-acesso" component={PrimeroAcesso} />
-    <Route exact path="/esqueci-minha-senha" component={EsqueciMinhaSenha} />
-    <Route exact path="/redefinir-senha" component={AlterarSenha} />
 
     {RoutesConfig.map((value, key) => {
         return (
