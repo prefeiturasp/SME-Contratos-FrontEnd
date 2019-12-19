@@ -315,6 +315,7 @@ export default class ListarObrigacoesContratuais extends Component {
           <Col lg={6} xl={6}>
             <span className="float-right">
               <Button
+                disabled={this.props.desabilitado}
                 icon="pi pi-file"
                 type="button"
                 label="Adicionar Obrigação"
