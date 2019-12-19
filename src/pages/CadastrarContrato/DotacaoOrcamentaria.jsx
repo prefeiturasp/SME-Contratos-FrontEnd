@@ -69,7 +69,7 @@ const DotacaoOrcamentaria = props => {
             type="button"
             className="btn btn-link coad-color font-weight-bold"
             onClick={addNovoInput}
-            disabled={dotacao.length === 0 ? true : false}
+            disabled={dotacao.length === 0 || props.disableded ? true : false}
           >
             Adicionar Dotação
           </button>

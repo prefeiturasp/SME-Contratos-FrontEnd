@@ -100,6 +100,7 @@ class VisualizarContratos extends Component {
         : null
     });
     this.propsToState(contrato);
+    $(".ql-editor").prop("contenteditable", "false");
   }
 
   propsToState = contrato => {
@@ -535,7 +536,7 @@ class VisualizarContratos extends Component {
               <Editor
                 style={{ height: "320px" }}
                 value={objeto}
-                readOnly={disabilitado}
+                // readOnly={disabilitado}
                 onTextChange={e => this.setState({ objeto: e.htmlValue })}
                 headerTemplate={
                   <span className="ql-formats">
@@ -552,7 +553,10 @@ class VisualizarContratos extends Component {
               />
             </CoadAccordion>
             <CoadAccordion titulo={"Obrigações Contratuais"}>
-              <ListarObrigacoesContratuais contrato={contrato.uuid} />
+              <ListarObrigacoesContratuais
+                contrato={contrato.uuid}
+                desabilitado={disabilitado}
+              />
             </CoadAccordion>
             <CoadAccordion titulo={"Gestão de Contrato"}>
               <Row>
@@ -635,7 +639,7 @@ class VisualizarContratos extends Component {
               <Editor
                 style={{ height: "320px" }}
                 value={observacoes}
-                readOnly={disabilitado}
+                // readOnly={disabilitado}
                 onTextChange={e => this.setState({ observacoes: e.htmlValue })}
                 headerTemplate={
                   <span className="ql-formats">
