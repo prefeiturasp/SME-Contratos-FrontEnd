@@ -156,10 +156,7 @@ class VisualizarContratos extends Component {
   alteraDataAssinatura = data => {
     const data_assinatura = moment(data).format("YYYY-MM-DD");
     this.setState({ data_assinatura });
-    this.calculaEncerramento(
-      data_assinatura,
-      this.state.vigencia_em_dias
-    );
+    this.calculaEncerramento(data_assinatura, this.state.vigencia_em_dias);
   };
 
   calculaEncerramento = (data, dias) => {
@@ -184,6 +181,7 @@ class VisualizarContratos extends Component {
     const { uuid } = this.state.contrato;
     const payload = mapStateToPayload(this.state);
     this.setState({ disabilitado: true, alert: true });
+    $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
     updateContrato(payload, uuid);
     setTimeout(() => {
       this.setState({ alert: false });
@@ -318,6 +316,7 @@ class VisualizarContratos extends Component {
                 <Col className="d-flex justify-content-end">
                   <Label className="px-3">Modo de edição</Label>
                   <Switch
+                    checked={!disabilitado}
                     defaultChecked={false}
                     onChange={() => this.habilitarEdicao()}
                   />
