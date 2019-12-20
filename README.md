@@ -1,8 +1,20 @@
 # SME-Contratos-FrontEnd
 
-Projeto de Frontend com REACT JS
+FrontEnd do SAFI - Sistema de Administração Finanças e Infraestrutura. 
+
+Um sistema da Secretaria de Educação da Cidade de São Paulo.
+
+License: MIT
+
+Versão: 1.0.0
 
 ## Release Notes ##
+### 1.0.0 - 19/12/2019 - Sprint 6
+* Inclusão de obrigações contratuais no cadastro único de contratos
+* Coluna DRE's na consulta de contratos
+* Pagina de consultas de contrato passa a ser a principal
+* Alteração do nome do sistema para SAFI (incluindo logos)
+
 ### 0.5.0 - 09/12/2019 - Sprint 5
 * Cadastro de Modelos de Ateste
 * Duplicar um Modelo de Ateste
