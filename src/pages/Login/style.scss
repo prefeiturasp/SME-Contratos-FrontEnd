@@ -1,31 +1,213 @@
-.card-login {
-  padding: 0;
-  margin: 0;
-  background-color: #ffffff;
-  border-radius: 3px;
+.login-coad {
+  .btn-link {
+    color: #602a2a;
+  }
+
+  .btn-link:hover {
+    color: #431e1e;
+  }
+
+  .p-button {
+    background-color: #602a2a !important;
+    border-color: #602a2a !important;
+    font-weight: bold;
+  }
+
+  .p-button:enabled:hover {
+    border-color: #602a2a !important;
+  }
+
+  .p-button:enabled:focus {
+    box-shadow: 0 0 0 0.1em #602a2a !important;
+  }
+
+  .btn-coad-background {
+    background-color: #602a2a !important;
+    border-color: #602a2a;
+    color: #ffffff;
+  }
+
+  .btn-coad-primary {
+    background-color: #602a2a;
+    border-color: #602a2a;
+    color: #ffffff;
+  }
+
+  .btn-coad-primary-small {
+    background-color: #602a2a;
+    border-color: #602a2a;
+    color: #ffffff;
+    font-size: 12px !important;
+  }
+
+  .btn-coad-blue {
+    border-color: #086397;
+    color: #086397 !important;
+    background-color: #ffffff;
+    font-weight: bold;
+  }
+  .btn-coad-blue:enabled:hover {
+    border-color: #064f79 !important;
+    color: #ffffff !important;
+    background-color: #064f79 !important;
+    font-weight: bold;
+  }
+
+  .p-button:enabled:hover {
+    color: #ffffff !important;
+    background-color: #431e1e !important;
+    .btn-coad-blue {
+      border-color: 086397;
+      color: 086397 !important;
+      background-color: #ffffff;
+      font-weight: bold;
+    }
+  }
+
+  .p-inputtext:enabled:hover {
+    border-color: #602a2a !important;
+  }
+
+  .p-inputtext:enabled:focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.2em #602a2a !important;
+    border-color: #602a2a !important;
+  }
+
+  .ant-btn-link:hover {
+    color: #431e1e;
+  }
+
+  .ant-btn-link {
+    color: #602a2a;
+    background-color: transparent;
+    border-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .coad-color {
+    color: #602a2a !important;
+  }
+
+  .p-highlight {
+    background-color: #602a2a !important;
+  }
 }
-.login {
-  overflow: hidden;
-  position: fixed;
+.login-bg {
+  background: url("../../assets/images/login.svg");
+  width: 50%;
+  position: absolute;
+  height: 100%;
+  left: 0px;
+  object-fit: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-
-.block-logo {
-  height: 15%;
+.right-half {
+  background-color: #fffffd;
+  position: absolute;
+  right: 0px;
+  width: 50%;
+  height: 100%;
+  text-align: center;
+  .container {
+    position: absolute;
+    left: 50%;
+    height: 100%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    padding: 0 85px;
+    text-align: left;
+    div.form {
+      .login {
+        div[class*="col-"] {
+          padding: 0;
+        }
+      }
+    }
+    .logo-safi {
+      text-align: center;
+      @media screen and (max-height: 610px) {
+        padding-top: 2rem;
+        img {
+          height: auto;
+          width: 300px;
+        }
+      }
+      @media screen and (min-height: 611px) {
+        padding-top: 5rem;
+        img {
+          height: 105px;
+          width: 427px;
+        }
+      }
+    }
+    .logo-prefeitura {
+      text-align: center;
+      @media screen and (max-height: 610px) {
+        padding-top: 1rem;
+        img {
+          height: auto;
+          width: 100px;
+        }
+      }
+      @media screen and (min-height: 611px) {
+        padding-top: 2rem;
+        img {
+          height: 65px;
+          width: 171px;
+        }
+      }
+    }
+  }
 }
 
-.ml-5-2 {
-  margin-left: 5.5rem !important;
+.texto-simples {
+  color: #42474a;
+  &-verde {
+    @extend .texto-simples;
+    align-items: center;
+    text-align: center;
+    color: #297805;
+  }
+  &-vermelho {
+    @extend .texto-simples;
+    align-items: center;
+    text-align: center;
+    color: #b40c02;
+  }
 }
 
-label {
-  font-family: Roboto;
+.div-circular {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 7em;
+  height: 7em;
+  &-verde {
+    @extend .div-circular;
+    border: 3px solid #297805;
+  }
+  &-vermelho {
+    @extend .div-circular;
+    border: 3px solid #b40c02;
+  }
 }
 
-.link{
-  color: #6a6a6a !important;
-}
-
-.btn-login {
-    background-color: #6A6A6A !important;
+.check {
+  color: #42474a;
+  &-verde {
+    @extend .check;
+    color: #297805;
+  }
+  &-vermelho {
+    @extend .check;
+    color: #b40c02;
+  }
 }

@@ -24,7 +24,7 @@ export class SelecionaColunasContrato extends Component {
         },
         {
           field: "tipo_servico.nome",
-          header: "Tipode de Serviço"
+          header: "Tipo de Serviço"
         },
         {
           field: "empresa_contratada.nome",
@@ -36,27 +36,23 @@ export class SelecionaColunasContrato extends Component {
         },
         {
           field: "data_encerramento",
-          header: "Data Encerramento"
+          header: "Data de Encerramento"
         },
         {
           field: "nucleo_responsavel.sigla",
           header: "Núcleo Responsável"
         },
         {
-          field: "objeto",
-          header: "Objeto"
-        },
-        {
           field: "data_assinatura",
-          header: "Data Assinatura"
+          header: "Data de Assinatura"
         },
         {
           field: "data_ordem_inicio",
-          header: "Data Ordem de Inicio"
+          header: "Data Ordem de Início"
         },
         {
           field: "vigencia_em_dias",
-          header: "Vigencia"
+          header: "Vigência"
         },
         {
           field: "situacao",
@@ -71,23 +67,31 @@ export class SelecionaColunasContrato extends Component {
           header: "Suplente"
         },
         {
-          field: "observacoes",
-          header: "Observações"
+          field: "dres",
+          header: "DREs"
         }
       ],
-      selectedCols: []
+      selectedCols: props.colunasInit
     };
 
     this.onColunasChange = this.onColunasChange.bind(this);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.colunasInit !== this.props.colunasInit) {
+      this.setState({
+        selectedCols: this.props.colunasInit
+      })
+    }
+  }
+
   onColunasChange(e) {
     let colunasSelecionadas = [...this.state.selectedCols];
-
     if (e.checked) colunasSelecionadas.push(e.value);
-    else colunasSelecionadas.splice(colunasSelecionadas.indexOf(e.value), 1);
+    else colunasSelecionadas.splice(colunasSelecionadas.indexOf(colunasSelecionadas.find(col => { return col.field === e.value.field})), 1)
 
     this.setState({ selectedCols: colunasSelecionadas });
+    console.log('Selecionadas Depois', colunasSelecionadas)
   }
   updateColunas() {
     const payLoad = {
@@ -120,7 +124,7 @@ export class SelecionaColunasContrato extends Component {
                 inputId={cols.field}
                 value={cols}
                 onChange={this.onColunasChange}
-                checked={this.state.selectedCols.indexOf(cols) !== -1}
+                checked={this.state.selectedCols.find(col => { return col.field === cols.field})}
               ></Checkbox>
               <label htmlFor={cols.field} className="p-checkbox-label">
                 {cols.header}

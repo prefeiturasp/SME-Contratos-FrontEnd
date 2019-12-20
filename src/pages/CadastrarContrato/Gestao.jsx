@@ -10,13 +10,14 @@ export default class Gestao extends Component {
   state = {
     nucleos: [],
     usuarios: [],
-    emailUsuario: null
+    emailUsuario: null,
   };
 
   async componentDidMount() {
     const nucleos = await getNucleos();
     const usuarios = await getUsuariosLookup();
-    this.setState({ nucleos, usuarios });
+    this.setState({ nucleos, usuarios, emailUsuario: this.props.contrato.gestor.email });
+    
     $("#avancar-2").click(() => {
       let error = 0;
       if (!$("[name=coordenador]").val()) {
@@ -32,7 +33,7 @@ export default class Gestao extends Component {
         error++;
       }
       if (error === 0) {
-        this.props.jumpToStep(2);
+        this.props.jumpToStep(3);
       } else {
         $(".alerta").removeClass("d-none");
       }
@@ -150,11 +151,12 @@ export default class Gestao extends Component {
             className="btn-coad-background-outline mx-3"
             type="button"
             onClick={() => this.cancelar()}
+            disabled={this.props.cancelamento}
           >
             Cancelar
           </Button>
           <Button
-            onClick={() => this.props.jumpToStep(0)}
+            onClick={() => this.props.jumpToStep(1)}
             className="btn-coad-background-outline"
           >
             Voltar

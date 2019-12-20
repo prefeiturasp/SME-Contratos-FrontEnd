@@ -119,7 +119,7 @@ const Modelo = props => {
 
   const mostraAlertaContainer = useCallback(event => {
     props.mostraAlerta();
-  }, []);
+  }, [props]);
 
   const habilitaBotao =
     modoVisualizacao === false && modelo.titulo && modelo.grupos_de_verificacao

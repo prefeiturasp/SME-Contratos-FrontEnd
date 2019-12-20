@@ -1,129 +1,206 @@
-import React, { Component } from "react";
-import Row from "../../components/Global/Row";
-import bg from "../../assets/images/bg.svg";
+import React, { useState, useEffect, Fragment } from "react";
 import logoSP from "../../assets/images/logoSP.svg";
-import logoSME from "../../assets/images/logoSME.svg";
-import Grid from "../../components/Global/Grid";
-import { Button, Form, Alert, Col } from "reactstrap";
-import { NavLink } from "react-router-dom";
-import { Field, reduxForm } from "redux-form";
-import { InputLabel } from "../../components/Global/InputLabel";
+import logoSafi from "../../assets/images/logoSafi.svg";
+import {
+  login,
+  esqueciMinhaSenha,
+  redefinirSenha,
+  trocarSenha,
+  validarPrimeiroAcesso
+} from "../../service/auth.service";
+import Login from "./Login";
+import EsqueciSenha from "./EsqueciMinhaSenha";
+import RecuperacaoSucesso from "./RecuperacaoSucesso";
+import RecuperacaoErro from "./RecuperacaoErro";
+import RedefinirSenha from "./RedefinirSenha";
 import "./style.scss";
-import { login } from "../../service/auth.service";
-import { getParams } from "./helpers";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { redirect } from "../../utils/redirect";
+import { OK } from "http-status-codes";
+import { getUrlParams } from "../../utils/params";
 
-export class Login extends Component {
-  constructor(props) {
-    super(props);
+const COMPONENTE = {
+  LOGIN: 0,
+  ESQUECI_SENHA: 1,
+  RECUPERACAO_SUCESSO: 2,
+  RECUPERACAO_ERRO: 3,
+  REDEFINIR_SENHA: 4,
+  PRIMEIRO_ACESSO: 5
+};
 
-    this.state = {
-      alerta: false,
-      mensagem: false
-    };
-  }
+const Index = props => {
+  const [alerta, setAlerta] = useState(false);
+  const [componenteAtivo, setComponenteAtivo] = useState(COMPONENTE.LOGIN);
+  const [hash, setHash] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isPrimeiroAcesso, setIsPrimeiroAcesso] = useState(false);
+  const [mensagem, setMensagem] = useState("");
+  const [usuario, setUsuario] = useState("");
 
-  componentDidMount() {
-    let mostraMensagem = getParams("msg");
-    if (mostraMensagem) {
-      this.setState({ mensagem: true });
+  useEffect(() => {
+    const paramt = getUrlParams();
+    if (paramt.hash) {
+      setHash(paramt.hash);
+      setComponenteAtivo(COMPONENTE.REDEFINIR_SENHA);
     }
-  }
+  }, []);
 
-  submit = values => {
-    const { username, password } = values;
-    login(username, password).then(resposta => {
-      if (resposta) {
-        redirect("/")
+  const logar = async (usuario, senha) => {
+    setUsuario(usuario);
+    const primeiro = await validarPrimeiroAcesso(usuario);
+    if (primeiro) {
+      setIsPrimeiroAcesso(true);
+      setComponenteAtivo(COMPONENTE.PRIMEIRO_ACESSO);
+    } else {
+      const resultado = await login(usuario, senha);
+      if (resultado) {
+        redirect("/");
       } else {
-        this.setState({ alerta: true });
+        setMensagem("Usuário e/ou senha inválidos.");
+        setAlerta(true);
       }
-    });
+    }
   };
 
-  render() {
-    const { handleSubmit, submitting, pristine } = this.props;
-    const { alerta, mensagem } = this.state;
-    return (
-      <div>
-        <Row>
-          <div className="col d-none d-lg-block">
-            <img alt="img" height="70%" width="100%" src={bg} />
-          </div>
-          <div className="col">
-            <Row centralizar={true} classe={"pt-5 block-logo d-inline-block"}>
-              <Grid cols={"2 2 2 2"} classe={"d-flex flex-row-reverse ml-5-2"}>
-                <img height={"65"} alt="logo-sme" src={logoSME} />
-              </Grid>
-              <Grid cols={"2 2 2 4"} classe={"mr-5"}>
-                <h5>Novo sistema de Gestão de Contratos</h5>
-              </Grid>
-            </Row>
-            <Row centralizar={true} classe={"w-100"}>
-              <Col>
-                <Alert color="success" isOpen={mensagem}>
-                  Sua senha foi validada com sucesso.
-                </Alert>
-              </Col>
-            </Row>
-            <Row centralizar={true} classe={"w-75 pb-3 ml-5-2"}>
-              <Grid cols={"1 4 4 8"}>
-                <Form onSubmit={handleSubmit(this.submit)}>
-                  <Field
-                    component={InputLabel}
-                    label={"RF ou CPF"}
-                    id={"username"}
-                    type={"text"}
-                    autoComplete={"Off"}
-                    placeholder={"Insira seu RF ou CPF"}
-                    name={"username"}
-                    />
-                  <Field
-                    component={InputLabel}
-                    autoComplete={"Off"}
-                    label={"Senha"}
-                    id={"senha"}
-                    type="password"
-                    placeholder={"Insira sua senha"}
-                    name={"password"}
-                    />
-                  <div className="pb-4 d-flex justify-content-end">
-                    <NavLink to="/esqueci-minha-senha" className="link">Esqueci minha senha</NavLink>
-                  </div>
-                  <div className="pb-4 d-flex justify-content-center">
-                    <Alert color="danger" isOpen={alerta}>
-                      Usuário e/ou senha inválidos.
-                    </Alert>
-                  </div>
+  const solicitaLinkRedefinicaoSenha = async usuario => {
+    setLoading(true);
+    const resultado = await esqueciMinhaSenha(usuario);
+    if (resultado.ok) {
+      const data = await resultado.json();
+      setEmail(data.email);
+      setLoading(false);
+      setComponenteAtivo(COMPONENTE.RECUPERACAO_SUCESSO);
+    } else {
+      setLoading(false);
+      setComponenteAtivo(COMPONENTE.RECUPERACAO_ERRO);
+    }
+  };
 
-                  <Button
-                    type={"submit"}
-                    color="secondary bt-login"
-                    size="lg"
-                    disabled={pristine || submitting}
-                    block
-                    >
-                    Acessar
-                  </Button>
-                  <div className="pt-3 d-flex justify-content-center">
-                    <NavLink to="#" className="link">Ainda não sou cadastrado</NavLink>
-                  </div>
-                </Form>
-              </Grid>
-            </Row>
-            <Row centralizar={true} classe={"mt-4"}>
-              <img alt="img" src={logoSP} />
-            </Row>
+  const ativaEsqueciSenha = value => {
+    setComponenteAtivo(COMPONENTE.ESQUECI_SENHA);
+  };
+
+  const chamaRedefinirSenha = async (senha1, senha2) => {
+    setAlerta(false);
+    if (validaSenhas(senha1, senha2)) {
+      const resultado = await redefinirSenha(senha1, senha2, hash);
+      if (resultado.status === OK) {
+        setComponenteAtivo(COMPONENTE.LOGIN);
+        setMensagem("Senha redefinida com sucesso.");
+        setAlerta(true);
+      } else {
+        setMensagem(resultado.detail);
+        setAlerta(true);
+      }
+    }
+  };
+
+  const primeiroAcesso = async (senha1, senha2) => {
+    setAlerta(false);
+    if (validaSenhas(senha1, senha2)) {
+      const resultado = await trocarSenha(senha1, senha2, usuario);
+      if (resultado.status === OK) {
+        setIsPrimeiroAcesso(false);
+        setComponenteAtivo(COMPONENTE.LOGIN);
+        setMensagem("Senha redefinida com sucesso.");
+        setAlerta(true);
+      } else {
+        setMensagem(resultado.detail);
+        setAlerta(true);
+      }
+    }
+  };
+
+  const validaSenhas = (senha1, senha2) => {
+    if (senha1 === senha2) {
+      return true;
+    } else {
+      setMensagem("Senhas não correspondem.");
+      setAlerta(true);
+      return false;
+    }
+  };
+
+  const renderSwitch = param => {
+    switch (param) {
+      case COMPONENTE.LOGIN:
+        return (
+          <Login
+            logar={logar}
+            isInvalid={alerta}
+            mensagem={mensagem}
+            ativaEsqueciSenha={ativaEsqueciSenha}
+          />
+        );
+      case COMPONENTE.ESQUECI_SENHA:
+        return (
+          <EsqueciSenha
+            solicitaRedefinicaoSenha={solicitaLinkRedefinicaoSenha}
+          />
+        );
+      case COMPONENTE.RECUPERACAO_SUCESSO:
+        return <RecuperacaoSucesso email={email} />;
+      case COMPONENTE.RECUPERACAO_ERRO:
+        return <RecuperacaoErro />;
+      case COMPONENTE.REDEFINIR_SENHA:
+        return (
+          <RedefinirSenha
+            isInvalid={alerta}
+            mensagem={mensagem}
+            redefineSenha={chamaRedefinirSenha}
+            titulo={"Redefinir Senha"}
+          />
+        );
+      case COMPONENTE.PRIMEIRO_ACESSO:
+        return (
+          <RedefinirSenha
+            isPrimeiroAcesso={isPrimeiroAcesso}
+            isInvalid={alerta}
+            mensagem={mensagem}
+            primeiroAcesso={primeiroAcesso}
+            titulo={"Primeiro Acesso"}
+          />
+        );
+      default:
+        return (
+          <Login
+            logar={logar}
+            isInvalid={alerta}
+            mensagem={mensagem}
+            ativaEsqueciSenha={ativaEsqueciSenha}
+          />
+        );
+    }
+  };
+
+  return (
+    <Fragment>
+      <div className="login-bg" />
+      <div className="right-half login-coad">
+        <div className="container my-auto">
+          <div className="logo-safi">
+            <img src={logoSafi} alt="" />
           </div>
-        </Row>
+          {loading ? (
+            <div>
+              <div className="w-100 my-5 d-flex justify-content-center">
+                <ProgressSpinner />
+              </div>
+              <div className="text-center w-100">
+                <p>Processando...</p>
+              </div>
+            </div>
+          ) : (
+            renderSwitch(componenteAtivo)
+          )}
+          <div className="logo-prefeitura">
+            <img src={logoSP} alt="" />
+          </div>
         </div>
-    );
-  }
-}
+      </div>
+    </Fragment>
+  );
+};
 
-Login = reduxForm({
-  form: "login",
-  destroyOnUnmount: false
-})(Login);
-
-export default Login;
+export default Index;

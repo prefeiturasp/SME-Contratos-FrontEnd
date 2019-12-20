@@ -13,7 +13,6 @@ import {
   Input,
   Alert
 } from "reactstrap";
-import InformacoesOrcamentaria from "./InformacoesOrcamentaria";
 import { Editor } from "primereact/editor";
 import UnidadeEnvolvidas from "./UnidadesEnvolvidas";
 import Anexos from "./Anexos";
@@ -37,7 +36,11 @@ import { mapStateToPayload } from "./helpers";
 import { Dialog } from "primereact/dialog";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
 import ListarObrigacoesContratuais from "../../components/Contratos/ListarObrigacoesContratuais";
-
+import DotacaoOrcamentaria from "../CadastrarContrato/DotacaoOrcamentaria";
+import { Switch } from "antd";
+import $ from "jquery";
+import moment from "moment";
+import { OK } from "http-status-codes";
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -57,7 +60,6 @@ class VisualizarContratos extends Component {
       observacoes: "",
       estadoContrato: [],
       situacaoContrato: [],
-      // divisao: null,
       gestor: null,
       nucleo: null,
       estado: null,
@@ -72,15 +74,17 @@ class VisualizarContratos extends Component {
       visible: false,
       usernameGestor: null,
       alert: false,
-      usuarios: []
+      usuarios: [],
+      totalMensal: 0.0,
+      dataEncerramento: null
     };
 
     this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
   }
 
   async componentDidMount() {
-    const tiposServicos = await getTiposServicoLookup();
     const param = getUrlParams();
+    const tiposServicos = await getTiposServicoLookup();
     const contrato = await getContratoByUUID(param.uuid);
     const estadoContrato = await getEstadosContrato();
     const usuarios = await getUsuariosLookup();
@@ -89,10 +93,15 @@ class VisualizarContratos extends Component {
       estadoContrato,
       tipoServicoOptions: tiposServicos,
       coordenador: contrato.coordenador,
-      usernameGestor: contrato.gestor ? contrato.gestor.username : '',
-      usuarios
+      usernameGestor: contrato.gestor ? contrato.gestor.username : "",
+      usuarios,
+      gestor: contrato.gestor,
+      dataEncerramento: contrato.data_encerramento
+        ? moment(contrato.data_encerramento).format("DD/MM/YYYY")
+        : null
     });
     this.propsToState(contrato);
+    $(".ql-editor").prop("contenteditable", "false");
   }
 
   propsToState = contrato => {
@@ -104,41 +113,32 @@ class VisualizarContratos extends Component {
       tipo_servico: contrato.tipo_servico,
       tipo_servico_uuid: contrato.tipo_servico.uuid,
       situacao: contrato.situacao,
-      data_ordem_inicio: new Date(contrato.data_ordem_inicio),
-      data_encerramento: new Date(contrato.data_encerramento),
+      data_ordem_inicio: contrato.data_ordem_inicio
+        ? new Date(contrato.data_ordem_inicio)
+        : null,
+      data_encerramento: contrato.data_encerramento
+        ? new Date(contrato.data_encerramento)
+        : null,
+      data_assinatura: contrato.data_assinatura
+        ? new Date(contrato.data_assinatura)
+        : null,
       processo: contrato.processo,
       empresa_contratada: contrato.empresa_contratada,
-      total_mensal: contrato.total_mensal,
+      totalMensal: contrato.total_mensal,
       objeto: contrato.objeto,
       observacoes: contrato.observacoes,
-      gestor: contrato.gestor ? contrato.gestor.uuid : '',
-      nucleo: contrato.nucleo_responsavel ? contrato.nucleo_responsavel.uuid : '',
+      gestor: contrato.gestor ? contrato.gestor.uuid : "",
+      nucleo: contrato.nucleo_responsavel
+        ? contrato.nucleo_responsavel.uuid
+        : "",
       estado: contrato.estado_contrato,
       vigencia_em_dias: contrato.vigencia_em_dias,
-      dotacao: contrato.dotacao_orcamentaria,
+      dotacao: contrato.dotacao_orcamentaria
     });
   };
 
   selecionaTipoServico = value => {
     this.setState({ tipo_servico_uuid: value.target.value });
-  };
-
-  SelecionarEmpresa = value => {
-    this.setState({
-      empresa_contratada: value
-    });
-  };
-
-  selecionarNucleo = value => {
-    this.setState({ nucleo: value });
-  };
-
-  selecionaCoordenador = coordenador => {
-    this.setState({ coordenador });
-  };
-
-  selecionaGestor = gestor => {
-    this.setState({ gestor });
   };
 
   selecionarDocsDre = files => {
@@ -148,31 +148,52 @@ class VisualizarContratos extends Component {
 
   alteraDiasVigencia = dias => {
     this.setState({ vigencia_em_dias: dias });
+
+    this.calculaEncerramento(
+      this.state.data_assinatura,
+      this.state.vigencia_em_dias
+    );
+  };
+
+  alteraDataAssinatura = data => {
+    const data_assinatura = moment(data).format("YYYY-MM-DD");
+    this.setState({ data_assinatura });
+    this.calculaEncerramento(data_assinatura, this.state.vigencia_em_dias);
+  };
+
+  calculaEncerramento = (data, dias) => {
+    if (data) {
+      data = moment(data).format("DD/MM/YYYY");
+      const novaData = moment(data, "DD/MM/YYYY")
+        .add(dias, "days")
+        .calendar();
+
+      this.setState({
+        dataEncerramento: moment(novaData).format("DD/MM/YYYY")
+      });
+    }
   };
 
   habilitarEdicao = () => {
     this.setState({ disabilitado: !this.state.disabilitado });
+    $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
   };
 
-  setTotalMensal = total_mensal => {
-    this.setState({ total_mensal });
-  };
-
-  setDotacao = valor => {
-    const { dotacao } = this.state;
-    if (typeof valor === "string" || valor instanceof String) {
-      dotacao.push(valor);
-      this.setState({ dotacao });
-    }
-  };
-
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const { uuid } = this.state.contrato;
     const payload = mapStateToPayload(this.state);
-    updateContrato(payload, uuid);
     this.setState({ disabilitado: true, alert: true });
-    this.cancelaAtualizacao();
-    window.scrollTo(0, 0);
+    $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
+    const resultado = await updateContrato(payload, uuid);
+    if (resultado.status === OK) {
+      setTimeout(() => {
+        this.setState({ alert: false });
+      }, 10000);
+      this.cancelaAtualizacao();
+      window.scrollTo(0, 0);
+    } else {
+      alert("Ocorreu um erro, tente novamente!");
+    }
   };
 
   handleConfimar = () => {
@@ -181,6 +202,10 @@ class VisualizarContratos extends Component {
 
   cancelaAtualizacao = () => {
     this.setState({ visible: false });
+  };
+
+  teste = () => {
+    return this.state.disabilitado;
   };
 
   render() {
@@ -192,9 +217,9 @@ class VisualizarContratos extends Component {
       situacao,
       processo,
       data_ordem_inicio,
-      data_encerramento,
+      data_assinatura,
       empresa_contratada,
-      total_mensal,
+      totalMensal,
       objeto,
       observacoes,
       gestor,
@@ -209,7 +234,9 @@ class VisualizarContratos extends Component {
       visible,
       alert,
       usernameGestor,
-      usuarios
+      usuarios,
+      dotacao,
+      dataEncerramento
     } = this.state;
     return (
       <>
@@ -259,20 +286,47 @@ class VisualizarContratos extends Component {
               Foram feitas alterações no contrato. Deseja aplicar estas
               modificações no documento?
             </Dialog>
+            <Row className="mb-3">
+              <Col lg={6}>
+                <Button
+                  className="btn btn-coad-background-outline"
+                  disabled={true}
+                >
+                  <i className="fas fa-history" /> Histórico
+                </Button>
+              </Col>
+              <Col lg={6} className="d-flex flex-row-reverse">
+                <Button
+                  className="btn btn-coad-background-outline"
+                  onClick={() => this.handleConfimar()}
+                  disabled={disabilitado}
+                >
+                  Salvar
+                </Button>
+                <Button
+                  onClick={() => redirect("#/contratos-continuos")}
+                  className="btn-coad-blue mx-2"
+                >
+                  <i className="fas fa-arrow-left" /> Voltar
+                </Button>
+              </Col>
+            </Row>
             <Row>
-              <Col lg={10}>
+              <Col lg={8}>
                 <h2>
                   <i className="fas fa-file-signature"></i> Visualizar/Alterar
                   contrato
                 </h2>
               </Col>
-              <Col lg={2}>
-                <Button
-                  className="btn btn-coad-primary float-right"
-                  onClick={() => this.habilitarEdicao()}
-                >
-                  {disabilitado ? "Editar" : "Editando..."}
-                </Button>
+              <Col lg={4} className="">
+                <Col className="d-flex justify-content-end">
+                  <Label className="px-3">Modo de edição</Label>
+                  <Switch
+                    checked={!disabilitado}
+                    defaultChecked={false}
+                    onChange={() => this.habilitarEdicao()}
+                  />
+                </Col>
               </Col>
             </Row>
             <CoadAccordion titulo={"Informações Contrato"}>
@@ -326,6 +380,7 @@ class VisualizarContratos extends Component {
                       }
                       placeholder={"Ex: 0000.2019/0000000-0"}
                       className="w-100"
+                      disabled={disabilitado}
                     />
                   </FormGroup>
                 </Col>
@@ -343,11 +398,11 @@ class VisualizarContratos extends Component {
                 <Col xs={12} sm={12} md={12} lg={4} xl={4}>
                   <Label for="edital">Número do Edital</Label>
                   <InputText
+                    disabled={true}
                     id="edital"
                     value={numero_edital}
                     placeholder={"Ex: 00000000"}
                     className="w-100"
-                    disabled={disabilitado}
                     onChange={e =>
                       this.setState({ numero_edital: e.target.value })
                     }
@@ -372,14 +427,15 @@ class VisualizarContratos extends Component {
                       <br />
 
                       <Calendar
-                        value={contrato.data_assinatura}
-                        onChange={e =>
-                          this.setState({ data_assinatura: e.value })
+                        value={
+                          data_assinatura ? new Date(data_assinatura) : null
                         }
+                        onChange={e => this.alteraDataAssinatura(e.value)}
                         locale={CALENDAR_PT}
                         dateFormat="dd/mm/yy"
                         showIcon={true}
                         disabled={disabilitado}
+                        id="data_assinatura"
                       />
                     </Col>
                     <Col xs={12} sm={12} md={12} lg={6} xl={6}>
@@ -414,18 +470,10 @@ class VisualizarContratos extends Component {
                       </FormGroup>
                     </Col>
                     <Col sm={12} xs={12} md={12} lg={6} xl={6}>
-                      <Label>Data Encerramento de Contrato</Label>
-                      <br />
-                      <Calendar
-                        value={data_encerramento}
-                        onChange={e =>
-                          this.setState({ data_encerramento: e.value })
-                        }
-                        showIcon={true}
-                        locale={CALENDAR_PT}
-                        dateFormat="dd/mm/yy"
-                        disabled={true}
-                      />
+                      <FormGroup>
+                        <Label>Data Encerramento de Contrato</Label>
+                        <Input value={dataEncerramento} disabled={true} />
+                      </FormGroup>
                     </Col>
                   </Row>
                 </Col>
@@ -448,13 +496,15 @@ class VisualizarContratos extends Component {
               <Row>
                 <Col lg={6} xl={6} sx={12} md={12} sm={12}>
                   <Row>
-                    <Col>
+                    <Col style={{ paddingTop: "0.4rem" }}>
                       <FormGroup className="p-grid p-fluid">
                         <Label>Nome Empresa</Label>
                         <br />
                         <SelecionaEmpresa
                           selecionada={empresa_contratada}
-                          onSelect={value => this.SelecionarEmpresa(value)}
+                          onSelect={value =>
+                            this.setState({ empresa_contratada: value })
+                          }
                           disabled={disabilitado}
                         />
                       </FormGroup>
@@ -470,41 +520,48 @@ class VisualizarContratos extends Component {
                           value={empresa_contratada.cnpj}
                           placeholder={"Digite nome da empresa"}
                           className="w-100 pb-2"
-                          readOnly={true}
+                          disabled={true}
                         />
                       </FormGroup>
                     </Col>
                   </Row>
                 </Col>
-                <Col>
-                  <button
-                    className="btn coad-color font-weight-bold"
-                    disabled={disabilitado}
-                  >
-                    Nova empresa
-                  </button>
-                </Col>
               </Row>
             </CoadAccordion>
             <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
-              <InformacoesOrcamentaria
-                totalMensal={total_mensal}
-                disabilitar={disabilitado}
-                dotacaoOrcamentaria={[]}
-                setDotacao={value => this.setDotacao(value)}
-                setTotalMensal={this.setTotalMensal}
+              <DotacaoOrcamentaria
+                dotacao={dotacao}
+                getDotacao={value => this.setState({ dotacao: value })}
+                disableded={disabilitado}
+                setTotalMensal={value => this.setState({ totalMensal: value })}
+                totalMensal={totalMensal}
               />
             </CoadAccordion>
             <CoadAccordion titulo={"Objeto de Contrato"}>
               <Editor
                 style={{ height: "320px" }}
                 value={objeto}
+                // readOnly={disabilitado}
                 onTextChange={e => this.setState({ objeto: e.htmlValue })}
-                disabled={disabilitado}
+                headerTemplate={
+                  <span className="ql-formats">
+                    <button className="ql-bold" aria-label="Bold"></button>
+                    <button className="ql-italic" aria-label="Italic"></button>
+                    <button
+                      className="ql-underline"
+                      aria-label="Underline"
+                    ></button>
+                    <button className="ql-list" value="ordered"></button>
+                    <button className="ql-list" value="bullet"></button>
+                  </span>
+                }
               />
             </CoadAccordion>
             <CoadAccordion titulo={"Obrigações Contratuais"}>
-              <ListarObrigacoesContratuais contrato={contrato.uuid} />
+              <ListarObrigacoesContratuais
+                contrato={contrato.uuid}
+                desabilitado={disabilitado}
+              />
             </CoadAccordion>
             <CoadAccordion titulo={"Gestão de Contrato"}>
               <Row>
@@ -514,7 +571,9 @@ class VisualizarContratos extends Component {
                     <Input
                       type="select"
                       disabled={disabilitado}
-                      onChange={e => this.selecionaCoordenador(e.target.value)}
+                      onChange={e =>
+                        this.setState({ coordenador: e.target.value })
+                      }
                       value={coordenador}
                     >
                       {usuarios
@@ -537,7 +596,7 @@ class VisualizarContratos extends Component {
                     <br />
                     <BuscaIncrementalServidores
                       placeholder={"Selecione o gestor do contrato"}
-                      onUpdate={this.selecionaGestor}
+                      onUpdate={valor => this.setState({ gestor: valor })}
                       disabled={disabilitado}
                       userName={usernameGestor}
                       onClear={true}
@@ -547,7 +606,9 @@ class VisualizarContratos extends Component {
                 <Col xs={12} sm={12} md={12} lg={4} xl={4}>
                   <SelecionarNucleos
                     selected={nucleo}
-                    onSelect={this.selecionarNucleo}
+                    onSelect={value =>
+                      this.setState({ nucleo_responsavel: value })
+                    }
                     disabled={disabilitado}
                   />
                 </Col>
@@ -583,7 +644,20 @@ class VisualizarContratos extends Component {
               <Editor
                 style={{ height: "320px" }}
                 value={observacoes}
+                // readOnly={disabilitado}
                 onTextChange={e => this.setState({ observacoes: e.htmlValue })}
+                headerTemplate={
+                  <span className="ql-formats">
+                    <button className="ql-bold" aria-label="Bold"></button>
+                    <button className="ql-italic" aria-label="Italic"></button>
+                    <button
+                      className="ql-underline"
+                      aria-label="Underline"
+                    ></button>
+                    <button className="ql-list" value="ordered"></button>
+                    <button className="ql-list" value="bullet"></button>
+                  </span>
+                }
               />
             </CoadAccordion>
             <CoadAccordion titulo={"Unidade Envolvidas"}>
@@ -602,23 +676,29 @@ class VisualizarContratos extends Component {
                 contrato={contrato}
               />
             </CoadAccordion>
-            <Row>
-              <Col lg={12}>
-                <div className="float-right">
-                  <Button
-                    type="button"
-                    className="btn-coad-background-outline mt-3 mb-2"
-                    onClick={() => redirect("/#/contratos-continuos")}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    onClick={() => this.handleConfimar()}
-                    className="btn btn-coad-primary mt-3 ml-2 mb-2"
-                  >
-                    Aplicar
-                  </Button>
-                </div>
+            <Row className="mt-3">
+              <Col lg={6}>
+                <Button
+                  className="btn btn-coad-background-outline"
+                  disabled={true}
+                >
+                  <i className="fas fa-history" /> Histórico
+                </Button>
+              </Col>
+              <Col lg={6} className="d-flex flex-row-reverse">
+                <Button
+                  className="btn btn-coad-background-outline"
+                  onClick={() => this.handleConfimar()}
+                  disabled={disabilitado}
+                >
+                  Salvar
+                </Button>
+                <Button
+                  onClick={() => redirect("#/contratos-continuos")}
+                  className="btn-coad-blue mx-2"
+                >
+                  <i className="fas fa-arrow-left" /> Voltar
+                </Button>
               </Col>
             </Row>
           </Container>

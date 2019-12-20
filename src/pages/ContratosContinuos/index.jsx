@@ -10,12 +10,12 @@ import {
 import "./style.scss";
 import { BuscaContratosForm } from "../../components/Contratos/BuscaContratosForm";
 import { SelecionaColunasContrato } from "../../components/Contratos/SelecionaColunasContrato";
-import { getUsuario } from "../../service/auth.service";
 import { getUrlParams } from "../../utils/params";
 import { Button, ButtonGroup } from "reactstrap";
 import { redirect } from "../../utils/redirect";
 import CoadAccordion from "../../components/Global/CoadAccordion";
 import { CoadTabs } from "../../components/Contratos/CoadTabs";
+import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
 
 class ContratosContinuos extends Component {
   constructor(props) {
@@ -32,7 +32,6 @@ class ContratosContinuos extends Component {
         { field: "data_encerramento", header: "Data Encerramento" }
       ],
       filtros: {
-        gestor: getUsuario().user_id,
         empresa_contratada: "",
         encerramento_de: "",
         encerramento_ate: "",
@@ -41,9 +40,10 @@ class ContratosContinuos extends Component {
         situacao: "",
         termo_Contrato: "",
         tipo_servico: ""
-      }
+      },
+      loading: true
     };
-  }
+  }  
   async setaColunasDefaut() {
     const colUsuario = await getCamposContrato();
     const colunasUsuario = colUsuario[0];
@@ -55,16 +55,20 @@ class ContratosContinuos extends Component {
     }
   }
 
-  setaMeusContratos() {
+  async setaMeusContratos() {
     const { filtros } = this.state;
-    getContratos(filtros).then(contratos => {
+    await getContratos(filtros).then(contratos => {
       this.setState({ contratos });
+    });
+    this.setState({
+      loading: false
     });
   }
 
   onBuscarClick = filtros => {
+    this.setState({ loading: true });
     getContratos(filtros).then(contratos => {
-      this.setState({ contratos, filtros });
+      this.setState({ contratos, filtros, loading: false });
     });
   };
 
@@ -90,7 +94,6 @@ class ContratosContinuos extends Component {
   };
 
   componentDidMount() {
-
     const param = getUrlParams();
     if (param.cadastro) {
       this.messages.show({
@@ -99,13 +102,21 @@ class ContratosContinuos extends Component {
         detail: "Contrato cadastrado com sucesso"
       });
     }
+
+    if (hasFlashMessage("sucesso")) {
+      this.messages.show({
+        severity: "success",
+        life: 10000,
+        detail: getFlashMessage("sucesso")
+      });
+    }
     this.pegaParametrosUrl();
     this.setaMeusContratos();
     this.setaColunasDefaut();
   }
 
   render() {
-    const { contratos, colunas } = this.state;
+    const { contratos, colunas, loading } = this.state;
     return (
       <Page>
         <Messages ref={el => (this.messages = el)}></Messages>
@@ -134,13 +145,18 @@ class ContratosContinuos extends Component {
               }
               conteudo2={
                 <SelecionaColunasContrato
+                  colunasInit={colunas}
                   uuid={this.state.uuid}
                   onAplicarClick={this.onAplicarClick}
                 />
               }
             />
           </CoadAccordion>
-          <TableContrato contratos={contratos} colunas={colunas} />
+          <TableContrato
+            contratos={contratos}
+            colunas={colunas}
+            loading={loading}
+          />
         </Container>
       </Page>
     );

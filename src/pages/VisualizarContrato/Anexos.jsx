@@ -107,7 +107,7 @@ class Anexos extends Component {
                                 className="text-danger"
                                 href={file.href}
                                 target="_blank"
-                                rel="Documentos fiscais DRE"
+                                rel="noopener noreferrer"
                                 key={i}
                               >
                                 <i className="fas fa-xl fa-paperclip"></i>{" "}
@@ -128,7 +128,6 @@ class Anexos extends Component {
                   </label>
                   <Dropzone
                     getUploadParams={this.getUploadParamsUnidade}
-                    // onChangeStatus={handleChangeStatus}
                     inputContent="Clique ou arraste arquivos nesta área para upload"
                     inputWithFilesContent="Adicionar mais arquivos"
                     disabled={disabilitado}
@@ -142,7 +141,7 @@ class Anexos extends Component {
                                 className="text-danger"
                                 href={file.href}
                                 target="_blank"
-                                rel="Documentos fiscais Unidade"
+                                rel="noopener noreferrer"
                               >
                                 <i className="fas fa-xl fa-paperclip"></i>{" "}
                                 {file.name}
@@ -164,7 +163,6 @@ class Anexos extends Component {
                 </label>
                 <Dropzone
                   getUploadParams={this.getUploadParamsOutros}
-                  // onChangeStatus={handleChangeStatus}
                   inputContent="Clique ou arraste arquivos nesta área para upload"
                   inputWithFilesContent="Adicionar mais arquivos"
                   disabled={disabilitado}
@@ -178,7 +176,7 @@ class Anexos extends Component {
                                 className="text-danger"
                                 href={file.href}
                                 target="_blank"
-                                rel="Documentos fiscais Outros"
+                                rel="noopener noreferrer"
                               >
                                 <i className="fas fa-xl fa-paperclip"></i>{" "}
                                 {file.name}
