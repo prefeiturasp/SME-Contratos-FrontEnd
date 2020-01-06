@@ -272,19 +272,18 @@ class VisualizarContratos extends Component {
                     className="btn btn-coad-background-outline"
                     onClick={() => this.cancelaAtualizacao()}
                   >
-                    Cancelar
+                    Não
                   </button>
                   <button
                     className="btn btn-coad-primary"
                     onClick={this.handleSubmit}
                   >
-                    Aplicar
+                    Sim
                   </button>
                 </div>
               }
             >
-              Foram feitas alterações no contrato. Deseja aplicar estas
-              modificações no documento?
+              Foram feitas alterações em contrato. Deseja aplicá-las em documento?
             </Dialog>
             <Row className="mb-3">
               <Col lg={6}>

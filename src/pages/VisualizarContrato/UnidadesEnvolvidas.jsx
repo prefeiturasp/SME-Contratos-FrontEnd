@@ -455,7 +455,7 @@ class UnidadeEnvolvidas extends Component {
                 size="small"
                 onClick={this.novaUnidade}
             >
-                Adicionar Unidade
+                Adicionar
             </AntButton>
           </Col>
         </Row>
