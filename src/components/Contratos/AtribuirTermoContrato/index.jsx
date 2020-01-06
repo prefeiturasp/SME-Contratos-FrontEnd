@@ -138,7 +138,7 @@ export default class AtribuirTermoContrato extends Component {
 
         {this.state.btnCancelarVisible && (
           <Button
-            label="Cancelar"
+            label="Cancelar11"
             style={{ marginRight: ".25em" }}
             onClick={e => this.reset()}
           />
@@ -149,13 +149,13 @@ export default class AtribuirTermoContrato extends Component {
     const footerModal = (
       <div>
         <Button
-          label="Confirmar"
+          label="Sim"
           style={{ marginRight: ".25em" }}
           onClick={this.handleClickCadastratar.bind(this)}
           className="btn-coad-background-outline"
         />
         <Button
-          label="Cancelar"
+          label="Não"
           style={{ marginRight: ".25em" }}
           onClick={this.onHide}
         />
@@ -165,7 +165,7 @@ export default class AtribuirTermoContrato extends Component {
       <Container>
         <Messages ref={el => (this.messages = el)}></Messages>
         <Dialog
-          header="Atribuir Termo de Contrato?"
+          header="Atribuir Termo de Contrato"
           visible={this.state.visible}
           style={{ width: "50vw" }}
           footer={footerModal}
