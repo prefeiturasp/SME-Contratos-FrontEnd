@@ -8,7 +8,6 @@ import { Dialog } from "primereact/dialog";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import Informacoes from "./informacoes";
-import { contratoValidations } from "./validations";
 import Gestao from "./Gestao";
 import AnexosContrato from "./AnexosContrato";
 import Finalizar from "./Finalizar";
@@ -24,6 +23,7 @@ import { Messages } from "primereact/messages";
 import ListarObrigacoesContratuais from "./ObrigacoesContratuais";
 import { NO_CONTENT, OK } from "http-status-codes";
 import { setFlashMessage } from "../../utils/flashMessages";
+// import { contratoValidations } from "./validations";
 
 export default class CadastrarContrato extends Component {
   state = {
@@ -204,14 +204,14 @@ export default class CadastrarContrato extends Component {
                 className="btn btn-coad-background-outline"
                 id="cancelar-contrato"
               >
-                Cancelar cadastro
+                Sim
               </button>
               <button
                 onClick={() => this.esconderCancelar()}
                 type="button"
                 className="btn btn-coad-primary"
               >
-                Voltar
+                Não
               </button>
             </div>
           }
