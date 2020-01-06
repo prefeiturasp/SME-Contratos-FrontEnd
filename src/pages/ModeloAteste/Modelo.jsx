@@ -110,16 +110,19 @@ const Modelo = props => {
     setmodalDuplicar(false);
     const resultado = await criaModeloAteste(modelo);
     if (resultado.status === CREATED) {
-      const modelo = resultado.data
-      setModelo({...modelo})
+      const modelo = resultado.data;
+      setModelo({ ...modelo });
       setFlashMessage("Modelo de ateste duplicado com sucesso", "sucesso");
       redirect(`#/modelo-ateste/?uuid=${modelo.uuid}`);
     }
   };
 
-  const mostraAlertaContainer = useCallback(event => {
-    props.mostraAlerta();
-  }, [props]);
+  const mostraAlertaContainer = useCallback(
+    event => {
+      props.mostraAlerta();
+    },
+    [props]
+  );
 
   const habilitaBotao =
     modoVisualizacao === false && modelo.titulo && modelo.grupos_de_verificacao
@@ -132,14 +135,14 @@ const Modelo = props => {
   const footerModalExcluir = (
     <div>
       <Button
-        label="Excluir"
+        label="Sim"
         style={{ marginRight: ".25em" }}
         onClick={excluirModelo}
         className="btn-coad-background-outline"
       />
 
       <Button
-        label="cancelar"
+        label="Não"
         style={{ marginRight: ".25em" }}
         onClick={() => setmodalExcluir(false)}
       />
@@ -149,14 +152,14 @@ const Modelo = props => {
   const footerModaDuplicar = (
     <div>
       <Button
-        label="Duplicar"
+        label="Sim"
         style={{ marginRight: ".25em" }}
         onClick={duplicaModelo}
         className="btn-coad-background-outline"
       />
 
       <Button
-        label="cancelar"
+        label="Não"
         style={{ marginRight: ".25em" }}
         onClick={() => setmodalDuplicar(false)}
       />
@@ -184,10 +187,10 @@ const Modelo = props => {
         )}
         {modoVisualizacao === true && incluir === true ? (
           <Button
-          className="btn-coad-background-outline mr-2"
-          label="Duplicar"
-          onClick={() => setmodalDuplicar(true)}
-        />
+            className="btn-coad-background-outline mr-2"
+            label="Duplicar"
+            onClick={() => setmodalDuplicar(true)}
+          />
         ) : ("")}
         <Button
           disabled={habilitaBotao}
@@ -213,11 +216,11 @@ const Modelo = props => {
             <Button
               disabled={habilitaBotao}
               className="btn-coad-background-outline"
-              label="Cancelar"
+              label="Sim"
               onClick={() => {
                 setFlashMessage(
                   "Alterações em modelo de ateste canceladas",
-                  "warning"
+                  "sucesso"
                 );
                 redirect("/#/listar-modelos-ateste");
               }}
@@ -225,7 +228,7 @@ const Modelo = props => {
             <Button
               className="btn-coad-primary mx-2"
               onClick={() => setVisivelCancelar(false)}
-              label="Continuar"
+              label="Não"
             />
           </FormGroup>
         }
@@ -244,20 +247,20 @@ const Modelo = props => {
           <Button
             className="btn-coad-background-outline mx-2"
             onClick={fechaDialog}
-            label="Cancelar"
+            label="Não"
           />
           {!incluir ? (
             <Button
               disabled={habilitaBotao}
               className="btn-coad-primary"
-              label="Confirmar"
+              label="Sim"
               onClick={confirmaModelo}
             />
           ) : (
             <Button
               disabled={habilitaBotao}
               className="btn-coad-primary"
-              label="Alterar"
+              label="Sim"
               onClick={alteraModelo}
             />
           )}
@@ -357,10 +360,10 @@ const Modelo = props => {
         )}
         {modoVisualizacao === true && incluir === true ? (
           <Button
-          className="btn-coad-background-outline mr-2"
-          label="Duplicar"
-          onClick={() => setmodalDuplicar(true)}
-        />
+            className="btn-coad-background-outline mr-2"
+            label="Duplicar"
+            onClick={() => setmodalDuplicar(true)}
+          />
         ) : ("")}
 
         <Button
