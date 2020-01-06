@@ -80,7 +80,7 @@ export default class CadastrarContrato extends Component {
   cancelarCadastro = async () => {
     const { uuid_contrato } = this.state;
     const resultado = await CancelarContrato(uuid_contrato);
-    if (resultado.status === NO_CONTENT) {
+    if (resultado.status === OK) {
       this.setState({ visibleCancelar: false });
       window.scrollTo(0, 0);
       this.messages.show({
