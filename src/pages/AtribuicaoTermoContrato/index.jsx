@@ -20,6 +20,11 @@ export default class AtribuicaoTermoContrato extends Component {
     });
   }
 
+  showMessage(messageParams){
+    window.scrollTo(0, 0);
+    this.messages.show(messageParams);  
+  }
+
   render() {
     return (
       <Page>
@@ -30,7 +35,7 @@ export default class AtribuicaoTermoContrato extends Component {
             subtitulo="Atribuir Termo de Contrato"
             icone="pi pi-pencil"
           >
-            <AtribuirTermoContrato />
+            <AtribuirTermoContrato showMessage={this.showMessage.bind(this)} />
           </Container>
           <Container>
             <ListarTermoContrato

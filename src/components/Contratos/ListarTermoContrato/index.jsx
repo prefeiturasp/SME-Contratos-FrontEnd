@@ -150,13 +150,13 @@ export default class ListarTermoContrato extends Component {
     const footerConfirmar = (
       <div>
         <Button
-          label="confirmar"
+          label="Sim"
           style={{ marginRight: ".25em" }}
           onClick={this.handleClickConfirmar.bind(this)}
           className="btn-coad-background-outline"
         />
         <Button
-          label="Cancelar"
+          label="Não"
           style={{ marginRight: ".25em" }}
           onClick={() => {
             this.setState({ confirmarVisible: false, editarVisible: true });
@@ -168,7 +168,7 @@ export default class ListarTermoContrato extends Component {
     return (
       <div>
         <Dialog
-          header="Confirmar alterações?"
+          header="Confirmar alterações"
           visible={this.state.confirmarVisible}
           style={{ width: "50vw" }}
           footer={footerConfirmar}
