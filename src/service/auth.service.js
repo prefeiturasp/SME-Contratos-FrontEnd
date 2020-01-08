@@ -1,12 +1,15 @@
 import decode from "jwt-decode";
 import CONFIG from "../configs/config.constants";
-import { redirect } from "../utils/redirect";
+import axios from "axios";
+import { setFlashMessage } from "../utils/flashMessages";
 
 export const TOKEN_ALIAS = "TOKEN";
 export const USERNAME_TEMP = "USERNAME_TEMP";
 export const STATUS_OK = 200;
 export const STATUS_ERROR = 400;
 export const STATUS_UNAUTHORIZED = 401;
+
+const LIMITE_TEMPO_REFRESH_TOKEN = 10 * 60; // 10 minutos
 
 const authHeader = {
   "Content-Type": "application/json",
@@ -49,7 +52,6 @@ const primeiroAcesso = async username => {
 
 export const trocarSenha = async (password, password2, username) => {
   try {
-    // const username = localStorage.getItem(USERNAME_TEMP);
     const OBJ_REQUEST = {
       headers: authHeader,
       method: "PATCH",
@@ -77,8 +79,8 @@ export const esqueciMinhaSenha = async username => {
       `${CONFIG.API_URL}/esqueci-minha-senha/${username}/`,
       OBJ_REQUEST
     );
-    const json = await response
-    return json
+    const json = await response;
+    return json;
   } catch (error) {
     return false;
   }
@@ -142,6 +144,70 @@ export const logout = () => {
   window.location.reload();
 };
 
+const getTokenDecoded = () => {
+  const token = getToken();
+  return decode(token);
+};
+
+export const refreshToken = async () => {
+  try {
+    const AUTH_HEADER = {
+      headers: getHeaderToken()
+    };
+
+    const payload = { token: getToken() };
+    const response = await axios.post(
+      `${CONFIG.API_URL}/api-token-refresh/`,
+      payload,
+      AUTH_HEADER
+    );
+    const newToken = response.data;
+    replaceToken(newToken.token);
+  } catch (error) {
+    saveLocation();
+    logout();
+  }
+};
+
+export const verifyToken = async () => {
+  try {
+    const AUTH_HEADER = {
+      headers: getHeaderToken()
+    };
+
+    const payload = { token: getToken() };
+    const response = await axios.post(
+      `${CONFIG.API_URL}/api-token-verify/`,
+      payload,
+      AUTH_HEADER
+    );
+
+    if (checkTimeLeft() <= LIMITE_TEMPO_REFRESH_TOKEN) {
+      refreshToken()
+    } 
+  } catch (error) {
+    saveLocation();
+    logout();
+  }
+};
+
+const checkTimeLeft = () => {
+  const token = getTokenDecoded();
+  const dateToken = new Date(token.exp * 1000);
+  const dateVerify = new Date(Date.now());
+  const secondsLeft = (dateToken - dateVerify) / 1000;
+  return secondsLeft;
+};
+
+const replaceToken = token => {
+  localStorage.removeItem(TOKEN_ALIAS);
+  localStorage.setItem(TOKEN_ALIAS, token);
+};
+
+export const saveLocation = () => {
+  setFlashMessage(window.location.href, "HISTORY_URL");
+};
+
 const validarToken = token => {
   const decoded = decode(token);
   if (decoded.username === undefined) return false;
@@ -149,9 +215,9 @@ const validarToken = token => {
   return true;
 };
 
-export const validarPrimeiroAcesso = async (username) => {                    
+export const validarPrimeiroAcesso = async username => {
   const response = await primeiroAcesso(username);
-  return response.alterar
+  return response.alterar;
 };
 
 export const removerUsernameTemp = () => {
