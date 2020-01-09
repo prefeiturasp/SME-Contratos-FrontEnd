@@ -2,6 +2,7 @@ import decode from "jwt-decode";
 import CONFIG from "../configs/config.constants";
 import axios from "axios";
 import { setFlashMessage } from "../utils/flashMessages";
+import { OK, BAD_REQUEST, UNAUTHORIZED } from "http-status-codes";
 
 export const TOKEN_ALIAS = "TOKEN";
 export const USERNAME_TEMP = "USERNAME_TEMP";
@@ -183,11 +184,19 @@ export const verifyToken = async () => {
     );
 
     if (checkTimeLeft() <= LIMITE_TEMPO_REFRESH_TOKEN) {
-      refreshToken()
-    } 
+      refreshToken();
+    }
+
+    return response;
   } catch (error) {
+    const response = error.response;
+    console.log(response)
+    if(response.data.non_field_errors){
+      console.log(response.data.non_field_errors[0]);
+    }
+
     saveLocation();
-    logout();
+    // logout();
   }
 };
 

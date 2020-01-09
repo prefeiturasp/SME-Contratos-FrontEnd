@@ -23,10 +23,10 @@ const PrivateRoute = ({ component: Componet, ...rest }) => {
 
 export const Routers = () => {
   const verificarToken = async () => {
-    const tempoToken = await verifyToken();
+    return await verifyToken();
   };
   useEffect(() => {
-    if(window.location.hash !== '#/login'){
+    if (window.location.hash !== "#/login") {
       verificarToken();
     }
   });
