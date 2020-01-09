@@ -76,6 +76,11 @@ class ContratosContinuos extends Component {
     getContratos(filtros).then(contratos => {
       this.setState({ contratos, filtros, loading: false });
     });
+    this.showMessage({
+      severity: "success",
+      life: 10000,
+      detail: "Personalização de colunas aplicada com sucesso"
+    });
   };
 
   onAplicarClick = colunas => {    
@@ -83,7 +88,7 @@ class ContratosContinuos extends Component {
     this.showMessage({
       severity: "success",
       life: 10000,
-      detail: "Personalização de colunas aplicada com sucesso"
+      detail: "Personalização de filtros aplicada com sucesso"
     });
   };
 
