@@ -43,7 +43,13 @@ class ContratosContinuos extends Component {
       },
       loading: true
     };
-  }  
+  } 
+  
+  showMessage(messageParams){
+    window.scrollTo(0, 0);
+    this.messages.show(messageParams);  
+  }
+
   async setaColunasDefaut() {
     const colUsuario = await getCamposContrato();
     const colunasUsuario = colUsuario[0];
@@ -72,8 +78,13 @@ class ContratosContinuos extends Component {
     });
   };
 
-  onAplicarClick = colunas => {
+  onAplicarClick = colunas => {    
     this.setState({ colunas });
+    this.showMessage({
+      severity: "success",
+      life: 10000,
+      detail: "Personalização de colunas aplicada com sucesso"
+    });
   };
 
   pegaParametrosUrl = () => {
@@ -147,7 +158,7 @@ class ContratosContinuos extends Component {
                 <SelecionaColunasContrato
                   colunasInit={colunas}
                   uuid={this.state.uuid}
-                  onAplicarClick={this.onAplicarClick}
+                  onAplicarClick={this.onAplicarClick.bind(this)}
                 />
               }
             />
