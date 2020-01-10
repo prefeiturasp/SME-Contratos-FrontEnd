@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "./Api";
 import { getHeaderToken } from "./auth.service";
 import CONFIG from "../configs/config.constants";
 
@@ -7,7 +7,7 @@ export const getNucleos = () => {
     headers: getHeaderToken()
   };
 
-  return axios
+  return api
     .get(`${CONFIG.API_URL}/nucleos/`, AUTH_HEADER)
     .then(res => res.data);
 };

@@ -2,13 +2,10 @@ import decode from "jwt-decode";
 import CONFIG from "../configs/config.constants";
 import axios from "axios";
 import { setFlashMessage } from "../utils/flashMessages";
-import { OK, BAD_REQUEST, UNAUTHORIZED } from "http-status-codes";
+import { BAD_REQUEST, OK } from "http-status-codes";
 
 export const TOKEN_ALIAS = "TOKEN";
 export const USERNAME_TEMP = "USERNAME_TEMP";
-export const STATUS_OK = 200;
-export const STATUS_ERROR = 400;
-export const STATUS_UNAUTHORIZED = 401;
 
 const LIMITE_TEMPO_REFRESH_TOKEN = 10 * 60; // 10 minutos
 
@@ -106,7 +103,7 @@ export const redefinirSenha = async (password, password2, hash_redefinicao) => {
 };
 
 const validaResposta = status => {
-  if (status === STATUS_OK) {
+  if (status === OK) {
     return true;
   }
   return false;
@@ -186,17 +183,21 @@ export const verifyToken = async () => {
     if (checkTimeLeft() <= LIMITE_TEMPO_REFRESH_TOKEN) {
       refreshToken();
     }
-
     return response;
   } catch (error) {
-    const response = error.response;
-    console.log(response)
-    if(response.data.non_field_errors){
-      console.log(response.data.non_field_errors[0]);
-    }
-
+    validaMensagemException(error);
     saveLocation();
-    // logout();
+    logout();
+  }
+};
+
+const validaMensagemException = error => {
+  const response = error.response;
+  if (response.status === BAD_REQUEST) {
+    if (response.data.non_field_errors) {
+      const mensagem = response.data.non_field_errors[0];
+      setFlashMessage(mensagem, "ERROR");
+    }
   }
 };
 
