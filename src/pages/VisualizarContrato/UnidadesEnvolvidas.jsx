@@ -474,7 +474,7 @@ class UnidadeEnvolvidas extends Component {
               <Column field="unidade.codigo_eol" header="Código EOL" />
               <Column field="unidade.nome" header="Un. que Recebem Serviço" />
               <Column field="unidade.equipamento" header="Equip." />
-              <Column field="unidade.dre.nome" header="DRE Corresp." />
+              <Column field="unidade.dre.sigla" header="DRE" />
               <Column field="lote" header="Lote Corresp." />
             </DataTable>
 
