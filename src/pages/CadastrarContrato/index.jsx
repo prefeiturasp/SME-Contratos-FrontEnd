@@ -21,7 +21,7 @@ import { redirect } from "../../utils/redirect";
 import { getCargosCoad } from "../../service/Cargos.service";
 import { Messages } from "primereact/messages";
 import ListarObrigacoesContratuais from "./ObrigacoesContratuais";
-import { NO_CONTENT, OK } from "http-status-codes";
+import { OK } from "http-status-codes";
 import { setFlashMessage } from "../../utils/flashMessages";
 // import { contratoValidations } from "./validations";
 
@@ -109,13 +109,19 @@ export default class CadastrarContrato extends Component {
 
   handleSubmit = async values => {
     const { uuid_contrato, dotacao } = this.state;
-    values["data_assinatura"] = moment(values.data_assinatura).format("YYYY-MM-DD")
-    values["data_ordem_inicio"] = moment(values.data_ordem_inicio).format("YYYY-MM-DD");
-    values["data_encerramento"] = moment(values.data_encerramento).format("YYYY-MM-DD");
+    values["data_assinatura"] = moment(values.data_assinatura).format(
+      "YYYY-MM-DD"
+    );
+    values["data_ordem_inicio"] = moment(values.data_ordem_inicio).format(
+      "YYYY-MM-DD"
+    );
+    values["data_encerramento"] = moment(values.data_encerramento).format(
+      "YYYY-MM-DD"
+    );
     values["dotacao_orcamentaria"] = this.removeEmpty(dotacao);
 
     const resultado = await updateContrato(values, uuid_contrato);
-    
+
     if (resultado.status === OK) {
       setFlashMessage("Contrato cadastrado com sucesso", "sucesso");
       redirect("/#/contratos-continuos");
@@ -255,7 +261,11 @@ export default class CadastrarContrato extends Component {
                   ? contrato.estado_contrato
                   : "VIGENTE",
                 situacao: this.state.situacaoContrato,
-                data_encerramento: contrato.data_encerramento ? new Date(moment(contrato.data_encerramento).format("YYYY-MM-DD")) : new Date(),
+                data_encerramento: contrato.data_encerramento
+                  ? new Date(
+                      moment(contrato.data_encerramento).format("YYYY-MM-DD")
+                    )
+                  : new Date(),
                 data_assinatura: contrato.data_assinatura
                   ? new Date(
                       moment(contrato.data_assinatura).format("YYYY-MM-DD")
