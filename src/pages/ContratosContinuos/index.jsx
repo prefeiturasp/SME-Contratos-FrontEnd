@@ -80,7 +80,7 @@ class ContratosContinuos extends Component {
     this.showMessage({
       severity: "success",
       life: 10000,
-      detail: "Personalização de colunas aplicada com sucesso"
+      detail: "Personalização de filtros aplicada com sucesso"
     });
   };
 
@@ -89,7 +89,7 @@ class ContratosContinuos extends Component {
     this.showMessage({
       severity: "success",
       life: 10000,
-      detail: "Personalização de filtros aplicada com sucesso"
+      detail: "Personalização de colunas aplicada com sucesso"
     });
   };
 
