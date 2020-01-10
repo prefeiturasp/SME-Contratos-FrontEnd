@@ -55,7 +55,8 @@ class UnidadeEnvolvidas extends Component {
       ADD: 'Adicionar Unidade à tabela',
       EDIT: 'Editar Unidade da tabela',
       VIEW: 'Visualizar Unidade da tabela'
-    }
+    },
+    loadingUnidades: true,
   };
 
   async componentDidMount() {
@@ -63,14 +64,14 @@ class UnidadeEnvolvidas extends Component {
     const unidadesSelect = await getUnidades();
     this.setState({
       unidadesSelect,
-      contrato: param.uuid
+      contrato: param.uuid,
     });
     this.carregaUnidadesContrato(param.uuid);
   }
 
   carregaUnidadesContrato = async uuid => {
     const unidadesContrato = await getUnidadesByContrato(uuid);
-    this.setState({ unidades: unidadesContrato });
+    this.setState({ unidades: unidadesContrato, loadingUnidades: false, });
   };
 
   toggle = () => {
@@ -306,6 +307,7 @@ class UnidadeEnvolvidas extends Component {
       headerByModalMode
     } = this.state;
     const { disabilitado } = this.props;
+    const { loadingUnidades } = this.state;
     return (
       <div>
         <Dialog
@@ -467,6 +469,7 @@ class UnidadeEnvolvidas extends Component {
               rows={rowsPerPage}
               paginatorTemplate="PrevPageLink PageLinks NextPageLink"
               className="datatable-strapd-coad"
+              loading={loadingUnidades}
             >
               <Column field="unidade.codigo_eol" header="Código EOL" />
               <Column field="unidade.nome" header="Un. que Recebem Serviço" />
