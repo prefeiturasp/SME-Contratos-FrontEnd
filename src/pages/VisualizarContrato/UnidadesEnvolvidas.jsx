@@ -16,6 +16,7 @@ import {getUsuarioByUserName} from '../../service/Usuarios.service'
 const cursorPointer = {
   cursor: "pointer"
 };
+const rowsPerPage = 5;
 
 class UnidadeEnvolvidas extends Component {
   state = {
@@ -440,23 +441,40 @@ class UnidadeEnvolvidas extends Component {
           </div>
         </Dialog>
         <Row>
+          <Col>
+            <span className="float-right">
+              <PrimeButton
+                disabled={disabilitado}
+                icon="pi pi-file"
+                type="button"
+                label="Adicionar Obrigação"
+                style={{ marginBottom: ".80em" }}
+                onClick={this.novaUnidade}
+                className="btn-coad-background-outline"
+              />
+            </span>
+          </Col>
+        </Row>        
+        <Row>
           <Col lg={12} xl={12}>
-            <DataTable value={unidades} scrollable={true} scrollHeight="250px" onRowClick={e => this.editUnidade(e.data)} style={cursorPointer}>
+            <DataTable 
+              value={unidades} 
+              scrollable={true} 
+              scrollHeight="250px" 
+              onRowClick={e => this.editUnidade(e.data)} 
+              style={cursorPointer}
+              paginator={unidades.length > rowsPerPage}
+              rows={rowsPerPage}
+              paginatorTemplate="PrevPageLink PageLinks NextPageLink"
+              className="datatable-strapd-coad"
+            >
               <Column field="unidade.codigo_eol" header="Código EOL" />
               <Column field="unidade.nome" header="Un. que Recebem Serviço" />
               <Column field="unidade.equipamento" header="Equip." />
               <Column field="unidade.dre.nome" header="DRE Corresp." />
               <Column field="lote" header="Lote Corresp." />
             </DataTable>
-            <AntButton
-                style={{marginTop: '5px'}}
-                type="link"
-                disabled={disabilitado}
-                size="small"
-                onClick={this.novaUnidade}
-            >
-                Adicionar
-            </AntButton>
+
           </Col>
         </Row>
       </div>
