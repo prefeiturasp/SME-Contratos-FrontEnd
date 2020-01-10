@@ -41,7 +41,8 @@ class ContratosContinuos extends Component {
         termo_Contrato: "",
         tipo_servico: ""
       },
-      loading: true
+      loading: true,
+      filtroAberto: false,
     };
   } 
   
@@ -72,7 +73,7 @@ class ContratosContinuos extends Component {
   }
 
   onBuscarClick = filtros => {
-    this.setState({ loading: true });
+    this.setState({ loading: true, filtroAberto: false  });
     getContratos(filtros).then(contratos => {
       this.setState({ contratos, filtros, loading: false });
     });
@@ -84,7 +85,7 @@ class ContratosContinuos extends Component {
   };
 
   onAplicarClick = colunas => {    
-    this.setState({ colunas });
+    this.setState({ colunas, filtroAberto: false });
     this.showMessage({
       severity: "success",
       life: 10000,
@@ -132,7 +133,7 @@ class ContratosContinuos extends Component {
   }
 
   render() {
-    const { contratos, colunas, loading } = this.state;
+    const { contratos, colunas, loading, filtroAberto } = this.state;
     return (
       <Page>
         <Messages ref={el => (this.messages = el)}></Messages>
@@ -150,7 +151,7 @@ class ContratosContinuos extends Component {
           </Button>
         </ButtonGroup>
         <Container icone="pi pi-chart-bar" subtitulo="Vizualizar Contratos">
-          <CoadAccordion titulo="Personalizar filtro de busca">
+          <CoadAccordion titulo="Personalizar filtro de busca" aberto={filtroAberto}>
             <CoadTabs
               titulo1={"Personalizar Filtros"}
               titulo2={"Personalizar Colunas"}
