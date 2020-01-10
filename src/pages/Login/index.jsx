@@ -176,8 +176,8 @@ const Index = props => {
 
   return (
     <Fragment>
-      <div className="login-bg" />
-      <div className="right-half login-coad">
+      <div className="login-bg d-none d-lg-block d-xl-block" />
+      <div className="right-half login-coad d-lg-flex">
         <div className="container my-auto">
           <div className="logo-safi">
             <img src={logoSafi} alt="" />

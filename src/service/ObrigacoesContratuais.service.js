@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "./Api";
 import { getHeaderToken } from "./auth.service";
 import CONFIG from "../configs/config.constants";
 
@@ -7,7 +7,7 @@ export const getObrigacaoContratualByContrato = contrato => {
     headers: getHeaderToken()
   };
 
-  return axios
+  return api
     .get(
       `${CONFIG.API_URL}/obrigacoes-contratuais/?contrato__uuid=${contrato}`,
       AUTH_HEADER
@@ -20,7 +20,7 @@ export const addObrigacaoContratual = payload => {
     headers: getHeaderToken()
   };
 
-  return axios
+  return api
     .post(`${CONFIG.API_URL}/obrigacoes-contratuais/`, payload, AUTH_HEADER)
     .then(res => res.data);
 };
@@ -29,7 +29,7 @@ export const updateObrigacaoContratual = (payload, uuid) => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
+  return api
     .put(
       `${CONFIG.API_URL}/obrigacoes-contratuais/${uuid}/`,
       payload,
@@ -47,7 +47,7 @@ export const excluirObrigacaoContratual = async uuid => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return await axios
+  return await api
     .delete(
       `${CONFIG.API_URL}/obrigacoes-contratuais/${uuid}/`,
       AUTH_HEADER
