@@ -331,7 +331,7 @@ class UnidadeEnvolvidas extends Component {
                   className="btn-coad-primary"
                   onClick={this.handleAddUnidade}
                 >
-                  Cadastrar
+                  Adicionar
                 </Button>
               }
             </div>

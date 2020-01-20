@@ -113,6 +113,7 @@ export const isAuthenticated = () => {
   if (localStorage.getItem(TOKEN_ALIAS)) {
     return true;
   }
+  saveLocation()
   return false;
 };
 
