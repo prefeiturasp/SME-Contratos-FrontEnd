@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { isAuthenticated } from "./service/auth.service";
-import RoutesConfig from './configs/routes.constants'
+import { isAuthenticated, verifyToken } from "./service/auth.service";
+import RoutesConfig from "./configs/routes.constants";
 import Login from "./pages/Login";
 
 const PrivateRoute = ({ component: Componet, ...rest }) => {
@@ -21,21 +21,31 @@ const PrivateRoute = ({ component: Componet, ...rest }) => {
   );
 };
 
-export const Routers = () => (
-  <Switch>
-    <Route exact path="/login" component={Login} />
+export const Routers = () => {
+  const verificarToken = async () => {
+    return await verifyToken();
+  };
+  useEffect(() => {
+    if (window.location.hash !== "#/login") {
+      verificarToken();
+    }
+  });
+  return (
+    <Switch>
+      <Route exact path="/login" component={Login} />
 
-    {RoutesConfig.map((value, key) => {
+      {RoutesConfig.map((value, key) => {
         return (
-            <PrivateRoute 
+          <PrivateRoute
             key={key}
             path={value.path}
             exact={value.exact}
             component={value.component}
-            />
-        )
-    })}
-  </Switch>
-);
+          />
+        );
+      })}
+    </Switch>
+  );
+};
 
-export default Routers
+export default Routers;

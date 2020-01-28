@@ -1,7 +1,7 @@
-import axios from "axios";
 import { getHeaderToken, getUsuario } from "./auth.service";
 import CONFIG from "../configs/config.constants";
 import moment from "moment";
+import Api from './Api'
 
 export function getContratos(filtro) {
   const AUTH_HEADER = {
@@ -18,7 +18,7 @@ export function getContratos(filtro) {
     }
   }
 
-  return axios
+  return Api
     .get(`${CONFIG.API_URL}/contratos/${parametros}`, AUTH_HEADER)
     .then(res => {
       return formataData(res.data);
@@ -39,7 +39,7 @@ export function getMeusContratos() {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
+  return Api
     .get(
       `${CONFIG.API_URL}/contratos/?gestor=${getUsuario().user_id}`,
       AUTH_HEADER
@@ -52,7 +52,7 @@ export const getContratoByUUID = uuid => {
     headers: getHeaderToken()
   };
 
-  return axios
+  return Api
     .get(`${CONFIG.API_URL}/contratos/${uuid}/`, AUTH_HEADER)
     .then(res => res.data);
 };
@@ -61,7 +61,7 @@ export function getTermo(termo) {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
+  return Api
     .get(`${CONFIG.API_URL}/contratos/?termo_contrato=${termo}`, AUTH_HEADER)
     .then(res => res.data);
 }
@@ -70,7 +70,7 @@ export function getTermoByAtribuicao(atribuicao) {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
+  return Api
     .get(`${CONFIG.API_URL}/contratos/?atribuido=${atribuicao}`, AUTH_HEADER)
     .then(res => {
       return formataDataCriacao(res.data);
@@ -81,7 +81,7 @@ export function getTermosAll() {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
+  return Api
     .get(`${CONFIG.API_URL}/contratos/termos/`, AUTH_HEADER)
     .then(res => {
       return formataDataCriacao(res.data);
@@ -99,7 +99,7 @@ export const getSituacoesContrato = () => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
+  return Api
     .get(`${CONFIG.API_URL}/contratos/situacoes/`, AUTH_HEADER)
     .then(res => res.data);
 };
@@ -108,7 +108,7 @@ export const getEstadosContrato = () => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
+  return Api
     .get(`${CONFIG.API_URL}/contratos/estados/`, AUTH_HEADER)
     .then(res => res.data);
 };
@@ -117,7 +117,7 @@ export const getCamposContrato = () => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
+  return Api
     .get(
       `${CONFIG.API_URL}/colunas-contrato/?usuario=${getUsuario().user_id}`,
       AUTH_HEADER
@@ -129,7 +129,7 @@ export const createContrato = payLoad => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
+  return Api
     .post(`${CONFIG.API_URL}/contratos/`, payLoad, AUTH_HEADER)
     .then(
       res => res.data,
@@ -147,7 +147,7 @@ export const updateColunasContrato = payload => {
     headers: getHeaderToken()
   };
 
-  return axios
+  return Api
     .patch(
       `${CONFIG.API_URL}/colunas-contrato/${payload.uuid}/`,
       payload,
@@ -168,14 +168,14 @@ export const updateContrato = async (payload, contratoUuid) => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  const response = axios.put(`${CONFIG.API_URL}/contratos/${contratoUuid}/`,payload,AUTH_HEADER)
+  const response = Api.put(`${CONFIG.API_URL}/contratos/${contratoUuid}/`,payload,AUTH_HEADER)
   return response;
 };
 export const CancelarContrato = (uuid) => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return axios
+  return Api
     .delete(
       `${CONFIG.API_URL}/contratos/${uuid}/cancelar-cadastro-unico/`,
       AUTH_HEADER

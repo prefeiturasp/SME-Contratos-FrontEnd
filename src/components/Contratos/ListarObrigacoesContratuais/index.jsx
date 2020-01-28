@@ -199,14 +199,14 @@ export default class ListarObrigacoesContratuais extends Component {
       <div>
         <Button
           type="button"
-          label="Confirmar"
+          label="Sim"
           style={{ marginRight: ".25em" }}
           onClick={this.handleClickConfirmar.bind(this)}
           className="btn-coad-background-outline"
         />
         <Button
           type="button"
-          label="Descartar"
+          label="Não"
           style={{ marginRight: ".25em" }}
           onClick={() => {
             this.setState({ confirmarVisible: false, item: "", obrigacao: "" });
@@ -270,14 +270,14 @@ export default class ListarObrigacoesContratuais extends Component {
       <div>
         <Button
           type="button"
-          label="Excluir"
+          label="Sim"
           style={{ marginRight: ".25em" }}
           onClick={this.handleExcluirObrigacao.bind(this)}
           className="btn-coad-background-outline"
         />
         <Button
           type="button"
-          label="Voltar"
+          label="Não"
           style={{ marginRight: ".25em" }}
           onClick={() => {
             this.setState({ excluirVisible: false });
@@ -401,7 +401,7 @@ export default class ListarObrigacoesContratuais extends Component {
           </Row>
         </Dialog>
         <Dialog
-          header="Confirmar edição de Obrigação Contratual?"
+          header="Confirmar edição de Obrigação Contratual"
           visible={confirmarVisible}
           style={{ width: "60vw" }}
           footer={footerModalConfirmar}
@@ -414,7 +414,7 @@ export default class ListarObrigacoesContratuais extends Component {
           </div>
         </Dialog>
         <Dialog
-          header="Excluir Obrigação Contratual?"
+          header="Excluir Obrigação Contratual"
           visible={excluirVisible}
           style={{ width: "60vw" }}
           footer={footerModalExcluir}

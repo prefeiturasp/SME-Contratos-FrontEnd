@@ -41,9 +41,16 @@ class ContratosContinuos extends Component {
         termo_Contrato: "",
         tipo_servico: ""
       },
-      loading: true
+      loading: true,
+      filtroAberto: false,
     };
-  }  
+  } 
+  
+  showMessage(messageParams){
+    window.scrollTo(0, 0);
+    this.messages.show(messageParams);  
+  }
+
   async setaColunasDefaut() {
     const colUsuario = await getCamposContrato();
     const colunasUsuario = colUsuario[0];
@@ -66,14 +73,24 @@ class ContratosContinuos extends Component {
   }
 
   onBuscarClick = filtros => {
-    this.setState({ loading: true });
+    this.setState({ loading: true, filtroAberto: false  });
     getContratos(filtros).then(contratos => {
       this.setState({ contratos, filtros, loading: false });
     });
+    this.showMessage({
+      severity: "success",
+      life: 10000,
+      detail: "Personalização de filtros aplicada com sucesso"
+    });
   };
 
-  onAplicarClick = colunas => {
-    this.setState({ colunas });
+  onAplicarClick = colunas => {    
+    this.setState({ colunas, filtroAberto: false });
+    this.showMessage({
+      severity: "success",
+      life: 10000,
+      detail: "Personalização de colunas aplicada com sucesso"
+    });
   };
 
   pegaParametrosUrl = () => {
@@ -116,7 +133,7 @@ class ContratosContinuos extends Component {
   }
 
   render() {
-    const { contratos, colunas, loading } = this.state;
+    const { contratos, colunas, loading, filtroAberto } = this.state;
     return (
       <Page>
         <Messages ref={el => (this.messages = el)}></Messages>
@@ -134,7 +151,7 @@ class ContratosContinuos extends Component {
           </Button>
         </ButtonGroup>
         <Container icone="pi pi-chart-bar" subtitulo="Vizualizar Contratos">
-          <CoadAccordion titulo="Personalizar filtro de busca">
+          <CoadAccordion titulo="Personalizar filtro de busca" aberto={filtroAberto}>
             <CoadTabs
               titulo1={"Personalizar Filtros"}
               titulo2={"Personalizar Colunas"}
@@ -147,7 +164,7 @@ class ContratosContinuos extends Component {
                 <SelecionaColunasContrato
                   colunasInit={colunas}
                   uuid={this.state.uuid}
-                  onAplicarClick={this.onAplicarClick}
+                  onAplicarClick={this.onAplicarClick.bind(this)}
                 />
               }
             />

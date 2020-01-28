@@ -18,6 +18,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { redirect } from "../../utils/redirect";
 import { OK } from "http-status-codes";
 import { getUrlParams } from "../../utils/params";
+import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
 
 const COMPONENTE = {
   LOGIN: 0,
@@ -55,7 +56,11 @@ const Index = props => {
     } else {
       const resultado = await login(usuario, senha);
       if (resultado) {
-        redirect("/");
+        if (hasFlashMessage("HISTORY_URL")) {
+          redirect(getFlashMessage("HISTORY_URL"));
+        } else {
+          redirect("/");
+        }
       } else {
         setMensagem("Usuário e/ou senha inválidos.");
         setAlerta(true);
@@ -176,8 +181,8 @@ const Index = props => {
 
   return (
     <Fragment>
-      <div className="login-bg" />
-      <div className="right-half login-coad">
+      <div className="login-bg d-none d-lg-block d-xl-block" />
+      <div className="right-half login-coad d-lg-flex">
         <div className="container my-auto">
           <div className="logo-safi">
             <img src={logoSafi} alt="" />

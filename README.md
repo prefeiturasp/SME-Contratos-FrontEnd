@@ -6,9 +6,13 @@ Um sistema da Secretaria de Educação da Cidade de São Paulo.
 
 License: MIT
 
-Versão: 1.0.0
+Versão: 1.1.0
 
 ## Release Notes ##
+
+### 1.1.0 - 20/01/2019 - Sprint 7
+* Solução de débitos técnicos
+
 ### 1.0.0 - 19/12/2019 - Sprint 6
 * Inclusão de obrigações contratuais no cadastro único de contratos
 * Coluna DRE's na consulta de contratos

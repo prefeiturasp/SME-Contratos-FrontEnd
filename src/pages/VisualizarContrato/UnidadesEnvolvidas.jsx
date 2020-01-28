@@ -16,6 +16,7 @@ import {getUsuarioByUserName} from '../../service/Usuarios.service'
 const cursorPointer = {
   cursor: "pointer"
 };
+const rowsPerPage = 5;
 
 class UnidadeEnvolvidas extends Component {
   state = {
@@ -54,7 +55,8 @@ class UnidadeEnvolvidas extends Component {
       ADD: 'Adicionar Unidade à tabela',
       EDIT: 'Editar Unidade da tabela',
       VIEW: 'Visualizar Unidade da tabela'
-    }
+    },
+    loadingUnidades: true,
   };
 
   async componentDidMount() {
@@ -62,14 +64,14 @@ class UnidadeEnvolvidas extends Component {
     const unidadesSelect = await getUnidades();
     this.setState({
       unidadesSelect,
-      contrato: param.uuid
+      contrato: param.uuid,
     });
     this.carregaUnidadesContrato(param.uuid);
   }
 
   carregaUnidadesContrato = async uuid => {
     const unidadesContrato = await getUnidadesByContrato(uuid);
-    this.setState({ unidades: unidadesContrato });
+    this.setState({ unidades: unidadesContrato, loadingUnidades: false, });
   };
 
   toggle = () => {
@@ -305,6 +307,7 @@ class UnidadeEnvolvidas extends Component {
       headerByModalMode
     } = this.state;
     const { disabilitado } = this.props;
+    const { loadingUnidades } = this.state;
     return (
       <div>
         <Dialog
@@ -328,7 +331,7 @@ class UnidadeEnvolvidas extends Component {
                   className="btn-coad-primary"
                   onClick={this.handleAddUnidade}
                 >
-                  Cadastrar
+                  Adicionar
                 </Button>
               }
             </div>
@@ -440,23 +443,41 @@ class UnidadeEnvolvidas extends Component {
           </div>
         </Dialog>
         <Row>
+          <Col>
+            <span className="float-right">
+              <PrimeButton
+                disabled={disabilitado}
+                icon="pi pi-file"
+                type="button"
+                label="Adicionar Obrigação"
+                style={{ marginBottom: ".80em" }}
+                onClick={this.novaUnidade}
+                className="btn-coad-background-outline"
+              />
+            </span>
+          </Col>
+        </Row>        
+        <Row>
           <Col lg={12} xl={12}>
-            <DataTable value={unidades} scrollable={true} scrollHeight="250px" onRowClick={e => this.editUnidade(e.data)} style={cursorPointer}>
+            <DataTable 
+              value={unidades} 
+              scrollable={true} 
+              scrollHeight="250px" 
+              onRowClick={e => this.editUnidade(e.data)} 
+              style={cursorPointer}
+              paginator={unidades.length > rowsPerPage}
+              rows={rowsPerPage}
+              paginatorTemplate="PrevPageLink PageLinks NextPageLink"
+              className="datatable-strapd-coad"
+              loading={loadingUnidades}
+            >
               <Column field="unidade.codigo_eol" header="Código EOL" />
               <Column field="unidade.nome" header="Un. que Recebem Serviço" />
               <Column field="unidade.equipamento" header="Equip." />
-              <Column field="unidade.dre.nome" header="DRE Corresp." />
+              <Column field="unidade.dre.sigla" header="DRE" />
               <Column field="lote" header="Lote Corresp." />
             </DataTable>
-            <AntButton
-                style={{marginTop: '5px'}}
-                type="link"
-                disabled={disabilitado}
-                size="small"
-                onClick={this.novaUnidade}
-            >
-                Adicionar Unidade
-            </AntButton>
+
           </Col>
         </Row>
       </div>

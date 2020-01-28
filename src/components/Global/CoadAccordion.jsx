@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Collapse, CardBody, Card } from "reactstrap";
 import { PropTypes } from "prop-types";
 
 const CoadAccordion = props => {
-  const [collapse, setCollapse] = useState(false);
+  const {titulo, aberto} = props;
+  const [collapse, setCollapse] = useState(aberto);
 
   const toggle = () => setCollapse(!collapse);
 
-  const {titulo} = props;
+  useEffect(() => {
+    setCollapse(props.aberto);
+  }, [props]);
+
   return (
     <div className="accordion">
       <div className="card caod-card-accordion px-0">

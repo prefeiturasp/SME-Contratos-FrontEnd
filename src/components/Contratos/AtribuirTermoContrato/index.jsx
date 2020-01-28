@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Container from "../../Global/Container";
 import { Row, Col } from "reactstrap";
-import { Messages } from "primereact/messages";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -49,7 +48,7 @@ export default class AtribuirTermoContrato extends Component {
     if (!termo || termo.length === 0) {
       createContrato(payLoad);
 
-      this.messages.show({
+      this.props.showMessage({
         severity: "success",
         life: 5000,
         detail:
@@ -59,7 +58,7 @@ export default class AtribuirTermoContrato extends Component {
       this.reset();
     } else {
       this.setState({ contratoUuid: termo[0].uuid });
-      this.messages.show({
+      this.props.showMessage({
         severity: "info",
         life: 8000,
         detail:
@@ -84,7 +83,7 @@ export default class AtribuirTermoContrato extends Component {
     };
     updateContrato(payLoadAlterar, this.state.contratoUuid);
 
-    this.messages.show({
+    this.props.showMessage({
       severity: "success",
       life: 5000,
       detail:
@@ -138,7 +137,7 @@ export default class AtribuirTermoContrato extends Component {
 
         {this.state.btnCancelarVisible && (
           <Button
-            label="Cancelar"
+            label="Cancelar11"
             style={{ marginRight: ".25em" }}
             onClick={e => this.reset()}
           />
@@ -149,13 +148,13 @@ export default class AtribuirTermoContrato extends Component {
     const footerModal = (
       <div>
         <Button
-          label="Confirmar"
+          label="Sim"
           style={{ marginRight: ".25em" }}
           onClick={this.handleClickCadastratar.bind(this)}
           className="btn-coad-background-outline"
         />
         <Button
-          label="Cancelar"
+          label="Não"
           style={{ marginRight: ".25em" }}
           onClick={this.onHide}
         />
@@ -163,9 +162,8 @@ export default class AtribuirTermoContrato extends Component {
     );
     return (
       <Container>
-        <Messages ref={el => (this.messages = el)}></Messages>
         <Dialog
-          header="Atribuir Termo de Contrato?"
+          header="Atribuir Termo de Contrato"
           visible={this.state.visible}
           style={{ width: "50vw" }}
           footer={footerModal}

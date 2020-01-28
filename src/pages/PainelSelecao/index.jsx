@@ -8,7 +8,7 @@ import CardServico from "../../components/Contratos/CardServico";
 import { Button, ButtonGroup } from "reactstrap";
 import { Messages } from "primereact/messages";
 import { redirect } from "../../utils/redirect";
-import {getMinhasNotificacoesVigenciaContratos, geraNotificacoesVigenciaContratos} from "../../service/Notificacoes.service"
+import {getMinhasNotificacoesVigenciaContratos} from "../../service/Notificacoes.service"
 
 class PainelSelecao extends Component {
 
@@ -22,21 +22,15 @@ class PainelSelecao extends Component {
   
   
   async componentDidMount() {
-    // TODO Extrair a geração de notificações para um serviço assíncrono do Celery
-    geraNotificacoesVigenciaContratos().then(
-      async () => {
-        const minhasNotificacoesVigenciaContrato = await getMinhasNotificacoesVigenciaContratos()
 
-        if (minhasNotificacoesVigenciaContrato) {
-          this.setState({qtdContratosVencendo: minhasNotificacoesVigenciaContrato.contratos_vencendo})
-        }
-        
-        
-        this.exibeNotificacoesVigencia()
-      }
-    )
+    const minhasNotificacoesVigenciaContrato = await getMinhasNotificacoesVigenciaContratos()
 
+    if (minhasNotificacoesVigenciaContrato) {
+      this.setState({qtdContratosVencendo: minhasNotificacoesVigenciaContrato.contratos_vencendo})
+    }
     
+    this.exibeNotificacoesVigencia()
+
   }
 
   exibeNotificacoesVigencia() {
@@ -78,3 +72,4 @@ class PainelSelecao extends Component {
 }
 
 export default PainelSelecao;
+

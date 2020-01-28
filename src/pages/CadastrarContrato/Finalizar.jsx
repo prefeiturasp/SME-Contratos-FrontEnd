@@ -20,10 +20,10 @@ export default class Finalizar extends Component {
                 className="btn btn-coad-background-outline"
                 onClick={() => this.props.jumpToStep(0)}
               >
-                Cancelar
+                Não
               </button>
               <button type="submit" className="btn btn-coad-primary">
-                Cadastrar
+                Sim
               </button>
             </div>
           }
