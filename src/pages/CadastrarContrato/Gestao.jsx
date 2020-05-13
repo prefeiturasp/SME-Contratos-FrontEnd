@@ -7,6 +7,7 @@ import { getNucleos } from "../../service/Nucleos.service";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
 import { getDiretoriasRegionais } from "../../service/DiretoriasRegionais.service";
 import { formatarDREs } from "./helper";
+import { getEquipamentos } from "../../service/Equipamentos.service";
 
 export default class Gestao extends Component {
   state = {
@@ -14,6 +15,11 @@ export default class Gestao extends Component {
     usuarios: [],
     emailUsuario: null,
     dres: null,
+    // filtros
+    cd_equipamento: "",
+    nm_equipamento: "",
+    dre: "",
+    tp_unidade: "",
   };
 
   async componentDidMount() {
@@ -63,6 +69,10 @@ export default class Gestao extends Component {
   cancelar = () => {
     this.props.cancelar();
     this.props.jumpToStep(0);
+  };
+
+  filtrar = async () => {
+    const response = await getEquipamentos(this.state);
   };
 
   render() {
@@ -147,17 +157,24 @@ export default class Gestao extends Component {
             <Col xl={3} lg={3}>
               <label>Código EOL</label>
               <InputBootStrap
-                name="codigo_eol"
+                name="cd_equipamento"
+                onChange={(event) =>
+                  this.setState({ cd_equipamento: event.target.value })
+                }
                 placeholder="Código EOL da instituição"
               />
             </Col>
             <Col xl={3} lg={3}>
-              <CoadSelect label="DRE" name="dre">
+              <CoadSelect
+                onChange={(event) => this.setState({ dre: event.target.value })}
+                label="DRE"
+                name="dre"
+              >
                 <option value="">Selecione</option>
                 {dres
                   ? dres.map((dre, i) => {
                       return (
-                        <option key={i} value={dre.dre}>
+                        <option key={i} value={dre.diretoria}>
                           {dre.diretoria} - {dre.dre}
                         </option>
                       );
@@ -166,24 +183,58 @@ export default class Gestao extends Component {
               </CoadSelect>
             </Col>
             <Col xl={3} lg={3}>
-              <label>Nome da Unidade</label>
-              <InputBootStrap
-                name="nome_unidade"
-                placeholder="Digite o nome da unidade"
-              />
+              <CoadSelect
+                onChange={(event) =>
+                  this.setState({ tp_unidade: event.target.value })
+                }
+                label="Tipo de Unidade"
+                name="tp_unidade"
+              >
+                <option value="">Selecione</option>
+                <option value="UA">Unidade Administrativa</option>
+                <option value="CEU">Centro Educacional Unificado - CEU</option>
+                <option value="">Unidades Escolares</option>
+              </CoadSelect>
             </Col>
             <Col xl={3} lg={3}>
-              <label>Telefone Gestor de Contrato</label>
-              <InputBootStrap
-                name="email_gestor"
-                disabled={true}
-                placeholder="(+55) xxxxx-xxxx"
-              />
+              <CoadSelect
+                onChange={(event) =>
+                  this.setState({ tp_unidade: event.target.value })
+                }
+                label="Tipo de Unidade Escolar"
+                name="tp_unidade"
+              >
+                <option value="">Selecione</option>
+                <option value="EMEF">EMEF</option>
+                <option value="EMEFM">EMEFM</option>
+                <option value="EMEBS">EMEBS/EMEE</option>
+                <option value="CIEJA">CIEJA</option>
+                <option value="EMEI">EMEI</option>
+                <option value="CEMEI">CEMEI</option>
+                <option value="CEI">CEI</option>
+                <option value="CECI">CECI</option>
+                <option value="CMCT">CMCT</option>
+                <option value="IF">INSTITUTO FEDERAL</option>
+              </CoadSelect>
             </Col>
           </Row>
           <div className="row">
-            <div className="col-12 text-right">
-              <Button type="button" className="btn-coad-primary mr-3">
+            <div className="col-6">
+              <label>Nome da Unidade</label>
+              <InputBootStrap
+                onChange={(event) =>
+                  this.setState({ nm_equipamento: event.target.value })
+                }
+                name="nm_equipamento"
+                placeholder="Digite o nome da unidade"
+              />
+            </div>
+            <div className="col-3 offset-3 my-auto">
+              <Button
+                type="button"
+                onClick={() => this.filtrar()}
+                className="btn-coad-primary mr-3"
+              >
                 Filtrar
               </Button>
               <Button
