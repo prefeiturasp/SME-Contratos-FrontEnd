@@ -8,6 +8,7 @@ import { getUsuariosLookup } from "../../service/Usuarios.service";
 import { getDiretoriasRegionais } from "../../service/DiretoriasRegionais.service";
 import { formatarDREs } from "./helper";
 import { getEquipamentos } from "../../service/Equipamentos.service";
+import "./style.scss";
 
 export default class Gestao extends Component {
   state = {
@@ -20,6 +21,8 @@ export default class Gestao extends Component {
     nm_equipamento: "",
     dre: "",
     tp_unidade: "",
+    tp_unidade_escolar: "",
+    unidades: null,
   };
 
   async componentDidMount() {
@@ -73,10 +76,19 @@ export default class Gestao extends Component {
 
   filtrar = async () => {
     const response = await getEquipamentos(this.state);
+    this.setState({ unidades: response.data.results });
+    console.log(this.unidades);
   };
 
   render() {
-    const { dres, nucleos, usuarios, emailUsuario } = this.state;
+    const {
+      dres,
+      nucleos,
+      usuarios,
+      emailUsuario,
+      tp_unidade,
+      unidades,
+    } = this.state;
     return (
       <>
         <strong>
@@ -185,7 +197,10 @@ export default class Gestao extends Component {
             <Col xl={3} lg={3}>
               <CoadSelect
                 onChange={(event) =>
-                  this.setState({ tp_unidade: event.target.value })
+                  this.setState({
+                    tp_unidade: event.target.value,
+                    tp_unidade_escolar: "",
+                  })
                 }
                 label="Tipo de Unidade"
                 name="tp_unidade"
@@ -193,30 +208,36 @@ export default class Gestao extends Component {
                 <option value="">Selecione</option>
                 <option value="UA">Unidade Administrativa</option>
                 <option value="CEU">Centro Educacional Unificado - CEU</option>
-                <option value="">Unidades Escolares</option>
+                <option value="ESC">Unidades Escolares</option>
               </CoadSelect>
             </Col>
-            <Col xl={3} lg={3}>
-              <CoadSelect
-                onChange={(event) =>
-                  this.setState({ tp_unidade: event.target.value })
-                }
-                label="Tipo de Unidade Escolar"
-                name="tp_unidade"
-              >
-                <option value="">Selecione</option>
-                <option value="EMEF">EMEF</option>
-                <option value="EMEFM">EMEFM</option>
-                <option value="EMEBS">EMEBS/EMEE</option>
-                <option value="CIEJA">CIEJA</option>
-                <option value="EMEI">EMEI</option>
-                <option value="CEMEI">CEMEI</option>
-                <option value="CEI">CEI</option>
-                <option value="CECI">CECI</option>
-                <option value="CMCT">CMCT</option>
-                <option value="IF">INSTITUTO FEDERAL</option>
-              </CoadSelect>
-            </Col>
+            {tp_unidade === "ESC" && (
+              <Col xl={3} lg={3}>
+                <CoadSelect
+                  onChange={(event) =>
+                    this.setState({ tp_unidade_escolar: event.target.value })
+                  }
+                  label="Tipo de Unidade Escolar"
+                  name="tp_unidade"
+                >
+                  <option value="">Selecione</option>
+                  <option value="EMEF">EMEF</option>
+                  <option value="EMEI">EMEI</option>
+                  <option value="EMEFM">EMEFM</option>
+                  <option value="EMEBS">EMEBS</option>
+                  <option value="CEI DIRET">CEI DIRET</option>
+                  <option value="CEI INDIRET">CEI INDIRET</option>
+                  <option value="CIEJA">CIEJA</option>
+                  <option value="CEU EMEF">CEU EMEF</option>
+                  <option value="CEU EMEI">CEU EMEI</option>
+                  <option value="CEU CEI">CEU CEI</option>
+                  <option value="CMCT">CMCT</option>
+                  <option value="CEMEI">CEMEI</option>
+                  <option value="CECI">CECI</option>
+                  <option value="IF">INSTITUTO FEDERAL</option>
+                </CoadSelect>
+              </Col>
+            )}
           </Row>
           <div className="row">
             <div className="col-6">
@@ -247,6 +268,45 @@ export default class Gestao extends Component {
               </Button>
             </div>
           </div>
+          <hr />
+          {unidades && (
+            <div className="tabela-unidades">
+              <table>
+                <thead>
+                  <tr className="row">
+                    <th className="col-2">Código EOL</th>
+                    <th className="col-3">Nome da Unidade</th>
+                    <th className="col-3">Endereço</th>
+                    <th className="col-2">DRE</th>
+                    <th className="col-2">Tipo de Unidade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {unidades.map((unidade, key) => {
+                    return (
+                      <tr key={key} className="row">
+                        <td className="col-1">
+                          <label htmlFor="check" className="checkbox-label">
+                            <input type="checkbox" name="check" />
+                            <span className="checkbox-custom" />{" "}a
+                          </label>
+                        </td>
+                        <td className="col-1">{unidade.cd_equipamento}</td>
+                        <td className="col-3">{unidade.nm_equipamento}</td>
+                        <td className="col-3">
+                          {unidade.logradouro}, {unidade.bairro}
+                        </td>
+                        <td className="col-2">
+                          {unidade.nm_exibicao_diretoria_referencia}
+                        </td>
+                        <td className="col-2">{unidade.dc_tp_equipamento}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
           <UnidadeEnvolvidas termo={this.props.termo} />
         </Card>
         <div className="alerta text-center alert alert-danger d-none">

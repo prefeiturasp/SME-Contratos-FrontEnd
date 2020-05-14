@@ -6,13 +6,14 @@ export const getEquipamentos = async ({
   cd_equipamento = "",
   dre = "",
   tp_unidade = "",
+  tp_unidade_escolar = "",
 }) => {
   return await axios.get(
     `https://hom-smecieduapi.sme.prefeitura.sp.gov.br/safi/equipamentos/` +
       `?nm_equipamento=${nm_equipamento}` +
       `&cd_equipamento=${cd_equipamento}` +
       `&dre=${dre}` +
-      `&tp_unidade=${tp_unidade}`,
+      `&tp_unidade=${tp_unidade_escolar || tp_unidade}`,
     { headers: { Authorization: SAFI_TOKEN } }
   );
 };
