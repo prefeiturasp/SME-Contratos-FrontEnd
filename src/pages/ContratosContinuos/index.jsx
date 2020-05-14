@@ -150,7 +150,7 @@ class ContratosContinuos extends Component {
             <i className="pi pi-list mx-4"></i>
           </Button>
         </ButtonGroup>
-        <Container icone="pi pi-chart-bar" subtitulo="Vizualizar Contratos">
+        <Container icone="pi pi-chart-bar" subtitulo="Visualizar Contratos">
           <CoadAccordion titulo="Personalizar filtro de busca" aberto={filtroAberto}>
             <CoadTabs
               titulo1={"Personalizar Filtros"}
