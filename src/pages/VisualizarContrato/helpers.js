@@ -39,3 +39,12 @@ export const corDoPrazo = dias => {
       return Cor.verde;
   }
 }
+
+export const corDoEstado = status => {
+  switch(status.toLowerCase()) {
+    case "ativo":
+      return Cor.verde;
+    default:
+      return Cor.cinzaEscuro;
+  }
+}

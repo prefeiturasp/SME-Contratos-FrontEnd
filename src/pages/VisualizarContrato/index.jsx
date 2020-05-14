@@ -254,7 +254,7 @@ class VisualizarContratos extends Component {
           <CardSuperior
             tipoServico={tipoServico}
             situacaoContratual={estado}
-            estadoContrato={situacao}
+            estadoContrato={situacao || ""}
             totalmensal={contrato.total_mensal}
             dataEncerramento={contrato.data_encerramento}
             diasEncerramento={contrato.dias_para_o_encerramento}
