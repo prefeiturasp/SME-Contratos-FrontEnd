@@ -1,4 +1,5 @@
 import moment from "moment";
+import { Cor } from "../../configs/colors.constants";
 
 export const mapStateToPayload = state => {
   let payload = {};
@@ -27,3 +28,14 @@ export const mapStateToPayload = state => {
 
   return payload;
 };
+
+export const corDoPrazo = dias => {
+  switch(true) {
+    case (dias <= 30):
+      return Cor.vermelho;
+    case (dias <= 60):
+      return Cor.laranja;
+    default:
+      return Cor.verde;
+  }
+}
