@@ -56,7 +56,7 @@ div.tabela-unidades {
   .checkbox-custom {
     position: absolute;
     top: 0px;
-    left: -30px;
+    left: 0px;
     height: 20px;
     width: 20px;
     background-color: #fff;
@@ -79,5 +79,18 @@ div.tabela-unidades {
     &.radio {
       border-radius: 15px;
     }
+  }
+  span.text {
+    padding-left: 2em;
+  }
+}
+
+.checkbox-label,
+.checkbox-custom {
+  top: unset;
+  position: relative;
+  padding-right: 20px;
+  &.small {
+    padding-right: 0px;
   }
 }

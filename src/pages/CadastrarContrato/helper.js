@@ -7,3 +7,10 @@ export const formatarDREs = (dres) => {
     return dre;
   });
 };
+
+export const formatarUnidades = (unidades) => {
+  return unidades.map((unidade) => {
+    unidade.checked = false;
+    return unidade;
+  });
+};

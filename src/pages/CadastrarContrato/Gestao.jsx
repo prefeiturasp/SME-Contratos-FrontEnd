@@ -6,7 +6,7 @@ import UnidadeEnvolvidas from "../VisualizarContrato/UnidadesEnvolvidas";
 import { getNucleos } from "../../service/Nucleos.service";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
 import { getDiretoriasRegionais } from "../../service/DiretoriasRegionais.service";
-import { formatarDREs } from "./helper";
+import { formatarDREs, formatarUnidades } from "./helper";
 import { getEquipamentos } from "../../service/Equipamentos.service";
 import "./style.scss";
 
@@ -23,6 +23,7 @@ export default class Gestao extends Component {
     tp_unidade: "",
     tp_unidade_escolar: "",
     unidades: null,
+    todosSelecionados: false,
   };
 
   async componentDidMount() {
@@ -76,8 +77,23 @@ export default class Gestao extends Component {
 
   filtrar = async () => {
     const response = await getEquipamentos(this.state);
-    this.setState({ unidades: response.data.results });
-    console.log(this.unidades);
+    this.setState({ unidades: formatarUnidades(response.data.results) });
+  };
+
+  checkUnidade = (index) => {
+    let { unidades } = this.state;
+    unidades[index].checked = !unidades[index].checked;
+    this.setState({ unidades });
+  };
+
+  selecionarTodos = () => {
+    let { unidades, todosSelecionados } = this.state;
+    todosSelecionados = !todosSelecionados;
+    unidades = unidades.map((unidade) => {
+      unidade.checked = todosSelecionados;
+      return unidade;
+    });
+    this.setState({ unidades, todosSelecionados });
   };
 
   render() {
@@ -88,6 +104,7 @@ export default class Gestao extends Component {
       emailUsuario,
       tp_unidade,
       unidades,
+      todosSelecionados,
     } = this.state;
     return (
       <>
@@ -271,6 +288,18 @@ export default class Gestao extends Component {
           <hr />
           {unidades && (
             <div className="tabela-unidades">
+              <label htmlFor="check" className="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="check"
+                  checked={todosSelecionados}
+                />
+                <span
+                  onClick={() => this.selecionarTodos()}
+                  className="checkbox-custom"
+                />{" "}
+                <span className="text">Selecionar todos</span>
+              </label>
               <table>
                 <thead>
                   <tr className="row">
@@ -285,13 +314,22 @@ export default class Gestao extends Component {
                   {unidades.map((unidade, key) => {
                     return (
                       <tr key={key} className="row">
-                        <td className="col-1">
+                        <td className="col-2">
                           <label htmlFor="check" className="checkbox-label">
-                            <input type="checkbox" name="check" />
-                            <span className="checkbox-custom" />{" "}a
+                            <input
+                              type="checkbox"
+                              name="check"
+                              checked={unidade.checked}
+                            />
+                            <span
+                              onClick={() => this.checkUnidade(key)}
+                              className="checkbox-custom"
+                            />{" "}
+                            <span className="text">
+                              {unidade.cd_equipamento}
+                            </span>
                           </label>
                         </td>
-                        <td className="col-1">{unidade.cd_equipamento}</td>
                         <td className="col-3">{unidade.nm_equipamento}</td>
                         <td className="col-3">
                           {unidade.logradouro}, {unidade.bairro}
