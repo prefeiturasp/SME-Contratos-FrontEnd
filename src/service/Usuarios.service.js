@@ -1,6 +1,6 @@
 import api from "./Api";
 import { getHeaderToken, getUsuario } from "./auth.service";
-import CONFIG from "../configs/config.constants";
+import * as CONFIG from "../configs/config.constants";
 
 export const getUsuariosLookup = () => {
     const AUTH_HEADER = {
