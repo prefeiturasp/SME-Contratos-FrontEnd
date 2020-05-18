@@ -85,7 +85,7 @@ class VisualizarContratos extends Component {
       usuarios: [],
       totalMensal: 0.0,
       dataEncerramento: null,
-      referencia_encerramento: null
+      referencia_encerramento: DATA_ORDEM_INICIO,
     };
 
     this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
@@ -157,35 +157,37 @@ class VisualizarContratos extends Component {
   };
 
   alteraDiasVigencia = dias => {
-    this.setState({ vigencia_em_dias: dias }, this.recalculaEncerramento());
+    this.setState({ vigencia_em_dias: dias }, () => this.recalculaEncerramento());
   };
 
   alteraDataAssinatura = data => {
     const data_assinatura = moment(data).format("YYYY-MM-DD");
-    this.setState({ data_assinatura }, this.recalculaEncerramento());
+    this.setState({ data_assinatura }, () => this.recalculaEncerramento());
   };
 
   alteraDataOrdemInicio = data => {
     const data_ordem_inicio = moment(data).format("YYYY-MM-DD");
-    this.setState({ data_ordem_inicio }, this.recalculaEncerramento() );
+    this.setState({ data_ordem_inicio });
     
   };
 
   alteraReferenciaEncerramento = referencia_encerramento => {
-    this.setState({ referencia_encerramento }, this.recalculaEncerramento());
+    this.setState( { referencia_encerramento })
+    // TODO: implementar recalculo da data de encerramento
   }
 
   recalculaEncerramento = () => {
-    const dataRef = this.state.referencia_encerramento === DATA_ASSINATURA ? this.state.data_assinatura : this.state.data_ordem_inicio;
+    const dataRef =  this.state.data_assinatura;
     const dias = this.state.vigencia_em_dias
-    if (dias && dataRef) {
+    if (dias && dias.length && dataRef) {
+      console.log(dias)
       const parsedDate = typeof dataRef === "string" ? moment(dataRef).format("YYYY-MM-DD") : dataRef;
       const data = moment(parsedDate).format("DD/MM/YYYY");
       const novaData = moment(data, "DD/MM/YYYY")
         .add(dias, "days")
         .calendar();
       this.setState({
-        dataEncerramento: moment(novaData).format("DD/MM/YYYY")
+          dataEncerramento: moment(novaData).format("DD/MM/YYYY")
       });
     }
   };
@@ -435,9 +437,9 @@ class VisualizarContratos extends Component {
               </Row>
               <hr />
               <Row>
-                <Col sm={12} xs={12} lg={8} xl={8}>
+                <Col sm={12} xs={12} lg={9} xl={9}>
                   <Row>
-                    <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                    <Col xs={12} sm={12} md={12} lg={6} xl={6} className="mb-3">
                       <Label>Data Assinatura de Contrato</Label>
                       <br />
 
@@ -453,7 +455,7 @@ class VisualizarContratos extends Component {
                         id="data_assinatura"
                       />
                     </Col>
-                    <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                    <Col xs={12} sm={12} md={12} lg={6} xl={6} className="mb-3">
                       <Label>Data Ordem de Início</Label>
                       <br />
                       <Calendar
@@ -465,8 +467,26 @@ class VisualizarContratos extends Component {
                         disabled={disabilitado}
                       />
                     </Col>
-                    <Col sm={12} xs={12} md={12} lg={4} xl={4}>
-                      <FormGroup>
+                  </Row>
+                  <Row>
+                    <Col sm={12} xs={12} md={12} lg={6} xl={6}>
+                    <FormGroup>
+                        <Label>Referência para cálculo do encerramento</Label>
+                        <Dropdown
+                            options={referenciaEncerramentoOptions} 
+                            value={this.state.referencia_encerramento} 
+                            defaultValue={this.state.referencia_encerramento}
+                            onChange={e => this.alteraReferenciaEncerramento(e.target.value)}
+                            disabled={disabilitado}
+                            className="w-100"
+                            
+                        />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={12} xs={12} md={12} lg={6} xl={6}>
+                    <FormGroup>
                         <Label for="vigencia">Vigência de Contrato</Label>
                         <InputText
                           id="vigencia"
@@ -480,20 +500,6 @@ class VisualizarContratos extends Component {
                         />
                       </FormGroup>
                     </Col>
-                  </Row>
-                  <Row>
-                    <Col sm={12} xs={12} md={12} lg={6} xl={6}>
-                      <FormGroup>
-                        <Label>Referência para cálculo do encerramento</Label>
-                        <Dropdown
-                            options={referenciaEncerramentoOptions} 
-                            value={this.state.referencia_encerramento} 
-                            onChange={e => this.alteraReferenciaEncerramento(e.target.value)}
-                            autoWidth={true} 
-                            
-                        />
-                      </FormGroup>
-                    </Col>
                     <Col sm={12} xs={12} md={12} lg={6} xl={6}>
                       <FormGroup>
                         <Label>Data Encerramento de Contrato</Label>
@@ -502,7 +508,7 @@ class VisualizarContratos extends Component {
                     </Col>
                   </Row>
                 </Col>
-                <Col sm={12} xs={12} lg={4} xl={4}>
+                <Col sm={12} xs={12} lg={3} xl={3}>
                   <Row>
                     <Col>
                       <Label for="dataAssinatura">Contagem Vencimento</Label>
