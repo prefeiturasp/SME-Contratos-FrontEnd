@@ -26,6 +26,7 @@ import {
 import { getEmpresasLookup } from "../../service/Empresas.service";
 import DotacaoOrcamentaria from "./DotacaoOrcamentaria";
 import moment from "moment";
+import { comNomeUnico } from "../../utils/helper";
 export default class Informacoes extends Component {
   state = {
     situacao: [],
@@ -50,7 +51,7 @@ export default class Informacoes extends Component {
       tipoServicos,
       estado,
       situacao,
-      empresas,
+      empresas: comNomeUnico(empresas),
       dataEncerramento: contrato.data_encerramento
         ? moment(contrato.data_encerramento).format("DD/MM/YYYY")
         : null,
