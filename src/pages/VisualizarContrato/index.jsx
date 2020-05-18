@@ -529,7 +529,7 @@ class VisualizarContratos extends Component {
                   <Row>
                     <Col style={{ paddingTop: "0.4rem" }}>
                       <FormGroup className="p-grid p-fluid">
-                        <Label> </Label>
+                        <Label>Nome Empresa</Label>
                         <br />
                         <SelecionaEmpresa
                           selecionada={empresa_contratada}
