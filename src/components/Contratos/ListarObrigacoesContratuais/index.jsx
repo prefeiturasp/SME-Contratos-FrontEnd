@@ -179,6 +179,7 @@ export default class ListarObrigacoesContratuais extends Component {
         case "editar":
           return (
             <Column
+              key={col.field}
               body={this.actionTemplate.bind(this, col)}
               style={{ textAlign: "center", width: "8em" }}
             />
@@ -388,7 +389,7 @@ export default class ListarObrigacoesContratuais extends Component {
               />
             </Col>
             <Col lg={8} xl={8} className="p-fluid">
-              <label for="obrigacao">Obrigações Contratuais</label>
+              <label htmlFor="obrigacao">Obrigações Contratuais</label>
               <br />
               <Editor
                 headerTemplate={header}

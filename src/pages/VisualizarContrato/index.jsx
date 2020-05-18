@@ -43,12 +43,13 @@ import $ from "jquery";
 import moment from "moment";
 import { OK } from "http-status-codes";
 
+const nullToUndef = v =>  v === null ? undefined : v;
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
 
 const referenciaEncerramentoOptions = [
   {label:'Data da assinatura', value: DATA_ASSINATURA},
   {label:'Data da ordem de início', value: DATA_ORDEM_INICIO}
-]
+];
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -272,7 +273,7 @@ class VisualizarContratos extends Component {
           <CardSuperior
             tipoServico={tipoServico}
             situacaoContratual={estado}
-            estadoContrato={situacao}
+            estadoContrato={situacao || ""}
             totalmensal={contrato.total_mensal}
             dataEncerramento={contrato.data_encerramento}
             diasEncerramento={contrato.dias_para_o_encerramento}
@@ -353,7 +354,7 @@ class VisualizarContratos extends Component {
                     <Label form="termoContrato">Número Termo de Contrato</Label>
                     <InputText
                       id="termoContrato"
-                      value={termo_contrato}
+                      value={termo_contrato || ""}
                       onChange={e =>
                         this.setState({ termo_contrato: e.target.value })
                       }
@@ -371,12 +372,11 @@ class VisualizarContratos extends Component {
                       type="select"
                       onChange={e => this.selecionaTipoServico(e)}
                       disabled={disabilitado}
+                      defaultValue={tipoServico}
                     >
                       {tipoServicoOptions.map(value => {
-                        let selecionado =
-                          tipoServico === value.nome ? true : false;
                         return (
-                          <option selected={selecionado} value={value.uuid}>
+                          <option key={value.uuid}  value={value.uuid}>
                             {value.nome}
                           </option>
                         );
@@ -391,7 +391,7 @@ class VisualizarContratos extends Component {
                     <Label form="numeroProcesso">Número de Processo</Label>
                     <InputText
                       id="numeroProcesso"
-                      value={processo}
+                      value={nullToUndef(processo)}
                       onChange={e =>
                         this.setState({ processo: e.target.value })
                       }
@@ -417,7 +417,7 @@ class VisualizarContratos extends Component {
                   <InputText
                     disabled={true}
                     id="edital"
-                    value={numero_edital}
+                    value={nullToUndef(numero_edital)}
                     placeholder={"Ex: 00000000"}
                     className="w-100"
                     onChange={e =>
@@ -490,7 +490,7 @@ class VisualizarContratos extends Component {
                         <Label for="vigencia">Vigência de Contrato</Label>
                         <InputText
                           id="vigencia"
-                          value={vigencia_em_dias}
+                          value={nullToUndef(vigencia_em_dias)}
                           onChange={e =>
                             this.alteraDiasVigencia(e.target.value)
                           }
@@ -503,7 +503,7 @@ class VisualizarContratos extends Component {
                     <Col sm={12} xs={12} md={12} lg={6} xl={6}>
                       <FormGroup>
                         <Label>Data Encerramento de Contrato</Label>
-                        <Input value={dataEncerramento} disabled={true} />
+                        <Input value={dataEncerramento || ""} disabled={true} />
                       </FormGroup>
                     </Col>
                   </Row>
@@ -548,7 +548,7 @@ class VisualizarContratos extends Component {
                       <FormGroup>
                         <Label>CNPJ Empresa</Label>
                         <InputText
-                          value={empresa_contratada.cnpj}
+                          value={empresa_contratada ? empresa_contratada.cnpj : ""}
                           placeholder={"Digite nome da empresa"}
                           className="w-100 pb-2"
                           disabled={true}
@@ -563,7 +563,7 @@ class VisualizarContratos extends Component {
               <DotacaoOrcamentaria
                 dotacao={dotacao}
                 getDotacao={value => this.setState({ dotacao: value })}
-                disableded={disabilitado}
+                disabled={disabilitado}
                 setTotalMensal={value => this.setState({ totalMensal: value })}
                 totalMensal={totalMensal}
               />
@@ -605,7 +605,7 @@ class VisualizarContratos extends Component {
                       onChange={e =>
                         this.setState({ coordenador: e.target.value })
                       }
-                      value={coordenador}
+                      value={coordenador || ""}
                     >
                       {usuarios
                         ? usuarios.map((usuario, i) => {
@@ -663,7 +663,7 @@ class VisualizarContratos extends Component {
                     </Label>
                     <InputText
                       id="telefone-gestor"
-                      value={"(11) 98888-7777"}
+                      value={"(11) 98888-7777"} // TODO: Confirmar se essa informacao deve estar hardcoded.
                       className="w-100"
                       disabled={true}
                     />

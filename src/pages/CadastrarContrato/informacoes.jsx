@@ -26,6 +26,7 @@ import {
 import { getEmpresasLookup } from "../../service/Empresas.service";
 import DotacaoOrcamentaria from "./DotacaoOrcamentaria";
 import moment from "moment";
+import { comNomeUnico } from "../../utils/helper";
 import { REFERENCIA_ENCERRAMENTO } from "../../configs/config.constants";
 
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
@@ -58,7 +59,7 @@ export default class Informacoes extends Component {
       tipoServicos,
       estado,
       situacao,
-      empresas,
+      empresas: comNomeUnico(empresas),
       dataEncerramento: contrato.data_encerramento
         ? moment(contrato.data_encerramento).format("DD/MM/YYYY")
         : null,

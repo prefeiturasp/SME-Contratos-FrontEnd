@@ -1,15 +1,27 @@
 import React from "react";
 import { Row, Col, Card } from "reactstrap";
 import { formatadoMonetario, formatadorDeData } from "../../utils/formatador";
+import { corDoPrazo, corDoEstado } from "./helpers";
 
-export default props => {
+export const formataContagemVencimento = (dias) => {
+  switch (true) {
+    case dias === undefined:
+      return "";
+    case dias <= 0:
+      return "Zero dias";
+    default:
+      return `${dias} dias`;
+  }
+};
+
+export default (props) => {
   const {
     tipoServico,
     situacaoContratual,
     estadoContrato,
     totalmensal,
     dataEncerramento,
-    diasEncerramento
+    diasEncerramento,
   } = props;
   const styleTipoMensal = { color: "#42474A", fontWeight: "bold" };
   return (
@@ -30,7 +42,7 @@ export default props => {
                 {situacaoContratual}
               </h2>
               <b>Estado de Contrato:</b>{" "}
-              <span style={{ color: "green", fontWeight: "bold" }}>
+              <span style={{ color: corDoEstado(estadoContrato), fontWeight: "bold" }}>
                 {estadoContrato}
               </span>
             </Col>
@@ -50,8 +62,15 @@ export default props => {
             <Col>
               <i className="fas fa-stopwatch" /> Contagem Venc.
               <hr />
-              <h2 style={{ color: "#297805", fontWeight: "bold" }}>{diasEncerramento} dias</h2>
-              <br/>
+              <h2
+                style={{
+                  color: corDoPrazo(diasEncerramento),
+                  fontWeight: "bold",
+                }}
+              >
+                {formataContagemVencimento(diasEncerramento)}
+              </h2>
+              <br />
               <b>Data Venc.: {formatadorDeData(dataEncerramento)}</b>
             </Col>
           </Row>

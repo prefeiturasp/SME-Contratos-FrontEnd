@@ -4,7 +4,7 @@ import CurrencyInput from "react-currency-input";
 
 const DotacaoOrcamentaria = props => {
   const [dotacao, setDotacao] = useState([]);
-  const [total, setTotal] = useState([]);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     setDotacao(props.dotacao);
@@ -33,6 +33,7 @@ const DotacaoOrcamentaria = props => {
 
   const handleTotalMensal = (value, floatValue) => {
     setTotal(floatValue);
+    console.log(floatValue)
     props.setTotalMensal(floatValue);
   };
 
@@ -44,12 +45,11 @@ const DotacaoOrcamentaria = props => {
           <Label>Dotação Orçamentaria</Label>
           {dotacao.length ? (
             dotacao.map((value, i) => (
-              <FormGroup key={i} >
+              <FormGroup key={i}>
                 <Input
                   className="mb-2"
                   value={value}
-                  key={i}
-                  disabled={props.disableded}
+                  disabled={props.disabled}
                   onChange={e => alteraInput(e.target.value, i)}
                 />
               </FormGroup>
@@ -60,7 +60,7 @@ const DotacaoOrcamentaria = props => {
                 className="mb-2"
                 value=""
                 onChange={e => alteraInput(e.target.value, 1)}
-                disabled={props.disableded}
+                disabled={props.disabled}
               />
             </FormGroup>
           )}
@@ -69,7 +69,7 @@ const DotacaoOrcamentaria = props => {
             type="button"
             className="btn btn-link coad-color font-weight-bold"
             onClick={addNovoInput}
-            disabled={dotacao.length === 0 || props.disableded ? true : false}
+            disabled={dotacao.length === 0 || props.disabled ? true : false}
           >
             Adicionar Dotação
           </button>
