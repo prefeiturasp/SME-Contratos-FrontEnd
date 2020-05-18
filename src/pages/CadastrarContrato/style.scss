@@ -14,6 +14,13 @@ div.tabela-unidades {
         }
       }
     }
+    tbody {
+      tr {
+        td {
+          border-bottom: 1px solid gray;
+        }
+      }
+    }
   }
   th,
   td {
@@ -25,8 +32,43 @@ div.tabela-unidades {
 }
 
 div.tabela-unidades-selecionadas {
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
   table {
     width: 100%;
+    border: 1px solid gray;
+    thead {
+      tr {
+        border-bottom: 1px solid gray;
+      }
+    }
+    tbody {
+      tr {
+        td {
+          border-bottom: 1px solid gray;
+        }
+      }
+    }
+    th,
+    td {
+      padding: 8px 16px;
+    }
+    th {
+      background: #eee;
+    }
+  }
+  span.delete {
+    margin-left: 2em;
+    font-weight: bold;
+    background-color: #602a2a;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    &:hover {
+      background-color: #602a2a;
+    }
   }
 }
 

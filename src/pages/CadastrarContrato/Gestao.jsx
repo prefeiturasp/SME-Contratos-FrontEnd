@@ -25,7 +25,6 @@ export default class Gestao extends Component {
     tp_unidade_escolar: "",
     unidades: null,
     todosSelecionados: false,
-    rf_fiscal: null,
     nome_fiscal: null,
     suplentes: [],
     unidadesSelecionadas: [],
@@ -119,7 +118,7 @@ export default class Gestao extends Component {
       } else {
         if (key !== null) {
           let { suplentes } = this.state;
-          suplentes[key].rf = null;
+          suplentes[key].rf = undefined;
           suplentes[key].nome = "";
           this.setState({ suplentes });
         } else {
@@ -128,6 +127,18 @@ export default class Gestao extends Component {
             nome_fiscal: "",
           });
         }
+      }
+    } else {
+      if (key !== null) {
+        let { suplentes } = this.state;
+        suplentes[key].rf = rf;
+        suplentes[key].nome = "";
+        this.setState({ suplentes });
+      } else {
+        this.setState({
+          rf_fiscal: rf,
+          nome_fiscal: "",
+        });
       }
     }
   };
@@ -176,6 +187,12 @@ export default class Gestao extends Component {
       suplentes: [],
       selecionarTodos: false,
     });
+  };
+
+  removerUnidadeSelecionada = (key) => {
+    let { unidadesSelecionadas } = this.state;
+    unidadesSelecionadas.splice(key, 1);
+    this.setState({ unidadesSelecionadas });
   };
 
   render() {
@@ -526,6 +543,7 @@ export default class Gestao extends Component {
                       onClick={() => this.adicionarUnidadesSelecionadas()}
                       type="button"
                       className="btn-coad-primary mt-3"
+                      disabled={!lote || !nome_fiscal}
                     >
                       Adicionar complemento
                     </Button>
@@ -559,7 +577,15 @@ export default class Gestao extends Component {
                               .nm_exibicao_diretoria_referencia
                           }
                         </td>
-                        <td>{unidadeSelecionada.lote}</td>
+                        <td>
+                          {unidadeSelecionada.lote}
+                          <span
+                            onClick={() => this.removerUnidadeSelecionada(key)}
+                            className="delete"
+                          >
+                            x
+                          </span>
+                        </td>
                       </tr>
                     );
                   })}
