@@ -374,7 +374,7 @@ export default class ListarObrigacoesContratuais extends Component {
           <br />
           <Row>
             <Col lg={4} xl={4}>
-              <label for="item">Item</label>
+              <label htmlFor="item">Item</label>
               <br />
               <InputText
                 value={this.state.item}

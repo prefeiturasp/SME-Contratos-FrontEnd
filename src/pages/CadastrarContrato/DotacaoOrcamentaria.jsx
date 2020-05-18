@@ -44,7 +44,7 @@ const DotacaoOrcamentaria = props => {
           <Label>Dotação Orçamentaria</Label>
           {dotacao.length ? (
             dotacao.map((value, i) => (
-              <FormGroup>
+              <FormGroup key={i} >
                 <Input
                   className="mb-2"
                   value={value}
@@ -55,7 +55,7 @@ const DotacaoOrcamentaria = props => {
               </FormGroup>
             ))
           ) : (
-            <FormGroup>
+            <FormGroup key={0}>
               <Input
                 className="mb-2"
                 value=""

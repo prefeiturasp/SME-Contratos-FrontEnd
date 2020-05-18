@@ -13,7 +13,18 @@ export class SelecionaEmpresa extends Component {
 
   async componentDidMount() {
     const empresas = await getEmpresasLookup();
-    this.setState({ empresas, empresaSelecionada: this.props.selecionada });
+    const nomes = [];
+    const comNomeUnico = empresas.reduce((acc, empresa) => {
+      const nome = empresa.nome;
+      const count = nomes.filter(el => el === nome).length
+      if(count > 0) {
+        empresa.nome = `${nome} (${count+1})`
+      }
+      nomes.push(nome)
+      acc.push(empresa)
+      return acc;
+    }, [])
+    this.setState({ empresas: comNomeUnico, empresaSelecionada: this.props.selecionada });
   }
 
   selecionaEmpresa(event) {
