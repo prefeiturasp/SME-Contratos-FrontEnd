@@ -1,6 +1,6 @@
-let API_URL = process.env.REACT_APP_API_URL;
-let JWT_AUTH = `${API_URL}/api-token-auth/`;
-let ALIAS_TOKEN = "TOKEN";
+export let API_URL;
+export let JWT_AUTH;
+export let ALIAS_TOKEN;
 
 if (process.env.NODE_ENV === "production") {
   // This way we can pass params to static files. see Dockerfile.
@@ -9,9 +9,13 @@ if (process.env.NODE_ENV === "production") {
   JWT_AUTH = "API_URL_REPLACE_ME/api-token-auth/";
   //   USER_URL = "API_URL_REPLACE_ME/users/";
   //   API_MOCK = "API_MOCK_REPLACE_ME";
+}else{
+  API_URL = process.env.REACT_APP_API_URL;
+  JWT_AUTH = `${API_URL}/api-token-auth/`;
+  ALIAS_TOKEN = "TOKEN";
 }
 
-let CALENDAR_PT = {
+export const CALENDAR_PT = {
   firstDayOfWeek: 1,
   dayNames: [
     "domingo",
@@ -56,9 +60,9 @@ let CALENDAR_PT = {
   today: "Hoje"
 };
 
-module.exports = {
-  API_URL: API_URL,
-  JWT_AUTH: JWT_AUTH,
-  ALIAS_TOKEN: ALIAS_TOKEN,
-  CALENDAR_PT: CALENDAR_PT
-};
+export const REFERENCIA_ENCERRAMENTO = {
+  DATA_ASSINATURA: "DATA_ASSINATURA",
+  DATA_ORDEM_INICIO: "DATA_ORDEM_INICIO"
+}
+
+

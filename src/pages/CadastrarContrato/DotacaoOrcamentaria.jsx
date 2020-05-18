@@ -55,7 +55,7 @@ const DotacaoOrcamentaria = props => {
               </FormGroup>
             ))
           ) : (
-            <FormGroup>
+            <FormGroup key={0}>
               <Input
                 className="mb-2"
                 value=""

@@ -1,5 +1,5 @@
 import axios from "axios";
-import CONFIG from "../configs/config.constants";
+import * as CONFIG from "../configs/config.constants";
 import { verifyToken, saveLocation, logout } from "./auth.service";
 
 const instance = axios.create({
