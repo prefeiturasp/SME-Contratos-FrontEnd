@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col, Button, FormGroup, Input, Label } from "reactstrap";
-import { DataTable, Column } from "primereact/datatable";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 import { Button as AntButton } from 'antd';
 import {Button as PrimeButton} from 'primereact/button';
 import { getUnidades, getUnidade } from "../../service/Unidades.service";
@@ -358,7 +359,7 @@ class UnidadeEnvolvidas extends Component {
                   <Label>Lote Correspondente</Label>
                   <Input
                     disabled={disabilitado}
-                    value={this.state.lote}
+                    value={this.state.lote || ""}
                     placeholder="Digite Número do Lote"
                     onChange={e => this.setState({ lote: e.target.value })}
                   />
