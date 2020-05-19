@@ -67,7 +67,6 @@ class VisualizarContratos extends Component {
       empresa_contratada: {},
       objeto: "",
       observacoes: "",
-      estadoContrato: [],
       situacaoContrato: [],
       gestor: null,
       nucleo: null,
@@ -96,11 +95,9 @@ class VisualizarContratos extends Component {
     const param = getUrlParams();
     const tiposServicos = await getTiposServicoLookup();
     const contrato = await getContratoByUUID(param.uuid);
-    const estadoContrato = await getEstadosContrato();
     const usuarios = await getUsuariosLookup();
     this.setState({
       contrato,
-      estadoContrato,
       tipoServicoOptions: tiposServicos,
       coordenador: contrato.coordenador,
       usernameGestor: contrato.gestor ? contrato.gestor.username : "",
