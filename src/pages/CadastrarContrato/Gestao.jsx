@@ -187,6 +187,7 @@ export default class Gestao extends Component {
       suplentes: [],
       selecionarTodos: false,
     });
+    this.props.setUnidadesSelecionadas(unidadesSelecionadas);
   };
 
   removerUnidadeSelecionada = (key) => {
@@ -453,7 +454,12 @@ export default class Gestao extends Component {
                           <td className="col-2">
                             {unidade.nm_exibicao_diretoria_referencia}
                           </td>
-                          <td className="col-2">{unidade.dc_tp_equipamento}</td>
+                          <td className="col-2">
+                            {unidade.cd_tp_equipamento === 3 &&
+                            unidade.cd_tp_ua === 19
+                              ? "CEU"
+                              : unidade.dc_tp_equipamento}
+                          </td>
                         </tr>
                       );
                     })}
@@ -570,7 +576,12 @@ export default class Gestao extends Component {
                       <tr key={key}>
                         <td>{unidadeSelecionada.unidade.cd_equipamento}</td>
                         <td>{unidadeSelecionada.unidade.nm_equipamento}</td>
-                        <td>{unidadeSelecionada.unidade.dc_tp_equipamento}</td>
+                        <td>
+                          {unidadeSelecionada.unidade.cd_tp_equipamento === 3 &&
+                          unidadeSelecionada.unidade.cd_tp_ua === 19
+                            ? "CEU"
+                            : unidadeSelecionada.unidade.dc_tp_equipamento}
+                        </td>
                         <td>
                           {
                             unidadeSelecionada.unidade
@@ -593,7 +604,7 @@ export default class Gestao extends Component {
               </table>
             </div>
           )}
-          {/*<UnidadeEnvolvidas termo={this.props.termo} />*/}
+          <UnidadeEnvolvidas termo={this.props.termo} />
         </Card>
         <div className="alerta text-center alert alert-danger d-none">
           <strong>Para avançar, preencha os campos obrigatórios</strong>

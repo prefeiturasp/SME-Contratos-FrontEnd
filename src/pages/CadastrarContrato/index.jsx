@@ -38,6 +38,7 @@ export default class CadastrarContrato extends Component {
     situacaoContrato: "RASCUNHO",
     contrato: null,
     dotacao: [],
+    unidades_selecionadas: [],
   };
 
   async componentDidMount() {
@@ -75,6 +76,10 @@ export default class CadastrarContrato extends Component {
     });
   }
 
+  setUnidadesSelecionadas = (unidades_selecionadas) => {
+    this.setState({ unidades_selecionadas });
+  };
+
   cancelarCadastro = async () => {
     const { uuid_contrato } = this.state;
     const resultado = await CancelarContrato(uuid_contrato);
@@ -106,7 +111,9 @@ export default class CadastrarContrato extends Component {
   };
 
   handleSubmit = async (values) => {
-    const { uuid_contrato, dotacao } = this.state;
+    const { uuid_contrato, dotacao, unidades_selecionadas } = this.state;
+    values.unidades_selecionadas = unidades_selecionadas;
+    console.log(values);
     values["data_assinatura"] = moment(values.data_assinatura).format(
       "YYYY-MM-DD"
     );
@@ -150,17 +157,6 @@ export default class CadastrarContrato extends Component {
     } = this.state;
     const steps = [
       {
-        name: "Gestão/Unidade",
-        component: (
-          <Gestao
-            termo={termo_contrato}
-            cancelar={this.mostrarModalCancelar}
-            cancelamento={cancelamento}
-            contrato={contrato}
-          />
-        ),
-      },
-      {
         name: "Contrato/Empresa",
         component: (
           <Informacoes
@@ -181,7 +177,18 @@ export default class CadastrarContrato extends Component {
           />
         ),
       },
-
+      {
+        name: "Gestão/Unidade",
+        component: (
+          <Gestao
+            termo={termo_contrato}
+            cancelar={this.mostrarModalCancelar}
+            cancelamento={cancelamento}
+            contrato={contrato}
+            setUnidadesSelecionadas={this.setUnidadesSelecionadas}
+          />
+        ),
+      },
       {
         name: "Anexos/Observações",
         component: (
