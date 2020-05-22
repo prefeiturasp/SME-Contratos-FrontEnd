@@ -11,7 +11,7 @@ export default class Finalizar extends Component {
           className="coad-dialog"
           header="Cadastrar contrato"
           visible={true}
-          style={{ width: "50vw", "z-index": 1000 }}
+          style={{ width: "50vw", zIndex: 1000 }}
           modal={true}
           onHide={false}
           footer={

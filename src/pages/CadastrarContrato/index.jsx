@@ -206,7 +206,7 @@ export default class CadastrarContrato extends Component {
         <Dialog
           header="Cancelar cadastro de contrato"
           visible={this.state.visibleCancelar}
-          style={{ width: "50vw", "z-index": 1000 }}
+          style={{ width: "50vw", zIndex: 1000 }}
           modal={true}
           onHide={this.esconderCancelar}
           footer={
