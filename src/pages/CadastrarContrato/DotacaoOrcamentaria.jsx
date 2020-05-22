@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Row, Col, Label, Input, FormGroup } from "reactstrap";
 import CurrencyInput from "react-currency-input";
 import * as R from "ramda";
@@ -23,6 +23,7 @@ const DotacaoRow = ({
     </Col>
     <Col lg={4} xl={4}>
       <CurrencyInput
+        disabled={disabled}
         decimalSeparator=","
         thousandSeparator="."
         prefix="R$ "
@@ -43,10 +44,16 @@ const dotacaoVazia = () => ({
 
 const DotacaoOrcamentaria = ({ dotacoesSalvas, disabled = false }) => {
   const [dotacoes, setDotacoes] = useState(dotacoesSalvas || [dotacaoVazia()]);
+  const [erros, setErros] = useState([])
+
+  useEffect(() => {
+    atualizaErros()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dotacoes]);
 
   const adicionaLinha = () => {
     setDotacoes([...dotacoes, dotacaoVazia()]);
-  };
+  }; 
 
   const removeLinha = () => {
     if(dotacoes.length > 1) {
@@ -61,22 +68,38 @@ const DotacaoOrcamentaria = ({ dotacoesSalvas, disabled = false }) => {
     const obj = dotacoes[index];
     const arr = R.update(index, { ...obj, descricao }, dotacoes);
     setDotacoes(arr);
-    atualizaErros();
   };
 
   const alteraValor = (index, valor) => {
     const obj = dotacoes[index];
     const arr = R.update(index, { ...obj, valor }, dotacoes);
     setDotacoes(arr);
-    atualizaErros();
   };
 
   const formularioEstaLimpo = () => {
     return dotacoes.length === 1 && dotacoes[0].descricao.length === 0
   }
 
+  const testaDuplicacao = (errosCampo, { descricao : essaDescricao }, arr) => {
+    const len = arr.filter(({descricao}) => descricao === essaDescricao ).length
+    if(len > 1) errosCampo.push("Valor duplicado")
+  }
+
+  const testaVazio = (errosCampo, {descricao, valor}) => {
+    if(!descricao.length) errosCampo.push("Preencha uma descrição")
+    if(!valor) errosCampo.push("Preencha um valor")
+  }
+
   const atualizaErros = () => {
-    //TBI
+    console.log(dotacoes)
+    const arr = Array.from(Array(dotacoes.length), () => []);
+    console.log(arr)
+    dotacoes.forEach((dotacao, index) => {
+      testaDuplicacao(arr[index], dotacao, dotacoes);
+      testaVazio(arr[index], dotacao, dotacoes);
+    })
+    console.log(arr)
+    setErros(arr);
   };
   return (
     <Fragment>
@@ -99,6 +122,7 @@ const DotacaoOrcamentaria = ({ dotacoesSalvas, disabled = false }) => {
             dotacao={el}
             alteraDescricao={alteraDescricao}
             alteraValor={alteraValor}
+            disabled={disabled}
           />
         ))}
 
