@@ -100,7 +100,7 @@ export const getSituacoesContrato = () => {
     headers: getHeaderToken()
   };
   return Api
-    .get(`${CONFIG.API_URL}/contratos/situacoes/`, AUTH_HEADER)
+    .get(`${CONFIG.API_URL}/contratos/situacoes/`)
     .then(res => res.data);
 };
 

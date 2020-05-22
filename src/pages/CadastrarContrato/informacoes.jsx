@@ -343,7 +343,7 @@ export default class Informacoes extends Component {
         </Card>
         <Card>
           <DotacaoOrcamentaria
-            dotacao={this.props.dotacao}
+            listaDotacoes={this.props.dotacao}
             getDotacao={value => this.props.getDotacao(value)}
           />
         </Card>
