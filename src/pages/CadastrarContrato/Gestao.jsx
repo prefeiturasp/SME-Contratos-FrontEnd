@@ -4,13 +4,11 @@ import { Row, Col, Card, Input as InputBootStrap, Button } from "reactstrap";
 import { CoadSelect } from "../../components/Contratos/CoadForm";
 import { getNucleos } from "../../service/Nucleos.service";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
-import { getDiretoriasRegionais } from "../../service/DiretoriasRegionais.service";
-import { formatarDREs, formatarUnidades } from "./helper";
-import { getEquipamentos } from "../../service/Equipamentos.service";
-import { getUsuarioByUserName } from "../../service/Usuarios.service";
+import { TabelaUnidades } from "./UnidadesEnvolvidas/TabelaUnidades";
+import { FiltroUnidades } from "./UnidadesEnvolvidas/FiltroUnidades";
+import { TabelaUnidadesParaSelecionar } from "./UnidadesEnvolvidas/TabelaUnidadesParaSelecionar";
+import { AdicionarComplementos } from "./UnidadesEnvolvidas/AdicionarComplementos";
 import "./style.scss";
-import { TabelaUnidades } from "./LotesDeUnidades/TabelaUnidades";
-import { FiltroUnidades } from "./LotesDeUnidades/FiltroUnidades";
 
 export default class Gestao extends Component {
   state = {
@@ -91,64 +89,6 @@ export default class Gestao extends Component {
     this.setState({ unidades, todosSelecionados });
   };
 
-  pesquisarRF = async (rf, key = null) => {
-    if (rf && rf.length === 7) {
-      const resultado = await getUsuarioByUserName(rf);
-      if (resultado) {
-        if (key !== null) {
-          let { suplentes } = this.state;
-          suplentes[key].rf = rf;
-          suplentes[key].nome = resultado.nome;
-          this.setState({ suplentes });
-        } else {
-          this.setState({
-            rf_fiscal: rf,
-            nome_fiscal: resultado.nome,
-          });
-        }
-      } else {
-        if (key !== null) {
-          let { suplentes } = this.state;
-          suplentes[key].rf = undefined;
-          suplentes[key].nome = "";
-          this.setState({ suplentes });
-        } else {
-          this.setState({
-            rf_fiscal: null,
-            nome_fiscal: "",
-          });
-        }
-      }
-    } else {
-      if (key !== null) {
-        let { suplentes } = this.state;
-        suplentes[key].rf = rf;
-        suplentes[key].nome = "";
-        this.setState({ suplentes });
-      } else {
-        this.setState({
-          rf_fiscal: rf,
-          nome_fiscal: "",
-        });
-      }
-    }
-  };
-
-  adicionarSuplente = () => {
-    let { suplentes } = this.state;
-    suplentes.push({
-      nome: "",
-      rf: "",
-    });
-    this.setState({ suplentes });
-  };
-
-  removerSuplente = (index) => {
-    let { suplentes } = this.state;
-    suplentes.splice(index, 1);
-    this.setState({ suplentes });
-  };
-
   adicionarUnidadesSelecionadas = () => {
     const {
       unidades,
@@ -181,6 +121,15 @@ export default class Gestao extends Component {
     this.props.setUnidadesSelecionadas(unidadesSelecionadas);
   };
 
+  setFiscalESuplentes = ({ lote, rf_fiscal, nome_fiscal, suplentes }) => {
+    this.setState({
+      lote,
+      rf_fiscal,
+      nome_fiscal,
+      suplentes,
+    });
+  };
+
   removerUnidadeSelecionada = (key) => {
     let { unidadesSelecionadas } = this.state;
     unidadesSelecionadas.splice(key, 1);
@@ -194,11 +143,7 @@ export default class Gestao extends Component {
       emailUsuario,
       unidades,
       todosSelecionados,
-      nome_fiscal,
-      suplentes,
       unidadesSelecionadas,
-      rf_fiscal,
-      lote,
     } = this.state;
     return (
       <>
@@ -279,158 +224,19 @@ export default class Gestao extends Component {
           <hr />
           {unidades && (
             <Fragment>
-              <div className="tabela-unidades">
-                <label htmlFor="check" className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    name="check"
-                    checked={todosSelecionados}
-                  />
-                  <span
-                    onClick={() => this.selecionarTodos()}
-                    className="checkbox-custom"
-                  />{" "}
-                  <span className="text">Selecionar todos</span>
-                </label>
-                <table>
-                  <thead>
-                    <tr className="row">
-                      <th className="col-2">Código EOL</th>
-                      <th className="col-3">Nome da Unidade</th>
-                      <th className="col-3">Endereço</th>
-                      <th className="col-2">DRE</th>
-                      <th className="col-2">Tipo de Unidade</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {unidades.map((unidade, key) => {
-                      return (
-                        <tr key={key} className="row">
-                          <td className="col-2">
-                            <label htmlFor="check" className="checkbox-label">
-                              <input
-                                type="checkbox"
-                                name="check"
-                                checked={unidade.checked}
-                              />
-                              <span
-                                onClick={() => this.checkUnidade(key)}
-                                className="checkbox-custom"
-                              />{" "}
-                              <span className="text">
-                                {unidade.cd_equipamento}
-                              </span>
-                            </label>
-                          </td>
-                          <td className="col-3">{unidade.nm_equipamento}</td>
-                          <td className="col-3">
-                            {unidade.logradouro}, {unidade.bairro}
-                          </td>
-                          <td className="col-2">
-                            {unidade.nm_exibicao_diretoria_referencia}
-                          </td>
-                          <td className="col-2">
-                            {unidade.cd_tp_equipamento === 3 &&
-                            unidade.cd_tp_ua === 19
-                              ? "CEU"
-                              : unidade.dc_tp_equipamento}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              <TabelaUnidadesParaSelecionar
+                unidades={unidades}
+                checkUnidade={this.checkUnidade}
+                todosSelecionados={todosSelecionados}
+                selecionarTodos={this.selecionarTodos}
+              />
               <hr />
-              <div className="adicionar-complementos">
-                <div className="title font-weight-bold">
-                  Adicionar Complemento na Lista de Unidades do Filtro
-                </div>
-                <div className="row pt-3">
-                  <div className="col-4">
-                    <label>Lote</label>
-                    <InputBootStrap
-                      name="lote"
-                      value={lote}
-                      onChange={(event) =>
-                        this.setState({ lote: event.target.value })
-                      }
-                      placeholder="Lote das unidades"
-                    />
-                  </div>
-                  <div className="col-4">
-                    <label>RF do Fiscal do Contrato</label>
-                    <InputBootStrap
-                      name="rf_fiscal"
-                      value={rf_fiscal}
-                      onChange={(event) => this.pesquisarRF(event.target.value)}
-                      placeholder="RF do Fiscal"
-                    />
-                  </div>
-                  <div className="col-4">
-                    <label>Nome do Fiscal do Contrato</label>
-                    <InputBootStrap
-                      value={nome_fiscal}
-                      name="nome_fiscal"
-                      disabled
-                    />
-                  </div>
-                </div>
-                {suplentes.map((suplente, key) => {
-                  return (
-                    <div key={key} className="row pt-2">
-                      <div className="col-4">
-                        <label>RF do Suplente</label>
-                        <InputBootStrap
-                          name="rf"
-                          onChange={(event) =>
-                            this.pesquisarRF(event.target.value, key)
-                          }
-                          placeholder="RF do Suplente"
-                        />
-                      </div>
-                      <div className="col-4">
-                        <label>Nome do Suplente</label>
-                        <InputBootStrap
-                          value={suplente.nome}
-                          name="nome"
-                          disabled
-                        />
-                      </div>
-                      <div className="col-4 mt-auto">
-                        <Button
-                          type="button"
-                          onClick={() => this.removerSuplente(key)}
-                          className="btn-coad-primary"
-                        >
-                          Remover
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-                <div className="row">
-                  <div className="col-4">
-                    <Button
-                      onClick={() => this.adicionarSuplente()}
-                      type="button"
-                      className="btn-coad-primary mt-3"
-                    >
-                      Adicionar suplente
-                    </Button>
-                  </div>
-                  <div className="col-4 offset-4">
-                    <Button
-                      onClick={() => this.adicionarUnidadesSelecionadas()}
-                      type="button"
-                      className="btn-coad-primary mt-3"
-                      disabled={!lote || !nome_fiscal}
-                    >
-                      Adicionar complemento
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              <AdicionarComplementos
+                adicionarUnidadesSelecionadas={
+                  this.adicionarUnidadesSelecionadas
+                }
+                setFiscalESuplentes={this.setFiscalESuplentes}
+              />
             </Fragment>
           )}
           <TabelaUnidades

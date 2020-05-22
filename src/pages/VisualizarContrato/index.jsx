@@ -45,7 +45,7 @@ import { Switch } from "antd";
 import $ from "jquery";
 import moment from "moment";
 import { OK } from "http-status-codes";
-import { TabelaUnidades } from "../CadastrarContrato/LotesDeUnidades/TabelaUnidades";
+import { TabelaUnidades } from "../CadastrarContrato/UnidadesEnvolvidas/TabelaUnidades";
 
 const nullToUndef = (v) => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
