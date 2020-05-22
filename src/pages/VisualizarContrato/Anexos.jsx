@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col } from "reactstrap";
 import { CoadTabs } from "../../components/Contratos/CoadTabs";
-import CONFIG from "../../configs/config.constants";
+import * as CONFIG from "../../configs/config.constants";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
 import "./style.scss";

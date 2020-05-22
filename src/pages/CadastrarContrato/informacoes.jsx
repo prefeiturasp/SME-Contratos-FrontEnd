@@ -26,6 +26,15 @@ import {
 import { getEmpresasLookup } from "../../service/Empresas.service";
 import DotacaoOrcamentaria from "./DotacaoOrcamentaria";
 import moment from "moment";
+import { comNomeUnico } from "../../utils/helper";
+import { REFERENCIA_ENCERRAMENTO } from "../../configs/config.constants";
+
+const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
+
+const referenciaEncerramentoOptions = [
+  {label:'Data da assinatura', value: DATA_ASSINATURA},
+  {label:'Data da ordem de início', value: DATA_ORDEM_INICIO}
+]
 export default class Informacoes extends Component {
   state = {
     situacao: [],
@@ -50,7 +59,7 @@ export default class Informacoes extends Component {
       tipoServicos,
       estado,
       situacao,
-      empresas,
+      empresas: comNomeUnico(empresas),
       dataEncerramento: contrato.data_encerramento
         ? moment(contrato.data_encerramento).format("DD/MM/YYYY")
         : null,
@@ -251,13 +260,31 @@ export default class Informacoes extends Component {
                 label="Data Assinatura de Contrato"
               />
             </Col>
-            <Col lg={8} xl={8}>
+            <Col lg={3} xl={3}>
               <Field
                 component={CoadCalendar}
                 name="data_ordem_inicio"
                 id="data_ordem_inicio"
                 label="Data Ordem de Início"
               />
+            </Col>
+            <Col lg={5} xl={5}>
+            <CoadSelect
+                label="Referência para cálculo do encerramento"
+                name="referencia_encerramento"
+                onBlur={value => {}}
+              >
+                <option value="">Selecione</option>
+                {empresas
+                  ? referenciaEncerramentoOptions.map((option, index) => {
+                      return (
+                        <option key={index} value={option.value}>
+                          {option.label}
+                        </option>
+                      );
+                    })
+                  : ""}
+              </CoadSelect>
             </Col>
           </Row>
           <Row className="mt-3">

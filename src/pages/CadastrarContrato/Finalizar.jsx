@@ -28,7 +28,7 @@ export default class Finalizar extends Component {
             </div>
           }
         >
-          Deseja cadastrar contato?
+          Deseja cadastrar contrato?
         </Dialog>
       </>
     );

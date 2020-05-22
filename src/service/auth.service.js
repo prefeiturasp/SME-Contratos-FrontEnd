@@ -1,5 +1,5 @@
 import decode from "jwt-decode";
-import CONFIG from "../configs/config.constants";
+import * as CONFIG from "../configs/config.constants";
 import axios from "axios";
 import { setFlashMessage } from "../utils/flashMessages";
 import { BAD_REQUEST, OK } from "http-status-codes";

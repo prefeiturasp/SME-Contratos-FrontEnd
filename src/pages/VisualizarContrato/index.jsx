@@ -14,6 +14,7 @@ import {
   Alert
 } from "reactstrap";
 import { Editor } from "primereact/editor";
+import { Dropdown } from "primereact/dropdown";
 import UnidadeEnvolvidas from "./UnidadesEnvolvidas";
 import Anexos from "./Anexos";
 import {
@@ -24,7 +25,7 @@ import {
 import { getUrlParams } from "../../utils/params";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
-import { CALENDAR_PT } from "../../configs/config.constants";
+import { CALENDAR_PT, REFERENCIA_ENCERRAMENTO } from "../../configs/config.constants";
 import SituacaoRadio from "../../components/Contratos/SelecionaSituacaoContrato/SituacaoRadio";
 import EstadoRadio from "../../components/Contratos/SelecionaEstadoContrato/EstadoRadio";
 import { SelecionaEmpresa } from "../../components/Contratos/SelecionaEmpresa";
@@ -41,6 +42,14 @@ import { Switch } from "antd";
 import $ from "jquery";
 import moment from "moment";
 import { OK } from "http-status-codes";
+
+const nullToUndef = v =>  v === null ? undefined : v;
+const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
+
+const referenciaEncerramentoOptions = [
+  {label:'Data da assinatura', value: DATA_ASSINATURA},
+  {label:'Data da ordem de início', value: DATA_ORDEM_INICIO}
+];
 
 class VisualizarContratos extends Component {
   constructor(props) {
@@ -76,7 +85,8 @@ class VisualizarContratos extends Component {
       alert: false,
       usuarios: [],
       totalMensal: 0.0,
-      dataEncerramento: null
+      dataEncerramento: null,
+      referencia_encerramento: DATA_ORDEM_INICIO,
     };
 
     this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
@@ -98,7 +108,8 @@ class VisualizarContratos extends Component {
       gestor: contrato.gestor,
       dataEncerramento: contrato.data_encerramento
         ? moment(contrato.data_encerramento).format("DD/MM/YYYY")
-        : null
+        : null,
+      referencia_encerramento: contrato.referencia_encerramento,
     });
     this.propsToState(contrato);
     $(".ql-editor").prop("contenteditable", "false");
@@ -147,29 +158,37 @@ class VisualizarContratos extends Component {
   };
 
   alteraDiasVigencia = dias => {
-    this.setState({ vigencia_em_dias: dias });
-
-    this.calculaEncerramento(
-      this.state.data_assinatura,
-      this.state.vigencia_em_dias
-    );
+    this.setState({ vigencia_em_dias: dias }, () => this.recalculaEncerramento());
   };
 
   alteraDataAssinatura = data => {
     const data_assinatura = moment(data).format("YYYY-MM-DD");
-    this.setState({ data_assinatura });
-    this.calculaEncerramento(data_assinatura, this.state.vigencia_em_dias);
+    this.setState({ data_assinatura }, () => this.recalculaEncerramento());
   };
 
-  calculaEncerramento = (data, dias) => {
-    if (data) {
-      data = moment(data).format("DD/MM/YYYY");
+  alteraDataOrdemInicio = data => {
+    const data_ordem_inicio = moment(data).format("YYYY-MM-DD");
+    this.setState({ data_ordem_inicio });
+    
+  };
+
+  alteraReferenciaEncerramento = referencia_encerramento => {
+    this.setState( { referencia_encerramento })
+    // TODO: implementar recalculo da data de encerramento
+  }
+
+  recalculaEncerramento = () => {
+    const dataRef =  this.state.data_assinatura;
+    const dias = this.state.vigencia_em_dias
+    if (dias && dias.length && dataRef) {
+      console.log(dias)
+      const parsedDate = typeof dataRef === "string" ? moment(dataRef).format("YYYY-MM-DD") : dataRef;
+      const data = moment(parsedDate).format("DD/MM/YYYY");
       const novaData = moment(data, "DD/MM/YYYY")
         .add(dias, "days")
         .calendar();
-
       this.setState({
-        dataEncerramento: moment(novaData).format("DD/MM/YYYY")
+          dataEncerramento: moment(novaData).format("DD/MM/YYYY")
       });
     }
   };
@@ -254,7 +273,7 @@ class VisualizarContratos extends Component {
           <CardSuperior
             tipoServico={tipoServico}
             situacaoContratual={estado}
-            estadoContrato={situacao}
+            estadoContrato={situacao || ""}
             totalmensal={contrato.total_mensal}
             dataEncerramento={contrato.data_encerramento}
             diasEncerramento={contrato.dias_para_o_encerramento}
@@ -335,7 +354,7 @@ class VisualizarContratos extends Component {
                     <Label form="termoContrato">Número Termo de Contrato</Label>
                     <InputText
                       id="termoContrato"
-                      value={termo_contrato}
+                      value={termo_contrato || ""}
                       onChange={e =>
                         this.setState({ termo_contrato: e.target.value })
                       }
@@ -353,12 +372,11 @@ class VisualizarContratos extends Component {
                       type="select"
                       onChange={e => this.selecionaTipoServico(e)}
                       disabled={disabilitado}
+                      defaultValue={tipoServico}
                     >
                       {tipoServicoOptions.map(value => {
-                        let selecionado =
-                          tipoServico === value.nome ? true : false;
                         return (
-                          <option selected={selecionado} value={value.uuid}>
+                          <option key={value.uuid}  value={value.uuid}>
                             {value.nome}
                           </option>
                         );
@@ -373,7 +391,7 @@ class VisualizarContratos extends Component {
                     <Label form="numeroProcesso">Número de Processo</Label>
                     <InputText
                       id="numeroProcesso"
-                      value={processo}
+                      value={nullToUndef(processo)}
                       onChange={e =>
                         this.setState({ processo: e.target.value })
                       }
@@ -399,7 +417,7 @@ class VisualizarContratos extends Component {
                   <InputText
                     disabled={true}
                     id="edital"
-                    value={numero_edital}
+                    value={nullToUndef(numero_edital)}
                     placeholder={"Ex: 00000000"}
                     className="w-100"
                     onChange={e =>
@@ -419,9 +437,9 @@ class VisualizarContratos extends Component {
               </Row>
               <hr />
               <Row>
-                <Col sm={12} xs={12} lg={8} xl={8}>
+                <Col sm={12} xs={12} lg={9} xl={9}>
                   <Row>
-                    <Col xs={12} sm={12} md={12} lg={6} xl={6}>
+                    <Col xs={12} sm={12} md={12} lg={6} xl={6} className="mb-3">
                       <Label>Data Assinatura de Contrato</Label>
                       <br />
 
@@ -437,14 +455,12 @@ class VisualizarContratos extends Component {
                         id="data_assinatura"
                       />
                     </Col>
-                    <Col xs={12} sm={12} md={12} lg={6} xl={6}>
+                    <Col xs={12} sm={12} md={12} lg={6} xl={6} className="mb-3">
                       <Label>Data Ordem de Início</Label>
                       <br />
                       <Calendar
                         value={data_ordem_inicio}
-                        onChange={e =>
-                          this.setState({ data_ordem_inicio: e.value })
-                        }
+                        onChange={e => this.alteraDataOrdemInicio(e.value)}
                         showIcon={true}
                         locale={CALENDAR_PT}
                         dateFormat="dd/mm/yy"
@@ -454,11 +470,27 @@ class VisualizarContratos extends Component {
                   </Row>
                   <Row>
                     <Col sm={12} xs={12} md={12} lg={6} xl={6}>
-                      <FormGroup>
+                    <FormGroup>
+                        <Label>Referência para cálculo do encerramento</Label>
+                        <Dropdown
+                            options={referenciaEncerramentoOptions} 
+                            value={this.state.referencia_encerramento} 
+                            defaultValue={this.state.referencia_encerramento}
+                            onChange={e => this.alteraReferenciaEncerramento(e.target.value)}
+                            disabled={disabilitado}
+                            className="w-100"
+                            
+                        />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={12} xs={12} md={12} lg={6} xl={6}>
+                    <FormGroup>
                         <Label for="vigencia">Vigência de Contrato</Label>
                         <InputText
                           id="vigencia"
-                          value={vigencia_em_dias}
+                          value={nullToUndef(vigencia_em_dias)}
                           onChange={e =>
                             this.alteraDiasVigencia(e.target.value)
                           }
@@ -471,12 +503,12 @@ class VisualizarContratos extends Component {
                     <Col sm={12} xs={12} md={12} lg={6} xl={6}>
                       <FormGroup>
                         <Label>Data Encerramento de Contrato</Label>
-                        <Input value={dataEncerramento} disabled={true} />
+                        <Input value={dataEncerramento || ""} disabled={true} />
                       </FormGroup>
                     </Col>
                   </Row>
                 </Col>
-                <Col sm={12} xs={12} lg={4} xl={4}>
+                <Col sm={12} xs={12} lg={3} xl={3}>
                   <Row>
                     <Col>
                       <Label for="dataAssinatura">Contagem Vencimento</Label>
@@ -516,7 +548,7 @@ class VisualizarContratos extends Component {
                       <FormGroup>
                         <Label>CNPJ Empresa</Label>
                         <InputText
-                          value={empresa_contratada.cnpj}
+                          value={empresa_contratada ? empresa_contratada.cnpj : ""}
                           placeholder={"Digite nome da empresa"}
                           className="w-100 pb-2"
                           disabled={true}
@@ -531,7 +563,7 @@ class VisualizarContratos extends Component {
               <DotacaoOrcamentaria
                 dotacao={dotacao}
                 getDotacao={value => this.setState({ dotacao: value })}
-                disableded={disabilitado}
+                disabled={disabilitado}
                 setTotalMensal={value => this.setState({ totalMensal: value })}
                 totalMensal={totalMensal}
               />
@@ -573,7 +605,7 @@ class VisualizarContratos extends Component {
                       onChange={e =>
                         this.setState({ coordenador: e.target.value })
                       }
-                      value={coordenador}
+                      value={coordenador || ""}
                     >
                       {usuarios
                         ? usuarios.map((usuario, i) => {
@@ -598,7 +630,7 @@ class VisualizarContratos extends Component {
                       onUpdate={valor => this.setState({ gestor: valor })}
                       disabled={disabilitado}
                       userName={usernameGestor}
-                      onClear={true}
+                      onClear={() => {}}
                     />
                   </FormGroup>
                 </Col>
@@ -631,7 +663,7 @@ class VisualizarContratos extends Component {
                     </Label>
                     <InputText
                       id="telefone-gestor"
-                      value={"(11) 98888-7777"}
+                      value={"(11) 98888-7777"} // TODO: Confirmar se essa informacao deve estar hardcoded.
                       className="w-100"
                       disabled={true}
                     />
