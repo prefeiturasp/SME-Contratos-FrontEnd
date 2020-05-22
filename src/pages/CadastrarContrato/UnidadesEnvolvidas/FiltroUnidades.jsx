@@ -25,6 +25,16 @@ export class FiltroUnidades extends Component {
     });
   }
 
+  limpar = () => {
+    this.setState({
+      cd_equipamento: "",
+      nm_equipamento: "",
+      dre: "",
+      tp_unidade: "",
+      tp_unidade_escolar: "",
+    });
+  };
+
   filtrar = async () => {
     const response = await getEquipamentos(this.state);
     this.setState({ unidades: formatarUnidades(response.data.results) });
@@ -46,6 +56,7 @@ export class FiltroUnidades extends Component {
           <div className="col-3">
             <label>Código EOL</label>
             <InputBootStrap
+              value={cd_equipamento}
               name="cd_equipamento"
               onChange={(event) =>
                 this.setState({ cd_equipamento: event.target.value })
@@ -55,6 +66,7 @@ export class FiltroUnidades extends Component {
           </div>
           <div className="col-3">
             <CoadSelect
+              value={dre}
               onChange={(event) => this.setState({ dre: event.target.value })}
               label="DRE"
               name="dre"
@@ -73,6 +85,7 @@ export class FiltroUnidades extends Component {
           </div>
           <div className="col-3">
             <CoadSelect
+              value={tp_unidade}
               onChange={(event) =>
                 this.setState({
                   tp_unidade: event.target.value,
@@ -91,6 +104,7 @@ export class FiltroUnidades extends Component {
           {tp_unidade === "ESC" && (
             <div className="col-3">
               <CoadSelect
+                value={tp_unidade_escolar}
                 onChange={(event) =>
                   this.setState({ tp_unidade_escolar: event.target.value })
                 }
@@ -120,6 +134,7 @@ export class FiltroUnidades extends Component {
           <div className="col-6">
             <label>Nome da Unidade</label>
             <InputBootStrap
+              value={nm_equipamento}
               onChange={(event) =>
                 this.setState({ nm_equipamento: event.target.value })
               }
@@ -145,7 +160,7 @@ export class FiltroUnidades extends Component {
             <Button
               className="btn-coad-background-outline"
               type="button"
-              onClick={() => this.cancelar()}
+              onClick={() => this.limpar()}
               disabled={this.props.cancelamento}
             >
               Limpar

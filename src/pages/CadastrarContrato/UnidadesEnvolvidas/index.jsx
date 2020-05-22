@@ -62,27 +62,36 @@ export class UnidadesEnvolvidas extends Component {
       nome_fiscal,
       suplentes,
     } = this.state;
-    unidades
-      .filter((unidade) => unidade.checked)
-      .forEach((unidade) => {
-        unidadesSelecionadas.push({
-          unidade: unidade,
-          lote: lote,
-          rf_fiscal: rf_fiscal,
-          nome_fiscal: nome_fiscal,
-          suplentes: suplentes,
-        });
+    if (unidades.filter((unidade) => unidade.checked).length === 0) {
+      this.props.messages.show({
+        severity: "warn",
+        life: 10000,
+        detail: "É preciso selecionar ao menos uma unidade",
       });
-    this.setState({
-      unidadesSelecionadas,
-      unidades: null,
-      lote: "",
-      rf_fiscal: "",
-      nome_fiscal: "",
-      suplentes: [],
-      selecionarTodos: false,
-    });
-    this.props.setUnidadesSelecionadas(unidadesSelecionadas);
+      window.scrollTo(0, 0);
+    } else {
+      unidades
+        .filter((unidade) => unidade.checked)
+        .forEach((unidade) => {
+          unidadesSelecionadas.push({
+            unidade: unidade,
+            lote: lote,
+            rf_fiscal: rf_fiscal,
+            nome_fiscal: nome_fiscal,
+            suplentes: suplentes,
+          });
+        });
+      this.setState({
+        unidadesSelecionadas,
+        unidades: null,
+        lote: "",
+        rf_fiscal: "",
+        nome_fiscal: "",
+        suplentes: [],
+        selecionarTodos: false,
+      });
+      this.props.setUnidadesSelecionadas(unidadesSelecionadas);
+    }
   };
 
   render() {

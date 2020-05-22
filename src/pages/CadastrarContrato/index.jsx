@@ -186,6 +186,7 @@ export default class CadastrarContrato extends Component {
             cancelamento={cancelamento}
             contrato={contrato}
             setUnidadesSelecionadas={this.setUnidadesSelecionadas}
+            messages={this.messages}
           />
         ),
       },
