@@ -1,13 +1,10 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import $ from "jquery";
 import { Row, Col, Card, Input as InputBootStrap, Button } from "reactstrap";
 import { CoadSelect } from "../../components/Contratos/CoadForm";
 import { getNucleos } from "../../service/Nucleos.service";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
-import { TabelaUnidades } from "./UnidadesEnvolvidas/TabelaUnidades";
-import { FiltroUnidades } from "./UnidadesEnvolvidas/FiltroUnidades";
-import { TabelaUnidadesParaSelecionar } from "./UnidadesEnvolvidas/TabelaUnidadesParaSelecionar";
-import { AdicionarComplementos } from "./UnidadesEnvolvidas/AdicionarComplementos";
+import { UnidadesEnvolvidas } from "./UnidadesEnvolvidas";
 import "./style.scss";
 
 export default class Gestao extends Component {
@@ -15,11 +12,6 @@ export default class Gestao extends Component {
     nucleos: [],
     usuarios: [],
     emailUsuario: null,
-    unidades: null,
-    todosSelecionados: false,
-    nome_fiscal: null,
-    suplentes: [],
-    unidadesSelecionadas: [],
   };
 
   async componentDidMount() {
@@ -69,82 +61,8 @@ export default class Gestao extends Component {
     this.props.jumpToStep(0);
   };
 
-  checkUnidade = (index) => {
-    let { unidades } = this.state;
-    unidades[index].checked = !unidades[index].checked;
-    this.setState({ unidades });
-  };
-
-  setUnidades = (unidades) => {
-    this.setState({ unidades });
-  };
-
-  selecionarTodos = () => {
-    let { unidades, todosSelecionados } = this.state;
-    todosSelecionados = !todosSelecionados;
-    unidades = unidades.map((unidade) => {
-      unidade.checked = todosSelecionados;
-      return unidade;
-    });
-    this.setState({ unidades, todosSelecionados });
-  };
-
-  adicionarUnidadesSelecionadas = () => {
-    const {
-      unidades,
-      unidadesSelecionadas,
-      lote,
-      rf_fiscal,
-      nome_fiscal,
-      suplentes,
-    } = this.state;
-    unidades
-      .filter((unidade) => unidade.checked)
-      .forEach((unidade) => {
-        unidadesSelecionadas.push({
-          unidade: unidade,
-          lote: lote,
-          rf_fiscal: rf_fiscal,
-          nome_fiscal: nome_fiscal,
-          suplentes: suplentes,
-        });
-      });
-    this.setState({
-      unidadesSelecionadas,
-      unidades: null,
-      lote: "",
-      rf_fiscal: "",
-      nome_fiscal: "",
-      suplentes: [],
-      selecionarTodos: false,
-    });
-    this.props.setUnidadesSelecionadas(unidadesSelecionadas);
-  };
-
-  setFiscalESuplentes = ({ lote, rf_fiscal, nome_fiscal, suplentes }) => {
-    this.setState({
-      lote,
-      rf_fiscal,
-      nome_fiscal,
-      suplentes,
-    });
-  };
-
-  removerUnidadeSelecionada = (key) => {
-    let { unidadesSelecionadas } = this.state;
-    unidadesSelecionadas.splice(key, 1);
-    this.setState({ unidadesSelecionadas });
-  };
-
   render() {
-    const {
-      nucleos,
-      usuarios,
-      emailUsuario,
-      unidades,
-      todosSelecionados,
-      unidadesSelecionadas,
-    } = this.state;
+    const { nucleos, usuarios, emailUsuario } = this.state;
     return (
       <>
         <strong>
@@ -220,29 +138,7 @@ export default class Gestao extends Component {
         </Card>
         <Card>
           <strong className="my-2">Unidades Envolvidas</strong>
-          <FiltroUnidades setUnidades={this.setUnidades} />
-          <hr />
-          {unidades && (
-            <Fragment>
-              <TabelaUnidadesParaSelecionar
-                unidades={unidades}
-                checkUnidade={this.checkUnidade}
-                todosSelecionados={todosSelecionados}
-                selecionarTodos={this.selecionarTodos}
-              />
-              <hr />
-              <AdicionarComplementos
-                adicionarUnidadesSelecionadas={
-                  this.adicionarUnidadesSelecionadas
-                }
-                setFiscalESuplentes={this.setFiscalESuplentes}
-              />
-            </Fragment>
-          )}
-          <TabelaUnidades
-            unidadesSelecionadas={unidadesSelecionadas}
-            removerUnidadeSelecionada={this.removerUnidadeSelecionada}
-          />
+          <UnidadesEnvolvidas {...this.props} />
         </Card>
         <div className="alerta text-center alert alert-danger d-none">
           <strong>Para avançar, preencha os campos obrigatórios</strong>
