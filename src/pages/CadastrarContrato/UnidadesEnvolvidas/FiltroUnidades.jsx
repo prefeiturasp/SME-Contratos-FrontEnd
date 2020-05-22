@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Input as InputBootStrap, Button } from "reactstrap";
-import { CoadSelect } from "../../../components/Contratos/CoadForm";
+import { Input as InputBootStrap, Button, Label } from "reactstrap";
 import { getDiretoriasRegionais } from "../../../service/DiretoriasRegionais.service";
 import { formatarDREs, formatarUnidades } from "../helper";
 import { getEquipamentos } from "../../../service/Equipamentos.service";
@@ -65,10 +64,11 @@ export class FiltroUnidades extends Component {
             />
           </div>
           <div className="col-3">
-            <CoadSelect
+            <Label form="coordenador">DRE</Label>
+            <InputBootStrap
+              type="select"
               value={dre}
               onChange={(event) => this.setState({ dre: event.target.value })}
-              label="DRE"
               name="dre"
             >
               <option value="">Selecione</option>
@@ -81,10 +81,12 @@ export class FiltroUnidades extends Component {
                     );
                   })
                 : ""}
-            </CoadSelect>
+            </InputBootStrap>
           </div>
           <div className="col-3">
-            <CoadSelect
+            <Label form="coordenador">Tipo de Unidade</Label>
+            <InputBootStrap
+              type="select"
               value={tp_unidade}
               onChange={(event) =>
                 this.setState({
@@ -99,16 +101,17 @@ export class FiltroUnidades extends Component {
               <option value="UA">Unidade Administrativa</option>
               <option value="CEU">Centro Educacional Unificado - CEU</option>
               <option value="ESC">Unidades Escolares</option>
-            </CoadSelect>
+            </InputBootStrap>
           </div>
           {tp_unidade === "ESC" && (
             <div className="col-3">
-              <CoadSelect
+              <Label form="coordenador">Tipo de Unidade Escolar</Label>
+              <InputBootStrap
+                type="select"
                 value={tp_unidade_escolar}
                 onChange={(event) =>
                   this.setState({ tp_unidade_escolar: event.target.value })
                 }
-                label="Tipo de Unidade Escolar"
                 name="tp_unidade"
               >
                 <option value="">Selecione</option>
@@ -126,7 +129,7 @@ export class FiltroUnidades extends Component {
                 <option value="CEMEI">CEMEI</option>
                 <option value="CECI">CECI</option>
                 <option value="IF">INSTITUTO FEDERAL</option>
-              </CoadSelect>
+              </InputBootStrap>
             </div>
           )}
         </div>

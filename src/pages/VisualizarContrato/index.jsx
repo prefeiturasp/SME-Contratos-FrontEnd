@@ -46,6 +46,7 @@ import $ from "jquery";
 import moment from "moment";
 import { OK } from "http-status-codes";
 import { TabelaUnidades } from "../CadastrarContrato/UnidadesEnvolvidas/TabelaUnidades";
+import { UnidadesEnvolvidas } from "../CadastrarContrato/UnidadesEnvolvidas";
 
 const nullToUndef = (v) => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
@@ -703,8 +704,8 @@ class VisualizarContratos extends Component {
             </CoadAccordion>
             {contrato.lotes && (
               <CoadAccordion titulo={"Unidade Envolvidas"}>
-                <TabelaUnidades
-                  unidadesSelecionadas={getUnidadesSelecionadas(contrato)}
+                <UnidadesEnvolvidas
+                  contrato={contrato}
                   disabilitado={disabilitado}
                 />
               </CoadAccordion>

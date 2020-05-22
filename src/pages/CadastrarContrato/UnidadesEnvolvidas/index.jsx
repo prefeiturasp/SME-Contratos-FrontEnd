@@ -3,6 +3,7 @@ import { FiltroUnidades } from "./FiltroUnidades";
 import { TabelaUnidadesParaSelecionar } from "./TabelaUnidadesParaSelecionar";
 import { AdicionarComplementos } from "./AdicionarComplementos";
 import { TabelaUnidades } from "./TabelaUnidades";
+import { getUnidadesSelecionadas } from "../../VisualizarContrato/helpers";
 
 export class UnidadesEnvolvidas extends Component {
   constructor(props) {
@@ -17,6 +18,14 @@ export class UnidadesEnvolvidas extends Component {
       suplentes: [],
     };
   }
+
+  componentDidUpdate = () => {
+    if (this.props.contrato && this.state.unidadesSelecionadas.length === 0) {
+      this.setState({
+        unidadesSelecionadas: getUnidadesSelecionadas(this.props.contrato),
+      });
+    }
+  };
 
   setUnidades = (unidades) => {
     this.setState({ unidades });
@@ -96,9 +105,10 @@ export class UnidadesEnvolvidas extends Component {
 
   render() {
     const { unidades, unidadesSelecionadas, todosSelecionados } = this.state;
+    const { disabilitado } = this.props;
     return (
       <div>
-        <FiltroUnidades setUnidades={this.setUnidades} />
+        {!disabilitado && <FiltroUnidades setUnidades={this.setUnidades} />}
         <hr />
         {unidades && (
           <Fragment>
@@ -118,6 +128,7 @@ export class UnidadesEnvolvidas extends Component {
         <TabelaUnidades
           unidadesSelecionadas={unidadesSelecionadas}
           removerUnidadeSelecionada={this.removerUnidadeSelecionada}
+          disabilitado={disabilitado}
         />
       </div>
     );
