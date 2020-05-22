@@ -341,12 +341,12 @@ export default class Informacoes extends Component {
             </Col>
           </Row>
         </Card>
-        <Card>
+        {/*<Card>
           <DotacaoOrcamentaria
             dotacao={this.props.dotacao}
             getDotacao={value => this.props.getDotacao(value)}
           />
-        </Card>
+        </Card>*/}
         <Card>
           <strong className="mb-3">Objeto de Contrato</strong>
           <Row>

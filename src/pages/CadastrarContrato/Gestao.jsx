@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react";
 import $ from "jquery";
 import { Row, Col, Card, Input as InputBootStrap, Button } from "reactstrap";
 import { CoadSelect } from "../../components/Contratos/CoadForm";
-import UnidadeEnvolvidas from "../VisualizarContrato/UnidadesEnvolvidas";
 import { getNucleos } from "../../service/Nucleos.service";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
 import { getDiretoriasRegionais } from "../../service/DiretoriasRegionais.service";
@@ -10,6 +9,7 @@ import { formatarDREs, formatarUnidades } from "./helper";
 import { getEquipamentos } from "../../service/Equipamentos.service";
 import { getUsuarioByUserName } from "../../service/Usuarios.service";
 import "./style.scss";
+import { TabelaUnidades } from "./LotesDeUnidades/TabelaUnidades";
 
 export default class Gestao extends Component {
   state = {
@@ -558,53 +558,10 @@ export default class Gestao extends Component {
               </div>
             </Fragment>
           )}
-          {unidadesSelecionadas.length > 0 && (
-            <div className="tabela-unidades-selecionadas pt-3">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Código EOL</th>
-                    <th>Un. que recebem serviço</th>
-                    <th>Equipamento</th>
-                    <th>DRE</th>
-                    <th>Lote correspondente</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {unidadesSelecionadas.map((unidadeSelecionada, key) => {
-                    return (
-                      <tr key={key}>
-                        <td>{unidadeSelecionada.unidade.cd_equipamento}</td>
-                        <td>{unidadeSelecionada.unidade.nm_equipamento}</td>
-                        <td>
-                          {unidadeSelecionada.unidade.cd_tp_equipamento === 3 &&
-                          unidadeSelecionada.unidade.cd_tp_ua === 19
-                            ? "CEU"
-                            : unidadeSelecionada.unidade.dc_tp_equipamento}
-                        </td>
-                        <td>
-                          {
-                            unidadeSelecionada.unidade
-                              .nm_exibicao_diretoria_referencia
-                          }
-                        </td>
-                        <td>
-                          {unidadeSelecionada.lote}
-                          <span
-                            onClick={() => this.removerUnidadeSelecionada(key)}
-                            className="delete"
-                          >
-                            x
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-          <UnidadeEnvolvidas termo={this.props.termo} />
+          <TabelaUnidades
+            unidadesSelecionadas={unidadesSelecionadas}
+            removerUnidadeSelecionada={this.removerUnidadeSelecionada}
+          />
         </Card>
         <div className="alerta text-center alert alert-danger d-none">
           <strong>Para avançar, preencha os campos obrigatórios</strong>
