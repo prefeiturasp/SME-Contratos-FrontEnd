@@ -10,19 +10,13 @@ import { getEquipamentos } from "../../service/Equipamentos.service";
 import { getUsuarioByUserName } from "../../service/Usuarios.service";
 import "./style.scss";
 import { TabelaUnidades } from "./LotesDeUnidades/TabelaUnidades";
+import { FiltroUnidades } from "./LotesDeUnidades/FiltroUnidades";
 
 export default class Gestao extends Component {
   state = {
     nucleos: [],
     usuarios: [],
     emailUsuario: null,
-    dres: null,
-    // filtros
-    cd_equipamento: "",
-    nm_equipamento: "",
-    dre: "",
-    tp_unidade: "",
-    tp_unidade_escolar: "",
     unidades: null,
     todosSelecionados: false,
     nome_fiscal: null,
@@ -33,12 +27,10 @@ export default class Gestao extends Component {
   async componentDidMount() {
     const nucleos = await getNucleos();
     const usuarios = await getUsuariosLookup();
-    const dres = await getDiretoriasRegionais();
     this.setState({
       nucleos,
       usuarios,
       emailUsuario: this.props.contrato.gestor.email,
-      dres: formatarDREs(dres.data.results),
     });
 
     $("#avancar-2").click(() => {
@@ -79,14 +71,13 @@ export default class Gestao extends Component {
     this.props.jumpToStep(0);
   };
 
-  filtrar = async () => {
-    const response = await getEquipamentos(this.state);
-    this.setState({ unidades: formatarUnidades(response.data.results) });
-  };
-
   checkUnidade = (index) => {
     let { unidades } = this.state;
     unidades[index].checked = !unidades[index].checked;
+    this.setState({ unidades });
+  };
+
+  setUnidades = (unidades) => {
     this.setState({ unidades });
   };
 
@@ -198,12 +189,6 @@ export default class Gestao extends Component {
 
   render() {
     const {
-      dre,
-      nm_equipamento,
-      cd_equipamento,
-      tp_unidade,
-      tp_unidade_escolar,
-      dres,
       nucleos,
       usuarios,
       emailUsuario,
@@ -289,118 +274,8 @@ export default class Gestao extends Component {
           </Row>
         </Card>
         <Card>
-          <strong>Unidades Envolvidas</strong>
-          <div className="my-2"></div>
-          <Row>
-            <Col xl={3} lg={3}>
-              <label>Código EOL</label>
-              <InputBootStrap
-                name="cd_equipamento"
-                onChange={(event) =>
-                  this.setState({ cd_equipamento: event.target.value })
-                }
-                placeholder="Código EOL da instituição"
-              />
-            </Col>
-            <Col xl={3} lg={3}>
-              <CoadSelect
-                onChange={(event) => this.setState({ dre: event.target.value })}
-                label="DRE"
-                name="dre"
-              >
-                <option value="">Selecione</option>
-                {dres
-                  ? dres.map((dre, i) => {
-                      return (
-                        <option key={i} value={dre.diretoria}>
-                          {dre.diretoria} - {dre.dre}
-                        </option>
-                      );
-                    })
-                  : ""}
-              </CoadSelect>
-            </Col>
-            <Col xl={3} lg={3}>
-              <CoadSelect
-                onChange={(event) =>
-                  this.setState({
-                    tp_unidade: event.target.value,
-                    tp_unidade_escolar: "",
-                  })
-                }
-                label="Tipo de Unidade"
-                name="tp_unidade"
-              >
-                <option value="">Selecione</option>
-                <option value="UA">Unidade Administrativa</option>
-                <option value="CEU">Centro Educacional Unificado - CEU</option>
-                <option value="ESC">Unidades Escolares</option>
-              </CoadSelect>
-            </Col>
-            {tp_unidade === "ESC" && (
-              <Col xl={3} lg={3}>
-                <CoadSelect
-                  onChange={(event) =>
-                    this.setState({ tp_unidade_escolar: event.target.value })
-                  }
-                  label="Tipo de Unidade Escolar"
-                  name="tp_unidade"
-                >
-                  <option value="">Selecione</option>
-                  <option value="EMEF">EMEF</option>
-                  <option value="EMEI">EMEI</option>
-                  <option value="EMEFM">EMEFM</option>
-                  <option value="EMEBS">EMEBS</option>
-                  <option value="CEI DIRET">CEI DIRET</option>
-                  <option value="CEI INDIRET">CEI INDIRET</option>
-                  <option value="CIEJA">CIEJA</option>
-                  <option value="CEU EMEF">CEU EMEF</option>
-                  <option value="CEU EMEI">CEU EMEI</option>
-                  <option value="CEU CEI">CEU CEI</option>
-                  <option value="CMCT">CMCT</option>
-                  <option value="CEMEI">CEMEI</option>
-                  <option value="CECI">CECI</option>
-                  <option value="IF">INSTITUTO FEDERAL</option>
-                </CoadSelect>
-              </Col>
-            )}
-          </Row>
-          <div className="row">
-            <div className="col-6">
-              <label>Nome da Unidade</label>
-              <InputBootStrap
-                onChange={(event) =>
-                  this.setState({ nm_equipamento: event.target.value })
-                }
-                name="nm_equipamento"
-                placeholder="Digite o nome da unidade"
-              />
-            </div>
-            <div className="col-3 offset-3 my-auto">
-              <Button
-                type="button"
-                onClick={() => this.filtrar()}
-                className="btn-coad-primary mr-3"
-                disabled={
-                  !cd_equipamento &&
-                  !nm_equipamento &&
-                  !dre &&
-                  !tp_unidade &&
-                  !tp_unidade_escolar
-                }
-              >
-                Filtrar
-              </Button>
-              <Button
-                className="btn-coad-background-outline"
-                type="button"
-                onClick={() => this.cancelar()}
-                disabled={this.props.cancelamento}
-              >
-                Limpar
-              </Button>
-            </div>
-          </div>
+          <strong className="my-2">Unidades Envolvidas</strong>
+          <FiltroUnidades setUnidades={this.setUnidades} />
           <hr />
           {unidades && (
             <Fragment>
