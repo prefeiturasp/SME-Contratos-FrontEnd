@@ -25,6 +25,7 @@ export const mapStateToPayload = (state) => {
       termo_contrato: state.contrato.termo_contrato,
       dotacao_orcamentaria: state.dotacao,
       coordenador: state.coordenador,
+      unidades_selecionadas: state.unidades_selecionadas,
     };
   }
 
@@ -57,6 +58,9 @@ export const getUnidadesSelecionadas = (contrato) => {
     lote.unidades.forEach((unidade) => {
       unidades.push({
         lote: lote.nome,
+        suplentes: lote.suplentes,
+        rf_fiscal: lote.rf_fiscal,
+        nome_fiscal: lote.nome_fiscal,
         unidade: {
           cd_equipamento: unidade.codigo_eol,
           nm_equipamento: unidade.nome,

@@ -91,10 +91,13 @@ class VisualizarContratos extends Component {
       totalMensal: 0.0,
       dataEncerramento: null,
       referencia_encerramento: DATA_ORDEM_INICIO,
+      unidades_selecionadas: [],
     };
-
-    this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
   }
+
+  setUnidadesSelecionadas = (unidades_selecionadas) => {
+    this.setState({ unidades_selecionadas });
+  };
 
   async componentDidMount() {
     const param = getUrlParams();
@@ -707,6 +710,7 @@ class VisualizarContratos extends Component {
                 <UnidadesEnvolvidas
                   contrato={contrato}
                   disabilitado={disabilitado}
+                  setUnidadesSelecionadas={this.setUnidadesSelecionadas}
                 />
               </CoadAccordion>
             )}
