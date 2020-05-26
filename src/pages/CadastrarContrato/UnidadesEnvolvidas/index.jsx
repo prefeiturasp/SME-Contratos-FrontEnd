@@ -25,9 +25,16 @@ export class UnidadesEnvolvidas extends Component {
       this.props.contrato.lotes.length > 0 &&
       !this.state.unidadesSelecionadas
     ) {
-      this.setState({
-        unidadesSelecionadas: getUnidadesSelecionadas(this.props.contrato),
-      });
+      this.setState(
+        {
+          unidadesSelecionadas: getUnidadesSelecionadas(this.props.contrato),
+        },
+        () => {
+          this.props.setUnidadesSelecionadas(
+            getUnidadesSelecionadas(this.props.contrato)
+          );
+        }
+      );
     }
   };
 
@@ -63,7 +70,9 @@ export class UnidadesEnvolvidas extends Component {
   removerUnidadeSelecionada = (key) => {
     let { unidadesSelecionadas } = this.state;
     unidadesSelecionadas.splice(key, 1);
-    this.setState({ unidadesSelecionadas });
+    this.setState({ unidadesSelecionadas }, () => {
+      this.props.setUnidadesSelecionadas(unidadesSelecionadas);
+    });
   };
 
   adicionarUnidadesSelecionadas = () => {
