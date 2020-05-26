@@ -10,7 +10,7 @@ export class UnidadesEnvolvidas extends Component {
     super(props);
     this.state = {
       unidades: null,
-      unidadesSelecionadas: [],
+      unidadesSelecionadas: null,
       todosSelecionados: false,
       lote: "",
       rf_fiscal: "",
@@ -20,7 +20,11 @@ export class UnidadesEnvolvidas extends Component {
   }
 
   componentDidUpdate = () => {
-    if (this.props.contrato && this.state.unidadesSelecionadas.length === 0) {
+    if (
+      this.props.contrato &&
+      this.props.contrato.lotes.length > 0 &&
+      !this.state.unidadesSelecionadas
+    ) {
       this.setState({
         unidadesSelecionadas: getUnidadesSelecionadas(this.props.contrato),
       });
@@ -122,6 +126,7 @@ export class UnidadesEnvolvidas extends Component {
             <AdicionarComplementos
               adicionarUnidadesSelecionadas={this.adicionarUnidadesSelecionadas}
               setFiscalESuplentes={this.setFiscalESuplentes}
+              unidadesSelecionadas={unidadesSelecionadas}
             />
           </Fragment>
         )}

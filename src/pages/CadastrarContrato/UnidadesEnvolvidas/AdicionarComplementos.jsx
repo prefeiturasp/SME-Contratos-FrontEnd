@@ -10,6 +10,7 @@ export class AdicionarComplementos extends Component {
       rf_fiscal: "",
       nome_fiscal: "",
       suplentes: [],
+      loteExistente: false,
     };
   }
 
@@ -81,6 +82,43 @@ export class AdicionarComplementos extends Component {
     this.props.setFiscalESuplentes(this.state);
   };
 
+  setLote = (lote) => {
+    const { unidadesSelecionadas } = this.props;
+    if (unidadesSelecionadas.find((unidade) => unidade.lote === lote)) {
+      this.setState(
+        {
+          lote: lote,
+          nome_fiscal: unidadesSelecionadas.find(
+            (unidade) => unidade.lote === lote
+          ).nome_fiscal,
+          rf_fiscal: unidadesSelecionadas.find(
+            (unidade) => unidade.lote === lote
+          ).rf_fiscal,
+          suplentes: unidadesSelecionadas.find(
+            (unidade) => unidade.lote === lote
+          ).suplentes,
+          loteExistente: true,
+        },
+        () => {
+          this.setFiscalESuplentes();
+        }
+      );
+    } else {
+      this.setState(
+        {
+          lote: lote,
+          nome_fiscal: "",
+          rf_fiscal: "",
+          suplentes: [],
+          loteExistente: false,
+        },
+        () => {
+          this.setFiscalESuplentes();
+        }
+      );
+    }
+  };
+
   adicionarSuplente = () => {
     let { suplentes } = this.state;
     suplentes.push({
@@ -101,7 +139,13 @@ export class AdicionarComplementos extends Component {
   };
 
   render() {
-    const { lote, rf_fiscal, nome_fiscal, suplentes } = this.state;
+    const {
+      lote,
+      rf_fiscal,
+      nome_fiscal,
+      suplentes,
+      loteExistente,
+    } = this.state;
     const { adicionarUnidadesSelecionadas } = this.props;
     return (
       <div className="adicionar-complementos">
@@ -114,7 +158,7 @@ export class AdicionarComplementos extends Component {
             <InputBootStrap
               name="lote"
               value={lote}
-              onChange={(event) => this.setState({ lote: event.target.value })}
+              onChange={(event) => this.setLote(event.target.value)}
               placeholder="Lote das unidades"
             />
           </div>
@@ -125,6 +169,7 @@ export class AdicionarComplementos extends Component {
               value={rf_fiscal}
               onChange={(event) => this.pesquisarRF(event.target.value)}
               placeholder="RF do Fiscal"
+              disabled={loteExistente}
             />
           </div>
           <div className="col-4">
@@ -139,10 +184,12 @@ export class AdicionarComplementos extends Component {
                 <label>RF do Suplente</label>
                 <InputBootStrap
                   name="rf"
+                  value={suplente.rf}
                   onChange={(event) =>
                     this.pesquisarRF(event.target.value, key)
                   }
                   placeholder="RF do Suplente"
+                  disabled={loteExistente}
                 />
               </div>
               <div className="col-4">
