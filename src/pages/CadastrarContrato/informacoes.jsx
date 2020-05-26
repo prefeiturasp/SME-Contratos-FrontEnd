@@ -304,7 +304,7 @@ export default class Informacoes extends Component {
                 id="data_encerramento"
                 name="data_encerramento"
                 disabled={true}
-                value={dataEncerramento}
+                value={dataEncerramento || ""}
                 placeholder={"01/01/2030"}
               />
             </Col>
@@ -336,7 +336,7 @@ export default class Informacoes extends Component {
             <Col lg={12} xl={12}>
               <FormGroup>
                 <Label>CNPJ Empresa</Label>
-                <InputBootstrap value={cnpjEmpresa} disabled={true} />
+                <InputBootstrap value={cnpjEmpresa || ""} disabled={true} />
               </FormGroup>
             </Col>
           </Row>
