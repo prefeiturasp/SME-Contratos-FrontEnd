@@ -86,23 +86,38 @@ export class UnidadesEnvolvidas extends Component {
       unidades
         .filter((unidade) => unidade.checked)
         .forEach((unidade) => {
-          unidadesSelecionadas.push({
-            unidade: unidade,
-            lote: lote,
-            rf_fiscal: rf_fiscal,
-            nome_fiscal: nome_fiscal,
-            suplentes: suplentes,
-          });
+          if (
+            unidadesSelecionadas.find(
+              (unidadeSelecionada) =>
+                unidadeSelecionada.unidade.cd_equipamento ===
+                unidade.cd_equipamento
+            )
+          ) {
+            this.props.messages.show({
+              severity: "error",
+              life: 10000,
+              detail: `Unidade ${unidade.cd_equipamento} já pertence a um lote`,
+            });
+            window.scrollTo(0, 0);
+          } else {
+            unidadesSelecionadas.push({
+              unidade: unidade,
+              lote: lote,
+              rf_fiscal: rf_fiscal,
+              nome_fiscal: nome_fiscal,
+              suplentes: suplentes,
+            });
+            this.setState({
+              unidadesSelecionadas,
+              unidades: null,
+              lote: "",
+              rf_fiscal: "",
+              nome_fiscal: "",
+              suplentes: [],
+              selecionarTodos: false,
+            });
+          }
         });
-      this.setState({
-        unidadesSelecionadas,
-        unidades: null,
-        lote: "",
-        rf_fiscal: "",
-        nome_fiscal: "",
-        suplentes: [],
-        selecionarTodos: false,
-      });
       this.props.setUnidadesSelecionadas(unidadesSelecionadas);
     }
   };
