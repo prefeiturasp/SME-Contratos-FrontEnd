@@ -66,6 +66,8 @@ export const getUnidadesSelecionadas = (contrato) => {
           nm_equipamento: unidade.nome,
           dc_tp_equipamento: unidade.equipamento,
           nm_exibicao_diretoria_referencia: unidade.dre,
+          logradouro: unidade.logradouro,
+          bairro: unidade.bairro,
         },
       });
     });
