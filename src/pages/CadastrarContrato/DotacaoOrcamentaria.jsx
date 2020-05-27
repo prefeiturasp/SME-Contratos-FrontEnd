@@ -127,7 +127,7 @@ const DotacaoOrcamentaria = React.forwardRef(({ valorTotalSalvo, dotacoesSalvas,
   return (
     <Fragment>
       <Row className="mb-2">
-        <strong className="mb-3">Dotações orçamentárias</strong>
+        <strong className="mb-3">Dotações Orçamentárias</strong>
       </Row>
       <Row className="mb-2">
         <Col lg={8} xl={8}>
@@ -173,12 +173,9 @@ const DotacaoOrcamentaria = React.forwardRef(({ valorTotalSalvo, dotacoesSalvas,
        </Col>
       </Row>
       <Row className="mt-3mb-2">
-        <strong className="mb-3">Valor Total</strong>
+        <strong className="mb-3">Valor Total do Contrato</strong>
       </Row>
       <Row className="mb-2">
-        <Col>
-          <Label>Valor Total do Contrato</Label>
-        </Col>
       </Row>
       <Row>
     <Col>
