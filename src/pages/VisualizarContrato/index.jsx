@@ -19,7 +19,6 @@ import UnidadeEnvolvidas from "./UnidadesEnvolvidas";
 import Anexos from "./Anexos";
 import {
   getContratoByUUID,
-  getEstadosContrato,
   updateContrato
 } from "../../service/Contratos.service";
 import { getUrlParams } from "../../utils/params";
@@ -78,7 +77,7 @@ class VisualizarContratos extends Component {
       processo: null,
       vigencia_em_dias: null,
       numero_edital: null,
-      dotacao: [],
+      dotacoes_orcamentarias: [],
       visible: false,
       usernameGestor: null,
       alert: false,
@@ -86,8 +85,11 @@ class VisualizarContratos extends Component {
       totalMensal: 0.0,
       dataEncerramento: null,
       referencia_encerramento: DATA_ORDEM_INICIO,
+      valor_total: "",
+      erro: ""
     };
 
+    this.dotacoesRef = React.createRef();
     this.selecionaTipoServico = this.selecionaTipoServico.bind(this);
   }
 
@@ -113,13 +115,15 @@ class VisualizarContratos extends Component {
   }
 
   propsToState = contrato => {
+    const tipo_servico = contrato.tipo_servico || { nome: "", uuid: ""}
+    const empresa_contratada = contrato.empresa_contratada || { nome: ""} 
     this.setState({
-      tipoServico: contrato.tipo_servico.nome,
-      tipoServicoSelecionado: contrato.tipo_servico,
-      nomeEmpresa: contrato.empresa_contratada.nome,
+      tipoServico: tipo_servico.nome,
+      tipoServicoSelecionado: tipo_servico,
+      nomeEmpresa: empresa_contratada.nome,
       termo_contrato: contrato.termo_contrato,
-      tipo_servico: contrato.tipo_servico,
-      tipo_servico_uuid: contrato.tipo_servico.uuid,
+      tipo_servico: tipo_servico,
+      tipo_servico_uuid: tipo_servico.uuid,
       situacao: contrato.situacao,
       data_ordem_inicio: contrato.data_ordem_inicio
         ? new Date(contrato.data_ordem_inicio)
@@ -131,7 +135,7 @@ class VisualizarContratos extends Component {
         ? new Date(contrato.data_assinatura)
         : null,
       processo: contrato.processo,
-      empresa_contratada: contrato.empresa_contratada,
+      empresa_contratada: empresa_contratada,
       totalMensal: contrato.total_mensal,
       objeto: contrato.objeto,
       observacoes: contrato.observacoes,
@@ -141,7 +145,8 @@ class VisualizarContratos extends Component {
         : "",
       estado: contrato.estado_contrato,
       vigencia_em_dias: contrato.vigencia_em_dias,
-      dotacao: contrato.dotacao_orcamentaria
+      dotacoes_orcamentarias: contrato.dotacoes_orcamentarias.map(el => ({ ...el, valor: parseFloat(el.valor)})),
+      valor_total: parseFloat(contrato.valor_total)
     });
   };
 
@@ -178,7 +183,6 @@ class VisualizarContratos extends Component {
     const dataRef =  this.state.data_assinatura;
     const dias = this.state.vigencia_em_dias
     if (dias && dias.length && dataRef) {
-      console.log(dias)
       const parsedDate = typeof dataRef === "string" ? moment(dataRef).format("YYYY-MM-DD") : dataRef;
       const data = moment(parsedDate).format("DD/MM/YYYY");
       const novaData = moment(data, "DD/MM/YYYY")
@@ -197,7 +201,8 @@ class VisualizarContratos extends Component {
 
   handleSubmit = async () => {
     const { uuid } = this.state.contrato;
-    const payload = mapStateToPayload(this.state);
+    const dotacoesState = this.dotacoesRef.current ? this.dotacoesRef.current.getState() : null
+    const payload = mapStateToPayload(this.state, dotacoesState);
     this.setState({ disabilitado: true, alert: true });
     $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
     const resultado = await updateContrato(payload, uuid);
@@ -213,15 +218,19 @@ class VisualizarContratos extends Component {
   };
 
   handleConfimar = () => {
+    if(this.dotacoesRef.current) {
+      const erro = this.dotacoesRef.current.getError();
+      if(erro.length) {
+        window.scrollTo(0, 0);
+        this.setState({ erro });
+        return;
+      }
+    }
     this.setState({ visible: true });
   };
 
   cancelaAtualizacao = () => {
     this.setState({ visible: false });
-  };
-
-  teste = () => {
-    return this.state.disabilitado;
   };
 
   render() {
@@ -235,7 +244,6 @@ class VisualizarContratos extends Component {
       data_ordem_inicio,
       data_assinatura,
       empresa_contratada,
-      totalMensal,
       objeto,
       observacoes,
       gestor,
@@ -251,8 +259,10 @@ class VisualizarContratos extends Component {
       alert,
       usernameGestor,
       usuarios,
-      dotacao,
-      dataEncerramento
+      dotacoes_orcamentarias,
+      dataEncerramento,
+      valor_total,
+      erro
     } = this.state;
     return (
       <>
@@ -267,6 +277,12 @@ class VisualizarContratos extends Component {
           >
             Alterações realizadas com sucesso
           </Alert>
+          <Alert
+            color="danger"
+            className="text-center font-weight-bold"
+            isOpen={!!erro.length}
+            toggle={() => this.setState({ erro: "" })}
+          > { erro } </Alert>
           <CardSuperior
             tipoServico={tipoServico}
             situacaoContratual={estado}
@@ -557,12 +573,11 @@ class VisualizarContratos extends Component {
               </Row>
             </CoadAccordion>
             <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
-              <DotacaoOrcamentaria
-                dotacao={dotacao}
-                getDotacao={value => this.setState({ dotacao: value })}
-                disabled={disabilitado}
-                setTotalMensal={value => this.setState({ totalMensal: value })}
-                totalMensal={totalMensal}
+            <DotacaoOrcamentaria
+              ref={this.dotacoesRef}
+              dotacoesSalvas={dotacoes_orcamentarias}
+              valorTotalSalvo={valor_total}
+              disabled={disabilitado}
               />
             </CoadAccordion>
             <CoadAccordion titulo={"Objeto de Contrato"}>

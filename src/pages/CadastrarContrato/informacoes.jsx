@@ -9,7 +9,8 @@ import {
   FormGroup,
   Input as InputBootstrap,
   Button,
-  Input
+  Input,
+  Alert
 } from "reactstrap";
 import {
   CoadTextInput,
@@ -47,7 +48,13 @@ export default class Informacoes extends Component {
     empresas: [],
     cnpjEmpresa: null,
     dataEncerramento: null,
+    msg_erro: ""
   };
+
+  constructor(props) {
+    super(props);
+    this.dotacoesRef = React.createRef();
+  }
 
   async componentDidMount() {
     const contrato = this.props.contrato;
@@ -104,10 +111,20 @@ export default class Informacoes extends Component {
         error++;
       }
 
+      const erroDotacoes = this.dotacoesRef.current.getError();
+      if(erroDotacoes.length) {
+        window.scrollTo(0, 0);
+        this.setState({ msg_erro: erroDotacoes })
+        return;
+      }else{
+        this.props.setDotacoesOrcamentarias(this.dotacoesRef.current.getState())
+      }
+
       if (error === 0) {
         this.props.jumpToStep(1);
       } else {
-        $(".alerta").removeClass("d-none");
+        window.scrollTo(0, 0);
+        this.setState({ msg_erro: "Para avançar, preencha os campos obrigatórios" })
       }
     });
 
@@ -155,10 +172,24 @@ export default class Informacoes extends Component {
       situacao,
       empresas,
       cnpjEmpresa, 
-      dataEncerramento
+      dataEncerramento,
+      msg_erro
     } = this.state;
+
+    const {
+      cancelamento,
+      dotacao,
+      valorTotalSalvo
+    } = this.props;
+
     return (
       <>
+        <Alert
+            color="danger"
+            className="text-center font-weight-bold"
+            isOpen={!!msg_erro.length}
+            toggle={() => this.setState({ msg_erro: "" })}
+          > { msg_erro } </Alert>
         <strong>
           <i className="fas fa-lg fa-file-signature" /> Informações
           Contrato/Empresa
@@ -342,10 +373,11 @@ export default class Informacoes extends Component {
           </Row>
         </Card>
         <Card>
-          <DotacaoOrcamentaria
-            dotacao={this.props.dotacao}
-            getDotacao={value => this.props.getDotacao(value)}
-          />
+        <DotacaoOrcamentaria
+        ref={this.dotacoesRef}
+        dotacoesSalvas={dotacao}
+        valorTotalSalvo={valorTotalSalvo}
+        />
         </Card>
         <Card>
           <strong className="mb-3">Objeto de Contrato</strong>
@@ -361,9 +393,6 @@ export default class Informacoes extends Component {
             </Col>
           </Row>
         </Card>
-        <div className="alerta text-center alert alert-danger d-none">
-          <strong>Para avançar, preencha os campos obrigatórios</strong>
-        </div>
         <div className="d-flex flex-row-reverse mt-4">
           <Button id="avancar-1" type="button" className="btn-coad-primary">
             Avançar
@@ -372,7 +401,7 @@ export default class Informacoes extends Component {
             type="button"
             onClick={() => this.cancelar()}
             className="btn-coad-background-outline mx-3"
-            disabled={this.props.cancelamento}
+            disabled={cancelamento}
           >
             Cancelar
           </Button>
