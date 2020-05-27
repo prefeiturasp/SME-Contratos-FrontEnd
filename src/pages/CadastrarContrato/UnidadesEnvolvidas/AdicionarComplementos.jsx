@@ -84,7 +84,10 @@ export class AdicionarComplementos extends Component {
 
   setLote = (lote) => {
     const { unidadesSelecionadas } = this.props;
-    if (unidadesSelecionadas.find((unidade) => unidade.lote === lote)) {
+    if (
+      unidadesSelecionadas &&
+      unidadesSelecionadas.find((unidade) => unidade.lote === lote)
+    ) {
       this.setState(
         {
           lote: lote,

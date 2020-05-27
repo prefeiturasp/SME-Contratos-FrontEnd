@@ -76,14 +76,8 @@ export class UnidadesEnvolvidas extends Component {
   };
 
   adicionarUnidadesSelecionadas = () => {
-    const {
-      unidades,
-      unidadesSelecionadas,
-      lote,
-      rf_fiscal,
-      nome_fiscal,
-      suplentes,
-    } = this.state;
+    const { unidades, lote, rf_fiscal, nome_fiscal, suplentes } = this.state;
+    let { unidadesSelecionadas } = this.state;
     if (unidades.filter((unidade) => unidade.checked).length === 0) {
       this.props.messages.show({
         severity: "warn",
@@ -96,6 +90,7 @@ export class UnidadesEnvolvidas extends Component {
         .filter((unidade) => unidade.checked)
         .forEach((unidade) => {
           if (
+            unidadesSelecionadas &&
             unidadesSelecionadas.find(
               (unidadeSelecionada) =>
                 unidadeSelecionada.unidade.cd_equipamento ===
@@ -109,6 +104,7 @@ export class UnidadesEnvolvidas extends Component {
             });
             window.scrollTo(0, 0);
           } else {
+            if (!unidadesSelecionadas) unidadesSelecionadas = [];
             unidadesSelecionadas.push({
               unidade: unidade,
               lote: lote,
