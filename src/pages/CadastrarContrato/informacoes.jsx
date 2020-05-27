@@ -57,7 +57,6 @@ export default class Informacoes extends Component {
   }
 
   async componentDidMount() {
-    console.log("wfffffffff")
     const contrato = this.props.contrato;
     const tipoServicos = await getTiposServicoLookup();
     const estado = await getEstadosContrato();
@@ -74,7 +73,6 @@ export default class Informacoes extends Component {
       cnpjEmpresa: contrato.empresa_contratada ? contrato.empresa_contratada.cnpj : null
     });
     $("#avancar-1").click(e => {
-      console.log("click");
       const situacaoRadio = $("[name=situacao]:checked").val();
       e.preventDefault();
       let error = 0;
@@ -177,6 +175,13 @@ export default class Informacoes extends Component {
       dataEncerramento,
       msg_erro
     } = this.state;
+
+    const {
+      cancelamento,
+      dotacao,
+      valorTotalSalvo
+    } = this.props;
+
     return (
       <>
         <Alert
@@ -368,7 +373,11 @@ export default class Informacoes extends Component {
           </Row>
         </Card>
         <Card>
-        <DotacaoOrcamentaria ref={this.dotacoesRef} />
+        <DotacaoOrcamentaria
+        ref={this.dotacoesRef}
+        dotacoesSalvas={dotacao}
+        valorTotalSalvo={valorTotalSalvo}
+        />
         </Card>
         <Card>
           <strong className="mb-3">Objeto de Contrato</strong>
@@ -392,7 +401,7 @@ export default class Informacoes extends Component {
             type="button"
             onClick={() => this.cancelar()}
             className="btn-coad-background-outline mx-3"
-            disabled={this.props.cancelamento}
+            disabled={cancelamento}
           >
             Cancelar
           </Button>

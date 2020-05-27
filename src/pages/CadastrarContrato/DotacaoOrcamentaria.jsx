@@ -118,12 +118,10 @@ const DotacaoOrcamentaria = React.forwardRef(({ valorTotalSalvo, dotacoesSalvas,
 
   const atualizaErros = () => {
     const arr = Array.from(Array(dotacoes.length), () => []);
-    //console.log(arr)
     dotacoes.forEach((dotacao, index) => {
       testaDuplicacao(arr[index], dotacao, dotacoes);
       testaVazio(arr[index], dotacao, index === dotacoes.length - 1);
     })
-    //console.log(arr)
     setErros(arr);
   };
   return (

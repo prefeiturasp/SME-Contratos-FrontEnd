@@ -115,13 +115,15 @@ class VisualizarContratos extends Component {
   }
 
   propsToState = contrato => {
+    const tipo_servico = contrato.tipo_servico || { nome: "", uuid: ""}
+    const empresa_contratada = contrato.empresa_contratada || { nome: ""} 
     this.setState({
-      tipoServico: contrato.tipo_servico.nome,
-      tipoServicoSelecionado: contrato.tipo_servico,
-      nomeEmpresa: contrato.empresa_contratada.nome,
+      tipoServico: tipo_servico.nome,
+      tipoServicoSelecionado: tipo_servico,
+      nomeEmpresa: empresa_contratada.nome,
       termo_contrato: contrato.termo_contrato,
-      tipo_servico: contrato.tipo_servico,
-      tipo_servico_uuid: contrato.tipo_servico.uuid,
+      tipo_servico: tipo_servico,
+      tipo_servico_uuid: tipo_servico.uuid,
       situacao: contrato.situacao,
       data_ordem_inicio: contrato.data_ordem_inicio
         ? new Date(contrato.data_ordem_inicio)
@@ -133,7 +135,7 @@ class VisualizarContratos extends Component {
         ? new Date(contrato.data_assinatura)
         : null,
       processo: contrato.processo,
-      empresa_contratada: contrato.empresa_contratada,
+      empresa_contratada: empresa_contratada,
       totalMensal: contrato.total_mensal,
       objeto: contrato.objeto,
       observacoes: contrato.observacoes,
@@ -181,7 +183,6 @@ class VisualizarContratos extends Component {
     const dataRef =  this.state.data_assinatura;
     const dias = this.state.vigencia_em_dias
     if (dias && dias.length && dataRef) {
-      console.log(dias)
       const parsedDate = typeof dataRef === "string" ? moment(dataRef).format("YYYY-MM-DD") : dataRef;
       const data = moment(parsedDate).format("DD/MM/YYYY");
       const novaData = moment(data, "DD/MM/YYYY")

@@ -37,7 +37,8 @@ export default class CadastrarContrato extends Component {
     cancelamento: false,
     situacaoContrato: "RASCUNHO",
     contrato: null,
-    dotacao: []
+    dotacao: [],
+    valor_total: 0
   };
 
   async componentDidMount() {
@@ -120,7 +121,10 @@ export default class CadastrarContrato extends Component {
     );
     values["dotacao_orcamentaria"] = this.removeEmpty(dotacao);
 
-    const resultado = await updateContrato(values, uuid_contrato);
+    const resultado = await updateContrato({ ...values,
+      dotacoes_orcamentarias: this.state.dotacao,
+      valor_total: this.state.valor_total
+    }, uuid_contrato);
 
     if (resultado.status === OK) {
       setFlashMessage("Contrato cadastrado com sucesso", "sucesso");
@@ -148,7 +152,8 @@ export default class CadastrarContrato extends Component {
       coordenador,
       cancelamento,
       contrato,
-      dotacao
+      dotacao,
+      valor_total
     } = this.state;
     const steps = [
       {
@@ -158,6 +163,7 @@ export default class CadastrarContrato extends Component {
             cancelar={this.mostrarModalCancelar}
             cancelamento={cancelamento}
             dotacao={dotacao}
+            valorTotalSalvo={valor_total}
             setDotacoesOrcamentarias={this.setDotacoesOrcamentarias}
             contrato={contrato}
           />
