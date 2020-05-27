@@ -91,7 +91,6 @@ export class SelecionaColunasContrato extends Component {
     else colunasSelecionadas.splice(colunasSelecionadas.indexOf(colunasSelecionadas.find(col => { return col.field === e.value.field})), 1)
 
     this.setState({ selectedCols: colunasSelecionadas });
-    console.log('Selecionadas Depois', colunasSelecionadas)
   }
   updateColunas() {
     const payLoad = {

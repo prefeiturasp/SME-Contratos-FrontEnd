@@ -31,7 +31,7 @@ export const login = async (username, password) => {
     }
     return false;
   } catch (error) {
-    console.log("Error ao tentar logar: ", error);
+    console.error("Error ao tentar logar: ", error);
     return false;
   }
 };
