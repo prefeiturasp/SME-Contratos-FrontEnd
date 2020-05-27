@@ -20,7 +20,7 @@ import UnidadeEnvolvidas from "./UnidadesEnvolvidas";
 import Anexos from "./Anexos";
 import {
   getContratoByUUID,
-  updateContrato
+  updateContrato,
 } from "../../service/Contratos.service";
 import { getUrlParams } from "../../utils/params";
 import { InputText } from "primereact/inputtext";
@@ -123,9 +123,9 @@ class VisualizarContratos extends Component {
     $(".ql-editor").prop("contenteditable", "false");
   }
 
-  propsToState = contrato => {
-    const tipo_servico = contrato.tipo_servico || { nome: "", uuid: ""}
-    const empresa_contratada = contrato.empresa_contratada || { nome: ""} 
+  propsToState = (contrato) => {
+    const tipo_servico = contrato.tipo_servico || { nome: "", uuid: "" };
+    const empresa_contratada = contrato.empresa_contratada || { nome: "" };
     this.setState({
       tipoServico: tipo_servico.nome,
       tipoServicoSelecionado: tipo_servico,
@@ -154,8 +154,11 @@ class VisualizarContratos extends Component {
         : "",
       estado: contrato.estado_contrato,
       vigencia_em_dias: contrato.vigencia_em_dias,
-      dotacoes_orcamentarias: contrato.dotacoes_orcamentarias.map(el => ({ ...el, valor: parseFloat(el.valor)})),
-      valor_total: parseFloat(contrato.valor_total)
+      dotacoes_orcamentarias: contrato.dotacoes_orcamentarias.map((el) => ({
+        ...el,
+        valor: parseFloat(el.valor),
+      })),
+      valor_total: parseFloat(contrato.valor_total),
     });
   };
 
@@ -193,7 +196,10 @@ class VisualizarContratos extends Component {
     const dataRef = this.state.data_assinatura;
     const dias = this.state.vigencia_em_dias;
     if (dias && dias.length && dataRef) {
-      const parsedDate = typeof dataRef === "string" ? moment(dataRef).format("YYYY-MM-DD") : dataRef;
+      const parsedDate =
+        typeof dataRef === "string"
+          ? moment(dataRef).format("YYYY-MM-DD")
+          : dataRef;
       const data = moment(parsedDate).format("DD/MM/YYYY");
       const novaData = moment(data, "DD/MM/YYYY").add(dias, "days").calendar();
       this.setState({
@@ -209,7 +215,9 @@ class VisualizarContratos extends Component {
 
   handleSubmit = async () => {
     const { uuid } = this.state.contrato;
-    const dotacoesState = this.dotacoesRef.current ? this.dotacoesRef.current.getState() : null
+    const dotacoesState = this.dotacoesRef.current
+      ? this.dotacoesRef.current.getState()
+      : null;
     const payload = mapStateToPayload(this.state, dotacoesState);
     this.setState({ disabilitado: true, alert: true });
     $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
@@ -226,9 +234,9 @@ class VisualizarContratos extends Component {
   };
 
   handleConfimar = () => {
-    if(this.dotacoesRef.current) {
+    if (this.dotacoesRef.current) {
       const erro = this.dotacoesRef.current.getError();
-      if(erro.length) {
+      if (erro.length) {
         window.scrollTo(0, 0);
         this.setState({ erro });
         return;
@@ -270,7 +278,7 @@ class VisualizarContratos extends Component {
       dotacoes_orcamentarias,
       dataEncerramento,
       valor_total,
-      erro
+      erro,
     } = this.state;
     console.log(contrato);
     return (
@@ -292,7 +300,10 @@ class VisualizarContratos extends Component {
             className="text-center font-weight-bold"
             isOpen={!!erro.length}
             toggle={() => this.setState({ erro: "" })}
-          > { erro } </Alert>
+          >
+            {" "}
+            {erro}{" "}
+          </Alert>
           <CardSuperior
             tipoServico={tipoServico}
             situacaoContratual={estado}
@@ -587,13 +598,13 @@ class VisualizarContratos extends Component {
               </Row>
             </CoadAccordion>
             <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
-            <DotacaoOrcamentaria
-              ref={this.dotacoesRef}
-              dotacoesSalvas={dotacoes_orcamentarias}
-              valorTotalSalvo={valor_total}
-              disabled={disabilitado}
+              <DotacaoOrcamentaria
+                ref={this.dotacoesRef}
+                dotacoesSalvas={dotacoes_orcamentarias}
+                valorTotalSalvo={valor_total}
+                disabled={disabilitado}
               />
-                        </CoadAccordion>*/}
+            </CoadAccordion>
             <CoadAccordion titulo={"Objeto de Contrato"}>
               <Editor
                 style={{ height: "320px" }}
