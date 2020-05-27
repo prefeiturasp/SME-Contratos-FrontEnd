@@ -136,8 +136,8 @@ export default class CadastrarContrato extends Component {
     this.setState({ visibleCancelar: true });
   };
 
-  getDotacaoOrcamentaria = dotacao => {
-    this.setState({ dotacao: dotacao });
+  setDotacoesOrcamentarias = ({ dotacoes, valorTotal}) => {
+    this.setState({ dotacao: dotacoes, valor_total: valorTotal });
   };
 
   render() {
@@ -158,7 +158,7 @@ export default class CadastrarContrato extends Component {
             cancelar={this.mostrarModalCancelar}
             cancelamento={cancelamento}
             dotacao={dotacao}
-            getDotacao={this.getDotacaoOrcamentaria}
+            setDotacoesOrcamentarias={this.setDotacoesOrcamentarias}
             contrato={contrato}
           />
         )

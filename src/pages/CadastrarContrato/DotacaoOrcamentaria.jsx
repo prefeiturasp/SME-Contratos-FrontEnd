@@ -1,7 +1,13 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, useImperativeHandle, Fragment } from "react";
 import { Row, Col, Label, Input, FormGroup } from "reactstrap";
 import CurrencyInput from "react-currency-input";
 import * as R from "ramda";
+
+const ERRO_MSG = {
+  duplicado: "Dotações orçamentárias: descrição duplicada.",
+  semDescricao: "Dotações orçamentárias: descrição não foi informada.",
+  semValor: "Dotações orçamentárias: valor mensal estimado não foi informado.",
+}
 
 const DotacaoRow = ({
   index,
@@ -15,7 +21,7 @@ const DotacaoRow = ({
       <FormGroup>
         <Input
           className="mb-2"
-          value={dotacao.descricao}
+          value={dotacao.dotacao_orcamentaria}
           disabled={disabled}
           onChange={(e) => alteraDescricao(index, e.target.value)}
         />
@@ -38,13 +44,32 @@ const DotacaoRow = ({
 );
 
 const dotacaoVazia = () => ({
-  descricao: "",
+  dotacao_orcamentaria: "",
   valor: "",
 });
 
-const DotacaoOrcamentaria = ({ dotacoesSalvas, disabled = false }) => {
-  const [dotacoes, setDotacoes] = useState(dotacoesSalvas || [dotacaoVazia()]);
+
+const DotacaoOrcamentaria = React.forwardRef(({ valorTotalSalvo, dotacoesSalvas, disabled = false }, ref) => {
+  const [valorTotal, setValorTotal] = useState(valorTotalSalvo || 0) 
+  const [dotacoes, setDotacoes] = useState( dotacoesSalvas || [dotacaoVazia()]);
   const [erros, setErros] = useState([])
+
+  React.useEffect(() => {
+    if(dotacoesSalvas && dotacoesSalvas.length) setDotacoes(dotacoesSalvas)
+    if(valorTotalSalvo) setValorTotal(valorTotalSalvo)
+}, [dotacoesSalvas, valorTotalSalvo])
+
+  useImperativeHandle(ref, () => ({
+    getState: () => {return { valorTotal, dotacoes }},
+    getError: () => {
+      if(erros.flat().some(el => /duplica/gi.test(el))) return ERRO_MSG.duplicado;
+      if(erros.flat().some(el => /descri/gi.test(el)))  return ERRO_MSG.semDescricao;
+      if(erros.flat().some(el => /valor/gi.test(el))) return ERRO_MSG.semValor;
+      return "";
+    }
+  }), [valorTotal, dotacoes, erros]);
+  
+
 
   useEffect(() => {
     atualizaErros()
@@ -57,8 +82,7 @@ const DotacaoOrcamentaria = ({ dotacoesSalvas, disabled = false }) => {
 
   const removeLinha = () => {
     if(dotacoes.length > 1) {
-      const alterado = dotacoes.concat().pop();
-      setDotacoes(alterado);
+      setDotacoes(R.dropLast(1, dotacoes));
     }else{
       setDotacoes([dotacaoVazia()])
     }
@@ -66,7 +90,7 @@ const DotacaoOrcamentaria = ({ dotacoesSalvas, disabled = false }) => {
 
   const alteraDescricao = (index, descricao) => {
     const obj = dotacoes[index];
-    const arr = R.update(index, { ...obj, descricao }, dotacoes);
+    const arr = R.update(index, { ...obj, dotacao_orcamentaria: descricao }, dotacoes);
     setDotacoes(arr);
   };
 
@@ -77,28 +101,29 @@ const DotacaoOrcamentaria = ({ dotacoesSalvas, disabled = false }) => {
   };
 
   const formularioEstaLimpo = () => {
-    return dotacoes.length === 1 && dotacoes[0].descricao.length === 0
+    return dotacoes.length === 1 && dotacoes[0].dotacao_orcamentaria.length === 0
   }
 
-  const testaDuplicacao = (errosCampo, { descricao : essaDescricao }, arr) => {
-    const len = arr.filter(({descricao}) => descricao === essaDescricao ).length
+  const testaDuplicacao = (errosCampo, { dotacao_orcamentaria : current }, arr) => {
+    if(!current.length) return
+    const len = arr.filter(({dotacao_orcamentaria}) => dotacao_orcamentaria === current ).length
     if(len > 1) errosCampo.push("Valor duplicado")
   }
 
-  const testaVazio = (errosCampo, {descricao, valor}) => {
-    if(!descricao.length) errosCampo.push("Preencha uma descrição")
+  const testaVazio = (errosCampo, {dotacao_orcamentaria, valor}, ehUltimaLinha) => {
+    if(ehUltimaLinha) return;
+    if(!dotacao_orcamentaria.length) errosCampo.push("Preencha uma descrição")
     if(!valor) errosCampo.push("Preencha um valor")
   }
 
   const atualizaErros = () => {
-    console.log(dotacoes)
     const arr = Array.from(Array(dotacoes.length), () => []);
-    console.log(arr)
+    //console.log(arr)
     dotacoes.forEach((dotacao, index) => {
       testaDuplicacao(arr[index], dotacao, dotacoes);
-      testaVazio(arr[index], dotacao, dotacoes);
+      testaVazio(arr[index], dotacao, index === dotacoes.length - 1);
     })
-    console.log(arr)
+    //console.log(arr)
     setErros(arr);
   };
   return (
@@ -160,12 +185,14 @@ const DotacaoOrcamentaria = ({ dotacoesSalvas, disabled = false }) => {
       <Row>
     <Col>
       <CurrencyInput
+      disabled={disabled}
         decimalSeparator=","
         thousandSeparator="."
         prefix="R$ "
         className="form-control"
-        value={""}
+        value={valorTotal}
         onChange={(value, floatValue) => {
+          setValorTotal(floatValue)
           //
         }}
       />
@@ -173,6 +200,6 @@ const DotacaoOrcamentaria = ({ dotacoesSalvas, disabled = false }) => {
   </Row>
     </Fragment>
   );
-};
+});
 
 export default DotacaoOrcamentaria;
