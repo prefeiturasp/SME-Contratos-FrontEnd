@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import CardSuperior from "./CardSuperior";
+import { Messages } from "primereact/messages";
 import CoadAccordion from "../../components/Global/CoadAccordion";
 import {
   Button,
@@ -277,6 +278,7 @@ class VisualizarContratos extends Component {
         <Page
           titulo={`Termo de Contrato n. ${contrato.termo_contrato} - ${nomeEmpresa}`}
         >
+          <Messages ref={(el) => (this.messages = el)}></Messages>
           <Alert
             color="success"
             className="text-center font-weight-bold"
@@ -723,6 +725,7 @@ class VisualizarContratos extends Component {
                   contrato={contrato}
                   disabilitado={disabilitado}
                   setUnidadesSelecionadas={this.setUnidadesSelecionadas}
+                  messages={this.messages}
                 />
               </CoadAccordion>
             )}
