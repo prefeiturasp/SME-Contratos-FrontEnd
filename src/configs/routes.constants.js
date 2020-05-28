@@ -9,6 +9,8 @@ import Teste from "../pages/Teste";
 import CadastrarContrato from "../pages/CadastrarContrato";
 import ModeloAteste from "../pages/ModeloAteste"
 import ListarModelosAteste from "../pages/ListarModelosAteste";
+import Edital from "../pages/Edital"
+import ListarEditais from "../pages/ListarEditais";
 
 
 const RoutesConfig = [
@@ -63,6 +65,16 @@ const RoutesConfig = [
       exact: false
     }, 
     {
+      path: "/edital",
+      component: Edital,
+      exact: false
+    },
+    {
+      path: "/listar-editais",
+      component: ListarEditais,
+      exact: false
+    }, 
+    {
       path: "/teste",
       component: Teste,
       exact: false
@@ -114,6 +126,7 @@ export const MenuConfig = [
       items: [
         { label: "Designação de Cargos", icon: "pi pi-cog pi-th-large", to: "/designacao-cargos" },
         { label: "Modelos de Ateste", icon: "pi pi-cog pi-th-large", to: "/listar-modelos-ateste" },
+        { label: "Editais", icon: "pi pi-cog pi-th-large", to: "/listar-editais" },
       ]
     },
 ]
