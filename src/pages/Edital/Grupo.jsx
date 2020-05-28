@@ -16,7 +16,6 @@ const Grupo = (props) => {
   const [itemSelecionado, setItemSelecionado] = useState();
   const [novoItem, setNovoItem] = useState("");
   const [novaDescricao, setNovaDescricao] = useState("");
-  const [adicionar, setAdicionar] = useState(true);
 
   useEffect(() => {
     if (props.grupo) {
@@ -45,7 +44,6 @@ const Grupo = (props) => {
   };
 
   const populaModal = (conteudo, coluna) => {
-    setAdicionar(false);
     abrirDialog();
     setNovoItem(conteudo.item);
     setNovaDescricao(conteudo.descricao);
@@ -54,38 +52,32 @@ const Grupo = (props) => {
 
   const fecharDialog = () => {
     setNovaDescricao("");
-    setNovoItem(""); 
+    setNovoItem("");
+    setItemSelecionado(null);
     setVisivel(false);
-    setAdicionar(true);
   };
 
   const abrirDialog = () => {
     setVisivel(true);
   };
 
-  const iconTemplate = (rowData, column) => {
-    return (
-      <div className="d-flex justify-content-center">
-        <i className="fas fa-lg fa-arrows-alt-v" />
-      </div>
-    );
-  };
-
   const adicionarItem = () => {
-    atualizaEstado([...itens, { item: novoItem, descricao: novaDescricao } ]);
+    atualizaEstado([...itens, { item: novoItem, descricao: novaDescricao }]);
     props.mostraAlerta();
   };
 
   const alterarItem = () => {
-    atualizaEstado(R.update(
-      R.indexOf(itemSelecionado, itens),
-      { item: novoItem, descricao: novaDescricao },
-      itens));
+    atualizaEstado(
+      R.update(
+        R.indexOf(itemSelecionado, itens),
+        { item: novoItem, descricao: novaDescricao },
+        itens
+      )
+    );
   };
 
   const excluirItem = () => {
     atualizaEstado(R.remove(R.indexOf(itemSelecionado, itens), 1, itens));
-    setAdicionar(true);
   };
 
   const atualizaEstado = (itens) => {
@@ -102,14 +94,13 @@ const Grupo = (props) => {
 
   const habilitaBotao =
     props.modoVisualizacao === false && grupo.nome ? false : true;
-  const habilitarBotaoExcluir = adicionar ? true : false;
   const footerVazio =
     "Ainda não existem itens de obrigação adicionados ao edital.";
 
   return (
     <Fragment>
       <Dialog
-        header={adicionar ? "Adicionar Item de obrigação" : "Editar Item"}
+        header={itemSelecionado ? "Editar Item" : "Adicionar Item de obrigação"}
         visible={visivel}
         style={{ width: "60vw" }}
         modal={true}
@@ -144,14 +135,15 @@ const Grupo = (props) => {
 
         <FormGroup>
           <FormGroup className="d-flex flex-row-reverse mt-3">
-            {adicionar ? (
+            {!itemSelecionado && (
               <Button
                 onClick={adicionarItem}
                 className="btn-coad-primary"
                 label="Adicionar"
                 disabled={!novoItem.length || !novaDescricao.length}
               />
-            ) : (
+            )}
+            {itemSelecionado && (
               <Button
                 onClick={alterarItem}
                 className="btn-coad-primary"
@@ -164,14 +156,12 @@ const Grupo = (props) => {
               className="btn-coad-background-outline mx-2"
               label="Cancelar"
             />
-            {!habilitarBotaoExcluir ? (
+            {itemSelecionado && (
               <Button
                 className="btn-coad-background-outline mx-2"
                 label="Excluir"
                 onClick={excluirItem}
               />
-            ) : (
-              ""
             )}
           </FormGroup>
         </FormGroup>
