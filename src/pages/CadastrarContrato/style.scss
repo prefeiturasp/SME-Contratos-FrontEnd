@@ -142,3 +142,26 @@ div.tabela-unidades-selecionadas {
     padding-right: 0px;
   }
 }
+
+div.input-group.vigencia-contrato {
+  .col-6 {
+    padding-right: 0;
+    margin-right: -15px;
+  }
+  select {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  input {
+    height: 38px !important;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .input-group-append {
+    padding-top: 8px;
+    .input-group-text {
+      height: 38px;
+      font-size: 14px;
+    }
+  }
+}

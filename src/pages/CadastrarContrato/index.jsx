@@ -114,7 +114,6 @@ export default class CadastrarContrato extends Component {
   handleSubmit = async (values) => {
     const { uuid_contrato, dotacao, unidades_selecionadas } = this.state;
     values.unidades_selecionadas = unidades_selecionadas;
-    console.log(values);
     values["data_assinatura"] = moment(values.data_assinatura).format(
       "YYYY-MM-DD"
     );

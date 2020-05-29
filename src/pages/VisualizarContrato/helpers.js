@@ -24,9 +24,13 @@ export const mapStateToPayload = (state, dotacoesState) => {
       observacoes: state.observacoes,
       termo_contrato: state.contrato.termo_contrato,
       coordenador: state.coordenador,
-      dotacoes_orcamentarias: dotacoesState ? dotacoesState.dotacoes : state.dotacoes_orcamentarias,
+      dotacoes_orcamentarias: dotacoesState
+        ? dotacoesState.dotacoes
+        : state.dotacoes_orcamentarias,
       valor_total: dotacoesState ? dotacoesState.valorTotal : state.valor_total,
-      unidades_selecionadas: state.unidades_selecionadas, 
+      unidades_selecionadas: state.unidades_selecionadas,
+      unidade_vigencia: state.unidade_vigencia,
+      referencia_encerramento: state.referencia_encerramento,
     };
   }
 

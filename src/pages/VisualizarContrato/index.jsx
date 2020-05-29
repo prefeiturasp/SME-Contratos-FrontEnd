@@ -94,6 +94,7 @@ class VisualizarContratos extends Component {
       unidades_selecionadas: [],
       valor_total: "",
       erro: "",
+      unidade_vigencia: "DIAS",
     };
     this.dotacoesRef = React.createRef();
   }
@@ -159,6 +160,7 @@ class VisualizarContratos extends Component {
         valor: parseFloat(el.valor),
       })),
       valor_total: parseFloat(contrato.valor_total),
+      unidade_vigencia: contrato.unidade_vigencia,
     });
   };
 
@@ -172,14 +174,12 @@ class VisualizarContratos extends Component {
   };
 
   alteraDiasVigencia = (dias) => {
-    this.setState({ vigencia_em_dias: dias }, () =>
-      this.recalculaEncerramento()
-    );
+    this.setState({ vigencia_em_dias: dias });
   };
 
   alteraDataAssinatura = (data) => {
     const data_assinatura = moment(data).format("YYYY-MM-DD");
-    this.setState({ data_assinatura }, () => this.recalculaEncerramento());
+    this.setState({ data_assinatura });
   };
 
   alteraDataOrdemInicio = (data) => {
@@ -189,7 +189,6 @@ class VisualizarContratos extends Component {
 
   alteraReferenciaEncerramento = (referencia_encerramento) => {
     this.setState({ referencia_encerramento });
-    // TODO: implementar recalculo da data de encerramento
   };
 
   recalculaEncerramento = () => {
@@ -223,8 +222,15 @@ class VisualizarContratos extends Component {
     $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
     const resultado = await updateContrato(payload, uuid);
     if (resultado.status === OK) {
+      this.setState({
+        dataEncerramento: moment(resultado.data.data_encerramento).format(
+          "DD/MM/YYYY"
+        ),
+      });
       setTimeout(() => {
-        this.setState({ alert: false });
+        this.setState({
+          alert: false,
+        });
       }, 10000);
       this.cancelaAtualizacao();
       window.scrollTo(0, 0);
@@ -279,8 +285,8 @@ class VisualizarContratos extends Component {
       dataEncerramento,
       valor_total,
       erro,
+      unidade_vigencia,
     } = this.state;
-    console.log(contrato);
     return (
       <>
         <Page
@@ -480,7 +486,9 @@ class VisualizarContratos extends Component {
 
                       <Calendar
                         value={
-                          data_assinatura ? new Date(data_assinatura) : null
+                          data_assinatura
+                            ? moment(data_assinatura).format("DD/MM/YYYY")
+                            : null
                         }
                         onChange={(e) => this.alteraDataAssinatura(e.value)}
                         locale={CALENDAR_PT}
@@ -494,7 +502,11 @@ class VisualizarContratos extends Component {
                       <Label>Data Ordem de Início</Label>
                       <br />
                       <Calendar
-                        value={data_ordem_inicio}
+                        value={
+                          data_ordem_inicio
+                            ? moment(data_ordem_inicio).format("DD/MM/YYYY")
+                            : null
+                        }
                         onChange={(e) => this.alteraDataOrdemInicio(e.value)}
                         showIcon={true}
                         locale={CALENDAR_PT}
@@ -522,19 +534,41 @@ class VisualizarContratos extends Component {
                   </Row>
                   <Row>
                     <Col sm={12} xs={12} md={12} lg={6} xl={6}>
-                      <FormGroup>
-                        <Label for="vigencia">Vigência de Contrato</Label>
-                        <InputText
-                          id="vigencia"
-                          value={nullToUndef(vigencia_em_dias)}
-                          onChange={(e) =>
-                            this.alteraDiasVigencia(e.target.value)
-                          }
-                          placeholder={"Ex: 365 dias"}
-                          className="w-100"
-                          disabled={disabilitado}
-                        />
-                      </FormGroup>
+                      <div className="row">
+                        <div className="input-group vigencia-contrato">
+                          <div className="col-6">
+                            <Label>Vigência de Contrato</Label>
+                            <InputText
+                              value={nullToUndef(vigencia_em_dias)}
+                              placeholder="Ex: 365 dias"
+                              onChange={(e) =>
+                                this.alteraDiasVigencia(e.target.value)
+                              }
+                              label="Vigência de Contrato"
+                              name="vigencia_em_dias"
+                              required
+                              type="text"
+                              disabled={disabilitado}
+                            />
+                          </div>
+                          <div className="input-group-append mt-auto col-6">
+                            <Input
+                              type="select"
+                              value={unidade_vigencia}
+                              onChange={(event) =>
+                                this.setState({
+                                  unidade_vigencia: event.target.value,
+                                })
+                              }
+                              name="unidade_vigencia"
+                              disabled={disabilitado}
+                            >
+                              <option value="DIAS">Dias</option>
+                              <option value="MESES">Meses</option>
+                            </Input>
+                          </div>
+                        </div>
+                      </div>
                     </Col>
                     <Col sm={12} xs={12} md={12} lg={6} xl={6}>
                       <FormGroup>
