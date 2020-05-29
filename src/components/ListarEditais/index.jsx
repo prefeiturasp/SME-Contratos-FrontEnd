@@ -50,7 +50,7 @@ export default class ListarEditais extends Component {
               style={{ marginRight: "5px", color: "#42474A" }}
             ></i>
             <h6 style={{ fontWeight: "bold" }}>
-              Editais cadastrados
+            Editais e Obrigações cadastrados
             </h6>
           </Col>
           <Col lg={4} xl={4}>

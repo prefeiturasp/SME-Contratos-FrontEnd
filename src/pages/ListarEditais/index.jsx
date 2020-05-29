@@ -41,7 +41,7 @@ export default class ListarEditaisPage extends Component {
     return (
       <Page>
         <Messages ref={el => (this.messages = el)}></Messages>
-        <h4>Editais</h4>
+      <h4>Editais e Obrigações</h4>
         <Container>
           <ListaEditais />
         </Container>
