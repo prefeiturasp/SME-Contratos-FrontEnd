@@ -149,7 +149,6 @@ export default class Informacoes extends Component {
 
   calculaEncerramento = (data, dias) => {
     const novaData = moment(data, "DD/MM/YYYY").add(dias, "days").calendar();
-
     this.setState({ dataEncerramento: moment(novaData).format("DD/MM/YYYY") });
   };
 
@@ -339,8 +338,8 @@ export default class Informacoes extends Component {
                       name="unidade_vigencia"
                       onBlur={(value) => this.SelecionaEmpresa(value)}
                     >
-                      <option value="dias">Dias</option>
-                      <option value="meses">Meses</option>
+                      <option value="DIAS">Dias</option>
+                      <option value="MESES">Meses</option>
                     </CoadSelect>
                   </div>
                 </div>
