@@ -19,12 +19,12 @@ const Grupo = (props) => {
 
   useEffect(() => {
     if (props.grupo) {
-      setGrupo(props.grupo);
-      if (grupo.itens_de_verificacao) {
-        setItens(grupo.itens_de_verificacao);
+      setGrupo(props.grupo || {});
+      if (grupo.itens_de_obrigacao) {
+        setItens(grupo.itens_de_obrigacao);
       }
     }
-  }, [props.grupo, grupo.itens_de_verificacao]);
+  }, [props.grupo, grupo.itens_de_obrigacao]);
 
   const editaNomeGrupo = (value) => {
     grupo.nome = value;
@@ -35,7 +35,7 @@ const Grupo = (props) => {
   const actionTemplate = (rowData, column) => {
     return (
       <Button
-        onClick={(evet) => populaModal(rowData, column)}
+        onClick={() => populaModal(rowData, column)}
         className="btn-coad-background-outline"
         label="Editar"
         disabled={props.modoVisualizacao}
@@ -83,17 +83,17 @@ const Grupo = (props) => {
   const atualizaEstado = (itens) => {
     setItens(itens);
     fecharDialog();
-    grupo.itens_de_verificacao = itens;
+    grupo.itens_de_obrigacao = itens;
     setGrupo({ ...grupo });
     props.editar(props.index, grupo);
   };
 
   const descricaoTemplate = (rowData, column) => {
-    return <div dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
+    return <div className="mt-3" dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
   };
 
   const habilitaBotao =
-    props.modoVisualizacao === false && grupo.nome ? false : true;
+    props.modoVisualizacao === false && grupo.nome;
   const footerVazio =
     "Ainda não existem itens de obrigação adicionados ao edital.";
 
@@ -169,9 +169,10 @@ const Grupo = (props) => {
       <FormGroup>
         <Label className="font-weight-bold">Nome de grupo</Label>
         <Input
-          value={grupo ? grupo.nome : ""}
+          value={grupo.nome || ""}
+          autoFocus
           onChange={(e) => editaNomeGrupo(e.target.value)}
-          autocomplete="Off"
+          autoComplete="Off"
           disabled={props.modoVisualizacao}
         />
       </FormGroup>
@@ -186,7 +187,7 @@ const Grupo = (props) => {
             <Button
               style={{ fontSize: "11px" }}
               className="px-1 mb-2"
-              disabled={habilitaBotao}
+              disabled={!habilitaBotao}
               label="Adicionar Item"
               onClick={abrirDialog}
             />
@@ -204,7 +205,7 @@ const Grupo = (props) => {
             <Column header="Item" field="item" style={{ width: "10%" }} />
             <Column
               field="descricao"
-              header="Itens de verificação"
+              header="Itens de obrigação"
               body={descricaoTemplate}
             />
             <Column body={actionTemplate} style={{ width: "7em" }} />

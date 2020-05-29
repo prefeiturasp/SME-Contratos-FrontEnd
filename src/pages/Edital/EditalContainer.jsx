@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Fragment, useCallback } from "react";
+import $ from "jquery";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import { getEdital } from "../../service/Editais.service";
@@ -26,11 +27,11 @@ const EditalContainer = props => {
   }, [uuid, setEdital]);
 
   useEffect(() => {
-    /* if ($("#alerta-duplicidade").length) {
+    if ($("#alerta-duplicidade").length) {
       setTimeout(() => {
         setAlertaDuplicar(false);
       }, 5000);
-    } */
+    } 
   });
 
   const mostraAlerta = useCallback(
@@ -65,10 +66,10 @@ const EditalContainer = props => {
 
         <Alert color="success" isOpen={alerta} toggle={fechaAlerta}>
           <span className="font-weight-bold d-flex justify-content-center">
-            Item adicionado com sucesso
+            Item adicionado com sucesso 
           </span>
         </Alert>
-        <h3>{ `${ uuid ? 'Visualizar' : 'Cadastrar'} Edital` }</h3>
+        <h3>{ `${ uuid ? 'Visualizar' : 'Cadastro de'} Edital e Obrigações` }</h3>
         <Container>
           {edital && <Edital edital={edital} mostraAlerta={mostraAlerta} />}
         </Container>

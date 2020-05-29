@@ -74,7 +74,7 @@ export default class ListarEditais extends Component {
           rows={rowsPerPage}
           paginatorTemplate="PrevPageLink PageLinks NextPageLink"
         >
-          <Column field="titulo" header="Edital" />
+          <Column field="numero" header="Edital" />
           <Column
             field="criado_em"
             header="Data criação"

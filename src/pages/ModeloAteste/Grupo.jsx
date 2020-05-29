@@ -189,7 +189,7 @@ const Grupo = props => {
         <Input
           value={grupo ? grupo.nome : ""}
           onChange={e => editaNomeGrupo(e.target.value)}
-          autocomplete="Off"
+          autoComplete="Off"
           disabled={props.modoVisualizacao}
         />
       </FormGroup>

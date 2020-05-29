@@ -15,7 +15,7 @@ import {
   alteraEdital,
   excluiEdital
 } from "../../service/Editais.service";
-import { CREATED, OK, NO_CONTENT } from "http-status-codes";
+import { BAD_REQUEST, CREATED, OK, NO_CONTENT } from "http-status-codes";
 import { redirect } from "../../utils/redirect";
 import { setFlashMessage } from "../../utils/flashMessages";
 import { getUrlParams } from "../../utils/params";
@@ -23,6 +23,8 @@ import { Row, Col } from "reactstrap";
 import * as R from "ramda";
 
 const Edital = ({ mostraAlerta, edital : _edital }) => {
+
+
   const [visivel, setVisivel] = useState(false);
   const [visivelCancelar, setVisivelCancelar] = useState(false);
   const [edital, setEdital] = useState(_edital || {});
@@ -30,6 +32,11 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
   const [incluir, setIncluir] = useState(true);
   const [modalExcluir, setmodalExcluir] = useState(false);
   const [modalDuplicar, setmodalDuplicar] = useState(false);
+
+  useEffect(() => {
+    setEdital(_edital);
+    
+  }, [_edital]);
 
   useEffect(() => {
     const parametro = getUrlParams();
@@ -102,12 +109,22 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
 
   const duplicaEdital = async () => {
     setmodalDuplicar(false);
-    const copia = R.omit(['uuid', 'criado_em', 'alterado_em', 'titulo'], edital)
-    const resultado = await criaEdital({...copia, titulo: `${ edital.titulo } Cópia`});
-    if (resultado.status === CREATED) {
-      setEdital(resultado.data);
-      setFlashMessage("Edital duplicado com sucesso", "sucesso");
-      redirect(`#/edital/?uuid=${resultado.data.uuid}`);
+    const copia = R.omit(['uuid', 'criado_em', 'alterado_em', 'numero'], edital)
+    try {
+      const resposta = await criaEdital({...copia, numero: `${ edital.numero } Cópia`});
+      if (resposta.status === CREATED) {
+        setEdital(resposta.data);
+        setFlashMessage("Edital duplicado com sucesso", "sucesso");
+        redirect(`#/edital/?uuid=${resposta.data.uuid}`);
+      }
+    }catch(erro){
+      if(erro.response && erro.response.status === BAD_REQUEST) {
+        redirect("#/listar-editais/");
+        setFlashMessage(
+          `Erro ao duplicar: ${Object.values(erro.response.data).join("\r\n")}`,
+          "error"
+        );
+      }  
     }
   };
 
@@ -118,10 +135,12 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
     [mostraAlerta]
   );
 
-  const habilitaBotao =
-    modoVisualizacao === false && edital.titulo && edital.grupos_de_obrigacao
-      ? false
-      : true;
+  const semGrupoInvalido = () => {
+    if (!edital.grupos_de_obrigacao) return true;
+    return edital.grupos_de_obrigacao.every(el => el.nome.length)
+  }
+
+  const habilitaBotao = !modoVisualizacao && edital.numero && semGrupoInvalido();
   const mensagemConfirmacao = incluir
     ? "Confirma a alteração deste edital?"
     : "Confirma a criação de um novo edital?";
@@ -164,7 +183,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
     <Fragment>
       <FormGroup className="d-flex flex-row-reverse mt-3">
         <Button
-          disabled={habilitaBotao}
+          disabled={!habilitaBotao}
           className="btn-coad-primary"
           label="Salvar"
           onClick={exibeDialog}
@@ -187,7 +206,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
           />
         ) : ("")}
         <Button
-          disabled={habilitaBotao}
+          disabled={!habilitaBotao}
           className="btn-coad-background-outline mr-2"
           label="Cancelar"
           onClick={() => setVisivelCancelar(true)}
@@ -208,7 +227,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
         footer={
           <FormGroup className="pt-4 d-flex justify-content-end">
             <Button
-              disabled={habilitaBotao}
+              disabled={!habilitaBotao}
               className="btn-coad-background-outline"
               label="Sim"
               onClick={() => {
@@ -245,14 +264,12 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
           />
           {!incluir ? (
             <Button
-              disabled={habilitaBotao}
               className="btn-coad-primary"
               label="Sim"
               onClick={confirmarEdital}
             />
           ) : (
             <Button
-              disabled={habilitaBotao}
               className="btn-coad-primary"
               label="Sim"
               onClick={alterarEdital}
@@ -280,11 +297,11 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
       </Row>
       <br />
       <FormGroup>
-        <Label className="font-weight-bold">Título do Edital</Label>
+        <Label className="font-weight-bold">Número do Edital</Label>
         <Input
-          value={ edital.titulo || ""}
-          onChange={e => setEdital({ ...edital, titulo: e.target.value })}
-          autoComplete={false}
+          value={ edital.numero || ""}
+          onChange={e => setEdital({ ...edital, numero: e.target.value })}
+          autoComplete="off"
           disabled={modoVisualizacao}
         />
       </FormGroup>
@@ -292,9 +309,8 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
         <Label className="font-weight-bold">Grupo(s) de obrigação</Label>
         {edital.grupos_de_obrigacao ? (
           edital.grupos_de_obrigacao.map((grupo, i) => (
-            <Card>
+            <Card key={i}>
               <Grupo
-                key={i}
                 grupo={grupo}
                 editar={editaGrupo}
                 index={i}
@@ -314,7 +330,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
             </Card>
           ))
         ) : (
-          <Card>
+          <Card key={0}>
             <Grupo
               grupo={{}}
               editar={editaGrupo}
@@ -326,7 +342,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
         )}
         <div>
           <AntButton
-            disabled={habilitaBotao}
+            disabled={!habilitaBotao}
             type="link"
             size="small"
             onClick={addGrupo}
@@ -337,7 +353,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
       </FormGroup>
       <FormGroup className="d-flex flex-row-reverse mt-3">
         <Button
-          disabled={habilitaBotao}
+          disabled={!habilitaBotao}
           className="btn-coad-primary mr-1"
           label="Salvar"
           onClick={exibeDialog}
@@ -361,7 +377,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
         ) : ("")}
 
         <Button
-          disabled={habilitaBotao}
+          disabled={!habilitaBotao}
           className="btn-coad-background-outline mr-2"
           label="Cancelar"
           onClick={() => setVisivelCancelar(true)}
