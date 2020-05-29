@@ -5,25 +5,28 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Editor } from "primereact/editor";
+import { InputText } from "primereact/inputtext";
+import EditorHeader from "../../components/Shared/EditorHeader";
+import * as R from "ramda";
 
-const Grupo = props => {
+const Grupo = (props) => {
   const [grupo, setGrupo] = useState({});
   const [visivel, setVisivel] = useState(false);
   const [itens, setItens] = useState([]);
-  const [descricao, setDescricao] = useState("");
-  const [item, setItem] = useState("");
-  const [adicionar, setAdicionar] = useState(true);
+  const [itemSelecionado, setItemSelecionado] = useState();
+  const [novoItem, setNovoItem] = useState("");
+  const [novaDescricao, setNovaDescricao] = useState("");
 
   useEffect(() => {
     if (props.grupo) {
-      setGrupo(props.grupo);
-      if (grupo.itens_de_verificacao) {
-        setItens(grupo.itens_de_verificacao);
+      setGrupo(props.grupo || {});
+      if (grupo.itens_de_obrigacao) {
+        setItens(grupo.itens_de_obrigacao);
       }
     }
-  }, [props.grupo, grupo.itens_de_verificacao]);
+  }, [props.grupo, grupo.itens_de_obrigacao]);
 
-  const editaNomeGrupo = value => {
+  const editaNomeGrupo = (value) => {
     grupo.nome = value;
     setGrupo({ ...grupo });
     props.editar(props.index, grupo);
@@ -32,7 +35,7 @@ const Grupo = props => {
   const actionTemplate = (rowData, column) => {
     return (
       <Button
-        onClick={evet => populaModal(rowData, column)}
+        onClick={() => populaModal(rowData, column)}
         className="btn-coad-background-outline"
         label="Editar"
         disabled={props.modoVisualizacao}
@@ -41,130 +44,111 @@ const Grupo = props => {
   };
 
   const populaModal = (conteudo, coluna) => {
-    setAdicionar(false);
     abrirDialog();
-    setDescricao(conteudo.descricao);
-    setItem(conteudo.item);
+    setNovoItem(conteudo.item);
+    setNovaDescricao(conteudo.descricao);
+    setItemSelecionado(conteudo);
   };
 
   const fecharDialog = () => {
+    setNovaDescricao("");
+    setNovoItem("");
+    setItemSelecionado(null);
     setVisivel(false);
-    setAdicionar(true);
   };
 
   const abrirDialog = () => {
     setVisivel(true);
   };
 
-  const iconTemplate = (rowData, column) => {
-    return (
-      <div className="d-flex justify-content-center">
-        <i className="fas fa-lg fa-arrows-alt-v" />
-      </div>
-    );
-  };
-
   const adicionarItem = () => {
-    const index = itens.length + 1;
-    itens.push({ descricao: descricao, item: index });
-    atualizaEstadoItens(itens);
+    atualizaEstado([...itens, { item: novoItem, descricao: novaDescricao }]);
     props.mostraAlerta();
   };
 
   const alterarItem = () => {
-    itens.filter(value => {
-      if (item === value.item) {
-        value.descricao = descricao;
-        return value;
-      }
-      return itens;
-    });
-    atualizaEstadoItens(itens);
+    atualizaEstado(
+      R.update(
+        R.indexOf(itemSelecionado, itens),
+        { item: novoItem, descricao: novaDescricao },
+        itens
+      )
+    );
   };
 
-  const atualizaEstadoItens = itens => {
-    setItens([...itens]);
-    setDescricao("");
-    setItem("");
+  const excluirItem = () => {
+    atualizaEstado(R.remove(R.indexOf(itemSelecionado, itens), 1, itens));
+  };
+
+  const atualizaEstado = (itens) => {
+    setItens(itens);
     fecharDialog();
-    grupo.itens_de_verificacao = itens;
+    grupo.itens_de_obrigacao = itens;
     setGrupo({ ...grupo });
     props.editar(props.index, grupo);
   };
 
-  const excluirItem = () => {
-    itens.filter((value, i) => {
-      if (item === value.item) {
-        itens.splice(i, 1);
-      }
-      return itens;
-    });
-    atualizaEstadoItens(itens);
-    setAdicionar(true);
-  };
-
   const descricaoTemplate = (rowData, column) => {
-    return <div dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
+    return <div className="mt-3" dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
   };
 
   const habilitaBotao =
-    props.modoVisualizacao === false && grupo.nome ? false : true;
-  const habilitarBotaoExcluir = adicionar ? true : false;
-  const habilitaBotaoAdicionar =
-    descricao === "" || descricao === null ? true : false;
+    props.modoVisualizacao === false && grupo.nome;
   const footerVazio =
-    "Ainda não existem itens de verificação adicionados no ateste";
+    "Ainda não existem itens de obrigação adicionados ao edital.";
 
   return (
     <Fragment>
       <Dialog
-        header={
-          adicionar
-            ? "Adicionar Item de verificação"
-            : "Editar Item de verificação"
-        }
+        header={itemSelecionado ? "Editar Item" : "Adicionar Item de obrigação"}
         visible={visivel}
         style={{ width: "60vw" }}
         modal={true}
         onHide={fecharDialog}
       >
-        <FormGroup>
-          <Label className="font-weight-bold">Item de verificação</Label>
-          <br />
-          <Editor
-            style={{ height: "120px" }}
-            value={descricao}
-            headerTemplate={
-              <span className="ql-formats">
-                <button className="ql-bold" aria-label="Bold"></button>
-                <button className="ql-italic" aria-label="Italic"></button>
-                <button
-                  className="ql-underline"
-                  aria-label="Underline"
-                ></button>
-                <button className="ql-list" value="ordered"></button>
-                <button className="ql-list" value="bullet"></button>
-              </span>
-            }
-            onTextChange={e => setDescricao(e.htmlValue)}
-          />
-        </FormGroup>
+        <br />
+        <Row>
+          <Col lg={4} xl={4}>
+            <label htmlFor="item">Item</label>
+            <br />
+            <InputText
+              value={novoItem}
+              onChange={(e) => setNovoItem(e.target.value || "")}
+              placeholder="Digitar item"
+              className="w-100"
+            />
+          </Col>
+          <Col lg={8} xl={8} className="p-fluid">
+            <FormGroup>
+              <Label className="font-weight-bold">Item de obrigação</Label>
+              <br />
+              <Editor
+                style={{ height: "120px" }}
+                value={novaDescricao}
+                headerTemplate={<EditorHeader />}
+                onTextChange={(e) => setNovaDescricao(e.htmlValue || "")}
+                className="editor-coad"
+              />
+            </FormGroup>
+          </Col>
+        </Row>
 
         <FormGroup>
           <FormGroup className="d-flex flex-row-reverse mt-3">
-            {adicionar ? (
+            {!itemSelecionado && (
               <Button
                 onClick={adicionarItem}
                 className="btn-coad-primary"
                 label="Adicionar"
-                disabled={habilitaBotaoAdicionar}
+                disabled={!novoItem.length || !novaDescricao.length}
               />
-            ) : (
+            )}
+            {itemSelecionado && (
               <Button
                 onClick={alterarItem}
                 className="btn-coad-primary"
                 label="Alterar"
-                disabled={habilitaBotaoAdicionar}
+                disabled={!novoItem.length || !novaDescricao.length}
               />
             )}
             <Button
@@ -172,14 +156,12 @@ const Grupo = props => {
               className="btn-coad-background-outline mx-2"
               label="Cancelar"
             />
-            {!habilitarBotaoExcluir ? (
+            {itemSelecionado && (
               <Button
                 className="btn-coad-background-outline mx-2"
                 label="Excluir"
                 onClick={excluirItem}
               />
-            ) : (
-              ""
             )}
           </FormGroup>
         </FormGroup>
@@ -187,8 +169,9 @@ const Grupo = props => {
       <FormGroup>
         <Label className="font-weight-bold">Nome de grupo</Label>
         <Input
-          value={grupo ? grupo.nome : ""}
-          onChange={e => editaNomeGrupo(e.target.value)}
+          value={grupo.nome || ""}
+          autoFocus
+          onChange={(e) => editaNomeGrupo(e.target.value)}
           autoComplete="Off"
           disabled={props.modoVisualizacao}
         />
@@ -197,14 +180,14 @@ const Grupo = props => {
         <Row>
           <Col>
             <Label className="font-weight-bold">
-              Lista de itens de verificação{" "}
+              Lista de itens de obrigação{" "}
             </Label>
           </Col>
           <Col className="d-flex justify-content-end">
             <Button
               style={{ fontSize: "11px" }}
               className="px-1 mb-2"
-              disabled={habilitaBotao}
+              disabled={!habilitaBotao}
               label="Adicionar Item"
               onClick={abrirDialog}
             />
@@ -213,18 +196,16 @@ const Grupo = props => {
         {itens.length > 0 ? (
           <DataTable
             value={itens}
-            reorderableColumns={true}
+            resizableColumns={true}
+            columnResizeMode="fit"
             scrollable={true}
             scrollHeight={"300px"}
             className="datatable-strapd-coad"
           >
-            <Column
-              body={iconTemplate}
-              style={{ width: "5em", align: "center" }}
-            />
+            <Column header="Item" field="item" style={{ width: "10%" }} />
             <Column
               field="descricao"
-              header="Itens de verificação"
+              header="Itens de obrigação"
               body={descricaoTemplate}
             />
             <Column body={actionTemplate} style={{ width: "7em" }} />
@@ -233,7 +214,7 @@ const Grupo = props => {
           <div>
             <DataTable footer={footerVazio} className="datatable-footer-coad ">
               <Column header="" style={{ width: "5em" }} />
-              <Column header="Itens de verificação" />
+              <Column header="Itens de obrigação" />
               <Column header="" style={{ width: "7em" }} />
             </DataTable>
           </div>
