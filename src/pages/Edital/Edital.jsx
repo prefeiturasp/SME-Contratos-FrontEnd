@@ -11,38 +11,40 @@ import { Dialog } from "primereact/dialog";
 import Grupo from "./Grupo";
 import { Button as AntButton, Switch } from "antd";
 import {
-  criaModeloAteste,
-  alteraModeloAteste,
-  excluiModeloAteste
-} from "../../service/ModeloAteste.service";
-import { CREATED, OK, NO_CONTENT } from "http-status-codes";
+  criaEdital,
+  alteraEdital,
+  excluiEdital
+} from "../../service/Editais.service";
+import { BAD_REQUEST, CREATED, OK, NO_CONTENT } from "http-status-codes";
 import { redirect } from "../../utils/redirect";
 import { setFlashMessage } from "../../utils/flashMessages";
 import { getUrlParams } from "../../utils/params";
 import { Row, Col } from "reactstrap";
+import * as R from "ramda";
 
-const Modelo = props => {
+const Edital = ({ mostraAlerta, edital : _edital }) => {
+
+
   const [visivel, setVisivel] = useState(false);
   const [visivelCancelar, setVisivelCancelar] = useState(false);
-  const [modelo, setModelo] = useState({});
+  const [edital, setEdital] = useState(_edital || {});
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [incluir, setIncluir] = useState(true);
   const [modalExcluir, setmodalExcluir] = useState(false);
   const [modalDuplicar, setmodalDuplicar] = useState(false);
 
   useEffect(() => {
-    setModelo(props.modelo);
+    setEdital(_edital);
+    
+  }, [_edital]);
+
+  useEffect(() => {
     const parametro = getUrlParams();
     if (!parametro.uuid) {
       setIncluir(false);
       setModoVisualizacao(false);
     }
-  }, [props.modelo]);
-
-  const alteraTitulo = value => {
-    modelo.titulo = value;
-    setModelo({ ...modelo });
-  };
+  }, [edital]);
 
   const fechaDialog = () => {
     setVisivel(false);
@@ -53,91 +55,102 @@ const Modelo = props => {
   };
 
   const editaGrupo = (index, grupo) => {
-    if (modelo.grupos_de_verificacao) {
-      modelo.grupos_de_verificacao[index] = grupo;
+    if (edital.grupos_de_obrigacao) {
+      edital.grupos_de_obrigacao[index] = grupo;
     } else {
-      modelo.grupos_de_verificacao = [];
-      modelo.grupos_de_verificacao[index] = grupo;
+      edital.grupos_de_obrigacao = [];
+      edital.grupos_de_obrigacao[index] = grupo;
     }
-    setModelo({ ...modelo });
+    setEdital({ ...edital });
   };
 
-  const addGrupo = () => {
-    modelo.grupos_de_verificacao.push({ nome: "" });
-    setModelo({ ...modelo });
-  };
+  const addGrupo = () => setEdital({
+     ...edital,
+     grupos_de_obrigacao: R.append({ nome: "" }, edital.grupos_de_obrigacao)
+    });
+
 
   const excluirGrupo = index => {
-    modelo.grupos_de_verificacao.splice(index, 1);
-    setModelo({ ...modelo });
+    setEdital({
+      ...edital,
+      grupos_de_obrigacao: R.remove(index, 1, edital.grupos_de_obrigacao)
+    });
   };
 
-  const confirmaModelo = async () => {
-    const resultado = await criaModeloAteste(modelo);
+  const confirmarEdital = async () => {
+    const resultado = await criaEdital(edital);
     if (resultado.status === CREATED) {
-      setFlashMessage("Modelo de ateste criado com sucesso", "sucesso");
-      redirect("#/listar-modelos-ateste");
+      setFlashMessage("Edital criado com sucesso", "sucesso");
+      redirect("#/listar-editais");
     }
   };
 
-  const alteraModelo = async () => {
-    const resultado = await alteraModeloAteste(modelo);
+  const alterarEdital = async () => {
+    const resultado = await alteraEdital(edital);
     if (resultado.status === OK) {
-      setFlashMessage("Modelo de ateste alterado com sucesso", "sucesso");
-      redirect("#/listar-modelos-ateste");
+      setFlashMessage("Edital alterado com sucesso", "sucesso");
+      redirect("#/listar-editais");
     }
   };
 
-  const excluirModelo = async () => {
-    const resultado = await excluiModeloAteste(modelo.uuid);
+  const excluirEdital = async () => {
+    const resultado = await excluiEdital(edital.uuid);
     if (resultado.status === NO_CONTENT) {
-      setFlashMessage("Modelo de Ateste excluído com sucesso", "sucesso");
-      redirect("#/listar-modelos-ateste/");
+      setFlashMessage("Edital excluído com sucesso", "sucesso");
+      redirect("#/listar-editais/");
     } else {
-      redirect("#/listar-modelos-ateste/");
+      redirect("#/listar-editais/");
       setFlashMessage(
-        "Modelo de ateste não pode ser excluido! Este modelo está vinculado a um ou mais contratos.",
+        "Edital não pode ser excluido! Este edital está vinculado a um ou mais contratos.",
         "error"
       );
     }
   };
 
-  const duplicaModelo = async () => {
-    delete modelo.uuid;
-    delete modelo.criado_em;
-    delete modelo.alterado_em;
-    modelo.titulo = modelo.titulo + " (Cópia)";
+  const duplicaEdital = async () => {
     setmodalDuplicar(false);
-    const resultado = await criaModeloAteste(modelo);
-    if (resultado.status === CREATED) {
-      const modelo = resultado.data;
-      setModelo({ ...modelo });
-      setFlashMessage("Modelo de ateste duplicado com sucesso", "sucesso");
-      redirect(`#/modelo-ateste/?uuid=${modelo.uuid}`);
+    const copia = R.omit(['uuid', 'criado_em', 'alterado_em', 'numero'], edital)
+    try {
+      const resposta = await criaEdital({...copia, numero: `${ edital.numero } Cópia`});
+      if (resposta.status === CREATED) {
+        setEdital(resposta.data);
+        setFlashMessage("Edital duplicado com sucesso", "sucesso");
+        redirect(`#/edital/?uuid=${resposta.data.uuid}`);
+      }
+    }catch(erro){
+      if(erro.response && erro.response.status === BAD_REQUEST) {
+        redirect("#/listar-editais/");
+        setFlashMessage(
+          `Erro ao duplicar: ${Object.values(erro.response.data).join("\r\n")}`,
+          "error"
+        );
+      }  
     }
   };
 
   const mostraAlertaContainer = useCallback(
-    event => {
-      props.mostraAlerta();
+    () => {
+      mostraAlerta();
     },
-    [props]
+    [mostraAlerta]
   );
 
-  const habilitaBotao =
-    modoVisualizacao === false && modelo.titulo && modelo.grupos_de_verificacao
-      ? false
-      : true;
-  const mensagemConfirmacao = !incluir
-    ? "Deseja confirmar criação de novo modelo de ateste?"
-    : "Deseja confirmar alteração deste modelo de ateste?";
+  const semGrupoInvalido = () => {
+    if (!edital.grupos_de_obrigacao) return true;
+    return edital.grupos_de_obrigacao.every(el => el.nome.length)
+  }
+
+  const habilitaBotao = !modoVisualizacao && edital.numero && semGrupoInvalido();
+  const mensagemConfirmacao = incluir
+    ? "Confirma a alteração deste edital?"
+    : "Confirma a criação de um novo edital?";
 
   const footerModalExcluir = (
     <div>
       <Button
         label="Sim"
         style={{ marginRight: ".25em" }}
-        onClick={excluirModelo}
+        onClick={excluirEdital}
         className="btn-coad-background-outline"
       />
 
@@ -154,7 +167,7 @@ const Modelo = props => {
       <Button
         label="Sim"
         style={{ marginRight: ".25em" }}
-        onClick={duplicaModelo}
+        onClick={duplicaEdital}
         className="btn-coad-background-outline"
       />
 
@@ -170,7 +183,7 @@ const Modelo = props => {
     <Fragment>
       <FormGroup className="d-flex flex-row-reverse mt-3">
         <Button
-          disabled={habilitaBotao}
+          disabled={!habilitaBotao}
           className="btn-coad-primary"
           label="Salvar"
           onClick={exibeDialog}
@@ -179,7 +192,7 @@ const Modelo = props => {
           <Button
             disabled={modoVisualizacao}
             className="btn-coad-background-outline mr-2"
-            label="Excluir Modelo"
+            label="Excluir Edital"
             onClick={() => setmodalExcluir(true)}
           />
         ) : (
@@ -193,13 +206,13 @@ const Modelo = props => {
           />
         ) : ("")}
         <Button
-          disabled={habilitaBotao}
+          disabled={!habilitaBotao}
           className="btn-coad-background-outline mr-2"
           label="Cancelar"
           onClick={() => setVisivelCancelar(true)}
         />
         <ButtonBootstrap
-          onClick={() => redirect("#/listar-modelos-ateste")}
+          onClick={() => redirect("#/listar-editais")}
           className="btn-coad-blue mx-2"
         >
           <i className="fas fa-arrow-left" /> Voltar
@@ -214,15 +227,15 @@ const Modelo = props => {
         footer={
           <FormGroup className="pt-4 d-flex justify-content-end">
             <Button
-              disabled={habilitaBotao}
+              disabled={!habilitaBotao}
               className="btn-coad-background-outline"
               label="Sim"
               onClick={() => {
                 setFlashMessage(
-                  "Alterações em modelo de ateste canceladas",
+                  "Alterações canceladas",
                   "sucesso"
                 );
-                redirect("/#/listar-modelos-ateste");
+                redirect("/#/listar-editais");
               }}
             />
             <Button
@@ -233,7 +246,7 @@ const Modelo = props => {
           </FormGroup>
         }
       >
-        <span>Deseja cancelar alterações em modelo de ateste?</span>
+        <span>Deseja cancelar alterações desse edital?</span>
       </Dialog>
       <Dialog
         header={"Confirmar"}
@@ -251,17 +264,15 @@ const Modelo = props => {
           />
           {!incluir ? (
             <Button
-              disabled={habilitaBotao}
               className="btn-coad-primary"
               label="Sim"
-              onClick={confirmaModelo}
+              onClick={confirmarEdital}
             />
           ) : (
             <Button
-              disabled={habilitaBotao}
               className="btn-coad-primary"
               label="Sim"
-              onClick={alteraModelo}
+              onClick={alterarEdital}
             />
           )}
         </FormGroup>
@@ -269,7 +280,7 @@ const Modelo = props => {
       <Row>
         <Col lg={6} xl={6}>
           <h6>
-            <i className="fas fa-sm fa-file-signature" /> Modelo de Ateste
+            <i className="fas fa-sm fa-file-signature" /> Edital
           </h6>
         </Col>
         {incluir ? (
@@ -286,21 +297,20 @@ const Modelo = props => {
       </Row>
       <br />
       <FormGroup>
-        <Label className="font-weight-bold">Título do modelo de ateste</Label>
+        <Label className="font-weight-bold">Número do Edital</Label>
         <Input
-          value={modelo ? modelo.titulo : ""}
-          onChange={e => alteraTitulo(e.target.value)}
+          value={ edital.numero || ""}
+          onChange={e => setEdital({ ...edital, numero: e.target.value })}
           autoComplete="off"
           disabled={modoVisualizacao}
         />
       </FormGroup>
       <FormGroup>
-        <Label className="font-weight-bold">Grupo(s) de verificação</Label>
-        {modelo.grupos_de_verificacao ? (
-          modelo.grupos_de_verificacao.map((grupo, i) => (
-            <Card>
+        <Label className="font-weight-bold">Grupo(s) de obrigação</Label>
+        {edital.grupos_de_obrigacao ? (
+          edital.grupos_de_obrigacao.map((grupo, i) => (
+            <Card key={i}>
               <Grupo
-                key={i}
                 grupo={grupo}
                 editar={editaGrupo}
                 index={i}
@@ -320,7 +330,7 @@ const Modelo = props => {
             </Card>
           ))
         ) : (
-          <Card>
+          <Card key={0}>
             <Grupo
               grupo={{}}
               editar={editaGrupo}
@@ -332,7 +342,7 @@ const Modelo = props => {
         )}
         <div>
           <AntButton
-            disabled={habilitaBotao}
+            disabled={!habilitaBotao}
             type="link"
             size="small"
             onClick={addGrupo}
@@ -343,7 +353,7 @@ const Modelo = props => {
       </FormGroup>
       <FormGroup className="d-flex flex-row-reverse mt-3">
         <Button
-          disabled={habilitaBotao}
+          disabled={!habilitaBotao}
           className="btn-coad-primary mr-1"
           label="Salvar"
           onClick={exibeDialog}
@@ -352,7 +362,7 @@ const Modelo = props => {
           <Button
             disabled={modoVisualizacao}
             className="btn-coad-background-outline mr-2"
-            label="Excluir Modelo"
+            label="Excluir Edital"
             onClick={() => setmodalExcluir(true)}
           />
         ) : (
@@ -367,14 +377,14 @@ const Modelo = props => {
         ) : ("")}
 
         <Button
-          disabled={habilitaBotao}
+          disabled={!habilitaBotao}
           className="btn-coad-background-outline mr-2"
           label="Cancelar"
           onClick={() => setVisivelCancelar(true)}
         />
 
         <ButtonBootstrap
-          onClick={() => redirect("#/listar-modelos-ateste")}
+          onClick={() => redirect("#/listar-editais")}
           className="btn-coad-blue mx-2"
         >
           <i className="fas fa-arrow-left" /> Voltar
@@ -388,7 +398,7 @@ const Modelo = props => {
         onHide={() => setmodalExcluir(false)}
       >
         <div>
-          <p>Deseja excluir modelo de ateste? </p>
+          <p>Deseja excluir este edital? </p>
         </div>
       </Dialog>
       <Dialog
@@ -399,11 +409,11 @@ const Modelo = props => {
         onHide={() => setmodalDuplicar(false)}
       >
         <div>
-          <p>Deseja duplicar modelo de ateste?</p>
+          <p>Deseja duplicar este edital?</p>
         </div>
       </Dialog>
     </Fragment>
   );
 };
 
-export default Modelo;
+export default Edital;

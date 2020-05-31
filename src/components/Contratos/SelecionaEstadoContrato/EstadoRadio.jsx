@@ -26,7 +26,7 @@ class EstadoRadio extends Component {
         {estados.map(value => {
           const selecionado = value.id === checado ? true : false;
           return (
-            <FormGroup check inline>
+            <FormGroup key={value.id} check inline>
               <Label check>
                 <Input
                   {...this.props}

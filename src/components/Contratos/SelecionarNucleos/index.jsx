@@ -22,7 +22,7 @@ export default class SelecionarNucleos extends Component {
     const options = this.state.options;
     nucleos.map(value => {
       return options.push({
-        label: `${value.sigla} (${value.divisao.sigla})`,
+        label: `${value.sigla} (${value.nome})`,
         value: value.uuid
       });
     });
@@ -47,11 +47,11 @@ export default class SelecionarNucleos extends Component {
           onChange={event => this.onSelect(event)}
           name="nucleo"
           id="selecionarNucleos"
+          defaultValue={selected}
         >
           {options.map((value, key) => {
-            const selecionado = selected === value.value ? true : false;
             return (
-              <option selected={selecionado} key={key} value={value.value}>
+              <option  key={key} value={value.value}>
                 {value.label}
               </option>
             );

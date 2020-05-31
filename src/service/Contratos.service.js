@@ -1,5 +1,5 @@
 import { getHeaderToken, getUsuario } from "./auth.service";
-import CONFIG from "../configs/config.constants";
+import * as CONFIG from "../configs/config.constants";
 import moment from "moment";
 import Api from './Api'
 
@@ -100,7 +100,7 @@ export const getSituacoesContrato = () => {
     headers: getHeaderToken()
   };
   return Api
-    .get(`${CONFIG.API_URL}/contratos/situacoes/`, AUTH_HEADER)
+    .get(`${CONFIG.API_URL}/contratos/situacoes/`,  AUTH_HEADER)
     .then(res => res.data);
 };
 

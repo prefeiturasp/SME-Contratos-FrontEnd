@@ -9,23 +9,33 @@ import {
   FormGroup,
   Input as InputBootstrap,
   Button,
-  Input
+  Input,
+  Alert,
 } from "reactstrap";
 import {
   CoadTextInput,
   CoadRadio,
   CoadEditor,
   CoadCalendar,
-  CoadSelect
+  CoadSelect,
 } from "../../components/Contratos/CoadForm";
 import { getTiposServicoLookup } from "../../service/TiposServico.service";
 import {
   getEstadosContrato,
-  getSituacoesContrato
+  getSituacoesContrato,
 } from "../../service/Contratos.service";
 import { getEmpresasLookup } from "../../service/Empresas.service";
 import DotacaoOrcamentaria from "./DotacaoOrcamentaria";
 import moment from "moment";
+import { comNomeUnico } from "../../utils/helper";
+import { REFERENCIA_ENCERRAMENTO } from "../../configs/config.constants";
+
+const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
+
+const referenciaEncerramentoOptions = [
+  { label: "Data da assinatura", value: DATA_ASSINATURA },
+  { label: "Data da ordem de início", value: DATA_ORDEM_INICIO },
+];
 export default class Informacoes extends Component {
   state = {
     situacao: [],
@@ -38,7 +48,13 @@ export default class Informacoes extends Component {
     empresas: [],
     cnpjEmpresa: null,
     dataEncerramento: null,
+    msg_erro: "",
   };
+
+  constructor(props) {
+    super(props);
+    this.dotacoesRef = React.createRef();
+  }
 
   async componentDidMount() {
     const contrato = this.props.contrato;
@@ -50,13 +66,15 @@ export default class Informacoes extends Component {
       tipoServicos,
       estado,
       situacao,
-      empresas,
+      empresas: comNomeUnico(empresas),
       dataEncerramento: contrato.data_encerramento
         ? moment(contrato.data_encerramento).format("DD/MM/YYYY")
         : null,
-      cnpjEmpresa: contrato.empresa_contratada ? contrato.empresa_contratada.cnpj : null
+      cnpjEmpresa: contrato.empresa_contratada
+        ? contrato.empresa_contratada.cnpj
+        : null,
     });
-    $("#avancar-1").click(e => {
+    $("#avancar-1").click((e) => {
       const situacaoRadio = $("[name=situacao]:checked").val();
       e.preventDefault();
       let error = 0;
@@ -95,10 +113,24 @@ export default class Informacoes extends Component {
         error++;
       }
 
+      const erroDotacoes = this.dotacoesRef.current.getError();
+      if (erroDotacoes.length) {
+        window.scrollTo(0, 0);
+        this.setState({ msg_erro: erroDotacoes });
+        return;
+      } else {
+        this.props.setDotacoesOrcamentarias(
+          this.dotacoesRef.current.getState()
+        );
+      }
+
       if (error === 0) {
         this.props.jumpToStep(1);
       } else {
-        $(".alerta").removeClass("d-none");
+        window.scrollTo(0, 0);
+        this.setState({
+          msg_erro: "Para avançar, preencha os campos obrigatórios",
+        });
       }
     });
 
@@ -116,11 +148,8 @@ export default class Informacoes extends Component {
   }
 
   calculaEncerramento = (data, dias) => {
-    const novaData = moment(data, "DD/MM/YYYY")
-      .add(dias, "days")
-      .calendar();
-
-    this.setState({dataEncerramento: moment(novaData).format('DD/MM/YYYY')})
+    const novaData = moment(data, "DD/MM/YYYY").add(dias, "days").calendar();
+    this.setState({ dataEncerramento: moment(novaData).format("DD/MM/YYYY") });
   };
 
   cancelar = () => {
@@ -128,11 +157,11 @@ export default class Informacoes extends Component {
     this.props.jumpToStep(0);
   };
 
-  SelecionaEmpresa = event => {
+  SelecionaEmpresa = (event) => {
     const { empresas } = this.state;
     const value = event.target.value;
     if (empresas)
-      empresas.forEach(empresa => {
+      empresas.forEach((empresa) => {
         if (empresa.uuid === value) {
           this.setState({ cnpjEmpresa: empresa.cnpj });
         }
@@ -145,11 +174,24 @@ export default class Informacoes extends Component {
       estado,
       situacao,
       empresas,
-      cnpjEmpresa, 
-      dataEncerramento
+      cnpjEmpresa,
+      dataEncerramento,
+      msg_erro,
     } = this.state;
+
+    const { cancelamento, dotacao, valorTotalSalvo } = this.props;
+
     return (
       <>
+        <Alert
+          color="danger"
+          className="text-center font-weight-bold"
+          isOpen={!!msg_erro.length}
+          toggle={() => this.setState({ msg_erro: "" })}
+        >
+          {" "}
+          {msg_erro}{" "}
+        </Alert>
         <strong>
           <i className="fas fa-lg fa-file-signature" /> Informações
           Contrato/Empresa
@@ -251,7 +293,7 @@ export default class Informacoes extends Component {
                 label="Data Assinatura de Contrato"
               />
             </Col>
-            <Col lg={8} xl={8}>
+            <Col lg={3} xl={3}>
               <Field
                 component={CoadCalendar}
                 name="data_ordem_inicio"
@@ -259,16 +301,49 @@ export default class Informacoes extends Component {
                 label="Data Ordem de Início"
               />
             </Col>
+            <Col lg={5} xl={5}>
+              <CoadSelect
+                label="Referência para cálculo do encerramento"
+                name="referencia_encerramento"
+                onBlur={(value) => {}}
+              >
+                <option value="">Selecione</option>
+                {empresas
+                  ? referenciaEncerramentoOptions.map((option, index) => {
+                      return (
+                        <option key={index} value={option.value}>
+                          {option.label}
+                        </option>
+                      );
+                    })
+                  : ""}
+              </CoadSelect>
+            </Col>
           </Row>
           <Row className="mt-3">
             <Col lg={4} xl={4}>
-              <CoadTextInput
-                name="vigencia_em_dias"
-                label="Vigência de Contrato"
-                type="text"
-                id="vigencia_em_dias"
-                placeholder="Ex: 365 dias"
-              />
+              <div className="row">
+                <div className="input-group vigencia-contrato">
+                  <div className="col-6">
+                    <CoadTextInput
+                      placeholder="Ex: 365 dias"
+                      label="Vigência de Contrato"
+                      name="vigencia_em_dias"
+                      required
+                      type="text"
+                    />
+                  </div>
+                  <div className="input-group-append col-6">
+                    <CoadSelect
+                      name="unidade_vigencia"
+                      onBlur={(value) => this.SelecionaEmpresa(value)}
+                    >
+                      <option value="DIAS">Dias</option>
+                      <option value="MESES">Meses</option>
+                    </CoadSelect>
+                  </div>
+                </div>
+              </div>
             </Col>
             <Col lg={8} xl={8}>
               <Label>Data Encerramento de Contrato</Label>
@@ -277,7 +352,7 @@ export default class Informacoes extends Component {
                 id="data_encerramento"
                 name="data_encerramento"
                 disabled={true}
-                value={dataEncerramento}
+                value={dataEncerramento || ""}
                 placeholder={"01/01/2030"}
               />
             </Col>
@@ -290,7 +365,7 @@ export default class Informacoes extends Component {
               <CoadSelect
                 label="Empresa Contratada"
                 name="empresa_contratada"
-                onBlur={value => this.SelecionaEmpresa(value)}
+                onBlur={(value) => this.SelecionaEmpresa(value)}
               >
                 <option value="">Selecione</option>
                 {empresas
@@ -309,15 +384,16 @@ export default class Informacoes extends Component {
             <Col lg={12} xl={12}>
               <FormGroup>
                 <Label>CNPJ Empresa</Label>
-                <InputBootstrap value={cnpjEmpresa} disabled={true} />
+                <InputBootstrap value={cnpjEmpresa || ""} disabled={true} />
               </FormGroup>
             </Col>
           </Row>
         </Card>
         <Card>
           <DotacaoOrcamentaria
-            dotacao={this.props.dotacao}
-            getDotacao={value => this.props.getDotacao(value)}
+            ref={this.dotacoesRef}
+            dotacoesSalvas={dotacao}
+            valorTotalSalvo={valorTotalSalvo}
           />
         </Card>
         <Card>
@@ -334,9 +410,6 @@ export default class Informacoes extends Component {
             </Col>
           </Row>
         </Card>
-        <div className="alerta text-center alert alert-danger d-none">
-          <strong>Para avançar, preencha os campos obrigatórios</strong>
-        </div>
         <div className="d-flex flex-row-reverse mt-4">
           <Button id="avancar-1" type="button" className="btn-coad-primary">
             Avançar
@@ -345,7 +418,7 @@ export default class Informacoes extends Component {
             type="button"
             onClick={() => this.cancelar()}
             className="btn-coad-background-outline mx-3"
-            disabled={this.props.cancelamento}
+            disabled={cancelamento}
           >
             Cancelar
           </Button>

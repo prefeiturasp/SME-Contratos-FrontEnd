@@ -15,7 +15,7 @@ import { getUrlParams } from "../../utils/params";
 import {
   getContratoByUUID,
   updateContrato,
-  CancelarContrato
+  CancelarContrato,
 } from "../../service/Contratos.service";
 import { redirect } from "../../utils/redirect";
 import { getCargosCoad } from "../../service/Cargos.service";
@@ -37,7 +37,9 @@ export default class CadastrarContrato extends Component {
     cancelamento: false,
     situacaoContrato: "RASCUNHO",
     contrato: null,
-    dotacao: []
+    dotacao: [],
+    unidades_selecionadas: [],
+    valor_total: 0
   };
 
   async componentDidMount() {
@@ -47,13 +49,13 @@ export default class CadastrarContrato extends Component {
 
     this.setState({
       contrato: contrato,
-      dotacao: contrato.dotacao_orcamentaria
+      dotacao: contrato.dotacao_orcamentaria,
     });
 
     if (contrato.situacao !== "RASCUNHO") {
       this.setState({
         cancelamento: true,
-        situacaoContrato: contrato.situacao
+        situacaoContrato: contrato.situacao,
       });
     }
 
@@ -68,14 +70,16 @@ export default class CadastrarContrato extends Component {
       termo_contrato,
       gestor: gestor ? gestor.uuid : null,
       uuid_contrato: uuid,
-      coordenador: coordenador ? coordenador.uuid : null
+      coordenador: coordenador ? coordenador.uuid : null,
     });
-    $("#cancelar-contrato").click(function() {
-      $(".form-cadastrar-contrato")
-        .get(0)
-        .reset();
+    $("#cancelar-contrato").click(function () {
+      $(".form-cadastrar-contrato").get(0).reset();
     });
   }
+
+  setUnidadesSelecionadas = (unidades_selecionadas) => {
+    this.setState({ unidades_selecionadas });
+  };
 
   cancelarCadastro = async () => {
     const { uuid_contrato } = this.state;
@@ -86,7 +90,7 @@ export default class CadastrarContrato extends Component {
       this.messages.show({
         severity: "warn",
         life: 10000,
-        detail: "Cadastro de contrato cancelado"
+        detail: "Cadastro de contrato cancelado",
       });
     }
   };
@@ -95,7 +99,7 @@ export default class CadastrarContrato extends Component {
     this.setState({ visibleCancelar: false });
   };
 
-  removeEmpty = lista => {
+  removeEmpty = (lista) => {
     const novaLista = lista.filter((valor, i) => {
       if (valor !== null || valor !== undefined || valor !== "empty") {
         return valor;
@@ -107,8 +111,9 @@ export default class CadastrarContrato extends Component {
     return novaLista;
   };
 
-  handleSubmit = async values => {
-    const { uuid_contrato, dotacao } = this.state;
+  handleSubmit = async (values) => {
+    const { uuid_contrato, dotacao, unidades_selecionadas } = this.state;
+    values.unidades_selecionadas = unidades_selecionadas;
     values["data_assinatura"] = moment(values.data_assinatura).format(
       "YYYY-MM-DD"
     );
@@ -120,7 +125,10 @@ export default class CadastrarContrato extends Component {
     );
     values["dotacao_orcamentaria"] = this.removeEmpty(dotacao);
 
-    const resultado = await updateContrato(values, uuid_contrato);
+    const resultado = await updateContrato({ ...values,
+      dotacoes_orcamentarias: this.state.dotacao,
+      valor_total: this.state.valor_total
+    }, uuid_contrato);
 
     if (resultado.status === OK) {
       setFlashMessage("Contrato cadastrado com sucesso", "sucesso");
@@ -136,8 +144,8 @@ export default class CadastrarContrato extends Component {
     this.setState({ visibleCancelar: true });
   };
 
-  getDotacaoOrcamentaria = dotacao => {
-    this.setState({ dotacao: dotacao });
+  setDotacoesOrcamentarias = ({ dotacoes, valorTotal}) => {
+    this.setState({ dotacao: dotacoes, valor_total: valorTotal });
   };
 
   render() {
@@ -148,7 +156,8 @@ export default class CadastrarContrato extends Component {
       coordenador,
       cancelamento,
       contrato,
-      dotacao
+      dotacao,
+      valor_total
     } = this.state;
     const steps = [
       {
@@ -158,10 +167,11 @@ export default class CadastrarContrato extends Component {
             cancelar={this.mostrarModalCancelar}
             cancelamento={cancelamento}
             dotacao={dotacao}
-            getDotacao={this.getDotacaoOrcamentaria}
+            valorTotalSalvo={valor_total}
+            setDotacoesOrcamentarias={this.setDotacoesOrcamentarias}
             contrato={contrato}
           />
-        )
+        ),
       },
       {
         name: "Obrigações Contratuais",
@@ -170,7 +180,7 @@ export default class CadastrarContrato extends Component {
             cancelamento={cancelamento}
             cancelar={this.mostrarModalCancelar}
           />
-        )
+        ),
       },
       {
         name: "Gestão/Unidade",
@@ -180,8 +190,10 @@ export default class CadastrarContrato extends Component {
             cancelar={this.mostrarModalCancelar}
             cancelamento={cancelamento}
             contrato={contrato}
+            setUnidadesSelecionadas={this.setUnidadesSelecionadas}
+            messages={this.messages}
           />
-        )
+        ),
       },
       {
         name: "Anexos/Observações",
@@ -190,17 +202,17 @@ export default class CadastrarContrato extends Component {
             cancelar={this.mostrarModalCancelar}
             cancelamento={cancelamento}
           />
-        )
+        ),
       },
-      { name: "Contrato cadastrado", component: <Finalizar /> }
+      { name: "Contrato cadastrado", component: <Finalizar /> },
     ];
     return (
       <Page>
-        <Messages ref={el => (this.messages = el)}></Messages>
+        <Messages ref={(el) => (this.messages = el)}></Messages>
         <Dialog
           header="Cancelar cadastro de contrato"
           visible={this.state.visibleCancelar}
-          style={{ width: "50vw", "z-index": 1000 }}
+          style={{ width: "50vw", zIndex: 1000 }}
           modal={true}
           onHide={this.esconderCancelar}
           footer={
@@ -291,7 +303,7 @@ export default class CadastrarContrato extends Component {
                 objeto: contrato.objeto ? contrato.objeto : "",
                 empresa_contratada: contrato.empresa_contratada
                   ? contrato.empresa_contratada.uuid
-                  : ""
+                  : "",
               }}
               // validationSchema={contratoValidations}
               onReset={this.mostrarModalCancelar}
