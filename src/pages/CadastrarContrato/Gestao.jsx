@@ -108,7 +108,7 @@ export default class Gestao extends Component {
                   ? nucleos.map((nucleo, i) => {
                       return (
                         <option key={i} value={nucleo.uuid}>
-                          {nucleo.sigla} ({nucleo.divisao.sigla})
+                          {nucleo.sigla} ({nucleo.nome})
                         </option>
                       );
                     })

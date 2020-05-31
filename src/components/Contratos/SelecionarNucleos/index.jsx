@@ -22,7 +22,7 @@ export default class SelecionarNucleos extends Component {
     const options = this.state.options;
     nucleos.map(value => {
       return options.push({
-        label: `${value.sigla} (${value.divisao.sigla})`,
+        label: `${value.sigla} (${value.nome})`,
         value: value.uuid
       });
     });
