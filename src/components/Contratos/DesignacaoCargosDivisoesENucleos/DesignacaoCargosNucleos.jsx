@@ -32,7 +32,7 @@ export class DesignacaoCargosNucleos extends Component {
                 {nucleos && nucleos.map(
                     (nucleo) => {
                         return (
-                            <CoadAccordion titulo={nucleo.nome}>
+                            <CoadAccordion titulo={nucleo.sigla +" - "+ nucleo.nome}>
                                 <DesignacaoCargosNucleo nucleo={nucleo} showMessage={this.props.showMessage}/>
                             </CoadAccordion>
                         )
