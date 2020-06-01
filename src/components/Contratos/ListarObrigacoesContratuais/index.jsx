@@ -4,7 +4,7 @@ import { Column } from "primereact/column";
 import { Row } from "reactstrap";
 
 const obrigacaoTemplate = (rowData) => {
-  return <div dangerouslySetInnerHTML={{ __html: rowData.obrigacao }} />;
+  return <div dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
 };
 
 const Grupo = ({ nome, obrigacoes: itens = [] }) => (
@@ -19,9 +19,8 @@ const Grupo = ({ nome, obrigacoes: itens = [] }) => (
           paginatorTemplate="PrevPageLink PageLinks NextPageLink"
           className="datatable-strapd-coad"
         >
-          <Column field="item" header="Item" width={"20%"} />
+          <Column field="item" header="Item" style={{ width: "10%" }} />
           <Column
-            field="obrigacao"
             header="Obrigações"
             body={obrigacaoTemplate}
           />
