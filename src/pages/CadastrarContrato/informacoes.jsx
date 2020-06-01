@@ -29,6 +29,7 @@ import DotacaoOrcamentaria from "./DotacaoOrcamentaria";
 import moment from "moment";
 import { comNomeUnico } from "../../utils/helper";
 import { REFERENCIA_ENCERRAMENTO } from "../../configs/config.constants";
+import SelecionaEdital from "../../components/Contratos/SelecionaEdital";
 
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
 
@@ -253,12 +254,9 @@ export default class Informacoes extends Component {
 
           <Row>
             <Col lg={4} xl={4}>
-              <CoadTextInput
-                label="Número do Edital"
-                name="numero_edital"
-                id="numero_edital"
-                placeholder="Ex: 0000000000000"
-                type="text"
+              <SelecionaEdital
+                value={this.props.edital}
+                onSelect={this.props.setEdital}
               />
             </Col>
             <Col lg={8} xl={8}>
