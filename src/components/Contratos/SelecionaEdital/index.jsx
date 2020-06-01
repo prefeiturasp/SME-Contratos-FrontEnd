@@ -3,7 +3,7 @@ import { Dropdown } from "primereact/dropdown";
 import { FormGroup, Label } from "reactstrap";
 import { getListaDeEditais } from "../../../service/Editais.service";
 
-const SelecionaEdital = ({ value, onSelect }) => {
+const SelecionaEdital = ({ disabled, editalSalvo, value, onSelect }) => {
   const [editais, setEditais] = useState([]);
 
   useEffect(() => {
@@ -11,15 +11,19 @@ const SelecionaEdital = ({ value, onSelect }) => {
       try {
         const editais = await getListaDeEditais();
         setEditais(editais);
+        if(editalSalvo){
+          const arr = editais.filter(el => el.uuid === editalSalvo.uuid)
+          if(arr.length) onSelect({ value: arr[0] })
+        }
       } catch (erro) {
         console.error(erro);
       }
     })();
-  }, []);
+  }, [editalSalvo, onSelect]);
 
   return (
     <FormGroup className="p-grid p-fluid p-2">
-      <Label>Vincular Edital</Label>
+      <Label>Número do Edital</Label>
       <br />
       <Dropdown
         optionLabel="numero"
@@ -27,9 +31,9 @@ const SelecionaEdital = ({ value, onSelect }) => {
         value={value}
         onChange={onSelect}
         placeholder="Selecione..."
-        showClear={true}
         autoWidth={true}
         className="pb-1"
+        disabled={disabled}
         style={{ borderColor: "#ced4da" }}
       />
     </FormGroup>
