@@ -31,6 +31,7 @@ export default class ListarEditais extends Component {
 
   buscaEditais = async () => {
     const editais = await getListaDeEditais();
+    editais.reverse();
     this.setState({ editais });
   };
 
