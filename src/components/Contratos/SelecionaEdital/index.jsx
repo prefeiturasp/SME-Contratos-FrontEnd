@@ -12,7 +12,7 @@ const SelecionaEdital = ({ value, onSelect }) => {
         const editais = await getListaDeEditais();
         setEditais(editais);
       } catch (erro) {
-        console.log(erro);
+        console.error(erro);
       }
     })();
   }, []);
