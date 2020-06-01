@@ -34,8 +34,8 @@ import SelecionaEdital from "../../components/Contratos/SelecionaEdital";
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
 
 const referenciaEncerramentoOptions = [
-  { label: "Data da assinatura", value: DATA_ASSINATURA },
   { label: "Data da ordem de início", value: DATA_ORDEM_INICIO },
+  { label: "Data da assinatura", value: DATA_ASSINATURA },
 ];
 export default class Informacoes extends Component {
   state = {
@@ -305,7 +305,6 @@ export default class Informacoes extends Component {
                 name="referencia_encerramento"
                 onBlur={(value) => {}}
               >
-                <option value="">Selecione</option>
                 {empresas
                   ? referenciaEncerramentoOptions.map((option, index) => {
                       return (
