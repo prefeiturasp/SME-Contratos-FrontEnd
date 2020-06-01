@@ -7,13 +7,14 @@ const obrigacaoTemplate = (rowData) => {
   return <div dangerouslySetInnerHTML={{ __html: rowData.obrigacao }} />;
 };
 
-const ListarObrigacoesContratuais = ({ obrigacoes = [] }) => {
-  return (
+const Grupo = ({ nome, obrigacoes: itens = [] }) => (
+  <div className="mb-3">
+    <Row className="mb-1"><h6>{nome}</h6></Row>
     <Row>
-      {obrigacoes.length > 0 && (
+      {itens.length > 0 && (
         <DataTable
-          value={obrigacoes}
-          paginator={obrigacoes.length > 5}
+          value={itens}
+          paginator={itens.length > 5}
           rows={5}
           paginatorTemplate="PrevPageLink PageLinks NextPageLink"
           className="datatable-strapd-coad"
@@ -26,9 +27,9 @@ const ListarObrigacoesContratuais = ({ obrigacoes = [] }) => {
           />
         </DataTable>
       )}
-      {!obrigacoes.length && (
+      {!itens.length && (
         <DataTable
-          footer={"Não existem obrigações contratuais adicionadas no contrato"}
+          footer={"Esse grupo não contém itens de obrigação."}
           className="datatable-footer-coad "
         >
           <Column header="Item" style={{ width: "10%" }} />
@@ -37,7 +38,17 @@ const ListarObrigacoesContratuais = ({ obrigacoes = [] }) => {
         </DataTable>
       )}
     </Row>
-  );
+  </div>
+);
+
+const ListarObrigacoesContratuais = ({ grupos = [] }) => {
+  if (!grupos.length)
+    return (
+      <Row>Não existem obrigações contratuais adicionadas no contrato.</Row>
+    );
+  return grupos.map((grupo) => {
+    return <Grupo nome={grupo.nome} obrigacoes={grupo.itens_de_obrigacao} />;
+  });
 };
 
 export default ListarObrigacoesContratuais;

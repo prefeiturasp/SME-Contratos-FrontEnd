@@ -661,6 +661,8 @@ class VisualizarContratos extends Component {
               />
             </CoadAccordion>
             <CoadAccordion titulo={"Obrigações Contratuais"}>
+            <ListarObrigacoesContratuais
+              grupos={contrato.edital ? contrato.edital.grupos_de_obrigacao : []} />
             </CoadAccordion>
             <CoadAccordion titulo={"Gestão de Contrato"}>
               <Row>
