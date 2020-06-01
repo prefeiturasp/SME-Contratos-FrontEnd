@@ -36,7 +36,7 @@ import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
 import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
 import { redirect } from "../../utils/redirect";
 import { getTiposServicoLookup } from "../../service/TiposServico.service";
-import { mapStateToPayload, getUnidadesSelecionadas } from "./helpers";
+import { mapStateToPayload } from "./helpers";
 import { Dialog } from "primereact/dialog";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
 import ListarObrigacoesContratuais from "../../components/Contratos/ListarObrigacoesContratuais";
@@ -45,7 +45,6 @@ import { Switch } from "antd";
 import $ from "jquery";
 import moment from "moment";
 import { OK } from "http-status-codes";
-import { TabelaUnidades } from "../CadastrarContrato/UnidadesEnvolvidas/TabelaUnidades";
 import { UnidadesEnvolvidas } from "../CadastrarContrato/UnidadesEnvolvidas";
 
 const nullToUndef = (v) => (v === null ? undefined : v);
@@ -95,6 +94,7 @@ class VisualizarContratos extends Component {
       valor_total: "",
       erro: "",
       unidade_vigencia: "DIAS",
+      edital: null,
     };
     this.dotacoesRef = React.createRef();
   }
@@ -161,6 +161,7 @@ class VisualizarContratos extends Component {
       })),
       valor_total: parseFloat(contrato.valor_total),
       unidade_vigencia: contrato.unidade_vigencia,
+      edital: contrato.edital,
     });
   };
 
@@ -660,10 +661,6 @@ class VisualizarContratos extends Component {
               />
             </CoadAccordion>
             <CoadAccordion titulo={"Obrigações Contratuais"}>
-              <ListarObrigacoesContratuais
-                contrato={contrato.uuid}
-                desabilitado={disabilitado}
-              />
             </CoadAccordion>
             <CoadAccordion titulo={"Gestão de Contrato"}>
               <Row>

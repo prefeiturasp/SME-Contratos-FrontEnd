@@ -127,6 +127,7 @@ export default class CadastrarContrato extends Component {
 
     const resultado = await updateContrato({ ...values,
       dotacoes_orcamentarias: this.state.dotacao,
+      edital: this.state.edital.uuid,
       valor_total: this.state.valor_total
     }, uuid_contrato);
 
@@ -147,6 +148,10 @@ export default class CadastrarContrato extends Component {
   setDotacoesOrcamentarias = ({ dotacoes, valorTotal}) => {
     this.setState({ dotacao: dotacoes, valor_total: valorTotal });
   };
+
+  setEdital = (e) => {
+    this.setState({ edital: e.value} );
+  }
 
   render() {
     const {
@@ -169,16 +174,9 @@ export default class CadastrarContrato extends Component {
             dotacao={dotacao}
             valorTotalSalvo={valor_total}
             setDotacoesOrcamentarias={this.setDotacoesOrcamentarias}
+            edital={this.state.edital}
+            setEdital={this.setEdital}
             contrato={contrato}
-          />
-        ),
-      },
-      {
-        name: "Obrigações Contratuais",
-        component: (
-          <ListarObrigacoesContratuais
-            cancelamento={cancelamento}
-            cancelar={this.mostrarModalCancelar}
           />
         ),
       },
