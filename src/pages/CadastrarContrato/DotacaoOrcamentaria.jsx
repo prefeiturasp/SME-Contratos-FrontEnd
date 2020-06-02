@@ -49,6 +49,13 @@ const dotacaoVazia = () => ({
 });
 
 
+const dropLastIfEmpty = (arr1, arr2) => {
+  if(!arr1.length) return arr1;
+  const filtered = arr1.map(R.pick(["dotacao_orcamentaria", "valor"]))
+  if(Object.values(filtered[filtered.length -1]).every(el => !el)) return R.dropLast(1, arr2 || arr1)
+  return arr1
+}
+
 const DotacaoOrcamentaria = React.forwardRef(({ valorTotalSalvo, dotacoesSalvas, disabled = false }, ref) => {
   const [valorTotal, setValorTotal] = useState(valorTotalSalvo || 0) 
   const [dotacoes, setDotacoes] = useState( dotacoesSalvas || [dotacaoVazia()]);
@@ -60,7 +67,9 @@ const DotacaoOrcamentaria = React.forwardRef(({ valorTotalSalvo, dotacoesSalvas,
 }, [dotacoesSalvas, valorTotalSalvo])
 
   useImperativeHandle(ref, () => ({
-    getState: () => {return { valorTotal, dotacoes }},
+    getState: () => {
+      return { valorTotal, dotacoes: dropLastIfEmpty(dotacoes) }
+    },
     getError: () => {
       if(erros.flat().some(el => /duplica/gi.test(el))) return ERRO_MSG.duplicado;
       if(erros.flat().some(el => /descri/gi.test(el)))  return ERRO_MSG.semDescricao;
@@ -68,8 +77,6 @@ const DotacaoOrcamentaria = React.forwardRef(({ valorTotalSalvo, dotacoesSalvas,
       return "";
     }
   }), [valorTotal, dotacoes, erros]);
-  
-
 
   useEffect(() => {
     atualizaErros()
@@ -110,8 +117,7 @@ const DotacaoOrcamentaria = React.forwardRef(({ valorTotalSalvo, dotacoesSalvas,
     if(len > 1) errosCampo.push("Valor duplicado")
   }
 
-  const testaVazio = (errosCampo, {dotacao_orcamentaria, valor}, ehUltimaLinha) => {
-    if(ehUltimaLinha) return;
+  const testaVazio = (errosCampo, {dotacao_orcamentaria, valor}) => {
     if(!dotacao_orcamentaria.length) errosCampo.push("Preencha uma descrição")
     if(!valor) errosCampo.push("Preencha um valor")
   }
@@ -122,7 +128,7 @@ const DotacaoOrcamentaria = React.forwardRef(({ valorTotalSalvo, dotacoesSalvas,
       testaDuplicacao(arr[index], dotacao, dotacoes);
       testaVazio(arr[index], dotacao, index === dotacoes.length - 1);
     })
-    setErros(arr);
+    setErros(dropLastIfEmpty(dotacoes, arr));
   };
   return (
     <Fragment>
