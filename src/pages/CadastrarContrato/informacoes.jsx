@@ -30,6 +30,7 @@ import moment from "moment";
 import { comNomeUnico } from "../../utils/helper";
 import { REFERENCIA_ENCERRAMENTO } from "../../configs/config.constants";
 import SelecionaEdital from "../../components/Contratos/SelecionaEdital";
+import * as R from "ramda";
 
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
 
@@ -255,6 +256,7 @@ export default class Informacoes extends Component {
           <Row>
             <Col lg={4} xl={4}>
               <SelecionaEdital
+                editalSalvo={R.propOr(null, "edital")(this.props.contrato)}
                 value={this.props.edital}
                 onSelect={this.props.setEdital}
               />

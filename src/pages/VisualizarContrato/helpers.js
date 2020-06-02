@@ -18,7 +18,6 @@ export const mapStateToPayload = (state, dotacoesState) => {
         : null,
       vigencia_em_dias: state.vigencia_em_dias,
       processo: state.processo,
-      numero_edital: state.numero_edital,
       total_mensal: state.totalMensal,
       objeto: state.objeto,
       observacoes: state.observacoes,
@@ -31,6 +30,7 @@ export const mapStateToPayload = (state, dotacoesState) => {
       unidades_selecionadas: state.unidades_selecionadas,
       unidade_vigencia: state.unidade_vigencia,
       referencia_encerramento: state.referencia_encerramento,
+      edital: state.alteracaoEdital ? state.alteracaoEdital.uuid : (state.contrato.edital ? state.contrato.edital.uuid : null )
     };
   }
 

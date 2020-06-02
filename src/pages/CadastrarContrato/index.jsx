@@ -20,10 +20,13 @@ import {
 import { redirect } from "../../utils/redirect";
 import { getCargosCoad } from "../../service/Cargos.service";
 import { Messages } from "primereact/messages";
-import ListarObrigacoesContratuais from "./ObrigacoesContratuais";
 import { OK } from "http-status-codes";
 import { setFlashMessage } from "../../utils/flashMessages";
+import * as R from "ramda";
 // import { contratoValidations } from "./validations";
+
+
+const editalUuid = contrato =>  R.pathOr(null, ['edital', 'uuid'], contrato)
 
 export default class CadastrarContrato extends Component {
   state = {
@@ -39,7 +42,8 @@ export default class CadastrarContrato extends Component {
     contrato: null,
     dotacao: [],
     unidades_selecionadas: [],
-    valor_total: 0
+    valor_total: 0,
+    alteracaoEdital: null
   };
 
   async componentDidMount() {
@@ -127,7 +131,7 @@ export default class CadastrarContrato extends Component {
 
     const resultado = await updateContrato({ ...values,
       dotacoes_orcamentarias: this.state.dotacao,
-      edital: this.state.edital.uuid,
+      edital: this.state.alteracaoEdital ? this.state.alteracaoEdital.uuid : editalUuid(this.state.contrato),
       valor_total: this.state.valor_total
     }, uuid_contrato);
 
@@ -150,7 +154,7 @@ export default class CadastrarContrato extends Component {
   };
 
   setEdital = (e) => {
-    this.setState({ edital: e.value} );
+    this.setState({ alteracaoEdital: e.value} );
   }
 
   render() {
@@ -174,7 +178,7 @@ export default class CadastrarContrato extends Component {
             dotacao={dotacao}
             valorTotalSalvo={valor_total}
             setDotacoesOrcamentarias={this.setDotacoesOrcamentarias}
-            edital={this.state.edital}
+            edital={this.state.alteracaoEdital}
             setEdital={this.setEdital}
             contrato={contrato}
           />

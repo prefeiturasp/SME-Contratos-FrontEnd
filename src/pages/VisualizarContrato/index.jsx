@@ -16,7 +16,6 @@ import {
 } from "reactstrap";
 import { Editor } from "primereact/editor";
 import { Dropdown } from "primereact/dropdown";
-import UnidadeEnvolvidas from "./UnidadesEnvolvidas";
 import Anexos from "./Anexos";
 import {
   getContratoByUUID,
@@ -46,6 +45,7 @@ import $ from "jquery";
 import moment from "moment";
 import { OK } from "http-status-codes";
 import { UnidadesEnvolvidas } from "../CadastrarContrato/UnidadesEnvolvidas";
+import SelecionaEdital from "../../components/Contratos/SelecionaEdital";
 
 const nullToUndef = (v) => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
@@ -81,7 +81,6 @@ class VisualizarContratos extends Component {
       disabilitado: true,
       processo: null,
       vigencia_em_dias: null,
-      numero_edital: null,
       dotacoes_orcamentarias: [],
       visible: false,
       usernameGestor: null,
@@ -95,12 +94,17 @@ class VisualizarContratos extends Component {
       erro: "",
       unidade_vigencia: "DIAS",
       edital: null,
+      alteracaoEdital: null,
     };
     this.dotacoesRef = React.createRef();
   }
 
   setUnidadesSelecionadas = (unidades_selecionadas) => {
     this.setState({ unidades_selecionadas });
+  };
+
+  setEdital = (e) => {
+    this.setState({ alteracaoEdital: e.value });
   };
 
   async componentDidMount() {
@@ -229,8 +233,12 @@ class VisualizarContratos extends Component {
         ),
         contrato: {
           ...this.state.contrato,
-          dias_para_o_encerramento: resultado.data.dias_para_o_encerramento
-        }
+          dias_para_o_encerramento: resultado.data.dias_para_o_encerramento,
+          edital:
+            typeof resultado.data.edital === "object"
+              ? resultado.data.edital
+              : this.state.contrato.edital,
+        },
       });
       setTimeout(() => {
         this.setState({
@@ -281,7 +289,6 @@ class VisualizarContratos extends Component {
       coordenador,
       documentoFiscaDre,
       vigencia_em_dias,
-      numero_edital,
       visible,
       alert,
       usernameGestor,
@@ -459,16 +466,13 @@ class VisualizarContratos extends Component {
               </Row>
               <Row>
                 <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                  <Label for="edital">Número do Edital</Label>
-                  <InputText
-                    disabled={true}
-                    id="edital"
-                    value={nullToUndef(numero_edital)}
-                    placeholder={"Ex: 00000000"}
-                    className="w-100"
-                    onChange={(e) =>
-                      this.setState({ numero_edital: e.target.value })
+                  <SelecionaEdital
+                    editalSalvo={
+                      this.state.contrato ? this.state.contrato.edital : null
                     }
+                    value={this.state.alteracaoEdital}
+                    onSelect={this.setEdital}
+                    disabled={disabilitado}
                   />
                 </Col>
                 <Col xs={12} sm={12} md={12} lg={8} xl={8}>
