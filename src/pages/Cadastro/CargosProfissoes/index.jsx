@@ -1,0 +1,44 @@
+import React, { Component } from "react";
+import { Messages } from "primereact/messages";
+import Page from "../../../components/Global/Page";
+import Container from "../../../components/Global/Container";
+import ListarTermoContrato from "../../../components/Contratos/ListarTermoContrato";
+import AtribuirCargoProfissao from "./AtribuirCargoProfissao";
+
+export default class CadastroCargosProfissoes extends Component {
+  constructor() {
+    super();
+    this.mensagemSucessoEdicao = this.mensagemSucessoEdicao.bind(this);
+  }
+
+  mensagemSucessoEdicao() {
+    window.scrollTo(0, 0);
+    this.messages.show({
+      severity: "success",
+      life: 5000,
+      detail: "Alterações realizadas com sucesso",
+    });
+  }
+
+  showMessage(messageParams) {
+    window.scrollTo(0, 0);
+    this.messages.show(messageParams);
+  }
+
+  render() {
+    return (
+      <Page>
+        <Messages ref={(el) => (this.messages = el)}></Messages>
+        <h4>Cadastro - Cargos/Profissões</h4>
+        <Container>
+          <AtribuirCargoProfissao showMessage={this.showMessage.bind(this)} />
+          <Container>
+            <ListarTermoContrato
+              mensagemSucessoEdicao={this.mensagemSucessoEdicao}
+            />
+          </Container>
+        </Container>
+      </Page>
+    );
+  }
+}
