@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import $ from "jquery";
+import * as R from "ramda";
 import { Row, Col, Card, Input as InputBootStrap, Button } from "reactstrap";
 import { CoadSelect } from "../../components/Contratos/CoadForm";
 import { getNucleos } from "../../service/Nucleos.service";
@@ -20,7 +21,7 @@ export default class Gestao extends Component {
     this.setState({
       nucleos,
       usuarios,
-      emailUsuario: this.props.contrato.gestor.email,
+      emailUsuario:  R.pathOr(null, ['gestor', 'email'], this.props.contrato)
     });
 
     $("#avancar-2").click(() => {
@@ -37,9 +38,11 @@ export default class Gestao extends Component {
         $("[name=nucleo_responsavel]").addClass("is-invalid");
         error++;
       }
+      console.log("erros", error)
       if (error === 0) {
         this.props.jumpToStep(3);
       } else {
+        console.log("else")
         $(".alerta").removeClass("d-none");
       }
     });
