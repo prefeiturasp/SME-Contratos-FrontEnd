@@ -290,7 +290,7 @@ const Modelo = props => {
         <Input
           value={modelo ? modelo.titulo : ""}
           onChange={e => alteraTitulo(e.target.value)}
-          autoComplete={false}
+          autoComplete="off"
           disabled={modoVisualizacao}
         />
       </FormGroup>

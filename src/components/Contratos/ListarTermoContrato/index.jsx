@@ -194,7 +194,7 @@ export default class ListarTermoContrato extends Component {
           </p>
           <Row>
             <Col md={12} lg={5} xl={5}>
-              <label for="termo_contrato">Termo de Contrato</label>
+              <label htmlFor="termo_contrato">Termo de Contrato</label>
               <br />
               <InputText
                 value={this.state.termo_contrato}
@@ -209,7 +209,7 @@ export default class ListarTermoContrato extends Component {
               />
             </Col>
             <Col lg={7} xl={7} className="p-fluid">
-              <label for="gestor">Nome Gestor(a) de Contrato</label>
+              <label htmlFor="gestor">Nome Gestor(a) de Contrato</label>
               <br />
               <BuscaIncrementalServidores
                 placeholder="Ex.: Nome e sobrenome"
@@ -221,7 +221,7 @@ export default class ListarTermoContrato extends Component {
           <Row>
             <Col lg={5} xl={5}></Col>
             <Col lg={7} xl={7} className="p-fluid">
-              <label for="gestor">Nome Suplente de Contrato</label>
+              <label htmlFor="gestor">Nome Suplente de Contrato</label>
               <br />
               <BuscaIncrementalServidores
                 placeholder="Ex.: Nome e sobrenome"

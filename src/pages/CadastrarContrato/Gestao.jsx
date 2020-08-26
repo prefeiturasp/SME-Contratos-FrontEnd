@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import $ from "jquery";
+import * as R from "ramda";
 import { Row, Col, Card, Input as InputBootStrap, Button } from "reactstrap";
 import { CoadSelect } from "../../components/Contratos/CoadForm";
-import UnidadeEnvolvidas from "../VisualizarContrato/UnidadesEnvolvidas";
 import { getNucleos } from "../../service/Nucleos.service";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
+import { UnidadesEnvolvidas } from "./UnidadesEnvolvidas";
+import "./style.scss";
 
 export default class Gestao extends Component {
   state = {
@@ -16,8 +18,12 @@ export default class Gestao extends Component {
   async componentDidMount() {
     const nucleos = await getNucleos();
     const usuarios = await getUsuariosLookup();
-    this.setState({ nucleos, usuarios, emailUsuario: this.props.contrato.gestor.email });
-    
+    this.setState({
+      nucleos,
+      usuarios,
+      emailUsuario:  R.pathOr(null, ['gestor', 'email'], this.props.contrato)
+    });
+
     $("#avancar-2").click(() => {
       let error = 0;
       if (!$("[name=coordenador]").val()) {
@@ -27,23 +33,25 @@ export default class Gestao extends Component {
       if (!$("[name=gestor]").val()) {
         $("[name=gestor]").addClass("is-invalid");
         error++;
-      } 
+      }
       if (!$("[name=nucleo_responsavel]").val()) {
         $("[name=nucleo_responsavel]").addClass("is-invalid");
         error++;
       }
+      console.log("erros", error)
       if (error === 0) {
         this.props.jumpToStep(3);
       } else {
+        console.log("else")
         $(".alerta").removeClass("d-none");
       }
     });
   }
 
-  setEmailUsuario = uuid => {
+  setEmailUsuario = (uuid) => {
     const { usuarios } = this.state;
     let emailUsuario = null;
-    usuarios.forEach(usuario => {
+    usuarios.forEach((usuario) => {
       if (usuario.uuid === uuid) {
         emailUsuario = usuario.email;
       }
@@ -85,7 +93,7 @@ export default class Gestao extends Component {
               <CoadSelect
                 label="Gestor do Contrato"
                 name="gestor"
-                onBlur={value => this.setEmailUsuario(value.target.value)}
+                onBlur={(value) => this.setEmailUsuario(value.target.value)}
               >
                 {usuarios
                   ? usuarios.map((usuario, i) => (
@@ -103,7 +111,7 @@ export default class Gestao extends Component {
                   ? nucleos.map((nucleo, i) => {
                       return (
                         <option key={i} value={nucleo.uuid}>
-                          {nucleo.sigla} ({nucleo.divisao.sigla})
+                          {nucleo.sigla} ({nucleo.nome})
                         </option>
                       );
                     })
@@ -132,19 +140,14 @@ export default class Gestao extends Component {
           </Row>
         </Card>
         <Card>
-          <strong>Unidades Envolvidas</strong>
-          <div className="my-2"></div>
-          <UnidadeEnvolvidas termo={this.props.termo} />
+          <strong className="my-2">Unidades Envolvidas</strong>
+          <UnidadesEnvolvidas {...this.props} />
         </Card>
         <div className="alerta text-center alert alert-danger d-none">
           <strong>Para avançar, preencha os campos obrigatórios</strong>
         </div>
         <div className="d-flex flex-row-reverse mt-4">
-          <Button
-            id="avancar-2"
-            type="button"
-            className="btn-coad-primary"
-          >
+          <Button id="avancar-2" type="button" className="btn-coad-primary">
             Avançar
           </Button>
           <Button

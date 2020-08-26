@@ -185,7 +185,7 @@ export default class AtribuirTermoContrato extends Component {
         <Card footer={footer}>
           <Row>
             <Col md={12} lg={5} xl={5}>
-              <label for="termo_contrato">Termo de Contrato</label>
+              <label htmlFor="termo_contrato">Termo de Contrato</label>
               <br />
               <InputText
                 value={this.state.termo_contrato}
@@ -198,7 +198,7 @@ export default class AtribuirTermoContrato extends Component {
               />
             </Col>
             <Col lg={7} xl={7} className="p-fluid">
-              <label for="gestor">Nome Gestor de Contrato</label>
+              <label htmlFor="gestor">Nome Gestor de Contrato</label>
               <br />
               <BuscaIncrementalServidores
                 placeholder="Ex.: Nome e sobrenome"
@@ -210,7 +210,7 @@ export default class AtribuirTermoContrato extends Component {
           <Row>
             <Col lg={5} xl={5}></Col>
             <Col lg={7} xl={7} className="p-fluid">
-              <label for="gestor">Nome Suplente de Contrato</label>
+              <label htmlFor="gestor">Nome Suplente de Contrato</label>
               <br />
               <BuscaIncrementalServidores
                 placeholder="Ex.: Nome e sobrenome"

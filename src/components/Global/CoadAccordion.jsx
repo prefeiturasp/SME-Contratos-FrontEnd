@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Collapse, CardBody, Card } from "reactstrap";
 import { PropTypes } from "prop-types";
 
+const isBoolean = v => typeof v === "boolean"
+
 const CoadAccordion = props => {
   const {titulo, aberto} = props;
-  const [collapse, setCollapse] = useState(aberto);
+  const [collapse, setCollapse] = useState(isBoolean(aberto) ? aberto : false);
 
   const toggle = () => setCollapse(!collapse);
 
   useEffect(() => {
-    setCollapse(props.aberto);
-  }, [props]);
+    if(isBoolean(aberto)) setCollapse(aberto);
+  }, [aberto]);
 
   return (
     <div className="accordion">
