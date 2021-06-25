@@ -26,7 +26,7 @@ pipeline {
           withSonarQubeEnv('sonarqube-local'){
            sh 'sonar-scanner \
               -Dsonar.projectKey=SME-Contratos-FrontEnd \
-              -Dsonar.sources=. \
+              -Dsonar.sources=.'
 	  }
          }
       }
