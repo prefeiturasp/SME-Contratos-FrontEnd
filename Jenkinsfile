@@ -23,11 +23,11 @@ pipeline {
           branch 'homolog'
         }
          steps {
+          withSonarQubeEnv('sonarqube-local'){
            sh 'sonar-scanner \
               -Dsonar.projectKey=SME-Contratos-FrontEnd \
-              -Dsonar.sources=. \
-              -Dsonar.host.url=http://sonar.sme.prefeitura.sp.gov.br \
-              -Dsonar.login=35e9459957e7194c65b18c6281a9e3aa1f86d294'
+              -Dsonar.sources=.'
+	  }
          }
       }
       
