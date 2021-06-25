@@ -24,7 +24,7 @@ export const getListaDeEditais = async () => {
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return formataData((await api.get("editais", AUTH_HEADER)).data);
+  return formataData((await api.get("editais/", AUTH_HEADER)).data);
 };
 
 export const criaEdital = async payload => {
