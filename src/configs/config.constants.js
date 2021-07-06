@@ -1,6 +1,9 @@
 export let API_URL;
 export let JWT_AUTH;
 export let ALIAS_TOKEN;
+export let SAFI_EQUIPAMENTOS_API_URL;
+
+SAFI_EQUIPAMENTOS_API_URL = process.env.REACT_APP_SAFI_EQUIPAMENTOS_API_URL;
 
 if (process.env.NODE_ENV === "production") {
   // This way we can pass params to static files. see Dockerfile.
