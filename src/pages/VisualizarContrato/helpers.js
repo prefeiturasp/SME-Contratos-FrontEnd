@@ -12,7 +12,7 @@ export const mapStateToPayload = (state, dotacoesState) => {
       empresa_contratada: state.empresa_contratada.uuid,
       estado_contrato: state.estado,
       data_ordem_inicio: moment(state.data_ordem_inicio).format("YYYY-MM-DD"),
-      data_encerramento: moment(state.data_encerramento).format("YYYY-MM-DD"),
+      data_encerramento: null,
       data_assinatura: state.data_assinatura
         ? moment(state.data_assinatura).format("YYYY-MM-DD")
         : null,
