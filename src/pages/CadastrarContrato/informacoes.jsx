@@ -352,7 +352,6 @@ export default class Informacoes extends Component {
                 name="data_encerramento"
                 disabled={true}
                 value={dataEncerramento || ""}
-                placeholder={"01/01/2030"}
               />
             </Col>
           </Row>
