@@ -22,7 +22,7 @@ export const getEquipamentos = async ({
 }) => {
   const response = await getSafiToken();
   return await axios.get(
-    `https://hom-smecieduapi.sme.prefeitura.sp.gov.br/safi/equipamentos/` +
+    `${CONFIG.SAFI_EQUIPAMENTOS_API_URL}`+
       `?nm_equipamento=${nm_equipamento}` +
       `&cd_equipamento=${cd_equipamento}` +
       `&dre=${dre}` +
