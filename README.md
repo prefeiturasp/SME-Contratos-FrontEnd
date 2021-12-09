@@ -4,7 +4,7 @@ FrontEnd do SAFI - Sistema de Administração Finanças e Infraestrutura.
 
 Um sistema da Secretaria de Educação da Cidade de São Paulo.
 
-License: MIT
+License: AGPL3.0
 
 Versão: 1.1.0
 
