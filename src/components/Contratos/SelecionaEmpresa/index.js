@@ -8,13 +8,12 @@ export class SelecionaEmpresa extends Component {
     super();
     this.state = {
       empresas: [],
-      empresaSelecionada: null
     };
   }
 
   async componentDidMount() {
     const empresas = await getEmpresasLookup();
-    this.setState({ empresas: comNomeUnico(empresas), empresaSelecionada: this.props.selecionada });
+    this.setState({ empresas: comNomeUnico(empresas)});
   }
 
   selecionaEmpresa(event) {
@@ -28,7 +27,7 @@ export class SelecionaEmpresa extends Component {
         {...this.props}
         optionLabel="nome"
         options={this.state.empresas}
-        value={this.props.selecionada}
+        value={this.props.empresa}
         onChange={event => this.selecionaEmpresa(event)}
         autoWidth={false}
         placeholder="Selecione uma Empresa..."

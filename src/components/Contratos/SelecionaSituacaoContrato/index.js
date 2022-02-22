@@ -7,7 +7,6 @@ export class SelecionaSituacaoContrato extends Component {
         super();
         this.state = {
             situacoes: [],
-            situacaoSelecionada: null,
         };
     }
 
@@ -17,7 +16,6 @@ export class SelecionaSituacaoContrato extends Component {
     }
 
     selecionaSituacao(event) {
-        this.setState({situacaoSelecionada: event.value})
         this.props.onSelect(event.value)
     }
 
@@ -27,7 +25,7 @@ export class SelecionaSituacaoContrato extends Component {
                 {...this.props}
                 optionLabel="nome"
                 options={this.state.situacoes} 
-                value={this.state.situacaoSelecionada} 
+                value={this.props.situacao} 
                 onChange={event => this.selecionaSituacao(event)} 
                 autoWidth={false} 
                 placeholder="Selecione uma Situação..."
