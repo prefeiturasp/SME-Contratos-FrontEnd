@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import {Button} from 'primereact/button';
 import {Card} from 'primereact/card';
-import {InputText} from 'primereact/inputtext';
+import {InputMask} from 'primereact/inputmask';
+
 
 import { SelecionaEmpresa } from '../SelecionaEmpresa'
 import { SelecionaSituacaoContrato } from '../SelecionaSituacaoContrato'
-import { SelecionaEstadoContrato } from '../SelecionaEstadoContrato'
-import { SelecionaEquipamento } from '../SelecionaEquipamento'
 import { SelecionaTipoServico } from '../SelecionaTipoServico'
-import { SelecionaGestor } from '../SelecionaGestor'
-import { SelecionaPeriodoEncerramentoContrato } from '../SelecionaPeriodoEncerramentoContrato'
+import { SelecionaDataContrato } from '../SelecionaDataContrato'
 
 import './style.scss'
 
@@ -18,48 +16,37 @@ export class BuscaContratosForm extends Component {
         super(props)
 
         this.state = {
-            empresa_contratada: '',
-            situacao: '',
-            estado_contrato: '',
-            equipamento: '',
-            encerramento_de: '',
-            encerramento_ate: '',
-            gestor: '',
+            empresa: '',
+            status: '',
+            data_inicial: '',
+            data_final: '',
             termo_contrato: '',
-            tipo_servico: ''
+            objeto: '',
+            cnpj_empresa: '',
        }
     }
     
     setaEmpresa(empresa) {
-        this.setState({empresa_contratada: empresa ? empresa.id : ''})
+        this.setState({empresa: empresa})
     }
 
     setaSituacao(situacao) {
-        this.setState({situacao: situacao ? situacao.id : ''})
-    }
-   
-    setaEstado(estado) {
-        this.setState({estado_contrato: estado ? estado.id : ''})
-    }
-   
-    setaEquipamento(equipamento) {
-        this.setState({equipamento: equipamento ? equipamento.id : ''})
+        this.setState({status: situacao})
     }
    
     setaTipoServico(tipoServico) {
-        this.setState({tipo_servico: tipoServico ? tipoServico.id : ''})
+        this.setState({objeto: tipoServico })
     }
 
-    setaGestor(gestor) {
-        this.setState({gestor: gestor ? gestor.id : ''})
-    }
-
-    setaRangeDataEncerramento(rangeDataEncerramento) {
-        if (rangeDataEncerramento && rangeDataEncerramento[0]) {
-            this.setState({encerramento_de: rangeDataEncerramento ? rangeDataEncerramento[0].toISOString().slice(0,10) : ''})
+    setaDataInicialContrato(dataInicial) {
+        if (dataInicial) {
+            this.setState({data_inicial: dataInicial})
         }
-        if (rangeDataEncerramento && rangeDataEncerramento[1]) {
-            this.setState({encerramento_ate: rangeDataEncerramento ? rangeDataEncerramento[1].toISOString().slice(0,10) : ''})
+    }
+
+    setaDataFinalContrato(dataFinal) {
+        if (dataFinal) {
+            this.setState({data_final: dataFinal})
         }
     }
    
@@ -67,9 +54,24 @@ export class BuscaContratosForm extends Component {
         this.props.onBuscarClick(this.state)
     }
 
+    limparFiltros(){
+      this.setState({
+        empresa: '',
+        status: '',
+        equipamento: '',
+        data_inicial: '',
+        data_final: '',
+        gestor: '',
+        termo_contrato: '',
+        objeto: '',
+        cnpj_empresa: '',
+      })
+    }
+
     render() {
         const footer = <span>
-                            <Button label="Buscar" style={{marginRight: '.25em'}} onClick={this.handleClickBuscar.bind(this)}/>
+                            <Button className="float-right" label="Consultar" style={{marginRight: '.25em'}} onClick={this.handleClickBuscar.bind(this)}/>
+                            <Button className="float-right" label="Limpar Filtros" style={{marginRight: '.25em'}} onClick={this.limparFiltros.bind(this)}/>
                         </span>;
 
         return (
@@ -79,43 +81,52 @@ export class BuscaContratosForm extends Component {
 
                     <div className="p-grid">
 
-                        <div className="p-col-12">
-                            <SelecionaEmpresa  empresa={this.state.empresa_contratada} onSelect={this.setaEmpresa.bind(this)}/>
-                        </div>
-
-                        <div className="p-col-6">
-                            <SelecionaSituacaoContrato onSelect={this.setaSituacao.bind(this)}/>
-                        </div>
-
-                        <div className="p-col-6">
-                            <SelecionaEstadoContrato onSelect={this.setaEstado.bind(this)}/>
-                        </div>
-
-                        <div className="p-col-6">
-                            <SelecionaEquipamento onSelect={this.setaEquipamento.bind(this)}/>
-                        </div>
-
-                        <div className="p-col-6 ">
-                            <SelecionaTipoServico onSelect={this.setaTipoServico.bind(this)}/>
-                        </div>
-
-                        <div className="p-col-6 ">
-                            <SelecionaGestor onSelect={this.setaGestor.bind(this)}/>
-                        </div>
-
-
-                        <div className="p-col-6">
-                            <SelecionaPeriodoEncerramentoContrato onSelect={this.setaRangeDataEncerramento.bind(this)}/>
-                        </div>
-
-                        <div className="p-col-6">
-                            <InputText 
+                        <div  div className="p-col-6">
+                            <h6>Nº do Termo de Contrato</h6>
+                            <InputMask
+                                mask="********/9999"
                                 value={this.state.termo_contrato} 
                                 onChange={(e) => this.setState({termo_contrato: e.target.value})}
-                                placeholder="Termo de Contrato"
+                                placeholder="Informe o nº do termo de contrato"
                             />
                         </div>
 
+                        <div className="p-col-6">
+                            <h6>Nome da empresa</h6>
+                            <SelecionaEmpresa empresa={this.state.empresa} onSelect={this.setaEmpresa.bind(this)}/>
+                        </div>
+
+                        <div  div className="p-col-6">
+                            <h6>CNPJ da empresa</h6>
+                            <InputMask
+                                mask="99.999.999/9999-99"
+                                value={this.state.cnpj} 
+                                onChange={(e) => this.setState({cnpj_empresa: e.target.value})}
+                                placeholder="Informe o CNPJ"
+                            />
+                        </div>
+
+                        <div className="p-col-6">
+                            <h6>Periodo de Encerramento</h6>
+                            <div className="p-grid">
+                                <div className="p-col-6">
+                                    <SelecionaDataContrato tipo={"De"} data={this.state.data_inicial} maxDate={this.state.data_final} onSelect={this.setaDataInicialContrato.bind(this)}/>
+                                </div>
+                                <div className="p-col-6">
+                                    <SelecionaDataContrato tipo={"Até"}  data={this.state.data_final} minDate={this.state.data_inicial} onSelect={this.setaDataFinalContrato.bind(this)}/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-col-6">
+                            <h6>Status</h6>
+                            <SelecionaSituacaoContrato situacao={this.state.status} onSelect={this.setaSituacao.bind(this)}/>
+                        </div>
+
+                        <div className="p-col-6 "> 
+                            <h6>Objeto</h6>
+                            <SelecionaTipoServico tipoServico={this.state.objeto} onSelect={this.setaTipoServico.bind(this)}/>
+                        </div>
 
                     </div>
                 </div>

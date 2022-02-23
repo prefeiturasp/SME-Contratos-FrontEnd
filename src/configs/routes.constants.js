@@ -11,6 +11,7 @@ import ModeloAteste from "../pages/ModeloAteste"
 import ListarModelosAteste from "../pages/ListarModelosAteste";
 import Edital from "../pages/Edital"
 import ListarEditais from "../pages/ListarEditais";
+import GestaoContratos from "../pages/GestaoContratos";
 
 
 const RoutesConfig = [
@@ -47,6 +48,11 @@ const RoutesConfig = [
     {
       path: "/atribuicao-termo-contrato",
       component: AtribuicaoTermoContrato,
+      exact: false
+    }, 
+    {
+      path: "/gestao-contratos",
+      component: GestaoContratos,
       exact: false
     }, 
     {
@@ -88,7 +94,7 @@ export const MenuConfig = [
       label: "Contratos",
       icon: "pi pi-list",
       items: [
-        { label: "Consultar", icon: "pi pi-fw pi-th-large", to: "/painel-selecao" },
+        { label: "Gestão de Contratos", icon: "pi pi-cog pi-th-large", to: "/gestao-contratos" },
         { label: "Atribuição Termo Contratos", icon: "pi pi-cog pi-th-large", to: "/atribuicao-termo-contrato" },
       ]
     },

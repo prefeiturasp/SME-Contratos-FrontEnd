@@ -6,8 +6,7 @@ export class SelecionaTipoServico extends Component {
     constructor() {
         super();
         this.state = {
-            tiposServico: [],
-            tipoServicoSelecionado: null,
+            tiposServico: []
         };
     }
 
@@ -17,7 +16,6 @@ export class SelecionaTipoServico extends Component {
     }
 
     selecionaTipoServico(event) {
-        this.setState({tipoServicoSelecionado: event.value})
         this.props.onSelect(event.value)
     }
 
@@ -28,10 +26,10 @@ export class SelecionaTipoServico extends Component {
                 {...this.props}
                 optionLabel="nome"
                 options={this.state.tiposServico} 
-                value={this.state.tipoServicoSelecionado} 
+                value={this.props.tipoServico} 
                 onChange={event => this.selecionaTipoServico(event)} 
                 autoWidth={false} 
-                placeholder="Selecione um Tipo de Serviço..."
+                placeholder="Selecione um Objeto..."
                 showClear={true}
                 disabled={disabilitado}
             />
