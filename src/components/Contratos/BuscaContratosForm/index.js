@@ -107,7 +107,7 @@ export class BuscaContratosForm extends Component {
                         </div>
 
                         <div className="p-col-6">
-                            <h6>Periodo de Encerramento</h6>
+                            <h6>Período de Encerramento</h6>
                             <div className="p-grid">
                                 <div className="p-col-6">
                                     <SelecionaDataContrato tipo={"De"} data={this.state.data_inicial} maxDate={this.state.data_final} onSelect={this.setaDataInicialContrato.bind(this)}/>
