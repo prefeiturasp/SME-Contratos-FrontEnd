@@ -150,7 +150,7 @@ class ContratosContinuos extends Component {
     return (
       <Page>
         <Messages ref={el => (this.messages = el)}></Messages>
-        <h4>Contratos Contínuos</h4>
+        <h4>Gestão de Contratos</h4>
         <Container icone="pi pi-chart-bar">
 
           <BuscaContratosForm

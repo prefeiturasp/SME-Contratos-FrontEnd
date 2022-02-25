@@ -75,7 +75,7 @@ export class TableContrato extends Component {
           <DataTable
             value={this.props.contratos}
             footer={
-              "Não existem contratos atribuidos ao seu usuário até o momento."
+              "Não existe informação para os critérios de busca utilizados"
             }
             columnResizeMode="expand"
             className="mt-3 datatable-footer-coad"
