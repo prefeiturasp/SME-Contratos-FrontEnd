@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { AppTopbar } from "../../AppTopbar";
 import { AppMenu } from "../../AppMenu";
 import { AppProfile } from "../../AppProfile";
-import "primereact/resources/themes/nova-light/theme.css";
+import "primereact/resources/themes/nova/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";

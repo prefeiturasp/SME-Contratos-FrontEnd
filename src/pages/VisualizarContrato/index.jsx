@@ -24,6 +24,7 @@ import {
 import { getUrlParams } from "../../utils/params";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
+import { addLocale } from 'primereact/api';
 import {
   CALENDAR_PT,
   REFERENCIA_ENCERRAMENTO,
@@ -97,6 +98,7 @@ class VisualizarContratos extends Component {
       alteracaoEdital: null,
     };
     this.dotacoesRef = React.createRef();
+    addLocale('pt', CALENDAR_PT);
   }
 
   setUnidadesSelecionadas = (unidades_selecionadas) => {
@@ -500,7 +502,7 @@ class VisualizarContratos extends Component {
                             : null
                         }
                         onChange={(e) => this.alteraDataAssinatura(e.value)}
-                        locale={CALENDAR_PT}
+                        locale="pt"
                         dateFormat="dd/mm/yy"
                         showIcon={true}
                         disabled={disabilitado}
@@ -518,7 +520,7 @@ class VisualizarContratos extends Component {
                         }
                         onChange={(e) => this.alteraDataOrdemInicio(e.value)}
                         showIcon={true}
-                        locale={CALENDAR_PT}
+                        locale="pt"
                         dateFormat="dd/mm/yy"
                         disabled={disabilitado}
                       />

@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import {Calendar} from 'primereact/calendar';
 import { CALENDAR_PT } from '../../../configs/config.constants'
+import { addLocale } from 'primereact/api';
 
 
 export class SelecionaDataContrato extends Component {
     constructor() {
         super();
         this.state = {};
+        addLocale('pt', CALENDAR_PT);
     }
-
 
     setaData(event) {
         this.props.onSelect(event.value)
@@ -21,7 +22,7 @@ export class SelecionaDataContrato extends Component {
                 onChange={event => this.setaData(event)} 
                 minDate={new Date(this.props.minDate)}
                 maxDate={new Date(this.props.maxDate)}
-                locale={CALENDAR_PT}
+                locale="pt"
                 dateFormat="dd/mm/yy"
                 showIcon={true}
                 placeholder={this.props.tipo}
