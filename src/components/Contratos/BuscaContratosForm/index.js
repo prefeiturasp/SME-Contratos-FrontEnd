@@ -61,9 +61,7 @@ export class BuscaContratosForm extends Component {
         equipamento: '',
         data_inicial: '',
         data_final: '',
-        gestor: '',
         termo_contrato: '',
-        objeto: '',
         cnpj_empresa: '',
       })
     }
@@ -87,6 +85,7 @@ export class BuscaContratosForm extends Component {
                                 mask="********/9999"
                                 value={this.state.termo_contrato} 
                                 onChange={(e) => this.setState({termo_contrato: e.target.value})}
+                                autoClear={false}
                                 placeholder="Informe o nº do termo de contrato"
                             />
                         </div>
@@ -100,14 +99,15 @@ export class BuscaContratosForm extends Component {
                             <h6>CNPJ da empresa</h6>
                             <InputMask
                                 mask="99.999.999/9999-99"
-                                value={this.state.cnpj} 
+                                value={this.state.cnpj_empresa} 
                                 onChange={(e) => this.setState({cnpj_empresa: e.target.value})}
+                                autoClear={false}
                                 placeholder="Informe o CNPJ"
                             />
                         </div>
 
                         <div className="p-col-6">
-                            <h6>Periodo de Encerramento</h6>
+                            <h6>Período de Encerramento</h6>
                             <div className="p-grid">
                                 <div className="p-col-6">
                                     <SelecionaDataContrato tipo={"De"} data={this.state.data_inicial} maxDate={this.state.data_final} onSelect={this.setaDataInicialContrato.bind(this)}/>
