@@ -63,6 +63,7 @@ export class BuscaContratosForm extends Component {
         data_final: '',
         termo_contrato: '',
         cnpj_empresa: '',
+        objeto: '',
       })
     }
 
@@ -79,7 +80,7 @@ export class BuscaContratosForm extends Component {
 
                     <div className="p-grid">
 
-                        <div  div className="p-col-6">
+                        <div className="p-col-6">
                             <h6>Nº do Termo de Contrato</h6>
                             <InputMask
                                 mask="********/9999"
@@ -95,7 +96,7 @@ export class BuscaContratosForm extends Component {
                             <SelecionaEmpresa empresa={this.state.empresa} onSelect={this.setaEmpresa.bind(this)}/>
                         </div>
 
-                        <div  div className="p-col-6">
+                        <div className="p-col-6">
                             <h6>CNPJ da empresa</h6>
                             <InputMask
                                 mask="99.999.999/9999-99"

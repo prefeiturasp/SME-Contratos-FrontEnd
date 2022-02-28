@@ -1,78 +1,38 @@
-import React, { Component } from "react";
-import { Messages } from "primereact/messages";
+import React, { useEffect, useState } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import { TableContrato } from "../../components/Contratos/TableContrato";
 import {
-  getContratos,
-  getCamposContrato
+  getContratos
 } from "../../service/Contratos.service";
 import "./style.scss";
 import { BuscaContratosForm } from "../../components/Contratos/BuscaContratosForm";
-import { SelecionaColunasContrato } from "../../components/Contratos/SelecionaColunasContrato";
-import { getUrlParams } from "../../utils/params";
-import { Button, ButtonGroup } from "reactstrap";
-import { redirect } from "../../utils/redirect";
-import CoadAccordion from "../../components/Global/CoadAccordion";
-import { CoadTabs } from "../../components/Contratos/CoadTabs";
-import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
 
-class ContratosContinuos extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      uuid: null,
-      contratos: [],
-      colunas: [
-        { field: "row_index", header: "#" },
-        { field: "processo", header: "Processo" },
-        { field: "tipo_servico.nome", header: "Tipode de Serviço" },
-        { field: "empresa_contratada.nome", header: "Empresa" },
-        { field: "estado_contrato", header: "Estado do Contrato" },
-        { field: "data_encerramento", header: "Data Encerramento" }
-      ],
-      filtros: {
-        empresa_contratada: "",
-        encerramento_de: "",
-        encerramento_ate: "",
-        equipamento: "",
-        estado_contrato: "",
-        situacao: "",
-        termo_Contrato: "",
-        tipo_servico: ""
-      },
-      loading: true,
-      filtroAberto: false,
-    };
-  } 
-  
-  showMessage(messageParams){
-    window.scrollTo(0, 0);
-    this.messages.show(messageParams);  
-  }
+function GestaoContratos() {
 
-  async setaColunasDefaut() {
-    const colUsuario = await getCamposContrato();
-    const colunasUsuario = colUsuario[0];
-    if (colunasUsuario || colunasUsuario.length !== 0) {
-      this.setState({
-        colunas: colunasUsuario.colunas_array,
-        uuid: colunasUsuario.uuid
-      });
-    }
-  }
+  const colunas = [
+    { field: "nome_empresa", header: "Nome da empresa" },
+    { field: "termo_contrato", header: "Nº do Termo de Contrato" },
+    { field: "situacao", header: "Status" },
+    { field: "data_encerramento", header: "Data Encerramento" }
+  ];
+  const filtrosIniciais = {
+    empresa_contratada: "",
+    encerramento_de: "",
+    encerramento_ate: "",
+    equipamento: "",
+    estado_contrato: "",
+    situacao: "",
+    termo_Contrato: "",
+    tipo_servico: ""
+  };
 
-  async setaMeusContratos() {
-    const { filtros } = this.state;
-    await getContratos(filtros).then(contratos => {
-      this.setState({ contratos });
-    });
-    this.setState({
-      loading: false
-    });
-  }
+  const [contratos, setContratos] = useState([]);
+  const [totalContratos, setTotalContratos] = useState([]);
+  const [filtros, setFiltros] = useState(filtrosIniciais);
+  const [loading, setLoading] = useState(true);
 
-  ajustarFiltros = filtros => {
+  const ajustarFiltros = filtros => {
     let filtrosAjustados = {...filtros}
     filtrosAjustados.empresa = filtros.empresa ? filtros.empresa.uuid : '';
     filtrosAjustados.status = filtros.status ? filtros.status.id : '';
@@ -82,90 +42,47 @@ class ContratosContinuos extends Component {
     return filtrosAjustados;
   }
 
-  onBuscarClick = filtros => {
-    
-    let filtrosAjustados = this.ajustarFiltros(filtros)
-    console.log(filtrosAjustados)
-    this.setState({ loading: true, filtroAberto: false  });
-    getContratos(filtrosAjustados).then(contratos => {
-      this.setState({ contratos, filtros, loading: false });
-    });
-    this.showMessage({
-      severity: "success",
-      life: 10000,
-      detail: "Personalização de filtros aplicada com sucesso"
-    });
+  const onBuscarClick = filtros => {
+    let filtrosAjustados = ajustarFiltros(filtros)
+    setFiltros(filtrosAjustados);
   };
 
-  onAplicarClick = colunas => {    
-    this.setState({ colunas, filtroAberto: false });
-    this.showMessage({
-      severity: "success",
-      life: 10000,
-      detail: "Personalização de colunas aplicada com sucesso"
-    });
+  const mudarPagina = pagina => {
+    setFiltros({ ...filtros, page: pagina})
   };
 
-  pegaParametrosUrl = () => {
-    const params = getUrlParams();
-    const key = Object.keys(params)[0];
-    let filtros = this.state.filtros;
-    switch (key) {
-      case "equipamento":
-        filtros.equipamento = params[key];
-        break;
-      case "tipo_servico":
-        filtros.tipo_servico = params[key];
-        break;
-      default:
-    }
-
-    this.setState({ filtros });
-  };
-
-  componentDidMount() {
-    const param = getUrlParams();
-    if (param.cadastro) {
-      this.messages.show({
-        severity: "success",
-        life: 10000,
-        detail: "Contrato cadastrado com sucesso"
+  useEffect(() => {
+    const setaMeusContratos = async () => {
+      setLoading(true)
+      await getContratos(filtros).then(data => {
+        setContratos(data.results)
+        setTotalContratos(data.count)
       });
+      setLoading(false);
     }
 
-    if (hasFlashMessage("sucesso")) {
-      this.messages.show({
-        severity: "success",
-        life: 10000,
-        detail: getFlashMessage("sucesso")
-      });
-    }
-    this.pegaParametrosUrl();
-    this.setaMeusContratos();
-    this.setaColunasDefaut();
-  }
+    setaMeusContratos();
+  }, [filtros])
 
-  render() {
-    const { contratos, colunas, loading, filtroAberto } = this.state;
-    return (
-      <Page>
-        <Messages ref={el => (this.messages = el)}></Messages>
-        <h4>Gestão de Contratos</h4>
-        <Container icone="pi pi-chart-bar">
-
-          <BuscaContratosForm
-            onBuscarClick={filtros => this.onBuscarClick(filtros)}
-          />
-          <hr/>
-          <TableContrato
-            contratos={contratos}
-            colunas={colunas}
-            loading={loading}
-          />
-        </Container>
-      </Page>
-    );
-  }
+  return (
+    <Page>
+      <h4>Gestão de Contratos</h4>
+      <Container icone="pi pi-chart-bar">
+        <BuscaContratosForm
+          onBuscarClick={filtros => onBuscarClick(filtros)}
+        />
+        <hr/>
+        <TableContrato
+          contratos={contratos}
+          totalContratos={totalContratos}
+          colunas={colunas}
+          loading={loading}
+          mudarPagina={mudarPagina}
+        />
+      </Container>
+    </Page>
+  );
 }
 
-export default ContratosContinuos;
+
+export default GestaoContratos;

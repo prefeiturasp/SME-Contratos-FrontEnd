@@ -1,11 +1,21 @@
 import React, { Component } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { formatadoMonetario } from "../../../utils/formatador";
+import { Paginator } from 'primereact/paginator';
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
 
 export class TableContrato extends Component {
+  constructor() {
+    super();
+    this.state = {
+        expandedRows: null,
+        page: 0,
+        index: 0,
+    };
+    this.rowExpansionTemplate = this.rowExpansionTemplate.bind(this);
+  }
+
   formataTotalMensal(rowData, column) {
     const formatter = new Intl.NumberFormat("pt-BR", {
       style: "currency",
@@ -23,16 +33,25 @@ export class TableContrato extends Component {
     return props.rowIndex + 1;
   }
 
+  rowExpansionTemplate(data) {
+    return  <div className="p-grid p-fluid">
+                <h6>Objeto</h6>
+                <p>{data.objeto}</p>
+            </div>;
+  }
+
+  mudaPagina(event){
+    this.setState({
+      pagina: event.page,
+      index: event.first
+    })
+    this.props.mudarPagina(event.page + 1)
+  }
+
   render() {
-    const { contratos, colunas, loading } = this.props;
-    const total = contratos.reduce(
-      (prevVal, value) => prevVal + value.total_mensal,
-      0
-    );
+    const { contratos, colunas, loading, totalContratos } = this.props;
 
-    let novaColuna = [{ field: "row_index", header: "" }, ...colunas];
-
-    let dynamicColumns = novaColuna.map((col, i) => {
+    let dynamicColumns = colunas.map((col, i) => {
       if (col.field !== "row_index") {
         return (
           <Column
@@ -57,20 +76,31 @@ export class TableContrato extends Component {
 
     return (
       <div className="h-auto w-100">
-        {this.props.contratos.length > 0 || loading ? (
-          <DataTable
-            onRowClick={e => this.redirecionaDetalhe(e.data)}
-            value={this.props.contratos}
-            scrollable={true}
-            scrollHeight="300px"
-            resizableColumns={true}
-            columnResizeMode="expand"
-            className="mt-3 datatable-strapd-coad"
-            selectionMode="single"
-            loading={loading}
-          >
-            {dynamicColumns}
-          </DataTable>
+        {contratos.length > 0 || loading ? (
+          <>
+            <DataTable
+              onRowClick={e => this.redirecionaDetalhe(e.data)}
+              value={contratos}
+              className="mt-3 datatable-strapd-coad table-disable-auto-size"
+              selectionMode="single"
+              loading={loading}
+              expandedRows={this.state.expandedRows}
+              onRowToggle={(e) => this.setState({expandedRows:e.data})}
+              rowExpansionTemplate={this.rowExpansionTemplate}
+            >
+              <Column expander={true} style={{width: '5%'}}/>
+              {dynamicColumns}
+              
+            </DataTable>
+            {contratos.length < totalContratos && 
+              <Paginator
+                rows={10}
+                totalRecords={totalContratos}
+                onPageChange={(e) => this.mudaPagina(e)}
+                first={this.state.index}
+              />
+            }
+          </>
         ) : (
           <DataTable
             value={this.props.contratos}
@@ -87,15 +117,6 @@ export class TableContrato extends Component {
             <Column header="Data" />
           </DataTable>
         )}
-
-        <table className="table">
-          <tbody>
-            <tr>
-              <td>Total</td>
-              <td className="float-right">{formatadoMonetario(total)}</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     );
   }
