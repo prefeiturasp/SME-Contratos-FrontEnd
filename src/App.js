@@ -17,7 +17,7 @@ import { ChartsDemo } from "./components/ChartsDemo";
 import { MiscDemo } from "./components/MiscDemo";
 import { EmptyPage } from "./components/EmptyPage";
 import { Documentation } from "./components/Documentation";
-import "primereact/resources/themes/nova-light/theme.css";
+import "primereact/resources/themes/nova/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
