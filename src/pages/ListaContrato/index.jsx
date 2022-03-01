@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TableContrato } from "../../components/Contratos/TableContrato";
+import TableContrato from "../../components/Contratos/TableContrato";
 import { getMeusContratos, getContratos } from "../../service/Contratos.service";
 import { Button } from "primereact/button";
 import Page from "../../components/Global/Page";

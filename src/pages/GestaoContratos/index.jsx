@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
-import { TableContrato } from "../../components/Contratos/TableContrato";
+import TableContrato from "../../components/Contratos/TableContrato";
 import {
   getContratos
 } from "../../service/Contratos.service";

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Messages } from "primereact/messages";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
-import { TableContrato } from "../../components/Contratos/TableContrato";
+import TableContrato from "../../components/Contratos/TableContrato";
 import {
   getContratos,
   getCamposContrato
