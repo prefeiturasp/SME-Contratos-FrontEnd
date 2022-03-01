@@ -123,17 +123,6 @@ $hoverColor: #431e1e;
     margin-bottom: 15px !important;
   }
 
-  .p-inputtext:enabled:hover {
-    border-color: $mainColor;
-  }
-
-  .p-inputtext:enabled:focus {
-    outline: 0 none;
-    outline-offset: 0;
-    box-shadow: 0 0 0 0.2em $mainColor;
-    border-color: $mainColor;
-  }
-
   .ant-btn-link:hover {
     color: $hoverColor;
   }

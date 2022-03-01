@@ -21,19 +21,9 @@ export function getContratos(filtro) {
   return Api
     .get(`${CONFIG.API_URL}/contratos/${parametros}`, AUTH_HEADER)
     .then(res => {
-      return formataData(res.data);
+      return res.data;
     });
 }
-
-const formataData = datas => {
-  return datas.map(data => ({
-    ...data,
-    data_encerramento: data.data_encerramento ? moment(data.data_encerramento).format('DD/MM/YYYY') : '',
-    data_ordem_inicio : data.data_ordem_inicio ? moment(data.data_ordem_inicio).format('DD/MM/YYYY') : '',
-    data_assinatura: data.data_assinatura ? moment(data.data_assinatura).format('DD/MM/YYYY') : '',
-    alterado_em: data.alterado_em ? moment(data.alterado_em).format('DD/MM/YY - HH:mm:ss') : '',
-  }));
-};
 
 export function getMeusContratos() {
   const AUTH_HEADER = {
