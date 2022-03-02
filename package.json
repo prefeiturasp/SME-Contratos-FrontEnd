@@ -5,6 +5,11 @@
     "private": false,
     "license": "MIT",
     "type": "module",
+    "husky": {
+        "hooks": {
+            "pre-push": "npm run-script prettier && npm run-script eslint"
+        }
+    },
     "dependencies": {
         "@fullcalendar/core": "4.0.2",
         "@fullcalendar/daygrid": "4.0.1",
@@ -24,6 +29,7 @@
         "moment-timezone": "^0.5.27",
         "node-sass": "^4.12.0",
         "patch-package": "^6.4.7",
+        "prettier": "^2.5.1",
         "primeflex": "1.0.0-rc.1",
         "primeicons": "5.0.0",
         "primereact": "^7.2.1",
@@ -57,6 +63,9 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
+        "eslint": "eslint ./src/**/**/**/**/*.{jsx,js}",
+        "prettier": "prettier  --check src/**/**/**/*.{jsx,js,scss}",
+        "prettier-fix": "prettier  --write src/**/**/**/*.{jsx,js,scss}",
         "postinstall": "patch-package"
     },
     "eslintConfig": {
@@ -71,6 +80,7 @@
     "devDependencies": {
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.15.1",
+        "husky": "^7.0.4",
         "jest-environment-enzyme": "^7.1.2",
         "jest-enzyme": "^7.1.2"
     }
