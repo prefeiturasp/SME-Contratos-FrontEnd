@@ -36,7 +36,7 @@ class Page extends Component {
     this.createMenu();
   }
 
-  onWrapperClick(event) {
+  onWrapperClick() {
     if (!this.menuClick) {
       this.setState({
         overlayMenuActive: false,
@@ -73,7 +73,7 @@ class Page extends Component {
     event.preventDefault();
   }
 
-  onSidebarClick(event) {
+  onSidebarClick() {
     this.menuClick = true;
   }
 

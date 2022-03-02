@@ -398,7 +398,7 @@ class UnidadeEnvolvidas extends Component {
 
             {this.state.fiscaisSuplentes.map((fiscalSuplente, idx) => {
               return (
-                <Row>
+                <Row key={idx}>
                   <Col lg={4} xl={4}>
                     <FormGroup>
                       <Label>RF Suplente de Fiscal do Contrato</Label>
@@ -430,7 +430,7 @@ class UnidadeEnvolvidas extends Component {
                       disabled={disabilitado}
                       style={{ marginTop: "33px", width: "100%" }}
                       label="Remover"
-                      onClick={e => this.removeSuplente(idx)}
+                      onClick={() => this.removeSuplente(idx)}
                     />
                   </Col>
                 </Row>
@@ -444,7 +444,7 @@ class UnidadeEnvolvidas extends Component {
                 disabled={!this.state.podeAddSuplente || disabilitado}
                 type="link"
                 size="small"
-                onClick={e => this.appendSuplente()}
+                onClick={() => this.appendSuplente()}
               >
                 Adicionar Suplente
               </AntButton>

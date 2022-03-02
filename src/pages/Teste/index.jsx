@@ -2,7 +2,7 @@ import React from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 
-export default props => {
+export default () => {
   return (
     <Page titulo="Teste">
       <Container subtitulo="Página de Teste" icone="pi pi-chart-bar">

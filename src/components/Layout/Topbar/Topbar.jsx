@@ -15,7 +15,6 @@ export default class Topbar extends Component {
   };
 
   render() {
-    const { HandleLogout } = this.props;
     return (
       <div className="position-fixed fixed-top w-100">
         <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">

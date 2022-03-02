@@ -77,7 +77,7 @@ export class SelecionaColunasContrato extends Component {
     this.onColunasChange = this.onColunasChange.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.colunasInit !== this.props.colunasInit) {
       this.setState({
         selectedCols: this.props.colunasInit,
@@ -126,7 +126,7 @@ export class SelecionaColunasContrato extends Component {
       <Card footer={footer}>
         <div className="p-grid p-justify-start">
           {this.state.colunas.map((cols, i) => (
-            <div className="p-col-4">
+            <div key={i} className="p-col-4">
               <Checkbox
                 inputId={cols.field}
                 value={cols}

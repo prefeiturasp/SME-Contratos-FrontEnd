@@ -48,7 +48,7 @@ export const excluiModeloAteste = async uuid => {
     headers: getHeaderToken(),
   };
   const url = `modelo-ateste/${uuid}/`;
-  return await api.delete(url, AUTH_HEADER).catch(err => {
+  return await api.delete(url, AUTH_HEADER).catch(() => {
     return false;
   });
 };

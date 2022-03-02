@@ -34,7 +34,7 @@ export class BuscaIncrementalServidores extends Component {
     this.updateServidorFromProps();
   }
 
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps) {
     if (prevProps.userName !== this.props.userName) {
       this.updateServidorFromProps();
     }
@@ -54,7 +54,7 @@ export class BuscaIncrementalServidores extends Component {
 
   filterServidores(event) {
     setTimeout(() => {
-      var results = this.state.servidores.filter(servidor => {
+      let results = this.state.servidores.filter(servidor => {
         return servidor.nome
           .toLowerCase()
           .startsWith(event.query.toLowerCase());

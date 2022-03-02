@@ -9,7 +9,7 @@ export function getContratos(filtro) {
   };
 
   let parametros = "";
-  for (var prop in filtro) {
+  for (let prop in filtro) {
     if (Object.prototype.hasOwnProperty.call(filtro, prop)) {
       if (filtro[prop]) {
         let prefix = parametros ? "&" : "?";

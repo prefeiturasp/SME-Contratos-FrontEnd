@@ -44,8 +44,10 @@ const ListarObrigacoesContratuais = ({ grupos = [] }) => {
     return (
       <Row>Não existem obrigações contratuais adicionadas no contrato.</Row>
     );
-  return grupos.map(grupo => {
-    return <Grupo nome={grupo.nome} obrigacoes={grupo.itens_de_obrigacao} />;
+  return grupos.map((grupo, i) => {
+    return (
+      <Grupo key={i} nome={grupo.nome} obrigacoes={grupo.itens_de_obrigacao} />
+    );
   });
 };
 

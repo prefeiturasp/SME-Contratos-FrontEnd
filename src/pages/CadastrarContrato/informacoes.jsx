@@ -305,7 +305,7 @@ export default class Informacoes extends Component {
               <CoadSelect
                 label="Referência para cálculo do encerramento"
                 name="referencia_encerramento"
-                onBlur={value => {}}
+                onBlur={() => {}}
               >
                 {empresas
                   ? referenciaEncerramentoOptions.map((option, index) => {

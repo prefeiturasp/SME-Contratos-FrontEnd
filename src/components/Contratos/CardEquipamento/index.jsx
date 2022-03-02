@@ -9,7 +9,7 @@ const styled = {
   cursor: "pointer",
 };
 
-const CardEquipamento = props => {
+const CardEquipamento = () => {
   return (
     <Row>
       <Col lg={4} xl={4}>

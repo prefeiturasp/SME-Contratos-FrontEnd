@@ -139,7 +139,7 @@ export default class AtribuirTermoContrato extends Component {
           <Button
             label="Cancelar11"
             style={{ marginRight: ".25em" }}
-            onClick={e => this.reset()}
+            onClick={() => this.reset()}
           />
         )}
       </span>

@@ -43,7 +43,7 @@ const Grupo = props => {
     );
   };
 
-  const populaModal = (conteudo, coluna) => {
+  const populaModal = conteudo => {
     abrirDialog();
     setNovoItem(conteudo.item);
     setNovaDescricao(conteudo.descricao);
@@ -88,7 +88,7 @@ const Grupo = props => {
     props.editar(props.index, grupo);
   };
 
-  const descricaoTemplate = (rowData, column) => {
+  const descricaoTemplate = rowData => {
     return (
       <div
         className="mt-3"

@@ -86,14 +86,14 @@ export default class DesignacaoCargosDivisao extends Component {
         <span className="float-right" style={{ marginTop: "1.0em" }}>
           <Button
             label="Cancelar"
-            onClick={e => this.cancelUpdateCargos()}
+            onClick={() => this.cancelUpdateCargos()}
             className="btn-coad-background-outline"
             style={{ marginRight: ".25em" }}
           />
           <Button
             type="link"
             label="Aplicar"
-            onClick={e => this.updateCargos()}
+            onClick={() => this.updateCargos()}
           />
         </span>
       </div>

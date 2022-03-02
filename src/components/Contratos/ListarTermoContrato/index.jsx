@@ -93,7 +93,7 @@ export default class ListarTermoContrato extends Component {
         <Button
           label="Editar"
           className="btn-coad-background-outline"
-          onClick={event => {
+          onClick={() => {
             this.onClickEditar(column.uuid);
           }}
         />
@@ -114,7 +114,7 @@ export default class ListarTermoContrato extends Component {
       { field: "editar", header: "" },
     ];
 
-    let dynamicColumns = cols.map((col, i) => {
+    let dynamicColumns = cols.map(col => {
       if (col.field !== "editar") {
         return <Column key={col.field} field={col.field} header={col.header} />;
       } else {
@@ -188,8 +188,8 @@ export default class ListarTermoContrato extends Component {
           }}
         >
           <p>
-            Os campos "Gestor(a) de contrato" e "Suplente de Gestor(a) de
-            Contrato" podem ser alterados.
+            {`Os campos "Gestor(a) de contrato" e "Suplente de Gestor(a) de
+            Contrato" podem ser alterados.`}
             <br />
           </p>
           <Row>

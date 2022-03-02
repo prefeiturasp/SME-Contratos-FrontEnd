@@ -32,7 +32,7 @@ const Grupo = props => {
   const actionTemplate = (rowData, column) => {
     return (
       <Button
-        onClick={evet => populaModal(rowData, column)}
+        onClick={() => populaModal(rowData, column)}
         className="btn-coad-background-outline"
         label="Editar"
         disabled={props.modoVisualizacao}
@@ -40,7 +40,7 @@ const Grupo = props => {
     );
   };
 
-  const populaModal = (conteudo, coluna) => {
+  const populaModal = conteudo => {
     setAdicionar(false);
     abrirDialog();
     setDescricao(conteudo.descricao);
@@ -56,7 +56,7 @@ const Grupo = props => {
     setVisivel(true);
   };
 
-  const iconTemplate = (rowData, column) => {
+  const iconTemplate = () => {
     return (
       <div className="d-flex justify-content-center">
         <i className="fas fa-lg fa-arrows-alt-v" />
@@ -103,7 +103,7 @@ const Grupo = props => {
     setAdicionar(true);
   };
 
-  const descricaoTemplate = (rowData, column) => {
+  const descricaoTemplate = rowData => {
     return <div dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
   };
 

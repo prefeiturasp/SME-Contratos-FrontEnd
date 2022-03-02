@@ -117,12 +117,9 @@ const Modelo = props => {
     }
   };
 
-  const mostraAlertaContainer = useCallback(
-    event => {
-      props.mostraAlerta();
-    },
-    [props],
-  );
+  const mostraAlertaContainer = useCallback(() => {
+    props.mostraAlerta();
+  }, [props]);
 
   const habilitaBotao =
     modoVisualizacao === false && modelo.titulo && modelo.grupos_de_verificacao
@@ -300,9 +297,9 @@ const Modelo = props => {
         <Label className="font-weight-bold">Grupo(s) de verificação</Label>
         {modelo.grupos_de_verificacao ? (
           modelo.grupos_de_verificacao.map((grupo, i) => (
-            <Card>
+            <Card key={`card_${i}`}>
               <Grupo
-                key={i}
+                key={`grupo_${i}`}
                 grupo={grupo}
                 editar={editaGrupo}
                 index={i}

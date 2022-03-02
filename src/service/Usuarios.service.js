@@ -18,7 +18,7 @@ export const getUsuarioByUserName = userName => {
   return api
     .get(`${CONFIG.API_URL}/usuarios/${userName}/`, AUTH_HEADER)
     .then(res => res.data)
-    .catch(res => null);
+    .catch(res => res);
 };
 
 export function getMeuProfile() {

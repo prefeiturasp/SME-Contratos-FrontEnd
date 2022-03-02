@@ -38,11 +38,9 @@ export default class Gestao extends Component {
         $("[name=nucleo_responsavel]").addClass("is-invalid");
         error++;
       }
-      console.log("erros", error);
       if (error === 0) {
         this.props.jumpToStep(3);
       } else {
-        console.log("else");
         $(".alerta").removeClass("d-none");
       }
     });
@@ -80,7 +78,7 @@ export default class Gestao extends Component {
                 <option value="">Selecione</option>
                 {usuarios
                   ? usuarios.map((usuario, i) => (
-                      <option value={usuario.uuid}>
+                      <option key={i} value={usuario.uuid}>
                         {usuario.nome} ({usuario.username})
                       </option>
                     ))
@@ -97,7 +95,7 @@ export default class Gestao extends Component {
               >
                 {usuarios
                   ? usuarios.map((usuario, i) => (
-                      <option value={usuario.uuid}>
+                      <option key={i} value={usuario.uuid}>
                         {usuario.nome} ({usuario.username})
                       </option>
                     ))

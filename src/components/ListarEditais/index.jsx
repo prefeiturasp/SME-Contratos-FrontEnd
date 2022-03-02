@@ -21,7 +21,7 @@ export default class ListarEditais extends Component {
         <Button
           label="Visualizar"
           className="btn-coad-background-outline"
-          onClick={event => {
+          onClick={() => {
             redirect(`#/edital/?uuid=${column.uuid}`);
           }}
         />
@@ -61,7 +61,7 @@ export default class ListarEditais extends Component {
                 label="Criar Edital"
                 style={{ marginBottom: ".80em" }}
                 className="btn-coad-background-outline"
-                onClick={event => {
+                onClick={() => {
                   redirect(`#/edital/`);
                 }}
               />

@@ -21,7 +21,7 @@ function TableContrato({
     redirect(url);
   };
 
-  const onIndexTemplate = (data, props) => {
+  const onIndexTemplate = () => {
     return rowIndex + 1;
   };
 
@@ -41,7 +41,7 @@ function TableContrato({
     mudarPagina(event.page + 1);
   };
 
-  const dynamicColumns = colunas.map((col, i) => {
+  const dynamicColumns = colunas.map(col => {
     if (col.field !== "row_index") {
       return (
         <Column

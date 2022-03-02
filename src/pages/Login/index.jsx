@@ -29,7 +29,7 @@ const COMPONENTE = {
   PRIMEIRO_ACESSO: 5,
 };
 
-const Index = props => {
+const Index = () => {
   const [alerta, setAlerta] = useState(false);
   const [componenteAtivo, setComponenteAtivo] = useState(COMPONENTE.LOGIN);
   const [hash, setHash] = useState("");
@@ -82,7 +82,7 @@ const Index = props => {
     }
   };
 
-  const ativaEsqueciSenha = value => {
+  const ativaEsqueciSenha = () => {
     setComponenteAtivo(COMPONENTE.ESQUECI_SENHA);
   };
 

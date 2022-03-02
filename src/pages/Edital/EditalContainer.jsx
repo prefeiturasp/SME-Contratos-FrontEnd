@@ -8,7 +8,7 @@ import { getUrlParams } from "../../utils/params";
 import { Alert } from "reactstrap";
 import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
 
-const EditalContainer = props => {
+const EditalContainer = () => {
   const { uuid } = getUrlParams();
 
   const [edital, setEdital] = useState({});
@@ -32,7 +32,7 @@ const EditalContainer = props => {
     }
   });
 
-  const mostraAlerta = useCallback(event => {
+  const mostraAlerta = useCallback(() => {
     setAlerta(true);
     setTimeout(() => {
       setAlerta(false);

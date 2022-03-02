@@ -1,5 +1,5 @@
 export const getUrlParams = () => {
-  var vars = {};
+  let vars = {};
   window.location.href.replace(
     /[?&]+([^=&]+)=([^&]*)/gi,
     function (m, key, value) {

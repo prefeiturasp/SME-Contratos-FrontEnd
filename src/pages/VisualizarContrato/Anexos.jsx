@@ -42,7 +42,7 @@ class Anexos extends Component {
     });
   };
 
-  getUploadParamsDre = ({ file, meta }) => {
+  getUploadParamsDre = ({ file }) => {
     const { uuidContrato, url } = this.state;
     const fields = {
       anexo: file,
@@ -52,7 +52,7 @@ class Anexos extends Component {
     return { fields, url: url };
   };
 
-  getUploadParamsUnidade = ({ file, meta }) => {
+  getUploadParamsUnidade = ({ file }) => {
     const { uuidContrato, url } = this.state;
     const fields = {
       anexo: file,
@@ -62,7 +62,7 @@ class Anexos extends Component {
     return { fields, url: url };
   };
 
-  getUploadParamsOutros = ({ file, meta }) => {
+  getUploadParamsOutros = ({ file }) => {
     const { uuidContrato, url } = this.state;
     const fields = {
       anexo: file,
@@ -102,7 +102,7 @@ class Anexos extends Component {
                     {docsDres
                       ? docsDres.map((file, i) => {
                           return (
-                            <Col xl={12} lg={12}>
+                            <Col xl={12} lg={12} key={i}>
                               <a
                                 className="text-danger"
                                 href={file.href}
@@ -136,7 +136,7 @@ class Anexos extends Component {
                     {docsUnidades
                       ? docsUnidades.map((file, i) => {
                           return (
-                            <Col xl={12} lg={12}>
+                            <Col xl={12} lg={12} key={i}>
                               <a
                                 className="text-danger"
                                 href={file.href}
@@ -171,7 +171,7 @@ class Anexos extends Component {
                   {docsOutros
                     ? docsOutros.map((file, i) => {
                         return (
-                          <Col xl={12} lg={12}>
+                          <Col xl={12} lg={12} key={i}>
                             <a
                               className="text-danger"
                               href={file.href}

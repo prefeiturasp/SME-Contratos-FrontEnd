@@ -140,6 +140,7 @@ export class DesignacaoCargosNucleo extends Component {
           {this.state.servidores.map((servidor, idx) => {
             return (
               <div
+                key={idx}
                 className="p-grid p-col-12"
                 style={{ paddingRight: "0em", paddingBottom: "0em" }}
               >
@@ -158,7 +159,7 @@ export class DesignacaoCargosNucleo extends Component {
                   <Button
                     style={{ marginTop: "28px", padding: "0px" }}
                     label="Remover"
-                    onClick={e => this.removeServidor(idx)}
+                    onClick={() => this.removeServidor(idx)}
                   />
                 </div>
               </div>
@@ -169,7 +170,7 @@ export class DesignacaoCargosNucleo extends Component {
             <AntButton
               type="link"
               size="small"
-              onClick={e => this.appendServidor()}
+              onClick={() => this.appendServidor()}
             >
               Adicionar Servidor
             </AntButton>
@@ -178,14 +179,14 @@ export class DesignacaoCargosNucleo extends Component {
         <span className="float-right">
           <Button
             label="Cancelar"
-            onClick={e => this.cancelUpdateCargos()}
+            onClick={() => this.cancelUpdateCargos()}
             className="btn-coad-background-outline"
             style={{ marginRight: ".25em" }}
           />
           <Button
             type="link"
             label="Aplicar"
-            onClick={e => this.updateCargos()}
+            onClick={() => this.updateCargos()}
           />
         </span>
       </div>

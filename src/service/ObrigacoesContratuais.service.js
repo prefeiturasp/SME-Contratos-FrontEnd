@@ -49,7 +49,7 @@ export const excluirObrigacaoContratual = async uuid => {
   };
   return await api
     .delete(`${CONFIG.API_URL}/obrigacoes-contratuais/${uuid}/`, AUTH_HEADER)
-    .catch(err => {
+    .catch(() => {
       return false;
     });
 };

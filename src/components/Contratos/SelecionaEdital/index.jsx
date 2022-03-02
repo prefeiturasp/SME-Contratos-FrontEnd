@@ -16,7 +16,7 @@ const SelecionaEdital = ({ disabled, editalSalvo, value, onSelect }) => {
           if (arr.length) onSelect({ value: arr[0] });
         }
       } catch (erro) {
-        console.error(erro);
+        throw erro;
       }
     })();
   }, [editalSalvo, onSelect]);

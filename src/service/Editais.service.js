@@ -47,7 +47,7 @@ export const excluiEdital = async uuid => {
     headers: getHeaderToken(),
   };
   const url = `editais/${uuid}/`;
-  return await api.delete(url, AUTH_HEADER).catch(err => {
+  return await api.delete(url, AUTH_HEADER).catch(() => {
     return false;
   });
 };

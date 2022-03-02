@@ -119,6 +119,7 @@ export default class DesignacaoCargosCoad extends Component {
           {this.state.assessores.map((assessor, idx) => {
             return (
               <div
+                key={idx}
                 className="p-grid p-fluid"
                 style={{ marginLeft: "-1.9em", marginTop: "0.3em" }}
               >
@@ -137,7 +138,7 @@ export default class DesignacaoCargosCoad extends Component {
                   <Button
                     style={{ marginTop: "28px" }}
                     label="Remover"
-                    onClick={e => this.removeAssessor(idx)}
+                    onClick={() => this.removeAssessor(idx)}
                   />
                 </div>
               </div>
@@ -151,7 +152,7 @@ export default class DesignacaoCargosCoad extends Component {
             <AntButton
               type="link"
               size="small"
-              onClick={e => this.appendAssessor()}
+              onClick={() => this.appendAssessor()}
             >
               Adicionar Assessor
             </AntButton>
@@ -160,14 +161,14 @@ export default class DesignacaoCargosCoad extends Component {
           <span className="float-right">
             <Button
               label="Cancelar"
-              onClick={e => this.cancelUpdateCargosCoad()}
+              onClick={() => this.cancelUpdateCargosCoad()}
               className="btn-coad-background-outline"
               style={{ marginRight: ".25em" }}
             />
             <Button
               type="link"
               label="Aplicar"
-              onClick={e => this.updateCargosCoad()}
+              onClick={() => this.updateCargosCoad()}
             />
           </span>
         </CoadAccordion>
