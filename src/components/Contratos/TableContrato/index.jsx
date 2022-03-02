@@ -4,10 +4,15 @@ import { Column } from "primereact/column";
 import { Paginator } from 'primereact/paginator';
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
+import moment from "moment";
 
-
-function TableContrato ({ contratos, colunas, loading, totalContratos, rowIndex, mudarPagina }) {
-
+function TableContrato({
+  contratos,
+  colunas,
+  loading,
+  totalContratos,
+  mudarPagina,
+}) {
   const [index, setIndex] = useState(0);
   const [expandedRows, setExpandedRows] = useState(null);
 
@@ -16,26 +21,29 @@ function TableContrato ({ contratos, colunas, loading, totalContratos, rowIndex,
     redirect(url);
   };
 
-  const onIndexTemplate = (data, props) => {
-    return rowIndex + 1;
-  }
-
-  const rowExpansionTemplate = (data) => {
-    return  <div className="p-grid p-fluid expand-contrato">
-              <div>
-                <h6>Objeto</h6>
-                <p>{data.objeto}</p>
-              </div>
-            </div>;
-  }
+  const rowExpansionTemplate = data => {
+    return (
+      <div className="p-grid p-fluid expand-contrato">
+        <div>
+          <h6>Objeto</h6>
+          <p>{data.objeto}</p>
+        </div>
+      </div>
+    );
+  };
 
   const mudaPagina = (event) => {
     setIndex(event.first)
     mudarPagina(event.page + 1)
   }
 
-  const dynamicColumns = colunas.map((col, i) => {
-    if (col.field !== "row_index") {
+  const textoDataEncerramento = rowData =>{
+    let classe = moment(rowData.data_encerramento, "DD/MM/YYYY") < moment() ? "texto-vermelho" : "";
+    return <span className={classe}>{rowData.data_encerramento}</span>
+  }
+
+  const dynamicColumns = colunas.map(col => {
+    if (col.field !== "data_encerramento") {
       return (
         <Column
           key={col.field}
@@ -48,10 +56,11 @@ function TableContrato ({ contratos, colunas, loading, totalContratos, rowIndex,
     } else {
       return (
         <Column
-          field="Index"
-          header=""
-          body={onIndexTemplate.bind(this)}
-          style={{ width: "50px" }}
+          key={col.field}
+          field={col.field}
+          header={col.header}
+          body={textoDataEncerramento}
+          style={{ width: "200px" }}
         />
       );
     }
@@ -87,17 +96,17 @@ function TableContrato ({ contratos, colunas, loading, totalContratos, rowIndex,
       ) : (
         <DataTable
           value={contratos}
-          footer={
+          emptyMessage={
             "Não existe informação para os critérios de busca utilizados"
           }
           columnResizeMode="expand"
           className="mt-3 datatable-footer-coad"
         >
-          <Column header="TC" />
-          <Column header="Sit. Contrato" />
-          <Column header="Empresa" />
-          <Column header="Vigência" />
-          <Column header="Data" />
+          <Column expander={true} style={{width: '5%'}}/>
+          <Column header="Nome da empresa" />
+          <Column header="Nº do Termo de Contrato" />
+          <Column header="Status" />
+          <Column header="Data Encerramento" />
         </DataTable>
       )}
     </div>

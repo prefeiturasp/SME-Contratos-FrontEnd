@@ -34,6 +34,7 @@ function GestaoContratos() {
 
   const ajustarFiltros = filtros => {
     let filtrosAjustados = {...filtros}
+    filtrosAjustados.cnpj_empresa = filtros.cnpj_empresa.replace(/\D/g, '');
     filtrosAjustados.empresa = filtros.empresa ? filtros.empresa.uuid : '';
     filtrosAjustados.status = filtros.status ? filtros.status.id : '';
     filtrosAjustados.objeto = filtros.objeto ? filtros.objeto.id : '';
