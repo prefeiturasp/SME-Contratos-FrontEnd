@@ -7,8 +7,8 @@ import ScrollToTop from "./ScrollToTop";
 import { Provider } from "react-redux";
 import "bootstrap/scss/bootstrap.scss";
 import Routers from "./routers";
-import store from './store'
-import 'antd/dist/antd.css';
+import store from "./store";
+import "antd/dist/antd.css";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -18,7 +18,7 @@ ReactDOM.render(
       </ScrollToTop>
     </HashRouter>
   </Provider>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );
 
 // If you want your app to work offline and load faster, you can change

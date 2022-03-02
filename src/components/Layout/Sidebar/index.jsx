@@ -7,7 +7,7 @@ export default class Sidebar extends Component {
     super(props);
 
     this.state = {
-      recolher: false
+      recolher: false,
     };
   }
 
@@ -29,7 +29,13 @@ export default class Sidebar extends Component {
               type="button"
               className="btn btn-link text-white"
             >
-              <i className={`fas ${recolher ? 'fa-chevron-circle-right' : 'fa-chevron-circle-left'}`}></i>
+              <i
+                className={`fas ${
+                  recolher
+                    ? "fa-chevron-circle-right"
+                    : "fa-chevron-circle-left"
+                }`}
+              ></i>
             </button>
           </div>
           {/* <!-- Sidebar - Brand --> */}
@@ -47,7 +53,9 @@ export default class Sidebar extends Component {
           </NavLink>
           <div className="d-flex align-items-center justify-content-center">
             <div className="d-flex align-items-center justify-content-center coad-border-name border-white  w-75 p-1">
-              <span className="text-white coad-text-sm">{`Nome ${recolher ? '' : 'Sobrenome'}`}</span>
+              <span className="text-white coad-text-sm">{`Nome ${
+                recolher ? "" : "Sobrenome"
+              }`}</span>
             </div>
           </div>
           <div className="d-flex align-items-center justify-content-center mt-2">
@@ -274,7 +282,11 @@ export default class Sidebar extends Component {
               </div>
             </div>
           </li>
-          <div className={`d-flex align-items-center justify-content-center ${recolher ? 'sr-only' : ''}`}>
+          <div
+            className={`d-flex align-items-center justify-content-center ${
+              recolher ? "sr-only" : ""
+            }`}
+          >
             <div className="mt-5 pt-5 w-75">
               <span className="coad-text-sm text-white">
                 SME-SP-SGC - Distribuído sob a Licença AGPL V3

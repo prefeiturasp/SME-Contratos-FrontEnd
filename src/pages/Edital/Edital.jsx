@@ -4,7 +4,7 @@ import {
   Input,
   Label,
   Card,
-  Button as ButtonBootstrap
+  Button as ButtonBootstrap,
 } from "reactstrap";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -13,7 +13,7 @@ import { Button as AntButton, Switch } from "antd";
 import {
   criaEdital,
   alteraEdital,
-  excluiEdital
+  excluiEdital,
 } from "../../service/Editais.service";
 import { BAD_REQUEST, CREATED, OK, NO_CONTENT } from "http-status-codes";
 import { redirect } from "../../utils/redirect";
@@ -22,9 +22,7 @@ import { getUrlParams } from "../../utils/params";
 import { Row, Col } from "reactstrap";
 import * as R from "ramda";
 
-const Edital = ({ mostraAlerta, edital : _edital }) => {
-
-
+const Edital = ({ mostraAlerta, edital: _edital }) => {
   const [visivel, setVisivel] = useState(false);
   const [visivelCancelar, setVisivelCancelar] = useState(false);
   const [edital, setEdital] = useState(_edital || {});
@@ -35,7 +33,6 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
 
   useEffect(() => {
     setEdital(_edital);
-    
   }, [_edital]);
 
   useEffect(() => {
@@ -64,16 +61,16 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
     setEdital({ ...edital });
   };
 
-  const addGrupo = () => setEdital({
-     ...edital,
-     grupos_de_obrigacao: R.append({ nome: "" }, edital.grupos_de_obrigacao)
+  const addGrupo = () =>
+    setEdital({
+      ...edital,
+      grupos_de_obrigacao: R.append({ nome: "" }, edital.grupos_de_obrigacao),
     });
-
 
   const excluirGrupo = index => {
     setEdital({
       ...edital,
-      grupos_de_obrigacao: R.remove(index, 1, edital.grupos_de_obrigacao)
+      grupos_de_obrigacao: R.remove(index, 1, edital.grupos_de_obrigacao),
     });
   };
 
@@ -102,45 +99,49 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
       redirect("#/listar-editais/");
       setFlashMessage(
         "Edital não pode ser excluido! Este edital está vinculado a um ou mais contratos.",
-        "error"
+        "error",
       );
     }
   };
 
   const duplicaEdital = async () => {
     setmodalDuplicar(false);
-    const copia = R.omit(['uuid', 'criado_em', 'alterado_em', 'numero'], edital)
+    const copia = R.omit(
+      ["uuid", "criado_em", "alterado_em", "numero"],
+      edital,
+    );
     try {
-      const resposta = await criaEdital({...copia, numero: `${ edital.numero } Cópia`});
+      const resposta = await criaEdital({
+        ...copia,
+        numero: `${edital.numero} Cópia`,
+      });
       if (resposta.status === CREATED) {
         setEdital(resposta.data);
         setFlashMessage("Edital duplicado com sucesso", "sucesso");
         redirect(`#/edital/?uuid=${resposta.data.uuid}`);
       }
-    }catch(erro){
-      if(erro.response && erro.response.status === BAD_REQUEST) {
+    } catch (erro) {
+      if (erro.response && erro.response.status === BAD_REQUEST) {
         redirect("#/listar-editais/");
         setFlashMessage(
           `Erro ao duplicar: ${Object.values(erro.response.data).join("\r\n")}`,
-          "error"
+          "error",
         );
-      }  
+      }
     }
   };
 
-  const mostraAlertaContainer = useCallback(
-    () => {
-      mostraAlerta();
-    },
-    [mostraAlerta]
-  );
+  const mostraAlertaContainer = useCallback(() => {
+    mostraAlerta();
+  }, [mostraAlerta]);
 
   const semGrupoInvalido = () => {
     if (!edital.grupos_de_obrigacao) return true;
-    return edital.grupos_de_obrigacao.every(el => el.nome.length)
-  }
+    return edital.grupos_de_obrigacao.every(el => el.nome.length);
+  };
 
-  const habilitaBotao = !modoVisualizacao && edital.numero && semGrupoInvalido();
+  const habilitaBotao =
+    !modoVisualizacao && edital.numero && semGrupoInvalido();
   const mensagemConfirmacao = incluir
     ? "Confirma a alteração deste edital?"
     : "Confirma a criação de um novo edital?";
@@ -204,7 +205,9 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
             label="Duplicar"
             onClick={() => setmodalDuplicar(true)}
           />
-        ) : ("")}
+        ) : (
+          ""
+        )}
         <Button
           disabled={!habilitaBotao}
           className="btn-coad-background-outline mr-2"
@@ -231,10 +234,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
               className="btn-coad-background-outline"
               label="Sim"
               onClick={() => {
-                setFlashMessage(
-                  "Alterações canceladas",
-                  "sucesso"
-                );
+                setFlashMessage("Alterações canceladas", "sucesso");
                 redirect("/#/listar-editais");
               }}
             />
@@ -299,7 +299,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
       <FormGroup>
         <Label className="font-weight-bold">Número do Edital</Label>
         <Input
-          value={ edital.numero || ""}
+          value={edital.numero || ""}
           onChange={e => setEdital({ ...edital, numero: e.target.value })}
           autoComplete="off"
           disabled={modoVisualizacao}
@@ -374,7 +374,9 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
             label="Duplicar"
             onClick={() => setmodalDuplicar(true)}
           />
-        ) : ("")}
+        ) : (
+          ""
+        )}
 
         <Button
           disabled={!habilitaBotao}

@@ -11,7 +11,7 @@ export default class ListarModelosAteste extends Component {
     super(props);
     this.state = {
       uuid: null,
-      modelos: []
+      modelos: [],
     };
   }
 

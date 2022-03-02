@@ -4,7 +4,7 @@ import {
   Input,
   Label,
   Card,
-  Button as ButtonBootstrap
+  Button as ButtonBootstrap,
 } from "reactstrap";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -13,7 +13,7 @@ import { Button as AntButton, Switch } from "antd";
 import {
   criaModeloAteste,
   alteraModeloAteste,
-  excluiModeloAteste
+  excluiModeloAteste,
 } from "../../service/ModeloAteste.service";
 import { CREATED, OK, NO_CONTENT } from "http-status-codes";
 import { redirect } from "../../utils/redirect";
@@ -97,7 +97,7 @@ const Modelo = props => {
       redirect("#/listar-modelos-ateste/");
       setFlashMessage(
         "Modelo de ateste não pode ser excluido! Este modelo está vinculado a um ou mais contratos.",
-        "error"
+        "error",
       );
     }
   };
@@ -121,7 +121,7 @@ const Modelo = props => {
     event => {
       props.mostraAlerta();
     },
-    [props]
+    [props],
   );
 
   const habilitaBotao =
@@ -191,7 +191,9 @@ const Modelo = props => {
             label="Duplicar"
             onClick={() => setmodalDuplicar(true)}
           />
-        ) : ("")}
+        ) : (
+          ""
+        )}
         <Button
           disabled={habilitaBotao}
           className="btn-coad-background-outline mr-2"
@@ -220,7 +222,7 @@ const Modelo = props => {
               onClick={() => {
                 setFlashMessage(
                   "Alterações em modelo de ateste canceladas",
-                  "sucesso"
+                  "sucesso",
                 );
                 redirect("/#/listar-modelos-ateste");
               }}
@@ -364,7 +366,9 @@ const Modelo = props => {
             label="Duplicar"
             onClick={() => setmodalDuplicar(true)}
           />
-        ) : ("")}
+        ) : (
+          ""
+        )}
 
         <Button
           disabled={habilitaBotao}

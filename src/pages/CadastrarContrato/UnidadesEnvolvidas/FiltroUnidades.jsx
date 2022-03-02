@@ -57,7 +57,7 @@ export class FiltroUnidades extends Component {
             <InputBootStrap
               value={cd_equipamento}
               name="cd_equipamento"
-              onChange={(event) =>
+              onChange={event =>
                 this.setState({ cd_equipamento: event.target.value })
               }
               placeholder="Código EOL da instituição"
@@ -68,7 +68,7 @@ export class FiltroUnidades extends Component {
             <InputBootStrap
               type="select"
               value={dre}
-              onChange={(event) => this.setState({ dre: event.target.value })}
+              onChange={event => this.setState({ dre: event.target.value })}
               name="dre"
             >
               <option value="">Selecione</option>
@@ -88,7 +88,7 @@ export class FiltroUnidades extends Component {
             <InputBootStrap
               type="select"
               value={tp_unidade}
-              onChange={(event) =>
+              onChange={event =>
                 this.setState({
                   tp_unidade: event.target.value,
                   tp_unidade_escolar: "",
@@ -109,7 +109,7 @@ export class FiltroUnidades extends Component {
               <InputBootStrap
                 type="select"
                 value={tp_unidade_escolar}
-                onChange={(event) =>
+                onChange={event =>
                   this.setState({ tp_unidade_escolar: event.target.value })
                 }
                 name="tp_unidade"
@@ -138,7 +138,7 @@ export class FiltroUnidades extends Component {
             <label>Nome da Unidade</label>
             <InputBootStrap
               value={nm_equipamento}
-              onChange={(event) =>
+              onChange={event =>
                 this.setState({ nm_equipamento: event.target.value })
               }
               name="nm_equipamento"

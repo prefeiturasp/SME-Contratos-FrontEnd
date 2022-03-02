@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import classNames from "classnames";
-import {getMeuProfile} from "./service/Usuarios.service"
+import { getMeuProfile } from "./service/Usuarios.service";
 export class AppProfile extends Component {
   constructor() {
     super();
     this.state = {
       expanded: false,
-      nomeUsuario: ''
+      nomeUsuario: "",
     };
     this.onClick = this.onClick.bind(this);
   }
@@ -17,11 +17,10 @@ export class AppProfile extends Component {
   }
 
   async componentDidMount() {
-    const profile = await getMeuProfile()
-    const nomeUsuario = profile ? profile.nome : ''
-    this.setState({nomeUsuario})
+    const profile = await getMeuProfile();
+    const nomeUsuario = profile ? profile.nome : "";
+    this.setState({ nomeUsuario });
   }
-  
 
   render() {
     return (
@@ -35,7 +34,7 @@ export class AppProfile extends Component {
         </button>
         <ul
           className={classNames({
-            "layout-profile-expanded": this.state.expanded
+            "layout-profile-expanded": this.state.expanded,
           })}
         >
           <li>

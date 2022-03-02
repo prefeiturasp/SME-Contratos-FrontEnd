@@ -11,7 +11,7 @@ export default class ListarEditais extends Component {
     super(props);
     this.state = {
       uuid: null,
-      editais: []
+      editais: [],
     };
   }
 
@@ -51,7 +51,7 @@ export default class ListarEditais extends Component {
               style={{ marginRight: "5px", color: "#42474A" }}
             ></i>
             <h6 style={{ fontWeight: "bold" }}>
-            Editais e Obrigações cadastrados
+              Editais e Obrigações cadastrados
             </h6>
           </Col>
           <Col lg={4} xl={4}>

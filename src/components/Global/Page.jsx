@@ -26,7 +26,7 @@ class Page extends Component {
       overlayMenuActive: false,
       mobileMenuActive: false,
       isMobile: false,
-      clicado: false
+      clicado: false,
     };
 
     this.onWrapperClick = this.onWrapperClick.bind(this);
@@ -40,7 +40,7 @@ class Page extends Component {
     if (!this.menuClick) {
       this.setState({
         overlayMenuActive: false,
-        mobileMenuActive: false
+        mobileMenuActive: false,
       });
     }
 
@@ -54,19 +54,19 @@ class Page extends Component {
       if (this.state.layoutMode === "overlay") {
         this.setState({
           overlayMenuActive: !this.state.overlayMenuActive,
-          clicado: !this.state.clicado
+          clicado: !this.state.clicado,
         });
       } else if (this.state.layoutMode === "static") {
         this.setState({
           staticMenuInactive: !this.state.staticMenuInactive,
-          clicado: !this.state.clicado
+          clicado: !this.state.clicado,
         });
       }
     } else {
       const mobileMenuActive = this.state.mobileMenuActive;
       this.setState({
         mobileMenuActive: !mobileMenuActive,
-        clicado: !this.state.clicado
+        clicado: !this.state.clicado,
       });
     }
 
@@ -81,13 +81,13 @@ class Page extends Component {
     if (!event.item.items) {
       this.setState({
         overlayMenuActive: false,
-        mobileMenuActive: false
+        mobileMenuActive: false,
       });
     }
   }
 
   createMenu() {
-    this.menu = MenuConfig
+    this.menu = MenuConfig;
   }
 
   addClass(element, className) {
@@ -101,9 +101,9 @@ class Page extends Component {
       element.className = element.className.replace(
         new RegExp(
           "(^|\\b)" + className.split(" ").join("|") + "(\\b|$)",
-          "gi"
+          "gi",
         ),
-        " "
+        " ",
       );
   }
 
@@ -127,12 +127,12 @@ class Page extends Component {
         this.state.staticMenuInactive && this.state.layoutMode === "static",
       "layout-overlay-sidebar-active":
         this.state.overlayMenuActive && this.state.layoutMode === "overlay",
-      "layout-mobile-sidebar-active": this.state.mobileMenuActive
+      "layout-mobile-sidebar-active": this.state.mobileMenuActive,
     });
 
     const sidebarClassName = classNames("layout-sidebar", {
       "layout-sidebar-dark": this.state.layoutColorMode === "dark",
-      "layout-sidebar-light": this.state.layoutColorMode === "light"
+      "layout-sidebar-light": this.state.layoutColorMode === "light",
     });
 
     return (

@@ -8,7 +8,7 @@ export default class SelecionarDivisoes extends Component {
 
     this.state = {
       options: [],
-      selected: null
+      selected: null,
     };
   }
 
@@ -39,15 +39,17 @@ export default class SelecionarDivisoes extends Component {
     return (
       <FormGroup>
         <Label for="selecionarDivisoes">Divisão Responsável</Label>
-        <Input type="select" {...this.props} onChange={event => this.onSelect(event)} name="divisoes" id="selecionarDivisoes">
+        <Input
+          type="select"
+          {...this.props}
+          onChange={event => this.onSelect(event)}
+          name="divisoes"
+          id="selecionarDivisoes"
+        >
           {options.map((value, key) => {
             const selecionado = selected === value.value ? true : false;
             return (
-              <option
-                selected={selecionado}
-                key={key}
-                value={value.value}
-              >
+              <option selected={selecionado} key={key} value={value.value}>
                 {value.label}
               </option>
             );

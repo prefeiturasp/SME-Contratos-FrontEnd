@@ -4,7 +4,7 @@ import * as CONFIG from "../configs/config.constants";
 
 export const getUnidadeContrato = uuid => {
   const AUTH_HEADER = {
-    headers: getHeaderToken()
+    headers: getHeaderToken(),
   };
 
   return api
@@ -14,17 +14,20 @@ export const getUnidadeContrato = uuid => {
 
 export const getUnidadesByContrato = uuid => {
   const AUTH_HEADER = {
-    headers: getHeaderToken()
+    headers: getHeaderToken(),
   };
 
   return api
-    .get(`${CONFIG.API_URL}/unidades-contratos/?contrato__uuid=${uuid}`, AUTH_HEADER)
+    .get(
+      `${CONFIG.API_URL}/unidades-contratos/?contrato__uuid=${uuid}`,
+      AUTH_HEADER,
+    )
     .then(res => res.data);
 };
 
 export const addUnidade = payload => {
   const AUTH_HEADER = {
-    headers: getHeaderToken()
+    headers: getHeaderToken(),
   };
 
   return api
@@ -34,18 +37,14 @@ export const addUnidade = payload => {
 
 export const updateUnidade = (payload, uuid) => {
   const AUTH_HEADER = {
-    headers: getHeaderToken()
+    headers: getHeaderToken(),
   };
   return api
-    .put(
-      `${CONFIG.API_URL}/unidades-contratos/${uuid}/`,
-      payload,
-      AUTH_HEADER
-    )
+    .put(`${CONFIG.API_URL}/unidades-contratos/${uuid}/`, payload, AUTH_HEADER)
     .then(
       res => res.data,
       res => {
         return { statusCode: res.statusCode, result: res };
-      }
+      },
     );
 };

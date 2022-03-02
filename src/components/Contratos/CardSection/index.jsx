@@ -7,7 +7,12 @@ const CardSection = props => {
     <div className="section">
       <Card>
         <CardBody>
-          <CardImg id="img-cardsection" top src={props.icone} alt="icone seleção" />
+          <CardImg
+            id="img-cardsection"
+            top
+            src={props.icone}
+            alt="icone seleção"
+          />
           <CardTitle className="texto-cardsection">{props.titulo}</CardTitle>
           {props.children}
         </CardBody>

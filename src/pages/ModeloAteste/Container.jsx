@@ -34,15 +34,12 @@ const ModeloAteste = props => {
     }
   });
 
-  const mostraAlerta = useCallback(
-    event => {
-      setAlerta(true);
-      setTimeout(() => {
-        setAlerta(false);
-      }, 5000);
-    },
-    []
-  );
+  const mostraAlerta = useCallback(event => {
+    setAlerta(true);
+    setTimeout(() => {
+      setAlerta(false);
+    }, 5000);
+  }, []);
 
   const fechaAlerta = () => setAlerta(false);
 

@@ -5,14 +5,14 @@ import { redirect } from "../../../utils/redirect";
 import "./style.scss";
 
 const styled = {
-  cursor: "pointer"
+  cursor: "pointer",
 };
 
 export class CardServico extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tiposServico: []
+      tiposServico: [],
     };
   }
 
@@ -39,7 +39,7 @@ export class CardServico extends Component {
                 style={styled}
                 onClick={() =>
                   redirect(
-                    `#/contratos-continuos/?tipo_servico=${tipoServico.id}`
+                    `#/contratos-continuos/?tipo_servico=${tipoServico.id}`,
                   )
                 }
               >

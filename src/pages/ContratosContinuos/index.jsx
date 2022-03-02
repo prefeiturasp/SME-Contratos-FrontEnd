@@ -5,7 +5,7 @@ import Container from "../../components/Global/Container";
 import TableContrato from "../../components/Contratos/TableContrato";
 import {
   getContratos,
-  getCamposContrato
+  getCamposContrato,
 } from "../../service/Contratos.service";
 import "./style.scss";
 import { BuscaContratosForm } from "../../components/Contratos/BuscaContratosForm";
@@ -29,7 +29,7 @@ class ContratosContinuos extends Component {
         { field: "tipo_servico.nome", header: "Tipode de Serviço" },
         { field: "empresa_contratada.nome", header: "Empresa" },
         { field: "estado_contrato", header: "Estado do Contrato" },
-        { field: "data_encerramento", header: "Data Encerramento" }
+        { field: "data_encerramento", header: "Data Encerramento" },
       ],
       filtros: {
         empresa_contratada: "",
@@ -39,16 +39,16 @@ class ContratosContinuos extends Component {
         estado_contrato: "",
         situacao: "",
         termo_Contrato: "",
-        tipo_servico: ""
+        tipo_servico: "",
       },
       loading: true,
       filtroAberto: false,
     };
-  } 
-  
-  showMessage(messageParams){
+  }
+
+  showMessage(messageParams) {
     window.scrollTo(0, 0);
-    this.messages.show(messageParams);  
+    this.messages.show(messageParams);
   }
 
   async setaColunasDefaut() {
@@ -57,7 +57,7 @@ class ContratosContinuos extends Component {
     if (colunasUsuario || colunasUsuario.length !== 0) {
       this.setState({
         colunas: colunasUsuario.colunas_array,
-        uuid: colunasUsuario.uuid
+        uuid: colunasUsuario.uuid,
       });
     }
   }
@@ -68,28 +68,28 @@ class ContratosContinuos extends Component {
       this.setState({ contratos });
     });
     this.setState({
-      loading: false
+      loading: false,
     });
   }
 
   onBuscarClick = filtros => {
-    this.setState({ loading: true, filtroAberto: false  });
+    this.setState({ loading: true, filtroAberto: false });
     getContratos(filtros).then(contratos => {
       this.setState({ contratos, filtros, loading: false });
     });
     this.showMessage({
       severity: "success",
       life: 10000,
-      detail: "Personalização de filtros aplicada com sucesso"
+      detail: "Personalização de filtros aplicada com sucesso",
     });
   };
 
-  onAplicarClick = colunas => {    
+  onAplicarClick = colunas => {
     this.setState({ colunas, filtroAberto: false });
     this.showMessage({
       severity: "success",
       life: 10000,
-      detail: "Personalização de colunas aplicada com sucesso"
+      detail: "Personalização de colunas aplicada com sucesso",
     });
   };
 
@@ -116,7 +116,7 @@ class ContratosContinuos extends Component {
       this.messages.show({
         severity: "success",
         life: 10000,
-        detail: "Contrato cadastrado com sucesso"
+        detail: "Contrato cadastrado com sucesso",
       });
     }
 
@@ -124,7 +124,7 @@ class ContratosContinuos extends Component {
       this.messages.show({
         severity: "success",
         life: 10000,
-        detail: getFlashMessage("sucesso")
+        detail: getFlashMessage("sucesso"),
       });
     }
     this.pegaParametrosUrl();
@@ -151,7 +151,10 @@ class ContratosContinuos extends Component {
           </Button>
         </ButtonGroup>
         <Container icone="pi pi-chart-bar" subtitulo="Visualizar Contratos">
-          <CoadAccordion titulo="Personalizar filtro de busca" aberto={filtroAberto}>
+          <CoadAccordion
+            titulo="Personalizar filtro de busca"
+            aberto={filtroAberto}
+          >
             <CoadTabs
               titulo1={"Personalizar Filtros"}
               titulo2={"Personalizar Colunas"}

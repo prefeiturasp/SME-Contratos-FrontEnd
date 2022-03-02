@@ -9,7 +9,7 @@ import {
   getTermosAll,
   getTermoByAtribuicao,
   updateContrato,
-  getContratos
+  getContratos,
 } from "../../../service/Contratos.service";
 import { BuscaIncrementalServidores } from "../BuscaIncrementalServidores";
 import { Dialog } from "primereact/dialog";
@@ -25,7 +25,7 @@ export default class ListarTermoContrato extends Component {
       suplente: null,
       editarVisible: false,
       confirmarVisible: false,
-      contratoUuid: null
+      contratoUuid: null,
     };
     this.onClickEditar = this.onClickEditar.bind(this);
   }
@@ -63,7 +63,7 @@ export default class ListarTermoContrato extends Component {
     const payload = {
       termo_contrato: this.state.termo_contrato,
       gestor: this.state.gestor ? this.state.gestor.uuid : null,
-      suplente: this.state.suplente ? this.state.suplente.uuid : null
+      suplente: this.state.suplente ? this.state.suplente.uuid : null,
     };
     const result = await updateContrato(payload, this.state.contratoUuid);
     if (result) {
@@ -80,7 +80,7 @@ export default class ListarTermoContrato extends Component {
           contratoUuid: termo.uuid,
           termo_contrato: termo.termo_contrato,
           gestor: termo.gestor,
-          suplente: termo.suplente
+          suplente: termo.suplente,
         });
       }
     });
@@ -111,7 +111,7 @@ export default class ListarTermoContrato extends Component {
       { field: "termo_contrato", header: "Nº T.C." },
       { field: "gestor.nome", header: "Gestor(a) de Contrato" },
       { field: "suplente.nome", header: "Suplente de Contrato" },
-      { field: "editar", header: "" }
+      { field: "editar", header: "" },
     ];
 
     let dynamicColumns = cols.map((col, i) => {
@@ -200,7 +200,7 @@ export default class ListarTermoContrato extends Component {
                 value={this.state.termo_contrato}
                 onChange={e =>
                   this.setState({
-                    termo_contrato: e.target.value
+                    termo_contrato: e.target.value,
                   })
                 }
                 disabled="true"

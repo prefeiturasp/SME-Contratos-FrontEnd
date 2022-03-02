@@ -1,2 +1,2 @@
-import EditalContainer from "./EditalContainer"
+import EditalContainer from "./EditalContainer";
 export default EditalContainer;

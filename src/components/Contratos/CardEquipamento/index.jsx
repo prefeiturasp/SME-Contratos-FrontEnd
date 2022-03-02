@@ -3,17 +3,10 @@ import IconeUE from "../../../assets/images/icon-und-educacional.svg";
 import IconeCEU from "../../../assets/images/icon-und-centros-unificados.svg";
 import IconeUA from "../../../assets/images/icon-und-administrativas.svg";
 import { redirect } from "../../../utils/redirect";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  CardImg,
-  Row,
-  Col
-} from "reactstrap";
+import { Card, CardBody, CardTitle, CardImg, Row, Col } from "reactstrap";
 
 const styled = {
-  cursor: "pointer"
+  cursor: "pointer",
 };
 
 const CardEquipamento = props => {
