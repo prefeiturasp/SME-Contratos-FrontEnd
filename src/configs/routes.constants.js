@@ -106,20 +106,6 @@ export const MenuConfig = [
       }
     },
     {
-      label: "Estoque / Patrimônio",
-      icon: "pi pi-clone",
-      command: () => {
-        window.location = '#'
-      }
-    },
-    {
-      label: "Obras",
-      icon: "pi pi-users",
-      command: () => {
-        window.location = '#'
-      }
-    },
-    {
       label: "Relatórios",
       icon: "pi pi-chart-bar",
       command: () => {
