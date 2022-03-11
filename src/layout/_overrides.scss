@@ -165,6 +165,11 @@ $hoverColor: #431e1e;
     background-color: #602a2a !important;
   }
 
+  .field-checkbox, .field-radiobutton{
+    display: flex;
+    align-items: center;
+  }
+
   .p-radiobutton-icon{
     height: 8px !important;
     width:  8px !important;;
