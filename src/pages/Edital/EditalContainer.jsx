@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment, useCallback } from "react";
 import $ from "jquery";
+import moment from "moment";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import { getEdital } from "../../service/Editais.service";
@@ -21,6 +22,7 @@ const EditalContainer = props => {
     if (uuid) {
       (async () => {
         const dados = await getEdital(uuid);
+        dados.data_homologacao = moment(dados.data_homologacao, "YYYY-MM-DD").toDate();
         setEdital(dados);
       })();
     }
@@ -69,7 +71,7 @@ const EditalContainer = props => {
             Item adicionado com sucesso 
           </span>
         </Alert>
-        <h3>{ `${ uuid ? 'Visualizar' : 'Cadastro de'} Edital e Obrigações` }</h3>
+        <h3>{  uuid ? 'Edital Nº ' + edital.numero : 'Cadastro de Edital e Obrigações' }</h3>
         <Container>
           {edital && <Edital edital={edital} mostraAlerta={mostraAlerta} />}
         </Container>

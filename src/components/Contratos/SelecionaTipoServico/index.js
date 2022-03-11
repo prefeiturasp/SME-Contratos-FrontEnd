@@ -20,7 +20,6 @@ export class SelecionaTipoServico extends Component {
     }
 
     render() {
-        const { disabilitado } = this.props;
         return (
             <Dropdown 
                 {...this.props}
@@ -31,7 +30,6 @@ export class SelecionaTipoServico extends Component {
                 autoWidth={false} 
                 placeholder="Selecione um Objeto..."
                 showClear={true}
-                disabled={disabilitado}
             />
         );
     }
