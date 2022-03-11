@@ -340,7 +340,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
             </div>
 
             <div className="p-col-6">
-              <Label className="font-weight-bold">Situacao</Label>
+              <Label className="font-weight-bold">Status</Label>
               <Dropdown 
                 className="w-100"
                 optionLabel="nome"
@@ -362,7 +362,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
                 optionLabel="nome"
                 options={TIPOS_CONTRATACAO}
                 value={edital.tipo_contratacao} 
-                onChange={e => setEdital({ ...edital, tipo_contratacao: e.target.value })}
+                onChange={e => setEdital({ ...edital, tipo_contratacao: e.target.value, subtipo: null })}
                 placeholder="Selecione"
                 disabled={modoVisualizacao}
               />
