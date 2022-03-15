@@ -95,6 +95,7 @@ export const MenuConfig = [
       icon: "pi pi-list",
       items: [
         { label: "Gestão de Contratos", icon: "pi pi-cog pi-th-large", to: "/gestao-contratos" },
+        { label: "Editais", icon: "pi pi-cog pi-th-large", to: "/listar-editais" },
         { label: "Atribuição Termo Contratos", icon: "pi pi-cog pi-th-large", to: "/atribuicao-termo-contrato" },
       ]
     },
@@ -117,8 +118,7 @@ export const MenuConfig = [
       icon: "pi pi-cog",
       items: [
         { label: "Designação de Cargos", icon: "pi pi-cog pi-th-large", to: "/designacao-cargos" },
-        { label: "Modelos de Ateste", icon: "pi pi-cog pi-th-large", to: "/listar-modelos-ateste" },
-        { label: "Editais", icon: "pi pi-cog pi-th-large", to: "/listar-editais" },
+        { label: "Modelos de Ateste", icon: "pi pi-cog pi-th-large", to: "/listar-modelos-ateste" },       
       ]
     },
 ]
