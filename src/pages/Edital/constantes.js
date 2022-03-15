@@ -27,3 +27,8 @@ export const TIPOS_CONTRATACAO = [
   {id: "DISPENSA_LICITACAO", nome:"Dispensa de Licitação"},
   {id: "INEXIGIBILIDADE_LICITACAO", nome:"Inexigibilidade de Licitação"},
 ]
+
+export const STATUS_EDITAL = [
+  {id: "ATIVO", nome:"Ativo"},
+  {id: "INATIVO", nome:"Inativo"},
+]
