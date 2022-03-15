@@ -1,6 +1,7 @@
 import api from "./Api";
 import { getHeaderToken } from "./auth.service";
 import moment from "moment";
+import { formataParametros } from "../utils/formataParametros";
 
 
 const formataData = datas => {
@@ -20,11 +21,12 @@ export const getEdital = async uuid => {
   return (await api.get(url, AUTH_HEADER)).data;
 };
 
-export const getListaDeEditais = async () => {
+export const getListaDeEditais = async (filtro) => {
+  let parametros = formataParametros(filtro);
   const AUTH_HEADER = {
     headers: getHeaderToken()
   };
-  return formataData((await api.get("editais/", AUTH_HEADER)).data);
+  return formataData((await api.get(`editais/${parametros}`, AUTH_HEADER)).data.results);
 };
 
 export const criaEdital = async payload => {

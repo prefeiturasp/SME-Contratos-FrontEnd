@@ -32,7 +32,7 @@ import { Row, Col } from "reactstrap";
 import * as R from "ramda";
 import CoadAccordion from "../../components/Global/CoadAccordion";
 import { SelecionaTipoServico } from '../../components/Contratos/SelecionaTipoServico'
-import { SUBTIPOS_DISPENSA, SUBTIPOS_INEXIGIBILIDADE, SUBTIPOS_LICITACAO, TIPOS_CONTRATACAO } from './constantes'
+import { SUBTIPOS_DISPENSA, SUBTIPOS_INEXIGIBILIDADE, SUBTIPOS_LICITACAO, TIPOS_CONTRATACAO, STATUS_EDITAL } from './constantes'
 
 const Edital = ({ mostraAlerta, edital : _edital }) => {
 
@@ -344,10 +344,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
               <Dropdown 
                 className="w-100"
                 optionLabel="nome"
-                options={[
-                  {id: "ATIVO", nome:"Ativo"},
-                  {id: "INATIVO", nome:"Inativo"},
-                ]}
+                options={STATUS_EDITAL}
                 value={edital.status} 
                 onChange={e => setEdital({ ...edital, status: e.target.value })} 
                 placeholder="Selecione o Status"
