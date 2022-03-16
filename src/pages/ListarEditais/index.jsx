@@ -21,6 +21,8 @@ function ListarEditaisPage() {
 
   const [filtros, setFiltros] = useState(filtrosIniciais);
   const [editais, setEditais] = useState([]);
+  const [totalEditais, setTotalEditais] = useState([]);
+  const [loading, setLoading] = useState(true);
   const messages = useRef(null);
 
   const ajustarFiltros = filtros => {
@@ -38,10 +40,18 @@ function ListarEditaisPage() {
     setFiltros(filtrosAjustados);
   };
 
+  const mudarPagina = pagina => {
+    setFiltros({ ...filtros, page: pagina})
+  };
+
+
   useEffect(() => {
     const buscaEditais = async () => {
-      const editais = await getListaDeEditais(filtros);
-      setEditais(editais);
+      setLoading(true);
+      const data = await getListaDeEditais(filtros);
+      setEditais(data.results);
+      setTotalEditais(data.count);
+      setLoading(false);
     };
 
     buscaEditais();
@@ -86,7 +96,12 @@ function ListarEditaisPage() {
           onBuscarClick={filtros => onBuscarClick(filtros)}
         />
         <hr/>
-        <ListaEditais editais={editais}/>
+        <ListaEditais
+          loading={loading}
+          editais={editais}
+          mudarPagina={mudarPagina}
+          totalEditais={totalEditais}
+        />
       </Container>
     </Page>
   );
