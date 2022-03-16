@@ -11,12 +11,16 @@ export class SelecionaTipoServico extends Component {
     }
 
     async componentDidMount(){
-        const tiposServico = await getTiposServicoLookup()
-        this.setState({tiposServico})
+        this.buscaTiposServico()
     }
 
     selecionaTipoServico(event) {
         this.props.onSelect(event.value)
+    }
+
+    async buscaTiposServico(){
+        const tiposServico = await getTiposServicoLookup()
+        this.setState({tiposServico})
     }
 
     render() {

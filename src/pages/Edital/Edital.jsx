@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useCallback } from "react";
+import React, { useState, useEffect, Fragment, useCallback, useRef } from "react";
 import {
   FormGroup,
   Label,
@@ -6,6 +6,7 @@ import {
   Button as ButtonBootstrap
 } from "reactstrap";
 import moment from "moment";
+import { Messages } from 'primereact/messages';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { InputMask } from 'primereact/inputmask';
@@ -24,6 +25,7 @@ import {
   alteraEdital,
   excluiEdital
 } from "../../service/Editais.service";
+import { criaTipoServico } from "../../service/TiposServico.service";
 import { BAD_REQUEST, CREATED, OK, NO_CONTENT } from "http-status-codes";
 import { redirect } from "../../utils/redirect";
 import { setFlashMessage } from "../../utils/flashMessages";
@@ -44,6 +46,10 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
   const [incluir, setIncluir] = useState(true);
   const [modalExcluir, setmodalExcluir] = useState(false);
   const [modalDuplicar, setmodalDuplicar] = useState(false);
+  const [modalCadastrarObjeto, setModalCadastrarObjeto] = useState(false);
+  const [novoObjeto, setNovoObjeto] = useState("");
+  const tipoServico = useRef(null);
+  const messages = useRef(null);
 
   useEffect(() => {
     setEdital(_edital);
@@ -57,6 +63,10 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
       setModoVisualizacao(false);
     }
   }, [edital]);
+
+  const showMenssages = (type, erro) => {
+    messages.current.show({ severity: type, detail: erro });
+}
 
   const fechaDialog = () => {
     setVisivel(false);
@@ -151,6 +161,23 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
     }
   };
 
+  const CadastraObjeto = async () => {
+    setModalCadastrarObjeto(false);
+    try {
+      const resultado = await criaTipoServico({nome:novoObjeto});
+       if (resultado.status === CREATED) {
+         tipoServico.current.buscaTiposServico()
+         showMenssages("success", "Objeto cadastrado com sucesso!")
+       }
+    }catch(erro){
+      if(erro.response && erro.response.status === BAD_REQUEST) {
+        showMenssages("error", `${Object.values(erro.response.data).join("\r\n")}`)
+      }  
+    }
+
+     setNovoObjeto("")
+  };
+
   const mostraAlertaContainer = useCallback(
     () => {
       mostraAlerta();
@@ -212,8 +239,31 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
     </div>
   );
 
+  const footerModalCadastrarObjeto = (
+    <div>
+      <Button
+        label="Cancelar"
+        style={{ marginRight: ".25em" }}
+        onClick={() => {
+          setModalCadastrarObjeto(false); 
+          setNovoObjeto("");
+        }}
+        className="btn-coad-background-outline mx-2"
+      />
+
+      <Button
+        label="Adicionar"
+        style={{ marginRight: ".25em" }}
+        onClick={CadastraObjeto}
+        className="btn-coad-primary"
+        disabled={!novoObjeto.length}
+      />
+    </div>
+  );
+
   return (
     <Fragment>
+      <Messages ref={messages}></Messages>
       <FormGroup className="d-flex flex-row-reverse mt-3">
         <Button
           disabled={!habilitaBotao}
@@ -441,7 +491,19 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
                 tipoServico={edital.objeto}
                 onSelect={e => setEdital({ ...edital, objeto: e })}
                 disabled={modoVisualizacao}
+                ref={tipoServico}
               />
+            </div>
+            <div className="p-col-6 mt-4">
+              <AntButton
+                className="mt-2 font-weight-bold"
+                disabled={modoVisualizacao}
+                type="link"
+                size="small"
+                onClick={() => setModalCadastrarObjeto(true)}
+              >
+                + Cadastrar novo
+              </AntButton>
             </div>
             <div className="p-col-12">
               <Label className="font-weight-bold">Descreva brevemente o objeto do contrato</Label>
@@ -564,6 +626,23 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
       >
         <div>
           <p>Deseja duplicar este edital?</p>
+        </div>
+      </Dialog>
+      <Dialog
+        header="Adicionar objeto"
+        visible={modalCadastrarObjeto}
+        style={{ width: "60vw" }}
+        footer={footerModalCadastrarObjeto}
+        onHide={() => {setModalCadastrarObjeto(false); setNovoObjeto("");}}
+      >
+        <div>
+        <label htmlFor="objeto">Nome do objeto</label>
+            <br />
+            <InputText
+              value={novoObjeto}
+              onChange={(e) => setNovoObjeto(e.target.value.toUpperCase() || "")}
+              className="w-100"
+            />
         </div>
       </Dialog>
     </Fragment>
