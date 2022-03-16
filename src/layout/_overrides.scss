@@ -5,7 +5,7 @@ $blueHight: #064f79;
 $whiteColor: #ffffff;
 $hoverColor: #431e1e;
 
-.layout-wrapper {
+.layout-wrapper, .p-dialog-mask {
   background-color: #f2f2f2;
   .layout-topbar {
     z-index: 1000;
