@@ -56,7 +56,7 @@ export function BuscaEditaisForm({onBuscarClick}) {
 
     const footer = <span>
                         <Button className="float-right" label="Consultar" style={{marginRight: '.25em'}} onClick={handleClickBuscar}/>
-                        <Button className="float-right" label="Limpar Filtros" style={{marginRight: '.25em'}} onClick={limparFiltros}/>
+                        <Button className="float-right btn-coad-background-outline" label="Limpar Filtros" style={{marginRight: '.25em'}} onClick={limparFiltros}/>
                     </span>;
 
     return (

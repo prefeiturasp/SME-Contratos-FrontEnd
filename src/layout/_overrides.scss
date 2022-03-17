@@ -268,4 +268,16 @@ $hoverColor: #431e1e;
     background-color: #ffffff !important;
     border: none !important;
   }
+
+}
+.layout-topbar{
+  .layout-topbar-icons {
+    button {
+      span {
+        &.layout-topbar-icon {
+            font-size: 1.2em;
+        }
+      }
+    }
+  }
 }
