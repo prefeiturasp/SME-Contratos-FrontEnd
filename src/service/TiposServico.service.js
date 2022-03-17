@@ -13,7 +13,7 @@ export const getTiposServicoLookup = () => {
 
 export const criaTipoServico = async payload => {
   const AUTH_HEADER = {
-    headers: getHeaderToken()
+    headers: getHeaderToken(),
   };
   const url = "tipos-servico/";
   return await api.post(url, payload, AUTH_HEADER);

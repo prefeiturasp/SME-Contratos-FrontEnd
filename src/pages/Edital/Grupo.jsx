@@ -216,7 +216,10 @@ const Grupo = props => {
           </DataTable>
         ) : (
           <div>
-            <DataTable emptyMessage={footerVazio} className="datatable-footer-coad ">
+            <DataTable
+              emptyMessage={footerVazio}
+              className="datatable-footer-coad "
+            >
               <Column header="" style={{ width: "5em" }} />
               <Column header="Itens de obrigação" />
               <Column header="" style={{ width: "7em" }} />

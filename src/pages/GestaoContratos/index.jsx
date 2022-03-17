@@ -30,13 +30,19 @@ function GestaoContratos() {
   const [loading, setLoading] = useState(true);
 
   const ajustarFiltros = filtros => {
-    let filtrosAjustados = {...filtros}
-    filtrosAjustados.cnpj_empresa = filtros.cnpj_empresa.replace(/\D/g, '');
-    filtrosAjustados.empresa = filtros.empresa ? filtros.empresa.uuid : '';
-    filtrosAjustados.status = filtros.status ? filtros.status.id : '';
-    filtrosAjustados.objeto = filtros.objeto ? filtros.objeto.id : '';
-    filtrosAjustados.data_inicial = (filtros.data_inicial && filtros.data_inicial.toISOString) ? filtros.data_inicial.toISOString().slice(0,10) : '';
-    filtrosAjustados.data_final = (filtros.data_final && filtros.data_final.toISOString) ? filtros.data_final.toISOString().slice(0,10) : '';
+    let filtrosAjustados = { ...filtros };
+    filtrosAjustados.cnpj_empresa = filtros.cnpj_empresa.replace(/\D/g, "");
+    filtrosAjustados.empresa = filtros.empresa ? filtros.empresa.uuid : "";
+    filtrosAjustados.status = filtros.status ? filtros.status.id : "";
+    filtrosAjustados.objeto = filtros.objeto ? filtros.objeto.id : "";
+    filtrosAjustados.data_inicial =
+      filtros.data_inicial && filtros.data_inicial.toISOString
+        ? filtros.data_inicial.toISOString().slice(0, 10)
+        : "";
+    filtrosAjustados.data_final =
+      filtros.data_final && filtros.data_final.toISOString
+        ? filtros.data_final.toISOString().slice(0, 10)
+        : "";
     return filtrosAjustados;
   };
 

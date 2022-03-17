@@ -89,15 +89,26 @@ const RoutesConfig = [
 export default RoutesConfig;
 
 export const MenuConfig = [
-    {
-      label: "Contratos",
-      icon: "pi pi-list",
-      items: [
-        { label: "Gestão de Contratos", icon: "pi pi-cog pi-th-large", to: "/gestao-contratos" },
-        { label: "Editais", icon: "pi pi-cog pi-th-large", to: "/listar-editais" },
-        { label: "Atribuição Termo Contratos", icon: "pi pi-cog pi-th-large", to: "/atribuicao-termo-contrato" },
-      ]
-    },
+  {
+    label: "Contratos",
+    icon: "pi pi-list",
+    items: [
+      {
+        label: "Gestão de Contratos",
+        icon: "pi pi-cog pi-th-large",
+        to: "/gestao-contratos",
+      },
+      {
+        label: "Editais",
+        icon: "pi pi-cog pi-th-large",
+        to: "/listar-editais",
+      },
+      {
+        label: "Atribuição Termo Contratos",
+        icon: "pi pi-cog pi-th-large",
+        to: "/atribuicao-termo-contrato",
+      },
+    ],
   },
   {
     label: "Estoque / Patrimônio",
@@ -105,19 +116,28 @@ export const MenuConfig = [
     command: () => {
       window.location = "#";
     },
-    {
-      label: "Relatórios",
-      icon: "pi pi-chart-bar",
-      command: () => {
-        window.location = '#'
-      }
+  },
+  {
+    label: "Relatórios",
+    icon: "pi pi-chart-bar",
+    command: () => {
+      window.location = "#";
     },
-    {
-      label: "Configurações",
-      icon: "pi pi-cog",
-      items: [
-        { label: "Designação de Cargos", icon: "pi pi-cog pi-th-large", to: "/designacao-cargos" },
-        { label: "Modelos de Ateste", icon: "pi pi-cog pi-th-large", to: "/listar-modelos-ateste" },       
-      ]
-    },
-]
+  },
+  {
+    label: "Configurações",
+    icon: "pi pi-cog",
+    items: [
+      {
+        label: "Designação de Cargos",
+        icon: "pi pi-cog pi-th-large",
+        to: "/designacao-cargos",
+      },
+      {
+        label: "Modelos de Ateste",
+        icon: "pi pi-cog pi-th-large",
+        to: "/listar-modelos-ateste",
+      },
+    ],
+  },
+];

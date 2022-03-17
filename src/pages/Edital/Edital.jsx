@@ -1,23 +1,24 @@
-import React, { useState, useEffect, Fragment, useCallback, useRef } from "react";
-import {
-  FormGroup,
-  Label,
-  Card,
-  Button as ButtonBootstrap,
-} from "reactstrap";
+import React, {
+  useState,
+  useEffect,
+  Fragment,
+  useCallback,
+  useRef,
+} from "react";
+import { FormGroup, Label, Card, Button as ButtonBootstrap } from "reactstrap";
 import moment from "moment";
-import { Messages } from 'primereact/messages';
-import { Dropdown } from 'primereact/dropdown';
-import { InputText } from 'primereact/inputtext';
-import { InputMask } from 'primereact/inputmask';
-import { Calendar } from 'primereact/calendar';
+import { Messages } from "primereact/messages";
+import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { InputMask } from "primereact/inputmask";
+import { Calendar } from "primereact/calendar";
 import { Editor } from "primereact/editor";
-import { RadioButton } from "primereact/radiobutton"
+import { RadioButton } from "primereact/radiobutton";
 import EditorHeader from "../../components/Shared/EditorHeader";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { CALENDAR_PT } from '../../configs/config.constants';
-import { addLocale } from 'primereact/api';
+import { CALENDAR_PT } from "../../configs/config.constants";
+import { addLocale } from "primereact/api";
 import Grupo from "./Grupo";
 import { Button as AntButton, Switch } from "antd";
 import {
@@ -33,12 +34,17 @@ import { getUrlParams } from "../../utils/params";
 import { Row, Col } from "reactstrap";
 import * as R from "ramda";
 import CoadAccordion from "../../components/Global/CoadAccordion";
-import { SelecionaTipoServico } from '../../components/Contratos/SelecionaTipoServico'
-import { SUBTIPOS_DISPENSA, SUBTIPOS_INEXIGIBILIDADE, SUBTIPOS_LICITACAO, TIPOS_CONTRATACAO, STATUS_EDITAL } from './constantes'
+import { SelecionaTipoServico } from "../../components/Contratos/SelecionaTipoServico";
+import {
+  SUBTIPOS_DISPENSA,
+  SUBTIPOS_INEXIGIBILIDADE,
+  SUBTIPOS_LICITACAO,
+  TIPOS_CONTRATACAO,
+  STATUS_EDITAL,
+} from "./constantes";
 
-const Edital = ({ mostraAlerta, edital : _edital }) => {
-
-  addLocale('pt', CALENDAR_PT);
+const Edital = ({ mostraAlerta, edital: _edital }) => {
+  addLocale("pt", CALENDAR_PT);
   const [visivel, setVisivel] = useState(false);
   const [visivelCancelar, setVisivelCancelar] = useState(false);
   const [edital, setEdital] = useState(_edital || {});
@@ -65,7 +71,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
 
   const showMenssages = (type, erro) => {
     messages.current.show({ severity: type, detail: erro });
-}
+  };
 
   const fechaDialog = () => {
     setVisivel(false);
@@ -98,22 +104,24 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
     });
   };
 
-  const formatarEdital = () =>{
-    let novoEdital = { ...edital }
+  const formatarEdital = () => {
+    let novoEdital = { ...edital };
     novoEdital.tipo_contratacao = novoEdital.tipo_contratacao.id;
-    novoEdital.data_homologacao = moment(edital.data_homologacao).format("YYYY-MM-DD")
+    novoEdital.data_homologacao = moment(edital.data_homologacao).format(
+      "YYYY-MM-DD",
+    );
     novoEdital.objeto = novoEdital.objeto.uuid;
     novoEdital.status = novoEdital.status.id;
     return novoEdital;
-  }
+  };
 
   const confirmarEdital = async () => {
     let editalFormatado = formatarEdital();
     const resultado = await criaEdital(editalFormatado);
-     if (resultado.status === CREATED) {
-       setFlashMessage("Edital criado com sucesso", "sucesso");
-       redirect("#/listar-editais");
-     }
+    if (resultado.status === CREATED) {
+      setFlashMessage("Edital criado com sucesso", "sucesso");
+      redirect("#/listar-editais");
+    }
   };
 
   const alterarEdital = async () => {
@@ -169,43 +177,53 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
   const CadastraObjeto = async () => {
     setModalCadastrarObjeto(false);
     try {
-      const resultado = await criaTipoServico({nome:novoObjeto});
-       if (resultado.status === CREATED) {
-         tipoServico.current.buscaTiposServico()
-         showMenssages("success", "Objeto cadastrado com sucesso!")
-       }
-    }catch(erro){
-      if(erro.response && erro.response.status === BAD_REQUEST) {
-        showMenssages("error", `${Object.values(erro.response.data).join("\r\n")}`)
-      }  
+      const resultado = await criaTipoServico({ nome: novoObjeto });
+      if (resultado.status === CREATED) {
+        tipoServico.current.buscaTiposServico();
+        showMenssages("success", "Objeto cadastrado com sucesso!");
+      }
+    } catch (erro) {
+      if (erro.response && erro.response.status === BAD_REQUEST) {
+        showMenssages(
+          "error",
+          `${Object.values(erro.response.data).join("\r\n")}`,
+        );
+      }
     }
 
-     setNovoObjeto("")
+    setNovoObjeto("");
   };
 
-  const mostraAlertaContainer = useCallback(
-    () => {
-      mostraAlerta();
-    },
-    [mostraAlerta]
-  );
+  const mostraAlertaContainer = useCallback(() => {
+    mostraAlerta();
+  }, [mostraAlerta]);
 
   const semGrupoInvalido = () => {
     if (!edital.grupos_de_obrigacao) return true;
     return edital.grupos_de_obrigacao.every(el => el.nome.length);
   };
 
-  const getSubtipos = (tipoContratacao) => {
-    if(!tipoContratacao) return [];
-    else if(tipoContratacao.id === "LICITACAO") return SUBTIPOS_LICITACAO;
-    else if(tipoContratacao.id === "DISPENSA_LICITACAO") return SUBTIPOS_DISPENSA;
-    else if(tipoContratacao.id === "INEXIGIBILIDADE_LICITACAO") return SUBTIPOS_INEXIGIBILIDADE;
+  const getSubtipos = tipoContratacao => {
+    if (!tipoContratacao) return [];
+    else if (tipoContratacao.id === "LICITACAO") return SUBTIPOS_LICITACAO;
+    else if (tipoContratacao.id === "DISPENSA_LICITACAO")
+      return SUBTIPOS_DISPENSA;
+    else if (tipoContratacao.id === "INEXIGIBILIDADE_LICITACAO")
+      return SUBTIPOS_INEXIGIBILIDADE;
     else return [];
-  }
+  };
 
-  const habilitaBotao = !modoVisualizacao && edital.numero && edital.processo && edital.tipo_contratacao
-                         && edital.subtipo && edital.status && edital.data_homologacao && edital.objeto &&
-                         edital.descricao_objeto && semGrupoInvalido();
+  const habilitaBotao =
+    !modoVisualizacao &&
+    edital.numero &&
+    edital.processo &&
+    edital.tipo_contratacao &&
+    edital.subtipo &&
+    edital.status &&
+    edital.data_homologacao &&
+    edital.objeto &&
+    edital.descricao_objeto &&
+    semGrupoInvalido();
   const habilitaNovoGrupo = !modoVisualizacao && semGrupoInvalido();
   const mensagemConfirmacao = incluir
     ? "Confirma a alteração deste edital?"
@@ -251,7 +269,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
         label="Cancelar"
         style={{ marginRight: ".25em" }}
         onClick={() => {
-          setModalCadastrarObjeto(false); 
+          setModalCadastrarObjeto(false);
           setNovoObjeto("");
         }}
         className="btn-coad-background-outline mx-2"
@@ -380,118 +398,153 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
       </Row>
       <br />
       <CoadAccordion titulo="Informações Gerais">
-          <div className="p-grid">
-            <div className="p-col-6">
-              <Label className="font-weight-bold">Número do Edital</Label>
-              <InputMask
-                className="w-100"
-                mask="********/9999"
-                value={ edital.numero || ""}
-                onChange={e => setEdital({ ...edital, numero: e.target.value })}
-                autoClear={false}
-                disabled={modoVisualizacao}
-                placeholder="Ex.: XXXXXXXX/XXXX"
-              />
-            </div>
+        <div className="p-grid">
+          <div className="p-col-6">
+            <Label className="font-weight-bold">Número do Edital</Label>
+            <InputMask
+              className="w-100"
+              mask="********/9999"
+              value={edital.numero || ""}
+              onChange={e => setEdital({ ...edital, numero: e.target.value })}
+              autoClear={false}
+              disabled={modoVisualizacao}
+              placeholder="Ex.: XXXXXXXX/XXXX"
+            />
+          </div>
 
-            <div className="p-col-6">
-              <Label className="font-weight-bold">Status</Label>
-              <Dropdown 
-                className="w-100"
-                optionLabel="nome"
-                options={STATUS_EDITAL}
-                value={edital.status} 
-                onChange={e => setEdital({ ...edital, status: e.target.value })} 
-                placeholder="Selecione o Status"
-                disabled={modoVisualizacao}
-              />
-            </div>
+          <div className="p-col-6">
+            <Label className="font-weight-bold">Status</Label>
+            <Dropdown
+              className="w-100"
+              optionLabel="nome"
+              options={STATUS_EDITAL}
+              value={edital.status}
+              onChange={e => setEdital({ ...edital, status: e.target.value })}
+              placeholder="Selecione o Status"
+              disabled={modoVisualizacao}
+            />
+          </div>
 
-            <div className="p-col-6">
-              <Label className="font-weight-bold">Tipo de Contratação</Label>
-              <Dropdown 
-                className="w-100"
-                optionLabel="nome"
-                options={TIPOS_CONTRATACAO}
-                value={edital.tipo_contratacao} 
-                onChange={e => setEdital({ ...edital, tipo_contratacao: e.target.value, subtipo: null })}
-                placeholder="Selecione"
-                disabled={modoVisualizacao}
-              />
-            </div>
-
-            <div className="p-col-12">
-              {
-                getSubtipos(edital.tipo_contratacao).map((subtipo, index) => {
-                  return (
-                    <div key={index} className="field-radiobutton mb-2">
-                      <RadioButton disabled={modoVisualizacao} inputId={index} name="subtipo" value={subtipo} onChange={e => setEdital({ ...edital, subtipo: e.value, outroSubtipo: false })}  checked={edital.subtipo === subtipo} />
-                      <label className="mb-0 ml-2 w-75" htmlFor={index}>{subtipo}</label>
-                    </div>
-                  )
+          <div className="p-col-6">
+            <Label className="font-weight-bold">Tipo de Contratação</Label>
+            <Dropdown
+              className="w-100"
+              optionLabel="nome"
+              options={TIPOS_CONTRATACAO}
+              value={edital.tipo_contratacao}
+              onChange={e =>
+                setEdital({
+                  ...edital,
+                  tipo_contratacao: e.target.value,
+                  subtipo: null,
                 })
               }
-              {(edital.tipo_contratacao === TIPOS_CONTRATACAO[1] || edital.tipo_contratacao === TIPOS_CONTRATACAO[2]) &&
-                <>
-                  <div className="field-radiobutton mb-2">
-                    <RadioButton disabled={modoVisualizacao} inputId="outro" name="subtipo" value={""} onChange={e => setEdital({ ...edital, subtipo: e.value, outroSubtipo: true })}  checked={edital.outroSubtipo} />
-                    <label className="mb-0 ml-2 w-75" htmlFor="outro">Outro - Especifique com fundamento legal.</label>
-                  </div>
-                  <div>
-                    {edital.outroSubtipo &&
-                      <InputText
-                        className="w-100"
-                        value={ edital.subtipo || ""}
-                        onChange={e => setEdital({ ...edital, subtipo: e.target.value })}
-                        disabled={modoVisualizacao}
-                      />
+              placeholder="Selecione"
+              disabled={modoVisualizacao}
+            />
+          </div>
+
+          <div className="p-col-12">
+            {getSubtipos(edital.tipo_contratacao).map((subtipo, index) => {
+              return (
+                <div key={index} className="field-radiobutton mb-2">
+                  <RadioButton
+                    disabled={modoVisualizacao}
+                    inputId={index}
+                    name="subtipo"
+                    value={subtipo}
+                    onChange={e =>
+                      setEdital({
+                        ...edital,
+                        subtipo: e.value,
+                        outroSubtipo: false,
+                      })
                     }
-                  </div>
-                </>
+                    checked={edital.subtipo === subtipo}
+                  />
+                  <label className="mb-0 ml-2 w-75" htmlFor={index}>
+                    {subtipo}
+                  </label>
+                </div>
+              );
+            })}
+            {(edital.tipo_contratacao === TIPOS_CONTRATACAO[1] ||
+              edital.tipo_contratacao === TIPOS_CONTRATACAO[2]) && (
+              <>
+                <div className="field-radiobutton mb-2">
+                  <RadioButton
+                    disabled={modoVisualizacao}
+                    inputId="outro"
+                    name="subtipo"
+                    value={""}
+                    onChange={e =>
+                      setEdital({
+                        ...edital,
+                        subtipo: e.value,
+                        outroSubtipo: true,
+                      })
+                    }
+                    checked={edital.outroSubtipo}
+                  />
+                  <label className="mb-0 ml-2 w-75" htmlFor="outro">
+                    Outro - Especifique com fundamento legal.
+                  </label>
+                </div>
+                <div>
+                  {edital.outroSubtipo && (
+                    <InputText
+                      className="w-100"
+                      value={edital.subtipo || ""}
+                      onChange={e =>
+                        setEdital({ ...edital, subtipo: e.target.value })
+                      }
+                      disabled={modoVisualizacao}
+                    />
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        <hr />
+
+        <div className="p-grid">
+          <div className="p-col-6">
+            <Label className="font-weight-bold">Número do Processo</Label>
+            <InputMask
+              className="w-100"
+              mask="9999.9999/9999999-9"
+              value={edital.processo || ""}
+              onChange={e => setEdital({ ...edital, processo: e.target.value })}
+              autoClear={false}
+              disabled={modoVisualizacao}
+              placeholder="Ex.: XXXX.XXXX/XXXXXXX-X"
+            />
+          </div>
+          <div className="p-col-6">
+            <Label className="font-weight-bold">Data de Homologação</Label>
+            <Calendar
+              className="w-100"
+              value={edital.data_homologacao}
+              onChange={e =>
+                setEdital({ ...edital, data_homologacao: e.target.value })
               }
-
-            </div>
-
-            
-            
+              locale="pt"
+              dateFormat="dd/mm/yy"
+              showIcon={true}
+              showButtonBar={true}
+              disabled={modoVisualizacao}
+            />
           </div>
-
-          <hr/>
-
-          <div className="p-grid">
-            <div className="p-col-6">
-              <Label className="font-weight-bold">Número do Processo</Label>
-              <InputMask
-                className="w-100"
-                mask="9999.9999/9999999-9"
-                value={ edital.processo || ""}
-                onChange={e => setEdital({ ...edital, processo: e.target.value })}
-                autoClear={false}
-                disabled={modoVisualizacao}
-                placeholder="Ex.: XXXX.XXXX/XXXXXXX-X"
-              />
-            </div>
-            <div className="p-col-6">
-              <Label className="font-weight-bold">Data de Homologação</Label>
-              <Calendar 
-                  className="w-100"
-                  value={ edital.data_homologacao } 
-                  onChange={e => setEdital({ ...edital, data_homologacao: e.target.value })}
-                  locale="pt"
-                  dateFormat="dd/mm/yy"
-                  showIcon={true}
-                  showButtonBar={true}
-                  disabled={modoVisualizacao}
-              />
-            </div>
-          </div>
+        </div>
       </CoadAccordion>
       <CoadAccordion titulo="Objeto">
         <FormGroup>
           <div className="p-grid">
             <div className="p-col-6">
               <Label className="font-weight-bold">Categoria de objeto</Label>
-              <SelecionaTipoServico 
+              <SelecionaTipoServico
                 className="w-100"
                 tipoServico={edital.objeto}
                 onSelect={e => setEdital({ ...edital, objeto: e })}
@@ -511,12 +564,16 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
               </AntButton>
             </div>
             <div className="p-col-12">
-              <Label className="font-weight-bold">Descreva brevemente o objeto do edital</Label>
+              <Label className="font-weight-bold">
+                Descreva brevemente o objeto do edital
+              </Label>
               <Editor
                 style={{ height: "120px" }}
                 value={edital.descricao_objeto}
                 headerTemplate={<EditorHeader />}
-                onTextChange={(e) => setEdital({ ...edital, descricao_objeto: e.htmlValue })}
+                onTextChange={e =>
+                  setEdital({ ...edital, descricao_objeto: e.htmlValue })
+                }
                 className="editor-coad w-100"
                 readOnly={modoVisualizacao}
               />
@@ -640,16 +697,19 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
         visible={modalCadastrarObjeto}
         style={{ width: "60vw" }}
         footer={footerModalCadastrarObjeto}
-        onHide={() => {setModalCadastrarObjeto(false); setNovoObjeto("");}}
+        onHide={() => {
+          setModalCadastrarObjeto(false);
+          setNovoObjeto("");
+        }}
       >
         <div>
-        <label htmlFor="objeto">Nome do objeto</label>
-            <br />
-            <InputText
-              value={novoObjeto}
-              onChange={(e) => setNovoObjeto(e.target.value.toUpperCase() || "")}
-              className="w-100"
-            />
+          <label htmlFor="objeto">Nome do objeto</label>
+          <br />
+          <InputText
+            value={novoObjeto}
+            onChange={e => setNovoObjeto(e.target.value.toUpperCase() || "")}
+            className="w-100"
+          />
         </div>
       </Dialog>
     </Fragment>

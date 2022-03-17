@@ -20,7 +20,10 @@ const EditalContainer = () => {
     if (uuid) {
       (async () => {
         const dados = await getEdital(uuid);
-        dados.data_homologacao = moment(dados.data_homologacao, "YYYY-MM-DD").toDate();
+        dados.data_homologacao = moment(
+          dados.data_homologacao,
+          "YYYY-MM-DD",
+        ).toDate();
         setEdital(dados);
       })();
     }
@@ -66,7 +69,11 @@ const EditalContainer = () => {
             Item adicionado com sucesso
           </span>
         </Alert>
-        <h3>{  uuid ? 'Edital Nº ' + edital.numero : 'Cadastro de Edital e Obrigações' }</h3>
+        <h3>
+          {uuid
+            ? "Edital Nº " + edital.numero
+            : "Cadastro de Edital e Obrigações"}
+        </h3>
         <Container>
           {edital && <Edital edital={edital} mostraAlerta={mostraAlerta} />}
         </Container>

@@ -1,7 +1,7 @@
 import { getHeaderToken, getUsuario } from "./auth.service";
 import * as CONFIG from "../configs/config.constants";
 import moment from "moment";
-import Api from './Api'
+import Api from "./Api";
 import { formataParametros } from "../utils/formataParametros";
 
 export function getContratos(filtro) {

@@ -10,7 +10,7 @@ export const getEdital = async uuid => {
   return (await api.get(url, AUTH_HEADER)).data;
 };
 
-export const getListaDeEditais = async (filtro) => {
+export const getListaDeEditais = async filtro => {
   let parametros = formataParametros(filtro);
   const AUTH_HEADER = {
     headers: getHeaderToken(),

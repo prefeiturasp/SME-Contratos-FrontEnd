@@ -32,15 +32,18 @@ function TableContrato({
     );
   };
 
-  const mudaPagina = (event) => {
-    setIndex(event.first)
-    mudarPagina(event.page + 1)
-  }
+  const mudaPagina = event => {
+    setIndex(event.first);
+    mudarPagina(event.page + 1);
+  };
 
-  const textoDataEncerramento = rowData =>{
-    let classe = moment(rowData.data_encerramento, "DD/MM/YYYY") < moment() ? "texto-vermelho" : "";
-    return <span className={classe}>{rowData.data_encerramento}</span>
-  }
+  const textoDataEncerramento = rowData => {
+    let classe =
+      moment(rowData.data_encerramento, "DD/MM/YYYY") < moment()
+        ? "texto-vermelho"
+        : "";
+    return <span className={classe}>{rowData.data_encerramento}</span>;
+  };
 
   const dynamicColumns = colunas.map(col => {
     if (col.field !== "data_encerramento") {
@@ -101,7 +104,7 @@ function TableContrato({
           columnResizeMode="expand"
           className="mt-3 datatable-footer-coad"
         >
-          <Column expander={true} style={{width: '5%'}}/>
+          <Column expander={true} style={{ width: "5%" }} />
           <Column header="Nome da empresa" />
           <Column header="Nº do Termo de Contrato" />
           <Column header="Status" />
