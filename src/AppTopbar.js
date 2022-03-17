@@ -5,15 +5,15 @@ import { logout } from "./service/auth.service";
 
 export class AppTopbar extends Component {
   static defaultProps = {
-    onToggleMenu: null
+    onToggleMenu: null,
   };
 
   static propTypes = {
-    onToggleMenu: PropTypes.func.isRequired
+    onToggleMenu: PropTypes.func.isRequired,
   };
 
   handleLogout = () => {
-    logout()
+    logout();
   };
   render() {
     return (
@@ -42,7 +42,11 @@ export class AppTopbar extends Component {
             <span className="layout-topbar-item-text">Gestor</span>
             <span className="layout-topbar-icon pi pi-user" />
           </button>
-          <button className="p-link" title="Sair" onClick={()=>this.handleLogout()}>
+          <button
+            className="p-link"
+            title="Sair"
+            onClick={() => this.handleLogout()}
+          >
             <span className="layout-topbar-item-text">Sair</span>
             <span className="layout-topbar-icon pi pi-power-off" />
           </button>

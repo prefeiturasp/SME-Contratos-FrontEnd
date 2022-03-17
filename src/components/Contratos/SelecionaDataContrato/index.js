@@ -1,33 +1,32 @@
-import React, { Component } from 'react'
-import {Calendar} from 'primereact/calendar';
-import { CALENDAR_PT } from '../../../configs/config.constants'
-import { addLocale } from 'primereact/api';
-
+import React, { Component } from "react";
+import { Calendar } from "primereact/calendar";
+import { CALENDAR_PT } from "../../../configs/config.constants";
+import { addLocale } from "primereact/api";
 
 export class SelecionaDataContrato extends Component {
-    constructor() {
-        super();
-        this.state = {};
-        addLocale('pt', CALENDAR_PT);
-    }
+  constructor() {
+    super();
+    this.state = {};
+    addLocale("pt", CALENDAR_PT);
+  }
 
-    setaData(event) {
-        this.props.onSelect(event.value)
-    }
+  setaData(event) {
+    this.props.onSelect(event.value);
+  }
 
-    render() {
-           return (
-            <Calendar 
-                value={this.props.data} 
-                onChange={event => this.setaData(event)} 
-                minDate={new Date(this.props.minDate)}
-                maxDate={new Date(this.props.maxDate)}
-                locale="pt"
-                dateFormat="dd/mm/yy"
-                showIcon={true}
-                placeholder={this.props.tipo}
-                showButtonBar={true}
-            />
-        );
-    }
+  render() {
+    return (
+      <Calendar
+        value={this.props.data}
+        onChange={event => this.setaData(event)}
+        minDate={new Date(this.props.minDate)}
+        maxDate={new Date(this.props.maxDate)}
+        locale="pt"
+        dateFormat="dd/mm/yy"
+        showIcon={true}
+        placeholder={this.props.tipo}
+        showButtonBar={true}
+      />
+    );
+  }
 }

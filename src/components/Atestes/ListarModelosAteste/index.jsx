@@ -11,7 +11,7 @@ export default class ListarModelosAteste extends Component {
     super(props);
     this.state = {
       uuid: null,
-      modelos: []
+      modelos: [],
     };
   }
 
@@ -21,7 +21,7 @@ export default class ListarModelosAteste extends Component {
         <Button
           label="Visualizar"
           className="btn-coad-background-outline"
-          onClick={event => {
+          onClick={() => {
             redirect(`#/modelo-ateste/?uuid=${column.uuid}`);
           }}
         />
@@ -60,7 +60,7 @@ export default class ListarModelosAteste extends Component {
                 label="Criar Modelo de Ateste"
                 style={{ marginBottom: ".80em" }}
                 className="btn-coad-background-outline"
-                onClick={event => {
+                onClick={() => {
                   redirect(`#/modelo-ateste/`);
                 }}
               />

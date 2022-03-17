@@ -25,8 +25,7 @@ import { setFlashMessage } from "../../utils/flashMessages";
 import * as R from "ramda";
 // import { contratoValidations } from "./validations";
 
-
-const editalUuid = contrato =>  R.pathOr(null, ['edital', 'uuid'], contrato)
+const editalUuid = contrato => R.pathOr(null, ["edital", "uuid"], contrato);
 
 export default class CadastrarContrato extends Component {
   state = {
@@ -43,7 +42,7 @@ export default class CadastrarContrato extends Component {
     dotacao: [],
     unidades_selecionadas: [],
     valor_total: 0,
-    alteracaoEdital: null
+    alteracaoEdital: null,
   };
 
   async componentDidMount() {
@@ -81,7 +80,7 @@ export default class CadastrarContrato extends Component {
     });
   }
 
-  setUnidadesSelecionadas = (unidades_selecionadas) => {
+  setUnidadesSelecionadas = unidades_selecionadas => {
     this.setState({ unidades_selecionadas });
   };
 
@@ -103,7 +102,7 @@ export default class CadastrarContrato extends Component {
     this.setState({ visibleCancelar: false });
   };
 
-  removeEmpty = (lista) => {
+  removeEmpty = lista => {
     const novaLista = lista.filter((valor, i) => {
       if (valor !== null || valor !== undefined || valor !== "empty") {
         return valor;
@@ -115,25 +114,31 @@ export default class CadastrarContrato extends Component {
     return novaLista;
   };
 
-  handleSubmit = async (values) => {
+  handleSubmit = async values => {
     const { uuid_contrato, dotacao, unidades_selecionadas } = this.state;
     values.unidades_selecionadas = unidades_selecionadas;
     values["data_assinatura"] = moment(values.data_assinatura).format(
-      "YYYY-MM-DD"
+      "YYYY-MM-DD",
     );
     values["data_ordem_inicio"] = moment(values.data_ordem_inicio).format(
-      "YYYY-MM-DD"
+      "YYYY-MM-DD",
     );
     values["data_encerramento"] = moment(values.data_encerramento).format(
-      "YYYY-MM-DD"
+      "YYYY-MM-DD",
     );
     values["dotacao_orcamentaria"] = this.removeEmpty(dotacao);
 
-    const resultado = await updateContrato({ ...values,
-      dotacoes_orcamentarias: this.state.dotacao,
-      edital: this.state.alteracaoEdital ? this.state.alteracaoEdital.uuid : editalUuid(this.state.contrato),
-      valor_total: this.state.valor_total
-    }, uuid_contrato);
+    const resultado = await updateContrato(
+      {
+        ...values,
+        dotacoes_orcamentarias: this.state.dotacao,
+        edital: this.state.alteracaoEdital
+          ? this.state.alteracaoEdital.uuid
+          : editalUuid(this.state.contrato),
+        valor_total: this.state.valor_total,
+      },
+      uuid_contrato,
+    );
 
     if (resultado.status === OK) {
       setFlashMessage("Contrato cadastrado com sucesso", "sucesso");
@@ -149,13 +154,13 @@ export default class CadastrarContrato extends Component {
     this.setState({ visibleCancelar: true });
   };
 
-  setDotacoesOrcamentarias = ({ dotacoes, valorTotal}) => {
+  setDotacoesOrcamentarias = ({ dotacoes, valorTotal }) => {
     this.setState({ dotacao: dotacoes, valor_total: valorTotal });
   };
 
-  setEdital = (e) => {
-    this.setState({ alteracaoEdital: e.value} );
-  }
+  setEdital = e => {
+    this.setState({ alteracaoEdital: e.value });
+  };
 
   render() {
     const {
@@ -166,7 +171,7 @@ export default class CadastrarContrato extends Component {
       cancelamento,
       contrato,
       dotacao,
-      valor_total
+      valor_total,
     } = this.state;
     const steps = [
       {
@@ -210,7 +215,7 @@ export default class CadastrarContrato extends Component {
     ];
     return (
       <Page>
-        <Messages ref={(el) => (this.messages = el)}></Messages>
+        <Messages ref={el => (this.messages = el)}></Messages>
         <Dialog
           header="Cancelar cadastro de contrato"
           visible={this.state.visibleCancelar}
@@ -277,17 +282,17 @@ export default class CadastrarContrato extends Component {
                 situacao: this.state.situacaoContrato,
                 data_encerramento: contrato.data_encerramento
                   ? new Date(
-                      moment(contrato.data_encerramento).format("YYYY-MM-DD")
+                      moment(contrato.data_encerramento).format("YYYY-MM-DD"),
                     )
                   : new Date(),
                 data_assinatura: contrato.data_assinatura
                   ? new Date(
-                      moment(contrato.data_assinatura).format("YYYY-MM-DD")
+                      moment(contrato.data_assinatura).format("YYYY-MM-DD"),
                     )
                   : new Date(),
                 data_ordem_inicio: contrato.data_ordem_inicio
                   ? new Date(
-                      moment(contrato.data_ordem_inicio).format("YYYY-MM-DD")
+                      moment(contrato.data_ordem_inicio).format("YYYY-MM-DD"),
                     )
                   : new Date(),
                 vigencia_em_dias: contrato.vigencia_em_dias

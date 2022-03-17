@@ -33,7 +33,7 @@ export class AdicionarComplementos extends Component {
             },
             () => {
               this.setFiscalESuplentes();
-            }
+            },
           );
         }
       } else {
@@ -52,7 +52,7 @@ export class AdicionarComplementos extends Component {
             },
             () => {
               this.setFiscalESuplentes();
-            }
+            },
           );
         }
       }
@@ -72,7 +72,7 @@ export class AdicionarComplementos extends Component {
           },
           () => {
             this.setFiscalESuplentes();
-          }
+          },
         );
       }
     }
@@ -82,29 +82,27 @@ export class AdicionarComplementos extends Component {
     this.props.setFiscalESuplentes(this.state);
   };
 
-  setLote = (lote) => {
+  setLote = lote => {
     const { unidadesSelecionadas } = this.props;
     if (
       unidadesSelecionadas &&
-      unidadesSelecionadas.find((unidade) => unidade.lote === lote)
+      unidadesSelecionadas.find(unidade => unidade.lote === lote)
     ) {
       this.setState(
         {
           lote: lote,
           nome_fiscal: unidadesSelecionadas.find(
-            (unidade) => unidade.lote === lote
+            unidade => unidade.lote === lote,
           ).nome_fiscal,
-          rf_fiscal: unidadesSelecionadas.find(
-            (unidade) => unidade.lote === lote
-          ).rf_fiscal,
-          suplentes: unidadesSelecionadas.find(
-            (unidade) => unidade.lote === lote
-          ).suplentes,
+          rf_fiscal: unidadesSelecionadas.find(unidade => unidade.lote === lote)
+            .rf_fiscal,
+          suplentes: unidadesSelecionadas.find(unidade => unidade.lote === lote)
+            .suplentes,
           loteExistente: true,
         },
         () => {
           this.setFiscalESuplentes();
-        }
+        },
       );
     } else {
       this.setState(
@@ -117,7 +115,7 @@ export class AdicionarComplementos extends Component {
         },
         () => {
           this.setFiscalESuplentes();
-        }
+        },
       );
     }
   };
@@ -133,7 +131,7 @@ export class AdicionarComplementos extends Component {
     });
   };
 
-  removerSuplente = (index) => {
+  removerSuplente = index => {
     let { suplentes } = this.state;
     suplentes.splice(index, 1);
     this.setState({ suplentes }, () => {
@@ -142,13 +140,8 @@ export class AdicionarComplementos extends Component {
   };
 
   render() {
-    const {
-      lote,
-      rf_fiscal,
-      nome_fiscal,
-      suplentes,
-      loteExistente,
-    } = this.state;
+    const { lote, rf_fiscal, nome_fiscal, suplentes, loteExistente } =
+      this.state;
     const { adicionarUnidadesSelecionadas } = this.props;
     return (
       <div className="adicionar-complementos">
@@ -161,7 +154,7 @@ export class AdicionarComplementos extends Component {
             <InputBootStrap
               name="lote"
               value={lote}
-              onChange={(event) => this.setLote(event.target.value)}
+              onChange={event => this.setLote(event.target.value)}
               placeholder="Lote das unidades"
             />
           </div>
@@ -170,7 +163,7 @@ export class AdicionarComplementos extends Component {
             <InputBootStrap
               name="rf_fiscal"
               value={rf_fiscal}
-              onChange={(event) => this.pesquisarRF(event.target.value)}
+              onChange={event => this.pesquisarRF(event.target.value)}
               placeholder="RF do Fiscal"
               disabled={loteExistente}
             />
@@ -188,9 +181,7 @@ export class AdicionarComplementos extends Component {
                 <InputBootStrap
                   name="rf"
                   value={suplente.rf}
-                  onChange={(event) =>
-                    this.pesquisarRF(event.target.value, key)
-                  }
+                  onChange={event => this.pesquisarRF(event.target.value, key)}
                   placeholder="RF do Suplente"
                   disabled={loteExistente}
                 />

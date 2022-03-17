@@ -1,6 +1,6 @@
 import React from "react";
 
-export const TabelaUnidadesParaSelecionar = (props) => {
+export const TabelaUnidadesParaSelecionar = props => {
   const { unidades, todosSelecionados, checkUnidade, selecionarTodos } = props;
   return (
     <div className="tabela-unidades">

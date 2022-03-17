@@ -5,7 +5,7 @@ import { FormGroup, Label, Input } from "reactstrap";
 class SituacaoRadio extends Component {
   state = {
     situacoes: [],
-    situacaoSelecionada: null
+    situacaoSelecionada: null,
   };
 
   selecionaSituacao(event) {
@@ -18,24 +18,23 @@ class SituacaoRadio extends Component {
     this.setState({ situacoes });
   }
 
-
   render() {
-      const { situacoes } = this.state;
-      const { checado } = this.props;
+    const { situacoes } = this.state;
+    const { checado } = this.props;
     return (
       <div>
         {situacoes.map(value => {
-          const selecionado = value.id === checado ? true: false;
+          const selecionado = value.id === checado ? true : false;
           return (
             <FormGroup key={value.id} check inline>
               <Label check>
-                <Input 
-                    {...this.props} 
-                    type="radio" 
-                    checked={selecionado} 
-                    name="situacao" 
-                    value={value.id} 
-                    onChange={event => this.selecionaSituacao(event)} 
+                <Input
+                  {...this.props}
+                  type="radio"
+                  checked={selecionado}
+                  name="situacao"
+                  value={value.id}
+                  onChange={event => this.selecionaSituacao(event)}
                 />
                 {value.nome}
               </Label>

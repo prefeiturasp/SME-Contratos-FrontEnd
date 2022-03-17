@@ -21,7 +21,7 @@ export default class Gestao extends Component {
     this.setState({
       nucleos,
       usuarios,
-      emailUsuario:  R.pathOr(null, ['gestor', 'email'], this.props.contrato)
+      emailUsuario: R.pathOr(null, ["gestor", "email"], this.props.contrato),
     });
 
     $("#avancar-2").click(() => {
@@ -38,20 +38,18 @@ export default class Gestao extends Component {
         $("[name=nucleo_responsavel]").addClass("is-invalid");
         error++;
       }
-      console.log("erros", error)
       if (error === 0) {
         this.props.jumpToStep(3);
       } else {
-        console.log("else")
         $(".alerta").removeClass("d-none");
       }
     });
   }
 
-  setEmailUsuario = (uuid) => {
+  setEmailUsuario = uuid => {
     const { usuarios } = this.state;
     let emailUsuario = null;
-    usuarios.forEach((usuario) => {
+    usuarios.forEach(usuario => {
       if (usuario.uuid === uuid) {
         emailUsuario = usuario.email;
       }
@@ -80,7 +78,7 @@ export default class Gestao extends Component {
                 <option value="">Selecione</option>
                 {usuarios
                   ? usuarios.map((usuario, i) => (
-                      <option value={usuario.uuid}>
+                      <option key={i} value={usuario.uuid}>
                         {usuario.nome} ({usuario.username})
                       </option>
                     ))
@@ -93,11 +91,11 @@ export default class Gestao extends Component {
               <CoadSelect
                 label="Gestor do Contrato"
                 name="gestor"
-                onBlur={(value) => this.setEmailUsuario(value.target.value)}
+                onBlur={value => this.setEmailUsuario(value.target.value)}
               >
                 {usuarios
                   ? usuarios.map((usuario, i) => (
-                      <option value={usuario.uuid}>
+                      <option key={i} value={usuario.uuid}>
                         {usuario.nome} ({usuario.username})
                       </option>
                     ))

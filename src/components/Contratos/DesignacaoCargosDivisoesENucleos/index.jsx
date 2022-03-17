@@ -1,38 +1,38 @@
-import React, { Component } from 'react'
-import { getDivisoes } from '../../../service/Divisoes.service'
-import { CargosDivisao } from './CardDivisaoENucleos'
+import React, { Component } from "react";
+import { getDivisoes } from "../../../service/Divisoes.service";
+import { CargosDivisao } from "./CardDivisaoENucleos";
 
 export default class DesignacaoCargosDivisoes extends Component {
-    
-    constructor(props) {
-        super(props)
-    
-        this.state = {
-             divisoes: []
-        }
-    }
-    
-    async componentDidMount() {
-        const divisoes = await getDivisoes()
+  constructor(props) {
+    super(props);
 
-        this.setState({divisoes})
-    }
-    
+    this.state = {
+      divisoes: [],
+    };
+  }
 
-    render() {
-        const {divisoes} = this.state
+  async componentDidMount() {
+    const divisoes = await getDivisoes();
 
-        return (
-            <div>
-                {divisoes && divisoes.map(
-                    (divisao) => {
-                        return (
-                            <CargosDivisao divisao={divisao} showMessage={this.props.showMessage}></CargosDivisao>
-                        )
-                    }
-                )}
-                
-            </div>
-        )
-    }
+    this.setState({ divisoes });
+  }
+
+  render() {
+    const { divisoes } = this.state;
+
+    return (
+      <div>
+        {divisoes &&
+          divisoes.map((divisao, i) => {
+            return (
+              <CargosDivisao
+                key={i}
+                divisao={divisao}
+                showMessage={this.props.showMessage}
+              ></CargosDivisao>
+            );
+          })}
+      </div>
+    );
+  }
 }

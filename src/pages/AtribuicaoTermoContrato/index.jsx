@@ -16,13 +16,13 @@ export default class AtribuicaoTermoContrato extends Component {
     this.messages.show({
       severity: "success",
       life: 5000,
-      detail: "Alterações realizadas com sucesso"
+      detail: "Alterações realizadas com sucesso",
     });
   }
 
-  showMessage(messageParams){
+  showMessage(messageParams) {
     window.scrollTo(0, 0);
-    this.messages.show(messageParams);  
+    this.messages.show(messageParams);
   }
 
   render() {

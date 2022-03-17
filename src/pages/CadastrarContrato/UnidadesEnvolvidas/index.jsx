@@ -31,18 +31,18 @@ export class UnidadesEnvolvidas extends Component {
         },
         () => {
           this.props.setUnidadesSelecionadas(
-            getUnidadesSelecionadas(this.props.contrato)
+            getUnidadesSelecionadas(this.props.contrato),
           );
-        }
+        },
       );
     }
   };
 
-  setUnidades = (unidades) => {
+  setUnidades = unidades => {
     this.setState({ unidades });
   };
 
-  checkUnidade = (index) => {
+  checkUnidade = index => {
     let { unidades } = this.state;
     unidades[index].checked = !unidades[index].checked;
     this.setState({ unidades });
@@ -51,7 +51,7 @@ export class UnidadesEnvolvidas extends Component {
   selecionarTodos = () => {
     let { unidades, todosSelecionados } = this.state;
     todosSelecionados = !todosSelecionados;
-    unidades = unidades.map((unidade) => {
+    unidades = unidades.map(unidade => {
       unidade.checked = todosSelecionados;
       return unidade;
     });
@@ -67,7 +67,7 @@ export class UnidadesEnvolvidas extends Component {
     });
   };
 
-  removerUnidadeSelecionada = (key) => {
+  removerUnidadeSelecionada = key => {
     let { unidadesSelecionadas } = this.state;
     unidadesSelecionadas.splice(key, 1);
     this.setState({ unidadesSelecionadas }, () => {
@@ -78,7 +78,7 @@ export class UnidadesEnvolvidas extends Component {
   adicionarUnidadesSelecionadas = () => {
     const { unidades, lote, rf_fiscal, nome_fiscal, suplentes } = this.state;
     let { unidadesSelecionadas } = this.state;
-    if (unidades.filter((unidade) => unidade.checked).length === 0) {
+    if (unidades.filter(unidade => unidade.checked).length === 0) {
       this.props.messages.show({
         severity: "warn",
         life: 10000,
@@ -87,14 +87,14 @@ export class UnidadesEnvolvidas extends Component {
       window.scrollTo(0, 0);
     } else {
       unidades
-        .filter((unidade) => unidade.checked)
-        .forEach((unidade) => {
+        .filter(unidade => unidade.checked)
+        .forEach(unidade => {
           if (
             unidadesSelecionadas &&
             unidadesSelecionadas.find(
-              (unidadeSelecionada) =>
+              unidadeSelecionada =>
                 unidadeSelecionada.unidade.cd_equipamento ===
-                unidade.cd_equipamento
+                unidade.cd_equipamento,
             )
           ) {
             this.props.messages.show({

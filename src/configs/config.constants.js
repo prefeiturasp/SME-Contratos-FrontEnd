@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === "production") {
   JWT_AUTH = "API_URL_REPLACE_ME/api-token-auth/";
   //   USER_URL = "API_URL_REPLACE_ME/users/";
   //   API_MOCK = "API_MOCK_REPLACE_ME";
-}else{
+} else {
   API_URL = process.env.REACT_APP_API_URL;
   SAFI_EQUIPAMENTOS_API_URL = process.env.REACT_APP_SAFI_EQUIPAMENTOS_API_URL;
   JWT_AUTH = `${API_URL}/api-token-auth/`;
@@ -27,7 +27,7 @@ export const CALENDAR_PT = {
     "quarta",
     "quinta",
     "sexta",
-    "sábado"
+    "sábado",
   ],
   dayNamesShort: ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"],
   dayNamesMin: ["D", "S", "T", "Q", "Q", "S", "S"],
@@ -43,7 +43,7 @@ export const CALENDAR_PT = {
     "setembro",
     "outubro",
     "novembro",
-    "dezembro"
+    "dezembro",
   ],
   monthNamesShort: [
     "jan",
@@ -57,15 +57,13 @@ export const CALENDAR_PT = {
     "set",
     "out",
     "nov",
-    "dez"
+    "dez",
   ],
   clear: "Limpar",
-  today: "Hoje"
+  today: "Hoje",
 };
 
 export const REFERENCIA_ENCERRAMENTO = {
   DATA_ASSINATURA: "DATA_ASSINATURA",
-  DATA_ORDEM_INICIO: "DATA_ORDEM_INICIO"
-}
-
-
+  DATA_ORDEM_INICIO: "DATA_ORDEM_INICIO",
+};

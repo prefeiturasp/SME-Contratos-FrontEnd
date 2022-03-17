@@ -76,7 +76,7 @@ export default class Informacoes extends Component {
         ? contrato.empresa_contratada.cnpj
         : null,
     });
-    $("#avancar-1").click((e) => {
+    $("#avancar-1").click(e => {
       const situacaoRadio = $("[name=situacao]:checked").val();
       e.preventDefault();
       let error = 0;
@@ -122,7 +122,7 @@ export default class Informacoes extends Component {
         return;
       } else {
         this.props.setDotacoesOrcamentarias(
-          this.dotacoesRef.current.getState()
+          this.dotacoesRef.current.getState(),
         );
       }
 
@@ -159,11 +159,11 @@ export default class Informacoes extends Component {
     this.props.jumpToStep(0);
   };
 
-  SelecionaEmpresa = (event) => {
+  SelecionaEmpresa = event => {
     const { empresas } = this.state;
     const value = event.target.value;
     if (empresas)
-      empresas.forEach((empresa) => {
+      empresas.forEach(empresa => {
         if (empresa.uuid === value) {
           this.setState({ cnpjEmpresa: empresa.cnpj });
         }
@@ -305,7 +305,7 @@ export default class Informacoes extends Component {
               <CoadSelect
                 label="Referência para cálculo do encerramento"
                 name="referencia_encerramento"
-                onBlur={(value) => {}}
+                onBlur={() => {}}
               >
                 {empresas
                   ? referenciaEncerramentoOptions.map((option, index) => {
@@ -335,7 +335,7 @@ export default class Informacoes extends Component {
                   <div className="input-group-append col-6">
                     <CoadSelect
                       name="unidade_vigencia"
-                      onBlur={(value) => this.SelecionaEmpresa(value)}
+                      onBlur={value => this.SelecionaEmpresa(value)}
                     >
                       <option value="DIAS">Dias</option>
                       <option value="MESES">Meses</option>
@@ -363,7 +363,7 @@ export default class Informacoes extends Component {
               <CoadSelect
                 label="Empresa Contratada"
                 name="empresa_contratada"
-                onBlur={(value) => this.SelecionaEmpresa(value)}
+                onBlur={value => this.SelecionaEmpresa(value)}
               >
                 <option value="">Selecione</option>
                 {empresas

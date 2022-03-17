@@ -1,13 +1,13 @@
 .layout-footer {
-    @include transition(margin-left $transitionDuration);
-    background-color: $footerBgColor;
-    padding: 1em 2em;
+  @include transition(margin-left $transitionDuration);
+  background-color: $footerBgColor;
+  padding: 1em 2em;
 
-    img {
-        vertical-align: middle;
-    }
+  img {
+    vertical-align: middle;
+  }
 
-    .footer-text {
-        vertical-align: middle;
-    }
+  .footer-text {
+    vertical-align: middle;
+  }
 }

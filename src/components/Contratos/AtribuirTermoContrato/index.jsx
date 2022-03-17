@@ -7,7 +7,7 @@ import { Button } from "primereact/button";
 import {
   getTermo,
   createContrato,
-  updateContrato
+  updateContrato,
 } from "../../../service/Contratos.service";
 import { BuscaIncrementalServidores } from "../BuscaIncrementalServidores";
 import { Dialog } from "primereact/dialog";
@@ -23,7 +23,7 @@ export default class AtribuirTermoContrato extends Component {
       btnCadastrarVisible: true,
       btnAlterarVisible: false,
       btnCancelarVisible: false,
-      contratoUuid: null
+      contratoUuid: null,
     };
     this.onClick = this.onClick.bind(this);
     this.onHide = this.onHide.bind(this);
@@ -41,7 +41,7 @@ export default class AtribuirTermoContrato extends Component {
     const payLoad = {
       termo_contrato: this.state.termo_contrato,
       gestor: this.state.gestor ? this.state.gestor.uuid : null,
-      suplente: this.state.suplente ? this.state.suplente.uuid : null
+      suplente: this.state.suplente ? this.state.suplente.uuid : null,
     };
 
     const termo = await getTermo(payLoad.termo_contrato);
@@ -52,7 +52,7 @@ export default class AtribuirTermoContrato extends Component {
         severity: "success",
         life: 5000,
         detail:
-          "Termo de Contrato cadastrado. Gestor e suplente serão notificados via sistema e e-mail."
+          "Termo de Contrato cadastrado. Gestor e suplente serão notificados via sistema e e-mail.",
       });
 
       this.reset();
@@ -62,7 +62,7 @@ export default class AtribuirTermoContrato extends Component {
         severity: "info",
         life: 8000,
         detail:
-          "Termo de contrato já cadastrado. Você pode edita-lo alterando Gestor ou Suplente."
+          "Termo de contrato já cadastrado. Você pode edita-lo alterando Gestor ou Suplente.",
       });
 
       this.setState({ gestor: termo[0].gestor });
@@ -79,7 +79,7 @@ export default class AtribuirTermoContrato extends Component {
     const payLoadAlterar = {
       termo_contrato: this.state.termo_contrato,
       gestor: this.state.gestor ? this.state.gestor.uuid : null,
-      suplente: this.state.suplente ? this.state.suplente.uuid : null
+      suplente: this.state.suplente ? this.state.suplente.uuid : null,
     };
     updateContrato(payLoadAlterar, this.state.contratoUuid);
 
@@ -87,7 +87,7 @@ export default class AtribuirTermoContrato extends Component {
       severity: "success",
       life: 5000,
       detail:
-        "Termo de Contrato cadastrado. Gestor e suplente serão nofificados via sistema e e-mail."
+        "Termo de Contrato cadastrado. Gestor e suplente serão nofificados via sistema e e-mail.",
     });
     this.reset();
   }
@@ -139,7 +139,7 @@ export default class AtribuirTermoContrato extends Component {
           <Button
             label="Cancelar11"
             style={{ marginRight: ".25em" }}
-            onClick={e => this.reset()}
+            onClick={() => this.reset()}
           />
         )}
       </span>

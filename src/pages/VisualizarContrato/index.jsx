@@ -24,7 +24,7 @@ import {
 import { getUrlParams } from "../../utils/params";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
-import { addLocale } from 'primereact/api';
+import { addLocale } from "primereact/api";
 import {
   CALENDAR_PT,
   REFERENCIA_ENCERRAMENTO,
@@ -48,7 +48,7 @@ import { OK } from "http-status-codes";
 import { UnidadesEnvolvidas } from "../CadastrarContrato/UnidadesEnvolvidas";
 import SelecionaEdital from "../../components/Contratos/SelecionaEdital";
 
-const nullToUndef = (v) => (v === null ? undefined : v);
+const nullToUndef = v => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
 
 const referenciaEncerramentoOptions = [
@@ -98,14 +98,14 @@ class VisualizarContratos extends Component {
       alteracaoEdital: null,
     };
     this.dotacoesRef = React.createRef();
-    addLocale('pt', CALENDAR_PT);
+    addLocale("pt", CALENDAR_PT);
   }
 
-  setUnidadesSelecionadas = (unidades_selecionadas) => {
+  setUnidadesSelecionadas = unidades_selecionadas => {
     this.setState({ unidades_selecionadas });
   };
 
-  setEdital = (e) => {
+  setEdital = e => {
     this.setState({ alteracaoEdital: e.value });
   };
 
@@ -130,7 +130,7 @@ class VisualizarContratos extends Component {
     $(".ql-editor").prop("contenteditable", "false");
   }
 
-  propsToState = (contrato) => {
+  propsToState = contrato => {
     const tipo_servico = contrato.tipo_servico || { nome: "", uuid: "" };
     const empresa_contratada = contrato.empresa_contratada || { nome: "" };
     this.setState({
@@ -161,7 +161,7 @@ class VisualizarContratos extends Component {
         : "",
       estado: contrato.estado_contrato,
       vigencia_em_dias: contrato.vigencia_em_dias,
-      dotacoes_orcamentarias: contrato.dotacoes_orcamentarias.map((el) => ({
+      dotacoes_orcamentarias: contrato.dotacoes_orcamentarias.map(el => ({
         ...el,
         valor: parseFloat(el.valor),
       })),
@@ -171,30 +171,30 @@ class VisualizarContratos extends Component {
     });
   };
 
-  selecionaTipoServico = (value) => {
+  selecionaTipoServico = value => {
     this.setState({ tipo_servico_uuid: value.target.value });
   };
 
-  selecionarDocsDre = (files) => {
+  selecionarDocsDre = files => {
     const docs = Array.from(files);
     this.setState({ documentoFiscaDre: docs });
   };
 
-  alteraDiasVigencia = (dias) => {
+  alteraDiasVigencia = dias => {
     this.setState({ vigencia_em_dias: dias });
   };
 
-  alteraDataAssinatura = (data) => {
+  alteraDataAssinatura = data => {
     const data_assinatura = moment(data).format("YYYY-MM-DD");
     this.setState({ data_assinatura });
   };
 
-  alteraDataOrdemInicio = (data) => {
+  alteraDataOrdemInicio = data => {
     const data_ordem_inicio = moment(data).format("YYYY-MM-DD");
     this.setState({ data_ordem_inicio });
   };
 
-  alteraReferenciaEncerramento = (referencia_encerramento) => {
+  alteraReferenciaEncerramento = referencia_encerramento => {
     this.setState({ referencia_encerramento });
   };
 
@@ -231,7 +231,7 @@ class VisualizarContratos extends Component {
     if (resultado.status === OK) {
       this.setState({
         dataEncerramento: moment(resultado.data.data_encerramento).format(
-          "DD/MM/YYYY"
+          "DD/MM/YYYY",
         ),
         contrato: {
           ...this.state.contrato,
@@ -306,7 +306,7 @@ class VisualizarContratos extends Component {
         <Page
           titulo={`Termo de Contrato n. ${contrato.termo_contrato} - ${nomeEmpresa}`}
         >
-          <Messages ref={(el) => (this.messages = el)}></Messages>
+          <Messages ref={el => (this.messages = el)}></Messages>
           <Alert
             color="success"
             className="text-center font-weight-bold"
@@ -410,7 +410,7 @@ class VisualizarContratos extends Component {
                     <InputText
                       id="termoContrato"
                       value={termo_contrato || ""}
-                      onChange={(e) =>
+                      onChange={e =>
                         this.setState({ termo_contrato: e.target.value })
                       }
                       placeholder={"Ex: 001/002"}
@@ -425,11 +425,11 @@ class VisualizarContratos extends Component {
                     <Input
                       id="tipo_servico"
                       type="select"
-                      onChange={(e) => this.selecionaTipoServico(e)}
+                      onChange={e => this.selecionaTipoServico(e)}
                       disabled={disabilitado}
                       defaultValue={tipoServico}
                     >
-                      {tipoServicoOptions.map((value) => {
+                      {tipoServicoOptions.map(value => {
                         return (
                           <option key={value.uuid} value={value.uuid}>
                             {value.nome}
@@ -447,7 +447,7 @@ class VisualizarContratos extends Component {
                     <InputText
                       id="numeroProcesso"
                       value={nullToUndef(processo)}
-                      onChange={(e) =>
+                      onChange={e =>
                         this.setState({ processo: e.target.value })
                       }
                       placeholder={"Ex: 0000.2019/0000000-0"}
@@ -461,7 +461,7 @@ class VisualizarContratos extends Component {
                   <br />
                   <SituacaoRadio
                     checado={situacao}
-                    onSelect={(value) => this.setState({ situacao: value })}
+                    onSelect={value => this.setState({ situacao: value })}
                     disabled={disabilitado}
                   />
                 </Col>
@@ -481,7 +481,7 @@ class VisualizarContratos extends Component {
                   <Label form="estado">Estado de Contrato</Label>
                   <br />
                   <EstadoRadio
-                    onSelect={(value) => this.setState({ estado: value })}
+                    onSelect={value => this.setState({ estado: value })}
                     checado={estado}
                     disabled={disabilitado}
                   />
@@ -501,7 +501,7 @@ class VisualizarContratos extends Component {
                             ? moment(data_assinatura).format("DD/MM/YYYY")
                             : null
                         }
-                        onChange={(e) => this.alteraDataAssinatura(e.value)}
+                        onChange={e => this.alteraDataAssinatura(e.value)}
                         locale="pt"
                         dateFormat="dd/mm/yy"
                         showIcon={true}
@@ -518,7 +518,7 @@ class VisualizarContratos extends Component {
                             ? moment(data_ordem_inicio).format("DD/MM/YYYY")
                             : null
                         }
-                        onChange={(e) => this.alteraDataOrdemInicio(e.value)}
+                        onChange={e => this.alteraDataOrdemInicio(e.value)}
                         showIcon={true}
                         locale="pt"
                         dateFormat="dd/mm/yy"
@@ -534,7 +534,7 @@ class VisualizarContratos extends Component {
                           options={referenciaEncerramentoOptions}
                           value={this.state.referencia_encerramento}
                           defaultValue={this.state.referencia_encerramento}
-                          onChange={(e) =>
+                          onChange={e =>
                             this.alteraReferenciaEncerramento(e.target.value)
                           }
                           disabled={disabilitado}
@@ -552,7 +552,7 @@ class VisualizarContratos extends Component {
                             <InputText
                               value={nullToUndef(vigencia_em_dias)}
                               placeholder="Ex: 365 dias"
-                              onChange={(e) =>
+                              onChange={e =>
                                 this.alteraDiasVigencia(e.target.value)
                               }
                               label="Vigência de Contrato"
@@ -566,7 +566,7 @@ class VisualizarContratos extends Component {
                             <Input
                               type="select"
                               value={unidade_vigencia}
-                              onChange={(event) =>
+                              onChange={event =>
                                 this.setState({
                                   unidade_vigencia: event.target.value,
                                 })
@@ -598,7 +598,7 @@ class VisualizarContratos extends Component {
                         <h2
                           style={{
                             color: corDoPrazo(
-                              contrato.dias_para_o_encerramento
+                              contrato.dias_para_o_encerramento,
                             ),
                           }}
                           className="font-weight-bold"
@@ -621,7 +621,7 @@ class VisualizarContratos extends Component {
                         <br />
                         <SelecionaEmpresa
                           selecionada={empresa_contratada}
-                          onSelect={(value) =>
+                          onSelect={value =>
                             this.setState({ empresa_contratada: value })
                           }
                           disabled={disabilitado}
@@ -662,7 +662,7 @@ class VisualizarContratos extends Component {
                 style={{ height: "320px" }}
                 value={objeto}
                 // readOnly={disabilitado}
-                onTextChange={(e) => this.setState({ objeto: e.htmlValue })}
+                onTextChange={e => this.setState({ objeto: e.htmlValue })}
                 headerTemplate={
                   <span className="ql-formats">
                     <button className="ql-bold" aria-label="Bold"></button>
@@ -692,7 +692,7 @@ class VisualizarContratos extends Component {
                     <Input
                       type="select"
                       disabled={disabilitado}
-                      onChange={(e) =>
+                      onChange={e =>
                         this.setState({ coordenador: e.target.value })
                       }
                       value={coordenador || ""}
@@ -717,7 +717,7 @@ class VisualizarContratos extends Component {
                     <br />
                     <BuscaIncrementalServidores
                       placeholder={"Selecione o gestor do contrato"}
-                      onUpdate={(valor) => this.setState({ gestor: valor })}
+                      onUpdate={valor => this.setState({ gestor: valor })}
                       disabled={disabilitado}
                       userName={usernameGestor}
                       onClear={() => {}}
@@ -727,7 +727,7 @@ class VisualizarContratos extends Component {
                 <Col xs={12} sm={12} md={12} lg={4} xl={4}>
                   <SelecionarNucleos
                     selected={nucleo}
-                    onSelect={(value) =>
+                    onSelect={value =>
                       this.setState({ nucleo_responsavel: value })
                     }
                     disabled={disabilitado}
@@ -766,9 +766,7 @@ class VisualizarContratos extends Component {
                 style={{ height: "320px" }}
                 value={observacoes}
                 // readOnly={disabilitado}
-                onTextChange={(e) =>
-                  this.setState({ observacoes: e.htmlValue })
-                }
+                onTextChange={e => this.setState({ observacoes: e.htmlValue })}
                 headerTemplate={
                   <span className="ql-formats">
                     <button className="ql-bold" aria-label="Bold"></button>

@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import TableContrato from "../../components/Contratos/TableContrato";
-import { getMeusContratos, getContratos } from "../../service/Contratos.service";
+import {
+  getMeusContratos,
+  getContratos,
+} from "../../service/Contratos.service";
 import { Button } from "primereact/button";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
@@ -9,7 +12,7 @@ export class ListaContrato extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      contratos: []
+      contratos: [],
     };
   }
 
