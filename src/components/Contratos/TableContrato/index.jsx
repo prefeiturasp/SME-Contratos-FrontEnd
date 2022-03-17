@@ -4,13 +4,13 @@ import { Column } from "primereact/column";
 import { Paginator } from "primereact/paginator";
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
+import moment from "moment";
 
 function TableContrato({
   contratos,
   colunas,
   loading,
   totalContratos,
-  rowIndex,
   mudarPagina,
 }) {
   const [index, setIndex] = useState(0);
@@ -19,10 +19,6 @@ function TableContrato({
   const redirecionaDetalhe = value => {
     const url = "/#/visualizar-contrato?uuid=" + value.uuid;
     redirect(url);
-  };
-
-  const onIndexTemplate = () => {
-    return rowIndex + 1;
   };
 
   const rowExpansionTemplate = data => {
@@ -36,13 +32,18 @@ function TableContrato({
     );
   };
 
-  const mudaPagina = event => {
-    setIndex(event.first);
-    mudarPagina(event.page + 1);
-  };
+  const mudaPagina = (event) => {
+    setIndex(event.first)
+    mudarPagina(event.page + 1)
+  }
+
+  const textoDataEncerramento = rowData =>{
+    let classe = moment(rowData.data_encerramento, "DD/MM/YYYY") < moment() ? "texto-vermelho" : "";
+    return <span className={classe}>{rowData.data_encerramento}</span>
+  }
 
   const dynamicColumns = colunas.map(col => {
-    if (col.field !== "row_index") {
+    if (col.field !== "data_encerramento") {
       return (
         <Column
           key={col.field}
@@ -55,10 +56,11 @@ function TableContrato({
     } else {
       return (
         <Column
-          field="Index"
-          header=""
-          body={onIndexTemplate.bind(this)}
-          style={{ width: "50px" }}
+          key={col.field}
+          field={col.field}
+          header={col.header}
+          body={textoDataEncerramento}
+          style={{ width: "200px" }}
         />
       );
     }
@@ -93,15 +95,17 @@ function TableContrato({
       ) : (
         <DataTable
           value={contratos}
-          footer={"Não existe informação para os critérios de busca utilizados"}
+          emptyMessage={
+            "Não existe informação para os critérios de busca utilizados"
+          }
           columnResizeMode="expand"
           className="mt-3 datatable-footer-coad"
         >
-          <Column header="TC" />
-          <Column header="Sit. Contrato" />
-          <Column header="Empresa" />
-          <Column header="Vigência" />
-          <Column header="Data" />
+          <Column expander={true} style={{width: '5%'}}/>
+          <Column header="Nome da empresa" />
+          <Column header="Nº do Termo de Contrato" />
+          <Column header="Status" />
+          <Column header="Data Encerramento" />
         </DataTable>
       )}
     </div>

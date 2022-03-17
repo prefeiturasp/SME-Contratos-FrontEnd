@@ -1,15 +1,6 @@
 import api from "./Api";
 import { getHeaderToken } from "./auth.service";
-import moment from "moment";
-
-const formataData = datas => {
-  return datas.map(data => ({
-    ...data,
-    criado_em: data.criado_em
-      ? moment(data.criado_em).format("DD/MM/YY - HH:mm")
-      : "",
-  }));
-};
+import { formataParametros } from "../utils/formataParametros";
 
 export const getEdital = async uuid => {
   const AUTH_HEADER = {
@@ -19,11 +10,12 @@ export const getEdital = async uuid => {
   return (await api.get(url, AUTH_HEADER)).data;
 };
 
-export const getListaDeEditais = async () => {
+export const getListaDeEditais = async (filtro) => {
+  let parametros = formataParametros(filtro);
   const AUTH_HEADER = {
     headers: getHeaderToken(),
   };
-  return formataData((await api.get("editais/", AUTH_HEADER)).data);
+  return (await api.get(`editais/${parametros}`, AUTH_HEADER)).data;
 };
 
 export const criaEdital = async payload => {

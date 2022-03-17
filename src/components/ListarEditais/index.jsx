@@ -1,92 +1,66 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
-import { Row, Col } from "reactstrap";
-import { getListaDeEditais } from "../../service/Editais.service";
+import { Paginator } from 'primereact/paginator';
+import "./style.scss";
 import { redirect } from "../../utils/redirect";
 
-export default class ListarEditais extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      uuid: null,
-      editais: [],
-    };
-  }
+const ListarEditais = ({ editais, totalEditais, mudarPagina, loading }) => {
 
-  actionTemplate(rowData, column) {
-    return (
-      <div>
-        <Button
-          label="Visualizar"
-          className="btn-coad-background-outline"
-          onClick={() => {
-            redirect(`#/edital/?uuid=${column.uuid}`);
-          }}
-        />
-      </div>
-    );
-  }
+  const [index, setIndex] = useState(0);
+  const [expandedRows, setExpandedRows] = useState(null);
 
-  buscaEditais = async () => {
-    const editais = await getListaDeEditais();
-    editais.reverse();
-    this.setState({ editais });
+  const redirecionaEdital = value => {
+    const url = "#/edital/?uuid=" + value.uuid;
+    redirect(url);
   };
 
-  componentDidMount() {
-    this.buscaEditais();
-  }
-
-  render() {
-    const { editais } = this.state;
-    const rowsPerPage = 5;
+  const rowExpansionTemplate = data => {
     return (
-      <div>
-        <Row>
-          <Col lg={8} xl={8}>
-            <i
-              className="float-left fas fa-file-signature"
-              style={{ marginRight: "5px", color: "#42474A" }}
-            ></i>
-            <h6 style={{ fontWeight: "bold" }}>
-              Editais e Obrigações cadastrados
-            </h6>
-          </Col>
-          <Col lg={4} xl={4}>
-            <span className="float-right">
-              <Button
-                icon="pi pi-file"
-                label="Criar Edital"
-                style={{ marginBottom: ".80em" }}
-                className="btn-coad-background-outline"
-                onClick={() => {
-                  redirect(`#/edital/`);
-                }}
-              />
-            </span>
-          </Col>
-        </Row>
-        <DataTable
-          value={editais}
-          className="datatable-strapd-coad"
-          paginator={editais.length > rowsPerPage}
-          rows={rowsPerPage}
-          paginatorTemplate="PrevPageLink PageLinks NextPageLink"
-        >
-          <Column field="numero" header="Edital" />
-          <Column
-            field="criado_em"
-            header="Data criação"
-            style={{ width: "10em" }}
-          />
-          <Column
-            body={this.actionTemplate.bind(this, editais)}
-            style={{ textAlign: "center", width: "10em" }}
-          />
-        </DataTable>
+      <div className="p-grid p-fluid expand-contrato">
+        <div>
+          <h6>Objeto</h6>
+          <p>{data.objeto}</p>
+        </div>
       </div>
     );
+  };
+
+  const mudaPagina = (event) => {
+    setIndex(event.first)
+    mudarPagina(event.page + 1)
   }
+
+  return (
+    <div>
+      <DataTable
+        value={editais}
+        className="datatable-strapd-coad tabela-editais"
+        paginatorTemplate="PrevPageLink PageLinks NextPageLink"
+        emptyMessage="Não existe informação para os critérios de busca utilizados"
+        expandedRows={expandedRows}
+        loading={loading}
+        onRowToggle={(e) => setExpandedRows(e.data)}
+        rowExpansionTemplate={rowExpansionTemplate}
+        onRowClick={e => redirecionaEdital(e.data)}
+        selectionMode="single"
+      >
+        <Column expander={true} style={{width: '5%'}}/>
+        <Column field="numero" header="Nº do Edital" />
+        <Column field="status" header="Status" />
+        <Column field="tipo_contratacao" header="Tipo de contratação" />
+        <Column field="data_homologacao" header="Data de Homologação" />
+      </DataTable>
+      {editais.length < totalEditais && 
+          <Paginator
+            rows={10}
+            totalRecords={totalEditais}
+            onPageChange={(e) => mudaPagina(e)}
+            first={index}
+          />
+        }
+    </div>
+  );
 }
+
+export default ListarEditais;

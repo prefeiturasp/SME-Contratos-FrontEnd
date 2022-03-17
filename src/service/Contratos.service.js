@@ -1,22 +1,15 @@
 import { getHeaderToken, getUsuario } from "./auth.service";
 import * as CONFIG from "../configs/config.constants";
 import moment from "moment";
-import Api from "./Api";
+import Api from './Api'
+import { formataParametros } from "../utils/formataParametros";
 
 export function getContratos(filtro) {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
   };
 
-  let parametros = "";
-  for (let prop in filtro) {
-    if (Object.prototype.hasOwnProperty.call(filtro, prop)) {
-      if (filtro[prop]) {
-        let prefix = parametros ? "&" : "?";
-        parametros += `${prefix}${prop}=${filtro[prop]}`;
-      }
-    }
-  }
+  let parametros = formataParametros(filtro);
 
   return Api.get(`${CONFIG.API_URL}/contratos/${parametros}`, AUTH_HEADER).then(
     res => {
