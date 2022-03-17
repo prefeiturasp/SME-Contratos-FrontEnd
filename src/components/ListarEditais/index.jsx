@@ -43,6 +43,7 @@ const ListarEditais = ({ editais, totalEditais, mudarPagina, loading }) => {
         onRowToggle={(e) => setExpandedRows(e.data)}
         rowExpansionTemplate={rowExpansionTemplate}
         onRowClick={e => redirecionaEdital(e.data)}
+        selectionMode="single"
       >
         <Column expander={true} style={{width: '5%'}}/>
         <Column field="numero" header="Nº do Edital" />
