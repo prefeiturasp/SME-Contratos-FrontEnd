@@ -507,7 +507,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
               </AntButton>
             </div>
             <div className="p-col-12">
-              <Label className="font-weight-bold">Descreva brevemente o objeto do contrato</Label>
+              <Label className="font-weight-bold">Descreva brevemente o objeto do edital</Label>
               <Editor
                 style={{ height: "120px" }}
                 value={edital.descricao_objeto}
