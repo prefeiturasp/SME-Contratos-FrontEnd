@@ -174,6 +174,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
   const habilitaBotao = !modoVisualizacao && edital.numero && edital.processo && edital.tipo_contratacao
                          && edital.subtipo && edital.status && edital.data_homologacao && edital.objeto &&
                          edital.descricao_objeto && semGrupoInvalido();
+  const habilitaNovoGrupo = !modoVisualizacao && semGrupoInvalido();
   const mensagemConfirmacao = incluir
     ? "Confirma a alteração deste edital?"
     : "Confirma a criação de um novo edital?";
@@ -495,7 +496,7 @@ const Edital = ({ mostraAlerta, edital : _edital }) => {
           )}
           <div>
             <AntButton
-              disabled={!habilitaBotao}
+              disabled={!habilitaNovoGrupo}
               type="link"
               size="small"
               onClick={addGrupo}
