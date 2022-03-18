@@ -8,6 +8,7 @@ import {
   getTermo,
   createContrato,
   updateContrato,
+  getSituacoesContrato,
 } from "../../../service/Contratos.service";
 import { BuscaIncrementalServidores } from "../BuscaIncrementalServidores";
 import { Dialog } from "primereact/dialog";
