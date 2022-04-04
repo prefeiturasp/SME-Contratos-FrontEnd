@@ -44,7 +44,7 @@ export const ToastContextProvider = ({ children }) => {
       severity: "error",
       summary: titulo,
       detail: mensagem,
-      life: 10000,
+      life: 7000,
     });
   };
 
