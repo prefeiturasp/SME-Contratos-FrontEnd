@@ -2,18 +2,9 @@ import React, { Component } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import CardSuperior from "./CardSuperior";
-import { Messages } from "primereact/messages";
+import { Toast } from "primereact/toast";
 import CoadAccordion from "../../components/Global/CoadAccordion";
-import {
-  Button,
-  Col,
-  Row,
-  FormGroup,
-  Label,
-  Card,
-  Input,
-  Alert,
-} from "reactstrap";
+import { Button, Col, Row, FormGroup, Label, Card, Input } from "reactstrap";
 import { Editor } from "primereact/editor";
 import { Dropdown } from "primereact/dropdown";
 import Anexos from "./Anexos";
@@ -85,19 +76,18 @@ class VisualizarContratos extends Component {
       dotacoes_orcamentarias: [],
       visible: false,
       usernameGestor: null,
-      alert: false,
       usuarios: [],
       totalMensal: 0.0,
       dataEncerramento: null,
       referencia_encerramento: DATA_ORDEM_INICIO,
       unidades_selecionadas: [],
       valor_total: "",
-      erro: "",
       unidade_vigencia: "DIAS",
       edital: null,
       alteracaoEdital: null,
     };
     this.dotacoesRef = React.createRef();
+    this.toast = React.createRef();
     addLocale("pt", CALENDAR_PT);
   }
 
@@ -225,7 +215,13 @@ class VisualizarContratos extends Component {
       ? this.dotacoesRef.current.getState()
       : null;
     const payload = mapStateToPayload(this.state, dotacoesState);
-    this.setState({ disabilitado: true, alert: true });
+    this.setState({ disabilitado: true });
+    this.toast.show({
+      severity: "success",
+      summary: "Sucesso",
+      detail: "Alterações realizadas com sucesso",
+      life: 7000,
+    });
     $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
     const resultado = await updateContrato(payload, uuid);
     if (resultado.status === OK) {
@@ -242,11 +238,6 @@ class VisualizarContratos extends Component {
               : this.state.contrato.edital,
         },
       });
-      setTimeout(() => {
-        this.setState({
-          alert: false,
-        });
-      }, 10000);
       this.cancelaAtualizacao();
       window.scrollTo(0, 0);
     } else {
@@ -258,9 +249,12 @@ class VisualizarContratos extends Component {
     if (this.dotacoesRef.current) {
       const erro = this.dotacoesRef.current.getError();
       if (erro.length) {
-        window.scrollTo(0, 0);
-        this.setState({ erro });
-        return;
+        this.toast.show({
+          severity: "error",
+          summary: "Erro",
+          detail: erro,
+          life: 7000,
+        });
       }
     }
     this.setState({ visible: true });
@@ -292,13 +286,11 @@ class VisualizarContratos extends Component {
       documentoFiscaDre,
       vigencia_em_dias,
       visible,
-      alert,
       usernameGestor,
       usuarios,
       dotacoes_orcamentarias,
       dataEncerramento,
       valor_total,
-      erro,
       unidade_vigencia,
     } = this.state;
     return (
@@ -306,24 +298,7 @@ class VisualizarContratos extends Component {
         <Page
           titulo={`Termo de Contrato n. ${contrato.termo_contrato} - ${nomeEmpresa}`}
         >
-          <Messages ref={el => (this.messages = el)}></Messages>
-          <Alert
-            color="success"
-            className="text-center font-weight-bold"
-            isOpen={alert}
-            toggle={() => this.setState({ alert: false })}
-          >
-            Alterações realizadas com sucesso
-          </Alert>
-          <Alert
-            color="danger"
-            className="text-center font-weight-bold"
-            isOpen={!!erro.length}
-            toggle={() => this.setState({ erro: "" })}
-          >
-            {" "}
-            {erro}{" "}
-          </Alert>
+          <Toast ref={el => (this.toast = el)}></Toast>
           <CardSuperior
             tipoServico={tipoServico}
             situacaoContratual={estado}

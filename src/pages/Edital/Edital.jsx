@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import { FormGroup, Label, Card, Button as ButtonBootstrap } from "reactstrap";
 import moment from "moment";
-import { Messages } from "primereact/messages";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { InputMask } from "primereact/inputmask";
@@ -29,7 +28,6 @@ import {
 import { criaTipoServico } from "../../service/TiposServico.service";
 import { BAD_REQUEST, CREATED, OK, NO_CONTENT } from "http-status-codes";
 import { redirect } from "../../utils/redirect";
-import { setFlashMessage } from "../../utils/flashMessages";
 import { getUrlParams } from "../../utils/params";
 import { Row, Col } from "reactstrap";
 import * as R from "ramda";
@@ -42,6 +40,7 @@ import {
   TIPOS_CONTRATACAO,
   STATUS_EDITAL,
 } from "./constantes";
+import useToast from "../../hooks/useToast";
 
 const Edital = ({ mostraAlerta, edital: _edital }) => {
   addLocale("pt", CALENDAR_PT);
@@ -55,7 +54,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
   const [modalCadastrarObjeto, setModalCadastrarObjeto] = useState(false);
   const [novoObjeto, setNovoObjeto] = useState("");
   const tipoServico = useRef(null);
-  const messages = useRef(null);
+  const toast = useToast();
 
   useEffect(() => {
     setEdital(_edital);
@@ -68,10 +67,6 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
       setModoVisualizacao(false);
     }
   }, [edital]);
-
-  const showMenssages = (type, erro) => {
-    messages.current.show({ severity: type, detail: erro });
-  };
 
   const fechaDialog = () => {
     setVisivel(false);
@@ -119,7 +114,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
     let editalFormatado = formatarEdital();
     const resultado = await criaEdital(editalFormatado);
     if (resultado.status === CREATED) {
-      setFlashMessage("Edital criado com sucesso", "sucesso");
+      toast.showSuccess("Edital criado com sucesso");
       redirect("#/listar-editais");
     }
   };
@@ -128,7 +123,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
     let editalFormatado = formatarEdital();
     const resultado = await alteraEdital(editalFormatado);
     if (resultado.status === OK) {
-      setFlashMessage("Edital alterado com sucesso", "sucesso");
+      toast.showSuccess("Edital alterado com sucesso");
       redirect("#/listar-editais");
     }
   };
@@ -136,14 +131,13 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
   const excluirEdital = async () => {
     const resultado = await excluiEdital(edital.uuid);
     if (resultado.status === NO_CONTENT) {
-      setFlashMessage("Edital excluído com sucesso", "sucesso");
+      toast.showSuccess("Edital excluído com sucesso");
       redirect("#/listar-editais/");
     } else {
-      redirect("#/listar-editais/");
-      setFlashMessage(
+      toast.showError(
         "Edital não pode ser excluido! Este edital está vinculado a um ou mais contratos.",
-        "error",
       );
+      redirect("#/listar-editais/");
     }
   };
 
@@ -160,15 +154,14 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
       });
       if (resposta.status === CREATED) {
         setEdital(resposta.data);
-        setFlashMessage("Edital duplicado com sucesso", "sucesso");
+        toast.showSuccess("Edital duplicado com sucesso");
         redirect(`#/edital/?uuid=${resposta.data.uuid}`);
       }
     } catch (erro) {
       if (erro.response && erro.response.status === BAD_REQUEST) {
         redirect("#/listar-editais/");
-        setFlashMessage(
+        toast.showError(
           `Erro ao duplicar: ${Object.values(erro.response.data).join("\r\n")}`,
-          "error",
         );
       }
     }
@@ -180,14 +173,11 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
       const resultado = await criaTipoServico({ nome: novoObjeto });
       if (resultado.status === CREATED) {
         tipoServico.current.buscaTiposServico();
-        showMenssages("success", "Objeto cadastrado com sucesso!");
+        toast.showSuccess("Objeto cadastrado com sucesso!");
       }
     } catch (erro) {
       if (erro.response && erro.response.status === BAD_REQUEST) {
-        showMenssages(
-          "error",
-          `${Object.values(erro.response.data).join("\r\n")}`,
-        );
+        toast.showSuccess(`${Object.values(erro.response.data).join("\r\n")}`);
       }
     }
 
@@ -287,7 +277,6 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
 
   return (
     <Fragment>
-      <Messages ref={messages}></Messages>
       <FormGroup className="d-flex flex-row-reverse mt-3">
         <Button
           disabled={!habilitaBotao}
@@ -340,7 +329,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
               className="btn-coad-background-outline"
               label="Sim"
               onClick={() => {
-                setFlashMessage("Alterações canceladas", "sucesso");
+                toast.showSuccess("Alterações canceladas");
                 redirect("/#/listar-editais");
               }}
             />

@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import ListaEditais from "../../components/ListarEditais";
-import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
 import { Messages } from "primereact/messages";
 import { BuscaEditaisForm } from "../../components/Contratos/BuscaEditaisForm";
 import { getListaDeEditais } from "../../service/Editais.service";
@@ -63,36 +62,6 @@ function ListarEditaisPage() {
 
     buscaEditais();
   }, [filtros]);
-
-  useEffect(() => {
-    const mensagemAlerta = () => {
-      if (hasFlashMessage("sucesso")) {
-        messages.current.show({
-          severity: "success",
-          life: 10000,
-          detail: getFlashMessage("sucesso"),
-        });
-      }
-
-      if (hasFlashMessage("error")) {
-        messages.current.show({
-          severity: "error",
-          life: 10000,
-          detail: getFlashMessage("error"),
-        });
-      }
-
-      if (hasFlashMessage("warning")) {
-        messages.current.show({
-          severity: "warn",
-          life: 10000,
-          detail: getFlashMessage("warning"),
-        });
-      }
-    };
-
-    mensagemAlerta();
-  }, []);
 
   return (
     <Page>

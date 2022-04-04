@@ -9,15 +9,18 @@ import "bootstrap/scss/bootstrap.scss";
 import Routers from "./routers";
 import store from "./store";
 import "antd/dist/antd.css";
+import { ToastContextProvider } from "./contexts/ToastContext";
 
 ReactDOM.render(
-  <Provider store={store}>
-    <HashRouter>
-      <ScrollToTop>
-        <Routers />
-      </ScrollToTop>
-    </HashRouter>
-  </Provider>,
+  <ToastContextProvider>
+    <Provider store={store}>
+      <HashRouter>
+        <ScrollToTop>
+          <Routers />
+        </ScrollToTop>
+      </HashRouter>
+    </Provider>
+  </ToastContextProvider>,
   document.getElementById("root"),
 );
 
