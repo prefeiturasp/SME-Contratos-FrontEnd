@@ -6,7 +6,7 @@ import {
   esqueciMinhaSenha,
   redefinirSenha,
   trocarSenha,
-  validarPrimeiroAcesso
+  validarPrimeiroAcesso,
 } from "../../service/auth.service";
 import Login from "./Login";
 import EsqueciSenha from "./EsqueciMinhaSenha";
@@ -26,10 +26,10 @@ const COMPONENTE = {
   RECUPERACAO_SUCESSO: 2,
   RECUPERACAO_ERRO: 3,
   REDEFINIR_SENHA: 4,
-  PRIMEIRO_ACESSO: 5
+  PRIMEIRO_ACESSO: 5,
 };
 
-const Index = props => {
+const Index = () => {
   const [alerta, setAlerta] = useState(false);
   const [componenteAtivo, setComponenteAtivo] = useState(COMPONENTE.LOGIN);
   const [hash, setHash] = useState("");
@@ -82,7 +82,7 @@ const Index = props => {
     }
   };
 
-  const ativaEsqueciSenha = value => {
+  const ativaEsqueciSenha = () => {
     setComponenteAtivo(COMPONENTE.ESQUECI_SENHA);
   };
 

@@ -14,8 +14,8 @@ export default class AnexosContrato extends Component {
   };
 
   cadastrar = () => {
-    this.props.jumpToStep(4)
-  }
+    this.props.jumpToStep(4);
+  };
 
   render() {
     return (

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Paginator } from 'primereact/paginator';
+import { Paginator } from "primereact/paginator";
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
 import moment from "moment";
@@ -32,15 +32,18 @@ function TableContrato({
     );
   };
 
-  const mudaPagina = (event) => {
-    setIndex(event.first)
-    mudarPagina(event.page + 1)
-  }
+  const mudaPagina = event => {
+    setIndex(event.first);
+    mudarPagina(event.page + 1);
+  };
 
-  const textoDataEncerramento = rowData =>{
-    let classe = moment(rowData.data_encerramento, "DD/MM/YYYY") < moment() ? "texto-vermelho" : "";
-    return <span className={classe}>{rowData.data_encerramento}</span>
-  }
+  const textoDataEncerramento = rowData => {
+    let classe =
+      moment(rowData.data_encerramento, "DD/MM/YYYY") < moment()
+        ? "texto-vermelho"
+        : "";
+    return <span className={classe}>{rowData.data_encerramento}</span>;
+  };
 
   const dynamicColumns = colunas.map(col => {
     if (col.field !== "data_encerramento") {
@@ -77,21 +80,20 @@ function TableContrato({
             selectionMode="single"
             loading={loading}
             expandedRows={expandedRows}
-            onRowToggle={(e) => setExpandedRows(e.data)}
+            onRowToggle={e => setExpandedRows(e.data)}
             rowExpansionTemplate={rowExpansionTemplate}
           >
-            <Column expander={true} style={{width: '5%'}}/>
+            <Column expander={true} style={{ width: "5%" }} />
             {dynamicColumns}
-            
           </DataTable>
-          {contratos.length < totalContratos && 
+          {contratos.length < totalContratos && (
             <Paginator
               rows={10}
               totalRecords={totalContratos}
-              onPageChange={(e) => mudaPagina(e)}
+              onPageChange={e => mudaPagina(e)}
               first={index}
             />
-          }
+          )}
         </>
       ) : (
         <DataTable
@@ -102,7 +104,7 @@ function TableContrato({
           columnResizeMode="expand"
           className="mt-3 datatable-footer-coad"
         >
-          <Column expander={true} style={{width: '5%'}}/>
+          <Column expander={true} style={{ width: "5%" }} />
           <Column header="Nome da empresa" />
           <Column header="Nº do Termo de Contrato" />
           <Column header="Status" />
@@ -112,6 +114,5 @@ function TableContrato({
     </div>
   );
 }
-
 
 export default TableContrato;

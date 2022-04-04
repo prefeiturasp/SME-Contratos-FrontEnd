@@ -2,20 +2,20 @@ import React, { Component } from "react";
 import { Row, Col, Button, FormGroup, Input, Label } from "reactstrap";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button as AntButton } from 'antd';
-import {Button as PrimeButton} from 'primereact/button';
+import { Button as AntButton } from "antd";
+import { Button as PrimeButton } from "primereact/button";
 import { getUnidades, getUnidade } from "../../service/Unidades.service";
 import {
   getUnidadesByContrato,
   addUnidade,
-  updateUnidade
+  updateUnidade,
 } from "../../service/UnidadeContrato.service";
 import { getUrlParams } from "../../utils/params";
 import { Dialog } from "primereact/dialog";
-import {getUsuarioByUserName} from '../../service/Usuarios.service'
+import { getUsuarioByUserName } from "../../service/Usuarios.service";
 
 const cursorPointer = {
-  cursor: "pointer"
+  cursor: "pointer",
 };
 const rowsPerPage = 5;
 
@@ -28,8 +28,8 @@ class UnidadeEnvolvidas extends Component {
         tipo_unidade: "",
         equipamento: "",
         dre: "",
-        lote: ""
-      }
+        lote: "",
+      },
     ],
     unidadesSelect: [],
     valorMensal: 0.0,
@@ -47,15 +47,15 @@ class UnidadeEnvolvidas extends Component {
       rf: "",
       nome: "",
       uuid: "",
-      tipo_fiscal: 'TITULAR'
+      tipo_fiscal: "TITULAR",
     },
     fiscaisSuplentes: [],
     podeAddSuplente: true,
-    modalMode: '',
+    modalMode: "",
     headerByModalMode: {
-      ADD: 'Adicionar Unidade à tabela',
-      EDIT: 'Editar Unidade da tabela',
-      VIEW: 'Visualizar Unidade da tabela'
+      ADD: "Adicionar Unidade à tabela",
+      EDIT: "Editar Unidade da tabela",
+      VIEW: "Visualizar Unidade da tabela",
     },
     loadingUnidades: true,
   };
@@ -72,7 +72,7 @@ class UnidadeEnvolvidas extends Component {
 
   carregaUnidadesContrato = async uuid => {
     const unidadesContrato = await getUnidadesByContrato(uuid);
-    this.setState({ unidades: unidadesContrato, loadingUnidades: false, });
+    this.setState({ unidades: unidadesContrato, loadingUnidades: false });
   };
 
   toggle = () => {
@@ -83,64 +83,61 @@ class UnidadeEnvolvidas extends Component {
     this.toggle();
     this.setState({
       unidade: null,
-      valor_mensal: 0.00,
-      valor_total: 0.00,
+      valor_mensal: 0.0,
+      valor_total: 0.0,
       lote: null,
-      modalMode: 'ADD'
+      modalMode: "ADD",
     });
   };
 
   disaparecerModal = () => {
-    this.resetForm()
+    this.resetForm();
     this.setState({ modal: false });
   };
 
   handleAddUnidade = async () => {
-    const fiscais = []
+    const fiscais = [];
 
-    if (this.state.fiscalTitular.uuid.length > 0){
+    if (this.state.fiscalTitular.uuid.length > 0) {
       fiscais.push({
         fiscal: this.state.fiscalTitular.uuid,
-        tipo_fiscal: this.state.fiscalTitular.tipo_fiscal
-      })
+        tipo_fiscal: this.state.fiscalTitular.tipo_fiscal,
+      });
     }
 
-    this.state.fiscaisSuplentes.forEach(
-      (suplente) => {
-        fiscais.push({
-          fiscal: suplente.uuid,
-          tipo_fiscal: suplente.tipo_fiscal
-        })
-      }
-    )
+    this.state.fiscaisSuplentes.forEach(suplente => {
+      fiscais.push({
+        fiscal: suplente.uuid,
+        tipo_fiscal: suplente.tipo_fiscal,
+      });
+    });
     const payload = {
       contrato: this.state.contrato,
       unidade: this.state.unidade,
       valor_mensal: this.state.valorMensal,
       valor_total: this.state.valorTotal,
       lote: this.state.lote,
-      fiscais
+      fiscais,
     };
 
-    let resultado = null
+    let resultado = null;
 
-    if (this.state.modalMode === 'ADD') {
+    if (this.state.modalMode === "ADD") {
       resultado = await addUnidade(payload);
-    }
-    else {
+    } else {
       resultado = await updateUnidade(payload, this.state.unidadeContratoUUID);
     }
 
     if (resultado.uuid) {
       this.carregaUnidadesContrato(this.state.contrato);
-      this.resetForm()
+      this.resetForm();
       this.setState({
         modal: false,
         valorMensal: 0.0,
         valorTotal: 0.0,
         unidade: null,
         lote: null,
-        dre: null
+        dre: null,
       });
     }
   };
@@ -153,22 +150,20 @@ class UnidadeEnvolvidas extends Component {
     this.setState({ valorTotal: floatValue });
   };
 
-  handleOnChangeCodigoEol = async (event) => {
-    const codigoEol = event.target.value
+  handleOnChangeCodigoEol = async event => {
+    const codigoEol = event.target.value;
     if (codigoEol.length >= 6) {
-      const unidade = await getUnidade(codigoEol)
-      this.setState(
-        {
-          unidade: unidade.uuid,
-          unidadeNome: unidade.nome,
-          unidadeEquipamento: unidade.equipamento,
-          unidadeDRE: unidade.dre ? unidade.dre.nome : "Sem DRE vinculada"
-        }
-      )
+      const unidade = await getUnidade(codigoEol);
+      this.setState({
+        unidade: unidade.uuid,
+        unidadeNome: unidade.nome,
+        unidadeEquipamento: unidade.equipamento,
+        unidadeDRE: unidade.dre ? unidade.dre.nome : "Sem DRE vinculada",
+      });
     }
 
-    this.setState({ codigo_eol: codigoEol})
-  }
+    this.setState({ codigo_eol: codigoEol });
+  };
 
   resetForm = () => {
     this.setState({
@@ -181,132 +176,119 @@ class UnidadeEnvolvidas extends Component {
         rf: "",
         nome: "",
         uuid: "",
-        tipo_fiscal: 'TITULAR'
+        tipo_fiscal: "TITULAR",
       },
-      fiscaisSuplentes: []
-    })
-  }
+      fiscaisSuplentes: [],
+    });
+  };
 
   appendSuplente() {
     const emptySuplente = {
       rf: "",
       nome: "",
       uuid: "",
-      tipo_fiscal: 'SUPLENTE'
-    }
+      tipo_fiscal: "SUPLENTE",
+    };
 
-    const fiscaisSuplentes = this.state.fiscaisSuplentes
+    const fiscaisSuplentes = this.state.fiscaisSuplentes;
 
-    fiscaisSuplentes.push(emptySuplente)
+    fiscaisSuplentes.push(emptySuplente);
 
-    this.setState(fiscaisSuplentes)
+    this.setState(fiscaisSuplentes);
 
-    this.setState({podeAddSuplente: fiscaisSuplentes.length < 3})
-
+    this.setState({ podeAddSuplente: fiscaisSuplentes.length < 3 });
   }
 
-  async handleChangeTitular (event) {
-    const rfTitular = event.target.value
-    const fiscalTitular = this.state.fiscalTitular
+  async handleChangeTitular(event) {
+    const rfTitular = event.target.value;
+    const fiscalTitular = this.state.fiscalTitular;
 
-    fiscalTitular.nome = ''
-    fiscalTitular.uuid = ''
+    fiscalTitular.nome = "";
+    fiscalTitular.uuid = "";
 
     if (rfTitular.length >= 6) {
-      const titular = await getUsuarioByUserName(rfTitular)
+      const titular = await getUsuarioByUserName(rfTitular);
       if (titular && titular.uuid) {
-        fiscalTitular.nome = titular.nome
-        fiscalTitular.uuid = titular.uuid        
+        fiscalTitular.nome = titular.nome;
+        fiscalTitular.uuid = titular.uuid;
       }
     }
 
-    fiscalTitular.rf = rfTitular
-    this.setState({fiscalTitular})
-
+    fiscalTitular.rf = rfTitular;
+    this.setState({ fiscalTitular });
   }
 
-  async handleChangeSuplente (event, idx) {
-    const rfSuplente = event.target.value
-    const fiscaisSuplentes = this.state.fiscaisSuplentes
+  async handleChangeSuplente(event, idx) {
+    const rfSuplente = event.target.value;
+    const fiscaisSuplentes = this.state.fiscaisSuplentes;
 
-    fiscaisSuplentes[idx].nome = ''
-    fiscaisSuplentes[idx].uuid = ''
+    fiscaisSuplentes[idx].nome = "";
+    fiscaisSuplentes[idx].uuid = "";
 
     if (rfSuplente.length >= 6) {
-      const suplente = await getUsuarioByUserName(rfSuplente)
+      const suplente = await getUsuarioByUserName(rfSuplente);
       if (suplente && suplente.uuid) {
-        fiscaisSuplentes[idx].nome = suplente.nome
-        fiscaisSuplentes[idx].uuid = suplente.uuid
+        fiscaisSuplentes[idx].nome = suplente.nome;
+        fiscaisSuplentes[idx].uuid = suplente.uuid;
       }
     }
 
-    fiscaisSuplentes[idx].rf = rfSuplente
-    this.setState({fiscaisSuplentes})
-
+    fiscaisSuplentes[idx].rf = rfSuplente;
+    this.setState({ fiscaisSuplentes });
   }
 
   removeSuplente(idx) {
-    const fiscaisSuplentes = this.state.fiscaisSuplentes
-    fiscaisSuplentes.splice(idx, 1)
-    this.setState({fiscaisSuplentes})
-    this.setState({podeAddSuplente: fiscaisSuplentes.length < 3})
+    const fiscaisSuplentes = this.state.fiscaisSuplentes;
+    fiscaisSuplentes.splice(idx, 1);
+    this.setState({ fiscaisSuplentes });
+    this.setState({ podeAddSuplente: fiscaisSuplentes.length < 3 });
   }
 
-  editUnidade = (data) => {
-
+  editUnidade = data => {
     let fiscalTitular = {
       rf: "",
       nome: "",
       uuid: "",
-      tipo_fiscal: 'TITULAR'
-    }
-    let fiscaisSuplentes = []
+      tipo_fiscal: "TITULAR",
+    };
+    let fiscaisSuplentes = [];
 
-    data.fiscais.forEach(
-      (fiscal) => {
-        if (fiscal.tipo_fiscal === 'TITULAR') {
-          fiscalTitular = {
-            rf: fiscal.fiscal.username,
-            nome: fiscal.fiscal.nome,
-            uuid: fiscal.fiscal.uuid,
-            tipo_fiscal: 'TITULAR' 
-          }
-        }
-        else {
-          fiscaisSuplentes.push({
-            rf: fiscal.fiscal.username,
-            nome: fiscal.fiscal.nome,
-            uuid: fiscal.fiscal.uuid,
-            tipo_fiscal: 'SUPLENTE' 
-          })
-
-        }
+    data.fiscais.forEach(fiscal => {
+      if (fiscal.tipo_fiscal === "TITULAR") {
+        fiscalTitular = {
+          rf: fiscal.fiscal.username,
+          nome: fiscal.fiscal.nome,
+          uuid: fiscal.fiscal.uuid,
+          tipo_fiscal: "TITULAR",
+        };
+      } else {
+        fiscaisSuplentes.push({
+          rf: fiscal.fiscal.username,
+          nome: fiscal.fiscal.nome,
+          uuid: fiscal.fiscal.uuid,
+          tipo_fiscal: "SUPLENTE",
+        });
       }
-    )
+    });
 
     this.setState({
-      codigo_eol: data.unidade ? data.unidade.codigo_eol : '',
-      unidadeNome: data.unidade ? data.unidade.nome : '',
-      unidadeEquipamento: data.unidade ? data.unidade.equipamento : '',
-      unidadeDRE: data.unidade.dre ? data.unidade.dre.nome : '',
+      codigo_eol: data.unidade ? data.unidade.codigo_eol : "",
+      unidadeNome: data.unidade ? data.unidade.nome : "",
+      unidadeEquipamento: data.unidade ? data.unidade.equipamento : "",
+      unidadeDRE: data.unidade.dre ? data.unidade.dre.nome : "",
       unidadeContratoUUID: data.uuid,
       unidade: data.unidade.uuid,
       lote: data.lote,
       fiscalTitular,
       fiscaisSuplentes,
-      modalMode: this.props.disabilitado ? 'VIEW' : 'EDIT'
-    })
-    
+      modalMode: this.props.disabilitado ? "VIEW" : "EDIT",
+    });
+
     this.toggle();
   };
 
   render() {
-    const {
-      unidades,
-      modal,
-      modalMode,
-      headerByModalMode
-    } = this.state;
+    const { unidades, modal, modalMode, headerByModalMode } = this.state;
     const { disabilitado } = this.props;
     const { loadingUnidades } = this.state;
     return (
@@ -326,7 +308,7 @@ class UnidadeEnvolvidas extends Component {
                 Cancelar
               </Button>
 
-              { !disabilitado &&
+              {!disabilitado && (
                 <Button
                   danger
                   className="btn-coad-primary"
@@ -334,7 +316,7 @@ class UnidadeEnvolvidas extends Component {
                 >
                   Adicionar
                 </Button>
-              }
+              )}
             </div>
           }
         >
@@ -343,7 +325,12 @@ class UnidadeEnvolvidas extends Component {
               <Col lg={4} xl={4}>
                 <FormGroup>
                   <Label>Código EOL</Label>
-                  <Input placeholder="Digite o código EOL" value={this.state.codigo_eol} onChange={this.handleOnChangeCodigoEol.bind(this)} disabled={disabilitado} />
+                  <Input
+                    placeholder="Digite o código EOL"
+                    value={this.state.codigo_eol}
+                    onChange={this.handleOnChangeCodigoEol.bind(this)}
+                    disabled={disabilitado}
+                  />
                 </FormGroup>
               </Col>
               <Col lg={8} xl={8}>
@@ -390,57 +377,78 @@ class UnidadeEnvolvidas extends Component {
               <Col lg={4} xl={4}>
                 <FormGroup>
                   <Label>RF Fiscal do Contrato</Label>
-                  <Input placeholder="Digite o número do RF" value={this.state.fiscalTitular.rf} onChange={(event) => this.handleChangeTitular(event)}  disabled={disabilitado}/>
+                  <Input
+                    placeholder="Digite o número do RF"
+                    value={this.state.fiscalTitular.rf}
+                    onChange={event => this.handleChangeTitular(event)}
+                    disabled={disabilitado}
+                  />
                 </FormGroup>
               </Col>
               <Col lg={8} xl={8}>
                 <FormGroup>
                   <Label>Nome Fiscal do Contrato</Label>
-                  <Input disabled={true} value={this.state.fiscalTitular.nome} />
+                  <Input
+                    disabled={true}
+                    value={this.state.fiscalTitular.nome}
+                  />
                 </FormGroup>
               </Col>
             </Row>
 
-            {this.state.fiscaisSuplentes.map(
-                (fiscalSuplente, idx) => {
-                    return (
-                      <Row>
-                        <Col lg={4} xl={4}>
-                          <FormGroup>
-                            <Label>RF Suplente de Fiscal do Contrato</Label>
-                            <Input placeholder="Digite o número do RF" value={this.state.fiscaisSuplentes[idx].rf} onChange={(event) => this.handleChangeSuplente(event, idx)}  disabled={disabilitado}/>
-                          </FormGroup>
-                        </Col>
-                        <Col lg={6} xl={6}>
-                          <FormGroup>
-                            <Label>Nome Suplente Fiscal do Contrato</Label>
-                            <Input disabled={true} value={this.state.fiscaisSuplentes[idx].nome} />
-                          </FormGroup>
-                        </Col>
-                        <Col lg={2} xl={2} style={{padding: '0px', paddingRight: '15px'}}>
-                          <PrimeButton
-                              disabled={disabilitado}
-                              style={{marginTop: '33px', width: '100%'}}
-                              label="Remover"
-                              onClick={(e) => this.removeSuplente(idx)}
-                          />
-                        </Col>
-                      </Row>
-                    )
-                }
-            )}
-            <div className="p-col-12" style={{padding: '0px', marginLeft: '-0.5em'}} >
-                <AntButton
-                    disabled={!this.state.podeAddSuplente || disabilitado}
-                    type="link"
-                    size="small"
-                    onClick={(e) => this.appendSuplente()}
-                >
-                    Adicionar Suplente
-                </AntButton>
+            {this.state.fiscaisSuplentes.map((fiscalSuplente, idx) => {
+              return (
+                <Row key={idx}>
+                  <Col lg={4} xl={4}>
+                    <FormGroup>
+                      <Label>RF Suplente de Fiscal do Contrato</Label>
+                      <Input
+                        placeholder="Digite o número do RF"
+                        value={this.state.fiscaisSuplentes[idx].rf}
+                        onChange={event =>
+                          this.handleChangeSuplente(event, idx)
+                        }
+                        disabled={disabilitado}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col lg={6} xl={6}>
+                    <FormGroup>
+                      <Label>Nome Suplente Fiscal do Contrato</Label>
+                      <Input
+                        disabled={true}
+                        value={this.state.fiscaisSuplentes[idx].nome}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col
+                    lg={2}
+                    xl={2}
+                    style={{ padding: "0px", paddingRight: "15px" }}
+                  >
+                    <PrimeButton
+                      disabled={disabilitado}
+                      style={{ marginTop: "33px", width: "100%" }}
+                      label="Remover"
+                      onClick={() => this.removeSuplente(idx)}
+                    />
+                  </Col>
+                </Row>
+              );
+            })}
+            <div
+              className="p-col-12"
+              style={{ padding: "0px", marginLeft: "-0.5em" }}
+            >
+              <AntButton
+                disabled={!this.state.podeAddSuplente || disabilitado}
+                type="link"
+                size="small"
+                onClick={() => this.appendSuplente()}
+              >
+                Adicionar Suplente
+              </AntButton>
             </div>
-
-
           </div>
         </Dialog>
         <Row>
@@ -457,14 +465,14 @@ class UnidadeEnvolvidas extends Component {
               />
             </span>
           </Col>
-        </Row>        
+        </Row>
         <Row>
           <Col lg={12} xl={12}>
-            <DataTable 
-              value={unidades} 
-              scrollable={true} 
-              scrollHeight="250px" 
-              onRowClick={e => this.editUnidade(e.data)} 
+            <DataTable
+              value={unidades}
+              scrollable={true}
+              scrollHeight="250px"
+              onRowClick={e => this.editUnidade(e.data)}
               style={cursorPointer}
               paginator={unidades.length > rowsPerPage}
               rows={rowsPerPage}
@@ -478,7 +486,6 @@ class UnidadeEnvolvidas extends Component {
               <Column field="unidade.dre.sigla" header="DRE" />
               <Column field="lote" header="Lote Corresp." />
             </DataTable>
-
           </Col>
         </Row>
       </div>

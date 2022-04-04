@@ -8,61 +8,73 @@ import CardServico from "../../components/Contratos/CardServico";
 import { Button, ButtonGroup } from "reactstrap";
 import { Messages } from "primereact/messages";
 import { redirect } from "../../utils/redirect";
-import {getMinhasNotificacoesVigenciaContratos} from "../../service/Notificacoes.service"
+import { getMinhasNotificacoesVigenciaContratos } from "../../service/Notificacoes.service";
 
 class PainelSelecao extends Component {
-
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      qtdContratosVencendo: 0
-    }
-    
+      qtdContratosVencendo: 0,
+    };
   }
-  
-  
-  async componentDidMount() {
 
-    const minhasNotificacoesVigenciaContrato = await getMinhasNotificacoesVigenciaContratos()
+  async componentDidMount() {
+    const minhasNotificacoesVigenciaContrato =
+      await getMinhasNotificacoesVigenciaContratos();
 
     if (minhasNotificacoesVigenciaContrato) {
-      this.setState({qtdContratosVencendo: minhasNotificacoesVigenciaContrato.contratos_vencendo})
+      this.setState({
+        qtdContratosVencendo:
+          minhasNotificacoesVigenciaContrato.contratos_vencendo,
+      });
     }
-    
-    this.exibeNotificacoesVigencia()
 
+    this.exibeNotificacoesVigencia();
   }
 
   exibeNotificacoesVigencia() {
     if (this.state.qtdContratosVencendo) {
-      const strContratos = this.state.qtdContratosVencendo > 1 ? 'contratos' : 'contrato'
-      const strProximos = this.state.qtdContratosVencendo > 1 ? 'próximos' : 'próximo'
+      const strContratos =
+        this.state.qtdContratosVencendo > 1 ? "contratos" : "contrato";
+      const strProximos =
+        this.state.qtdContratosVencendo > 1 ? "próximos" : "próximo";
       this.messages.show({
         severity: "warn",
         sticky: true,
-        detail:
-          `${this.state.qtdContratosVencendo} ${strContratos} ${strProximos} ao vencimento.`
+        detail: `${this.state.qtdContratosVencendo} ${strContratos} ${strProximos} ao vencimento.`,
       });
     }
   }
-  
+
   render() {
     return (
       <div>
-        <Page >
-        <Messages ref={el => (this.messages = el)}></Messages>
-        <h4>Escolha visualização de painel de contratos</h4>
-        
+        <Page>
+          <Messages ref={el => (this.messages = el)}></Messages>
+          <h4>Escolha visualização de painel de contratos</h4>
+
           <ButtonGroup className="mb-4">
-            <Button className="btn-coad-background" size="sm"><i className="pi pi-table mx-4"></i></Button>
-            <Button onClick={()=> redirect('#/contratos-continuos')} className="btn-coad-background-outline" size="sm" outline><i className="pi pi-list mx-4"></i></Button>
+            <Button className="btn-coad-background" size="sm">
+              <i className="pi pi-table mx-4"></i>
+            </Button>
+            <Button
+              onClick={() => redirect("#/contratos-continuos")}
+              className="btn-coad-background-outline"
+              size="sm"
+              outline
+            >
+              <i className="pi pi-list mx-4"></i>
+            </Button>
           </ButtonGroup>
 
           <CardSection icone={IconeEquipamento} titulo="Escolha Equipamento">
             <CardEquipamento />
           </CardSection>
-          
-          <CardSection icone={IconeServico} titulo="Escolha Categoria de Serviço">
+
+          <CardSection
+            icone={IconeServico}
+            titulo="Escolha Categoria de Serviço"
+          >
             <CardServico />
           </CardSection>
         </Page>
@@ -72,4 +84,3 @@ class PainelSelecao extends Component {
 }
 
 export default PainelSelecao;
-

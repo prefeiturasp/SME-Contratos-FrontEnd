@@ -1,7 +1,7 @@
 export const formatadoMonetario = valor => {
   const formater = new Intl.NumberFormat("pt-BR", {
     style: "currency",
-    currency: "BRL"
+    currency: "BRL",
   });
   return formater.format(valor);
 };
@@ -18,5 +18,5 @@ export const formatadorDeData = data => {
 
 const convertStringToDate = data => {
   const date = data.split("-");
-  return new Date(date[0], date[1]-1, date[2]);
+  return new Date(date[0], date[1] - 1, date[2]);
 };

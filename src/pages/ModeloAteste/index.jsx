@@ -1,2 +1,2 @@
-import ModeloAteste from "./Container"
+import ModeloAteste from "./Container";
 export default ModeloAteste;

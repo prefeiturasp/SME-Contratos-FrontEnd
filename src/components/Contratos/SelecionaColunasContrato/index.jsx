@@ -4,7 +4,7 @@ import { Card } from "primereact/card";
 import { Checkbox } from "primereact/checkbox";
 import {
   getCamposContrato,
-  updateColunasContrato
+  updateColunasContrato,
 } from "../../../service/Contratos.service";
 
 export class SelecionaColunasContrato extends Component {
@@ -16,86 +16,94 @@ export class SelecionaColunasContrato extends Component {
       colunas: [
         {
           field: "termo_contrato",
-          header: "TC"
+          header: "TC",
         },
         {
           field: "processo",
-          header: "Processo"
+          header: "Processo",
         },
         {
           field: "tipo_servico.nome",
-          header: "Tipo de Serviço"
+          header: "Tipo de Serviço",
         },
         {
           field: "empresa_contratada.nome",
-          header: "Empresa"
+          header: "Empresa",
         },
         {
           field: "estado_contrato",
-          header: "Estado do Contrato"
+          header: "Estado do Contrato",
         },
         {
           field: "data_encerramento",
-          header: "Data de Encerramento"
+          header: "Data de Encerramento",
         },
         {
           field: "nucleo_responsavel.sigla",
-          header: "Núcleo Responsável"
+          header: "Núcleo Responsável",
         },
         {
           field: "data_assinatura",
-          header: "Data de Assinatura"
+          header: "Data de Assinatura",
         },
         {
           field: "data_ordem_inicio",
-          header: "Data Ordem de Início"
+          header: "Data Ordem de Início",
         },
         {
           field: "vigencia_em_dias",
-          header: "Vigência"
+          header: "Vigência",
         },
         {
           field: "situacao",
-          header: "Situação"
+          header: "Situação",
         },
         {
           field: "gestor.nome",
-          header: "Gestor"
+          header: "Gestor",
         },
         {
           field: "suplente.nome",
-          header: "Suplente"
+          header: "Suplente",
         },
         {
           field: "dres",
-          header: "DREs"
-        }
+          header: "DREs",
+        },
       ],
-      selectedCols: props.colunasInit
+      selectedCols: props.colunasInit,
     };
 
     this.onColunasChange = this.onColunasChange.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.colunasInit !== this.props.colunasInit) {
       this.setState({
-        selectedCols: this.props.colunasInit
-      })
+        selectedCols: this.props.colunasInit,
+      });
     }
   }
 
   onColunasChange(e) {
     let colunasSelecionadas = [...this.state.selectedCols];
     if (e.checked) colunasSelecionadas.push(e.value);
-    else colunasSelecionadas.splice(colunasSelecionadas.indexOf(colunasSelecionadas.find(col => { return col.field === e.value.field})), 1)
+    else
+      colunasSelecionadas.splice(
+        colunasSelecionadas.indexOf(
+          colunasSelecionadas.find(col => {
+            return col.field === e.value.field;
+          }),
+        ),
+        1,
+      );
 
     this.setState({ selectedCols: colunasSelecionadas });
   }
   updateColunas() {
     const payLoad = {
       uuid: this.props.uuid,
-      colunas_array: this.state.selectedCols
+      colunas_array: this.state.selectedCols,
     };
     updateColunasContrato(payLoad);
   }
@@ -118,12 +126,14 @@ export class SelecionaColunasContrato extends Component {
       <Card footer={footer}>
         <div className="p-grid p-justify-start">
           {this.state.colunas.map((cols, i) => (
-            <div className="p-col-4">
+            <div key={i} className="p-col-4">
               <Checkbox
                 inputId={cols.field}
                 value={cols}
                 onChange={this.onColunasChange}
-                checked={this.state.selectedCols.find(col => { return col.field === cols.field})}
+                checked={this.state.selectedCols.find(col => {
+                  return col.field === cols.field;
+                })}
               ></Checkbox>
               <label htmlFor={cols.field} className="p-checkbox-label">
                 {cols.header}

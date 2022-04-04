@@ -3,13 +3,15 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Row } from "reactstrap";
 
-const obrigacaoTemplate = (rowData) => {
+const obrigacaoTemplate = rowData => {
   return <div dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
 };
 
 const Grupo = ({ nome, obrigacoes: itens = [] }) => (
   <div className="mb-3">
-    <Row className="mb-1"><h6>{nome}</h6></Row>
+    <Row className="mb-1">
+      <h6>{nome}</h6>
+    </Row>
     <Row>
       {itens.length > 0 && (
         <DataTable
@@ -20,10 +22,7 @@ const Grupo = ({ nome, obrigacoes: itens = [] }) => (
           className="datatable-strapd-coad"
         >
           <Column field="item" header="Item" style={{ width: "10%" }} />
-          <Column
-            header="Obrigações"
-            body={obrigacaoTemplate}
-          />
+          <Column header="Obrigações" body={obrigacaoTemplate} />
         </DataTable>
       )}
       {!itens.length && (
@@ -45,8 +44,10 @@ const ListarObrigacoesContratuais = ({ grupos = [] }) => {
     return (
       <Row>Não existem obrigações contratuais adicionadas no contrato.</Row>
     );
-  return grupos.map((grupo) => {
-    return <Grupo nome={grupo.nome} obrigacoes={grupo.itens_de_obrigacao} />;
+  return grupos.map((grupo, i) => {
+    return (
+      <Grupo key={i} nome={grupo.nome} obrigacoes={grupo.itens_de_obrigacao} />
+    );
   });
 };
 

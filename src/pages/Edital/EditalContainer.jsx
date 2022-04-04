@@ -9,20 +9,21 @@ import { getUrlParams } from "../../utils/params";
 import { Alert } from "reactstrap";
 import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
 
-
-const EditalContainer = props => {
-
+const EditalContainer = () => {
   const { uuid } = getUrlParams();
 
   const [edital, setEdital] = useState({});
   const [alerta, setAlerta] = useState(false);
   const [alertaDuplicar, setAlertaDuplicar] = useState(true);
 
-  useEffect(() => {  
+  useEffect(() => {
     if (uuid) {
       (async () => {
         const dados = await getEdital(uuid);
-        dados.data_homologacao = moment(dados.data_homologacao, "YYYY-MM-DD").toDate();
+        dados.data_homologacao = moment(
+          dados.data_homologacao,
+          "YYYY-MM-DD",
+        ).toDate();
         setEdital(dados);
       })();
     }
@@ -33,18 +34,15 @@ const EditalContainer = props => {
       setTimeout(() => {
         setAlertaDuplicar(false);
       }, 5000);
-    } 
+    }
   });
 
-  const mostraAlerta = useCallback(
-    event => {
-      setAlerta(true);
-      setTimeout(() => {
-        setAlerta(false);
-      }, 5000);
-    },
-    []
-  );
+  const mostraAlerta = useCallback(() => {
+    setAlerta(true);
+    setTimeout(() => {
+      setAlerta(false);
+    }, 5000);
+  }, []);
 
   const fechaAlerta = () => setAlerta(false);
 
@@ -68,10 +66,14 @@ const EditalContainer = props => {
 
         <Alert color="success" isOpen={alerta} toggle={fechaAlerta}>
           <span className="font-weight-bold d-flex justify-content-center">
-            Item adicionado com sucesso 
+            Item adicionado com sucesso
           </span>
         </Alert>
-        <h3>{  uuid ? 'Edital Nº ' + edital.numero : 'Cadastro de Edital e Obrigações' }</h3>
+        <h3>
+          {uuid
+            ? "Edital Nº " + edital.numero
+            : "Cadastro de Edital e Obrigações"}
+        </h3>
         <Container>
           {edital && <Edital edital={edital} mostraAlerta={mostraAlerta} />}
         </Container>

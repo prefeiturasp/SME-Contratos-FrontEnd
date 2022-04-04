@@ -28,7 +28,7 @@ import "./layout/layout.scss";
 import "./App.scss";
 import LOGO from "./assets/images/logoSGC.svg";
 import { NavLink } from "react-router-dom";
-import 'moment-timezone';
+import "moment-timezone";
 
 class App extends Component {
   constructor() {
@@ -40,7 +40,7 @@ class App extends Component {
       overlayMenuActive: false,
       mobileMenuActive: false,
       isMobile: false,
-      clicado: false
+      clicado: false,
     };
 
     this.onWrapperClick = this.onWrapperClick.bind(this);
@@ -54,7 +54,7 @@ class App extends Component {
     if (!this.menuClick) {
       this.setState({
         overlayMenuActive: false,
-        mobileMenuActive: false
+        mobileMenuActive: false,
       });
     }
 
@@ -68,19 +68,19 @@ class App extends Component {
       if (this.state.layoutMode === "overlay") {
         this.setState({
           overlayMenuActive: !this.state.overlayMenuActive,
-          clicado: !this.state.clicado
+          clicado: !this.state.clicado,
         });
       } else if (this.state.layoutMode === "static") {
         this.setState({
           staticMenuInactive: !this.state.staticMenuInactive,
-          clicado: !this.state.clicado
+          clicado: !this.state.clicado,
         });
       }
     } else {
       const mobileMenuActive = this.state.mobileMenuActive;
       this.setState({
         mobileMenuActive: !mobileMenuActive,
-        clicado: !this.state.clicado
+        clicado: !this.state.clicado,
       });
     }
 
@@ -95,7 +95,7 @@ class App extends Component {
     if (!event.item.items) {
       this.setState({
         overlayMenuActive: false,
-        mobileMenuActive: false
+        mobileMenuActive: false,
       });
     }
   }
@@ -107,7 +107,7 @@ class App extends Component {
         icon: "pi pi-fw pi-home",
         command: () => {
           window.location = "#/";
-        }
+        },
       },
       {
         label: "Menu Modes",
@@ -116,14 +116,14 @@ class App extends Component {
           {
             label: "Static Menu",
             icon: "pi pi-fw pi-bars",
-            command: () => this.setState({ layoutMode: "static" })
+            command: () => this.setState({ layoutMode: "static" }),
           },
           {
             label: "Overlay Menu",
             icon: "pi pi-fw pi-bars",
-            command: () => this.setState({ layoutMode: "overlay" })
-          }
-        ]
+            command: () => this.setState({ layoutMode: "overlay" }),
+          },
+        ],
       },
       {
         label: "Menu Colors",
@@ -132,14 +132,14 @@ class App extends Component {
           {
             label: "Dark",
             icon: "pi pi-fw pi-bars",
-            command: () => this.setState({ layoutColorMode: "dark" })
+            command: () => this.setState({ layoutColorMode: "dark" }),
           },
           {
             label: "Light",
             icon: "pi pi-fw pi-bars",
-            command: () => this.setState({ layoutColorMode: "light" })
-          }
-        ]
+            command: () => this.setState({ layoutColorMode: "light" }),
+          },
+        ],
       },
       {
         label: "Components",
@@ -154,15 +154,15 @@ class App extends Component {
           { label: "Menus", icon: "pi pi-fw pi-plus", to: "/menus" },
           { label: "Messages", icon: "pi pi-fw pi-spinner", to: "/messages" },
           { label: "Charts", icon: "pi pi-fw pi-chart-bar", to: "/charts" },
-          { label: "Misc", icon: "pi pi-fw pi-upload", to: "/misc" }
-        ]
+          { label: "Misc", icon: "pi pi-fw pi-upload", to: "/misc" },
+        ],
       },
       {
         label: "Template Pages",
         icon: "pi pi-fw pi-file",
         items: [
-          { label: "Empty Page", icon: "pi pi-fw pi-circle-off", to: "/empty" }
-        ]
+          { label: "Empty Page", icon: "pi pi-fw pi-circle-off", to: "/empty" },
+        ],
       },
       {
         label: "Menu Hierarchy",
@@ -178,18 +178,18 @@ class App extends Component {
                 items: [
                   { label: "Submenu 1.1.1", icon: "pi pi-fw pi-bookmark" },
                   { label: "Submenu 1.1.2", icon: "pi pi-fw pi-bookmark" },
-                  { label: "Submenu 1.1.3", icon: "pi pi-fw pi-bookmark" }
-                ]
+                  { label: "Submenu 1.1.3", icon: "pi pi-fw pi-bookmark" },
+                ],
               },
               {
                 label: "Submenu 1.2",
                 icon: "pi pi-fw pi-bookmark",
                 items: [
                   { label: "Submenu 1.2.1", icon: "pi pi-fw pi-bookmark" },
-                  { label: "Submenu 1.2.2", icon: "pi pi-fw pi-bookmark" }
-                ]
-              }
-            ]
+                  { label: "Submenu 1.2.2", icon: "pi pi-fw pi-bookmark" },
+                ],
+              },
+            ],
           },
           {
             label: "Submenu 2",
@@ -201,35 +201,35 @@ class App extends Component {
                 items: [
                   { label: "Submenu 2.1.1", icon: "pi pi-fw pi-bookmark" },
                   { label: "Submenu 2.1.2", icon: "pi pi-fw pi-bookmark" },
-                  { label: "Submenu 2.1.3", icon: "pi pi-fw pi-bookmark" }
-                ]
+                  { label: "Submenu 2.1.3", icon: "pi pi-fw pi-bookmark" },
+                ],
               },
               {
                 label: "Submenu 2.2",
                 icon: "pi pi-fw pi-bookmark",
                 items: [
                   { label: "Submenu 2.2.1", icon: "pi pi-fw pi-bookmark" },
-                  { label: "Submenu 2.2.2", icon: "pi pi-fw pi-bookmark" }
-                ]
-              }
-            ]
-          }
-        ]
+                  { label: "Submenu 2.2.2", icon: "pi pi-fw pi-bookmark" },
+                ],
+              },
+            ],
+          },
+        ],
       },
       {
         label: "Documentation",
         icon: "pi pi-fw pi-question",
         command: () => {
           window.location = "#/documentation";
-        }
+        },
       },
       {
         label: "View Source",
         icon: "pi pi-fw pi-search",
         command: () => {
           window.location = "https://github.com/primefaces/sigma";
-        }
-      }
+        },
+      },
     ];
   }
 
@@ -244,9 +244,9 @@ class App extends Component {
       element.className = element.className.replace(
         new RegExp(
           "(^|\\b)" + className.split(" ").join("|") + "(\\b|$)",
-          "gi"
+          "gi",
         ),
-        " "
+        " ",
       );
   }
 
@@ -270,12 +270,12 @@ class App extends Component {
         this.state.staticMenuInactive && this.state.layoutMode === "static",
       "layout-overlay-sidebar-active":
         this.state.overlayMenuActive && this.state.layoutMode === "overlay",
-      "layout-mobile-sidebar-active": this.state.mobileMenuActive
+      "layout-mobile-sidebar-active": this.state.mobileMenuActive,
     });
 
     const sidebarClassName = classNames("layout-sidebar", {
       "layout-sidebar-dark": this.state.layoutColorMode === "dark",
-      "layout-sidebar-light": this.state.layoutColorMode === "light"
+      "layout-sidebar-light": this.state.layoutColorMode === "light",
     });
 
     return (
@@ -291,7 +291,9 @@ class App extends Component {
           onClick={this.onSidebarClick}
         >
           <div className="layout-logo fixed-top w-coad-logo d-none d-sm-block">
-            <NavLink to="/" alt="Home"><img alt="Logo" src={LOGO} /></NavLink>
+            <NavLink to="/" alt="Home">
+              <img alt="Logo" src={LOGO} />
+            </NavLink>
           </div>
           <AppProfile />
           <AppMenu model={this.menu} onMenuItemClick={this.onMenuItemClick} />

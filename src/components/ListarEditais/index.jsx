@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Paginator } from 'primereact/paginator';
+import { Paginator } from "primereact/paginator";
 import "./style.scss";
 import { redirect } from "../../utils/redirect";
 
 const ListarEditais = ({ editais, totalEditais, mudarPagina, loading }) => {
-
   const [index, setIndex] = useState(0);
   const [expandedRows, setExpandedRows] = useState(null);
 
@@ -26,10 +25,10 @@ const ListarEditais = ({ editais, totalEditais, mudarPagina, loading }) => {
     );
   };
 
-  const mudaPagina = (event) => {
-    setIndex(event.first)
-    mudarPagina(event.page + 1)
-  }
+  const mudaPagina = event => {
+    setIndex(event.first);
+    mudarPagina(event.page + 1);
+  };
 
   return (
     <div>
@@ -40,26 +39,27 @@ const ListarEditais = ({ editais, totalEditais, mudarPagina, loading }) => {
         emptyMessage="Não existe informação para os critérios de busca utilizados"
         expandedRows={expandedRows}
         loading={loading}
-        onRowToggle={(e) => setExpandedRows(e.data)}
+        onRowToggle={e => setExpandedRows(e.data)}
         rowExpansionTemplate={rowExpansionTemplate}
         onRowClick={e => redirecionaEdital(e.data)}
+        selectionMode="single"
       >
-        <Column expander={true} style={{width: '5%'}}/>
+        <Column expander={true} style={{ width: "5%" }} />
         <Column field="numero" header="Nº do Edital" />
         <Column field="status" header="Status" />
         <Column field="tipo_contratacao" header="Tipo de contratação" />
         <Column field="data_homologacao" header="Data de Homologação" />
       </DataTable>
-      {editais.length < totalEditais && 
-          <Paginator
-            rows={10}
-            totalRecords={totalEditais}
-            onPageChange={(e) => mudaPagina(e)}
-            first={index}
-          />
-        }
+      {editais.length < totalEditais && (
+        <Paginator
+          rows={10}
+          totalRecords={totalEditais}
+          onPageChange={e => mudaPagina(e)}
+          first={index}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default ListarEditais;

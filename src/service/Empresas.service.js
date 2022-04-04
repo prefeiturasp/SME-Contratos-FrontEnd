@@ -4,7 +4,7 @@ import api from "./Api";
 
 export const getEmpresasLookup = () => {
   const AUTH_HEADER = {
-    headers: getHeaderToken()
+    headers: getHeaderToken(),
   };
   return api
     .get(`${CONFIG.API_URL}/empresas/lookup/`, AUTH_HEADER)

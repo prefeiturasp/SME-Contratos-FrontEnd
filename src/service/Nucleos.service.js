@@ -4,7 +4,7 @@ import * as CONFIG from "../configs/config.constants";
 
 export const getNucleos = () => {
   const AUTH_HEADER = {
-    headers: getHeaderToken()
+    headers: getHeaderToken(),
   };
 
   return api

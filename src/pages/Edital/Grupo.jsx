@@ -9,7 +9,7 @@ import { InputText } from "primereact/inputtext";
 import EditorHeader from "../../components/Shared/EditorHeader";
 import * as R from "ramda";
 
-const Grupo = (props) => {
+const Grupo = props => {
   const [grupo, setGrupo] = useState({});
   const [visivel, setVisivel] = useState(false);
   const [itens, setItens] = useState([]);
@@ -26,7 +26,7 @@ const Grupo = (props) => {
     }
   }, [props.grupo, grupo.itens_de_obrigacao]);
 
-  const editaNomeGrupo = (value) => {
+  const editaNomeGrupo = value => {
     grupo.nome = value;
     setGrupo({ ...grupo });
     props.editar(props.index, grupo);
@@ -43,7 +43,7 @@ const Grupo = (props) => {
     );
   };
 
-  const populaModal = (conteudo, coluna) => {
+  const populaModal = conteudo => {
     abrirDialog();
     setNovoItem(conteudo.item);
     setNovaDescricao(conteudo.descricao);
@@ -71,8 +71,8 @@ const Grupo = (props) => {
       R.update(
         R.indexOf(itemSelecionado, itens),
         { item: novoItem, descricao: novaDescricao },
-        itens
-      )
+        itens,
+      ),
     );
   };
 
@@ -80,7 +80,7 @@ const Grupo = (props) => {
     atualizaEstado(R.remove(R.indexOf(itemSelecionado, itens), 1, itens));
   };
 
-  const atualizaEstado = (itens) => {
+  const atualizaEstado = itens => {
     setItens(itens);
     fecharDialog();
     grupo.itens_de_obrigacao = itens;
@@ -88,12 +88,16 @@ const Grupo = (props) => {
     props.editar(props.index, grupo);
   };
 
-  const descricaoTemplate = (rowData, column) => {
-    return <div className="mt-3" dangerouslySetInnerHTML={{ __html: rowData.descricao }} />;
+  const descricaoTemplate = rowData => {
+    return (
+      <div
+        className="mt-3"
+        dangerouslySetInnerHTML={{ __html: rowData.descricao }}
+      />
+    );
   };
 
-  const habilitaBotao =
-    props.modoVisualizacao === false && grupo.nome;
+  const habilitaBotao = props.modoVisualizacao === false && grupo.nome;
   const footerVazio =
     "Ainda não existem itens de obrigação adicionados ao edital.";
 
@@ -113,7 +117,7 @@ const Grupo = (props) => {
             <br />
             <InputText
               value={novoItem}
-              onChange={(e) => setNovoItem(e.target.value || "")}
+              onChange={e => setNovoItem(e.target.value || "")}
               placeholder="Digitar item"
               className="w-100"
             />
@@ -126,7 +130,7 @@ const Grupo = (props) => {
                 style={{ height: "120px" }}
                 value={novaDescricao}
                 headerTemplate={<EditorHeader />}
-                onTextChange={(e) => setNovaDescricao(e.htmlValue || "")}
+                onTextChange={e => setNovaDescricao(e.htmlValue || "")}
                 className="editor-coad"
               />
             </FormGroup>
@@ -171,7 +175,7 @@ const Grupo = (props) => {
         <Input
           value={grupo.nome || ""}
           autoFocus
-          onChange={(e) => editaNomeGrupo(e.target.value)}
+          onChange={e => editaNomeGrupo(e.target.value)}
           autoComplete="Off"
           disabled={props.modoVisualizacao}
         />
@@ -212,7 +216,10 @@ const Grupo = (props) => {
           </DataTable>
         ) : (
           <div>
-            <DataTable emptyMessage={footerVazio} className="datatable-footer-coad ">
+            <DataTable
+              emptyMessage={footerVazio}
+              className="datatable-footer-coad "
+            >
               <Column header="" style={{ width: "5em" }} />
               <Column header="Itens de obrigação" />
               <Column header="" style={{ width: "7em" }} />

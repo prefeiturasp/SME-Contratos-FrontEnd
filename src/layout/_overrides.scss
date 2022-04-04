@@ -5,7 +5,8 @@ $blueHight: #064f79;
 $whiteColor: #ffffff;
 $hoverColor: #431e1e;
 
-.layout-wrapper, .p-dialog-mask {
+.layout-wrapper,
+.p-dialog-mask {
   background-color: #f2f2f2;
   .layout-topbar {
     z-index: 1000;
@@ -100,7 +101,7 @@ $hoverColor: #431e1e;
     background-color: $whiteColor;
     font-weight: bold;
   }
-  
+
   .btn-coad-blue {
     border-color: $blue;
     color: $blue !important;
@@ -165,14 +166,15 @@ $hoverColor: #431e1e;
     background-color: #602a2a !important;
   }
 
-  .field-checkbox, .field-radiobutton{
+  .field-checkbox,
+  .field-radiobutton {
     display: flex;
     align-items: center;
   }
 
-  .p-radiobutton-icon{
+  .p-radiobutton-icon {
     height: 8px !important;
-    width:  8px !important;;
+    width: 8px !important;
   }
 
   .p-paginator-element {
@@ -267,5 +269,21 @@ $hoverColor: #431e1e;
   .p-editor-toolbar {
     background-color: #ffffff !important;
     border: none !important;
+  }
+}
+
+.p-toast {
+  width: 40vw;
+}
+
+.layout-topbar {
+  .layout-topbar-icons {
+    button {
+      span {
+        &.layout-topbar-icon {
+          font-size: 1.2em;
+        }
+      }
+    }
   }
 }

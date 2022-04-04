@@ -3,7 +3,7 @@ import { Row, Col, Card } from "reactstrap";
 import { formatadoMonetario, formatadorDeData } from "../../utils/formatador";
 import { corDoPrazo, corDoEstado } from "./helpers";
 
-export const formataContagemVencimento = (dias) => {
+export const formataContagemVencimento = dias => {
   switch (true) {
     case dias === undefined:
       return "";
@@ -14,7 +14,7 @@ export const formataContagemVencimento = (dias) => {
   }
 };
 
-export default (props) => {
+export default props => {
   const {
     tipoServico,
     situacaoContratual,
@@ -42,7 +42,12 @@ export default (props) => {
                 {situacaoContratual}
               </h2>
               <b>Estado de Contrato:</b>{" "}
-              <span style={{ color: corDoEstado(estadoContrato), fontWeight: "bold" }}>
+              <span
+                style={{
+                  color: corDoEstado(estadoContrato),
+                  fontWeight: "bold",
+                }}
+              >
                 {estadoContrato}
               </span>
             </Col>

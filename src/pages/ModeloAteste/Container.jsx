@@ -8,7 +8,7 @@ import { Alert } from "reactstrap";
 import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
 import $ from "jquery";
 
-const ModeloAteste = props => {
+const ModeloAteste = () => {
   const [modelo, setModelo] = useState({});
   const [alerta, setAlerta] = useState(false);
   const [alertaDuplicar, setAlertaDuplicar] = useState(true);
@@ -34,15 +34,12 @@ const ModeloAteste = props => {
     }
   });
 
-  const mostraAlerta = useCallback(
-    event => {
-      setAlerta(true);
-      setTimeout(() => {
-        setAlerta(false);
-      }, 5000);
-    },
-    []
-  );
+  const mostraAlerta = useCallback(() => {
+    setAlerta(true);
+    setTimeout(() => {
+      setAlerta(false);
+    }, 5000);
+  }, []);
 
   const fechaAlerta = () => setAlerta(false);
 

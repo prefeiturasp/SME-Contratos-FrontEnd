@@ -11,12 +11,12 @@ const SelecionaEdital = ({ disabled, editalSalvo, value, onSelect }) => {
       try {
         const editais = await getListaDeEditais();
         setEditais(editais);
-        if(editalSalvo){
-          const arr = editais.filter(el => el.uuid === editalSalvo.uuid)
-          if(arr.length) onSelect({ value: arr[0] })
+        if (editalSalvo) {
+          const arr = editais.filter(el => el.uuid === editalSalvo.uuid);
+          if (arr.length) onSelect({ value: arr[0] });
         }
       } catch (erro) {
-        console.error(erro);
+        throw erro;
       }
     })();
   }, [editalSalvo, onSelect]);

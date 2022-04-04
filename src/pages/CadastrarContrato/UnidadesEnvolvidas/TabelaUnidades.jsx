@@ -1,11 +1,8 @@
 import React from "react";
 
-export const TabelaUnidades = (props) => {
-  const {
-    disabilitado,
-    unidadesSelecionadas,
-    removerUnidadeSelecionada,
-  } = props;
+export const TabelaUnidades = props => {
+  const { disabilitado, unidadesSelecionadas, removerUnidadeSelecionada } =
+    props;
   return (
     unidadesSelecionadas &&
     unidadesSelecionadas.length > 0 && (

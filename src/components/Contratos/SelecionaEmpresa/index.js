@@ -13,7 +13,7 @@ export class SelecionaEmpresa extends Component {
 
   async componentDidMount() {
     const empresas = await getEmpresasLookup();
-    this.setState({ empresas: comNomeUnico(empresas)});
+    this.setState({ empresas: comNomeUnico(empresas) });
   }
 
   selecionaEmpresa(event) {

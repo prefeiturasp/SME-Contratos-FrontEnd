@@ -6,13 +6,12 @@ import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
 import { Messages } from "primereact/messages";
 
 export default class ListarModelosAtestePage extends Component {
-
   mensagemAlerta = () => {
     if (hasFlashMessage("sucesso")) {
       this.messages.show({
         severity: "success",
         life: 10000,
-        detail: getFlashMessage("sucesso")
+        detail: getFlashMessage("sucesso"),
       });
     }
 
@@ -20,15 +19,15 @@ export default class ListarModelosAtestePage extends Component {
       this.messages.show({
         severity: "error",
         life: 10000,
-        detail: getFlashMessage("error")
+        detail: getFlashMessage("error"),
       });
     }
-    
+
     if (hasFlashMessage("warning")) {
       this.messages.show({
         severity: "warn",
         life: 10000,
-        detail: getFlashMessage("warning")
+        detail: getFlashMessage("warning"),
       });
     }
   };

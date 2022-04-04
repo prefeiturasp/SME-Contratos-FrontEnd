@@ -8,7 +8,7 @@ export default class SelecionarNucleos extends Component {
 
     this.state = {
       options: [],
-      selected: null
+      selected: null,
     };
   }
 
@@ -23,7 +23,7 @@ export default class SelecionarNucleos extends Component {
     nucleos.map(value => {
       return options.push({
         label: `${value.sigla} (${value.nome})`,
-        value: value.uuid
+        value: value.uuid,
       });
     });
     this.setState({ options });
@@ -51,7 +51,7 @@ export default class SelecionarNucleos extends Component {
         >
           {options.map((value, key) => {
             return (
-              <option  key={key} value={value.value}>
+              <option key={key} value={value.value}>
                 {value.label}
               </option>
             );

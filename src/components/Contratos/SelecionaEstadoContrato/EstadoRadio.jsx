@@ -5,7 +5,7 @@ import { FormGroup, Label, Input } from "reactstrap";
 class EstadoRadio extends Component {
   state = {
     estados: [],
-    estadoSelecionada: null
+    estadoSelecionada: null,
   };
 
   selecionaEstado(event) {

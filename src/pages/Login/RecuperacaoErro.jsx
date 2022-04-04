@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Button } from "primereact/button";
 import { redirect } from "../../utils/redirect";
 
-const RecuperacaoErro = props => {
+const RecuperacaoErro = () => {
   return (
     <Fragment>
       <h3 className="my-4 w-100 text-center" style={{ fontWeight: "bold" }}>

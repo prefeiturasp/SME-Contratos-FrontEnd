@@ -11,7 +11,7 @@ const LIMITE_TEMPO_REFRESH_TOKEN = 10 * 60; // 10 minutos
 
 const authHeader = {
   "Content-Type": "application/json",
-  Accept: "application/json"
+  Accept: "application/json",
 };
 
 export const login = async (username, password) => {
@@ -19,7 +19,7 @@ export const login = async (username, password) => {
     const OBJ_REQUEST = {
       headers: authHeader,
       method: "POST",
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password }),
     };
     const response = await fetch(CONFIG.JWT_AUTH, OBJ_REQUEST);
     if (validaResposta(response.status)) {
@@ -31,7 +31,6 @@ export const login = async (username, password) => {
     }
     return false;
   } catch (error) {
-    console.error("Error ao tentar logar: ", error);
     return false;
   }
 };
@@ -39,7 +38,7 @@ export const login = async (username, password) => {
 const primeiroAcesso = async username => {
   try {
     const response = await fetch(
-      `${CONFIG.API_URL}/usuarios/${username}/primeiro-acesso/`
+      `${CONFIG.API_URL}/usuarios/${username}/primeiro-acesso/`,
     );
     const json = await response.json();
     return json;
@@ -53,11 +52,11 @@ export const trocarSenha = async (password, password2, username) => {
     const OBJ_REQUEST = {
       headers: authHeader,
       method: "PATCH",
-      body: JSON.stringify({ username, password, password2 })
+      body: JSON.stringify({ username, password, password2 }),
     };
     const response = await fetch(
       `${CONFIG.API_URL}/usuarios/${username}/troca-senha/`,
-      OBJ_REQUEST
+      OBJ_REQUEST,
     );
     const json = await response.json();
     return json;
@@ -71,11 +70,11 @@ export const esqueciMinhaSenha = async username => {
     const OBJ_REQUEST = {
       headers: authHeader,
       method: "PATCH",
-      body: JSON.stringify({ username })
+      body: JSON.stringify({ username }),
     };
     const response = await fetch(
       `${CONFIG.API_URL}/esqueci-minha-senha/${username}/`,
-      OBJ_REQUEST
+      OBJ_REQUEST,
     );
     const json = await response;
     return json;
@@ -89,11 +88,11 @@ export const redefinirSenha = async (password, password2, hash_redefinicao) => {
     const OBJ_REQUEST = {
       headers: authHeader,
       method: "POST",
-      body: JSON.stringify({ hash_redefinicao, password, password2 })
+      body: JSON.stringify({ hash_redefinicao, password, password2 }),
     };
     const response = await fetch(
       `${CONFIG.API_URL}/redefinir-senha/`,
-      OBJ_REQUEST
+      OBJ_REQUEST,
     );
     const json = await response.json();
     return { status: response.status, detail: json.detail };
@@ -113,7 +112,7 @@ export const isAuthenticated = () => {
   if (localStorage.getItem(TOKEN_ALIAS)) {
     return true;
   }
-  saveLocation()
+  saveLocation();
   return false;
 };
 
@@ -128,7 +127,7 @@ export const getUsuario = () => {
 export const getHeaderToken = () => ({
   "Content-Type": "application/json",
   Accept: "application/json",
-  Authorization: `JWT ${getToken()}`
+  Authorization: `JWT ${getToken()}`,
 });
 
 export const isPrimeiroAcesso = () => {
@@ -151,14 +150,14 @@ const getTokenDecoded = () => {
 export const refreshToken = async () => {
   try {
     const AUTH_HEADER = {
-      headers: getHeaderToken()
+      headers: getHeaderToken(),
     };
 
     const payload = { token: getToken() };
     const response = await axios.post(
       `${CONFIG.API_URL}/api-token-refresh/`,
       payload,
-      AUTH_HEADER
+      AUTH_HEADER,
     );
     const newToken = response.data;
     replaceToken(newToken.token);
@@ -171,14 +170,14 @@ export const refreshToken = async () => {
 export const verifyToken = async () => {
   try {
     const AUTH_HEADER = {
-      headers: getHeaderToken()
+      headers: getHeaderToken(),
     };
 
     const payload = { token: getToken() };
     const response = await axios.post(
       `${CONFIG.API_URL}/api-token-verify/`,
       payload,
-      AUTH_HEADER
+      AUTH_HEADER,
     );
 
     if (checkTimeLeft() <= LIMITE_TEMPO_REFRESH_TOKEN) {

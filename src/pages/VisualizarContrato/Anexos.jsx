@@ -15,7 +15,7 @@ class Anexos extends Component {
     docsDres: [],
     docsUnidades: [],
     docsOutros: [],
-    uuidContrato: null
+    uuidContrato: null,
   };
 
   carregaAnexosContrato = async () => {
@@ -42,32 +42,32 @@ class Anexos extends Component {
     });
   };
 
-  getUploadParamsDre = ({ file, meta }) => {
+  getUploadParamsDre = ({ file }) => {
     const { uuidContrato, url } = this.state;
     const fields = {
       anexo: file,
       contrato: uuidContrato,
-      tipo_unidade: "FISCAL_DRE"
+      tipo_unidade: "FISCAL_DRE",
     };
     return { fields, url: url };
   };
 
-  getUploadParamsUnidade = ({ file, meta }) => {
+  getUploadParamsUnidade = ({ file }) => {
     const { uuidContrato, url } = this.state;
     const fields = {
       anexo: file,
       contrato: uuidContrato,
-      tipo_unidade: "FISCAL_UNIDADE"
+      tipo_unidade: "FISCAL_UNIDADE",
     };
     return { fields, url: url };
   };
 
-  getUploadParamsOutros = ({ file, meta }) => {
+  getUploadParamsOutros = ({ file }) => {
     const { uuidContrato, url } = this.state;
     const fields = {
       anexo: file,
       contrato: uuidContrato,
-      tipo_unidade: "FISCAL_OUTROS"
+      tipo_unidade: "FISCAL_OUTROS",
     };
     return { fields, url: url };
   };
@@ -102,7 +102,7 @@ class Anexos extends Component {
                     {docsDres
                       ? docsDres.map((file, i) => {
                           return (
-                            <Col xl={12} lg={12}>
+                            <Col xl={12} lg={12} key={i}>
                               <a
                                 className="text-danger"
                                 href={file.href}
@@ -136,7 +136,7 @@ class Anexos extends Component {
                     {docsUnidades
                       ? docsUnidades.map((file, i) => {
                           return (
-                            <Col xl={12} lg={12}>
+                            <Col xl={12} lg={12} key={i}>
                               <a
                                 className="text-danger"
                                 href={file.href}
@@ -168,24 +168,24 @@ class Anexos extends Component {
                   disabled={disabilitado}
                 />
                 <Row className="mt-2">
-                    {docsOutros
-                      ? docsOutros.map((file, i) => {
-                          return (
-                            <Col xl={12} lg={12}>
-                              <a
-                                className="text-danger"
-                                href={file.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <i className="fas fa-xl fa-paperclip"></i>{" "}
-                                {file.name}
-                              </a>
-                            </Col>
-                          );
-                        })
-                      : ""}
-                  </Row>
+                  {docsOutros
+                    ? docsOutros.map((file, i) => {
+                        return (
+                          <Col xl={12} lg={12} key={i}>
+                            <a
+                              className="text-danger"
+                              href={file.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <i className="fas fa-xl fa-paperclip"></i>{" "}
+                              {file.name}
+                            </a>
+                          </Col>
+                        );
+                      })
+                    : ""}
+                </Row>
               </Col>
             </Row>
           }

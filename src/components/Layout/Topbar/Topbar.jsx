@@ -15,7 +15,6 @@ export default class Topbar extends Component {
   };
 
   render() {
-    const { HandleLogout } = this.props;
     return (
       <div className="position-fixed fixed-top w-100">
         <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -57,7 +56,9 @@ export default class Topbar extends Component {
                 {/* <i className="fas fa-question"></i> */}
                 <img src={ajuda} alt="Ajuda" />
               </NavLink>
-              <p className="coad-text-sm d-flex justify-content-center align-items-center">Ajuda</p>
+              <p className="coad-text-sm d-flex justify-content-center align-items-center">
+                Ajuda
+              </p>
             </li>
             <li className="nav-item dropdown no-arrow mx-2">
               <NavLink className="nav-link dropdown-toggle coad-height-bt mt-4">
@@ -70,7 +71,9 @@ export default class Topbar extends Component {
               <NavLink className="nav-link dropdown-toggle coad-height-bt mt-4">
                 <img src={gestor} alt="Gestor" />
               </NavLink>
-              <p className="coad-text-sm d-flex justify-content-center align-items-center">Gestor</p>
+              <p className="coad-text-sm d-flex justify-content-center align-items-center">
+                Gestor
+              </p>
             </li>
             <li className="nav-item dropdown no-arrow mx-2">
               <NavLink
@@ -80,7 +83,9 @@ export default class Topbar extends Component {
               >
                 <img src={sair} alt="Sair" />
               </NavLink>
-              <p className="coad-text-sm d-flex justify-content-center align-items-center">Sair</p>
+              <p className="coad-text-sm d-flex justify-content-center align-items-center">
+                Sair
+              </p>
             </li>
           </ul>
         </nav>

@@ -30,14 +30,18 @@ export const mapStateToPayload = (state, dotacoesState) => {
       unidades_selecionadas: state.unidades_selecionadas,
       unidade_vigencia: state.unidade_vigencia,
       referencia_encerramento: state.referencia_encerramento,
-      edital: state.alteracaoEdital ? state.alteracaoEdital.uuid : (state.contrato.edital ? state.contrato.edital.uuid : null )
+      edital: state.alteracaoEdital
+        ? state.alteracaoEdital.uuid
+        : state.contrato.edital
+        ? state.contrato.edital.uuid
+        : null,
     };
   }
 
   return payload;
 };
 
-export const corDoPrazo = (dias) => {
+export const corDoPrazo = dias => {
   switch (true) {
     case dias <= 30:
       return Cor.vermelho;
@@ -48,7 +52,7 @@ export const corDoPrazo = (dias) => {
   }
 };
 
-export const corDoEstado = (status) => {
+export const corDoEstado = status => {
   switch (status.toLowerCase()) {
     case "ativo":
       return Cor.verde;
@@ -57,10 +61,10 @@ export const corDoEstado = (status) => {
   }
 };
 
-export const getUnidadesSelecionadas = (contrato) => {
+export const getUnidadesSelecionadas = contrato => {
   let unidades = [];
-  contrato.lotes.forEach((lote) => {
-    lote.unidades.forEach((unidade) => {
+  contrato.lotes.forEach(lote => {
+    lote.unidades.forEach(unidade => {
       unidades.push({
         lote: lote.nome,
         suplentes: lote.suplentes,
