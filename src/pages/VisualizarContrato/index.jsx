@@ -226,17 +226,15 @@ class VisualizarContratos extends Component {
 
   habilitarEdicao = () => {
     this.setState({ disabilitado: !this.state.disabilitado });
-    {
-      this.state.contrato.edital
-        ? $(".ql-editor").prop(
-            "contenteditable",
-            !this.state.disabilitado.toString(),
-          )
-        : $(".ql-editor").prop(
-            "contenteditable",
-            this.state.disabilitado.toString(),
-          );
-    }
+    this.state.contrato.edital
+      ? $(".ql-editor").prop(
+          "contenteditable",
+          !this.state.disabilitado.toString(),
+        )
+      : $(".ql-editor").prop(
+          "contenteditable",
+          this.state.disabilitado.toString(),
+        );
   };
 
   handleSubmit = async () => {
