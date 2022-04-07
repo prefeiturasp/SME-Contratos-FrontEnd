@@ -4,9 +4,11 @@ import Container from "../../components/Global/Container";
 import CardSuperior from "./CardSuperior";
 import { Toast } from "primereact/toast";
 import CoadAccordion from "../../components/Global/CoadAccordion";
+import { SelecionaTipoServico } from "../../components/Contratos/SelecionaTipoServico";
 import { Button, Col, Row, FormGroup, Label, Card, Input } from "reactstrap";
 import { Editor } from "primereact/editor";
 import { Dropdown } from "primereact/dropdown";
+import EditorHeader from "../../components/Shared/EditorHeader";
 import Anexos from "./Anexos";
 import {
   getContratoByUUID,
@@ -32,12 +34,13 @@ import { Dialog } from "primereact/dialog";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
 import ListarObrigacoesContratuais from "../../components/Contratos/ListarObrigacoesContratuais";
 import DotacaoOrcamentaria from "../CadastrarContrato/DotacaoOrcamentaria";
-import { Switch } from "antd";
+import { Button as AntButton, Switch } from "antd";
 import $ from "jquery";
 import moment from "moment";
-import { OK } from "http-status-codes";
+import { criaTipoServico } from "../../service/TiposServico.service";
+import { BAD_REQUEST, CREATED, OK } from "http-status-codes";
 import { UnidadesEnvolvidas } from "../CadastrarContrato/UnidadesEnvolvidas";
-import SelecionaEdital from "../../components/Contratos/SelecionaEdital";
+import { SelecionaEdital } from "../../components/Contratos/SelecionaEditalContrato";
 
 const nullToUndef = v => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
@@ -61,7 +64,6 @@ class VisualizarContratos extends Component {
       data_assinatura: null,
       situacao: null,
       empresa_contratada: {},
-      objeto: "",
       observacoes: "",
       situacaoContrato: [],
       gestor: null,
@@ -85,9 +87,16 @@ class VisualizarContratos extends Component {
       unidade_vigencia: "DIAS",
       edital: null,
       alteracaoEdital: null,
+      objeto_edital: null,
+      objeto: "",
+      descricao_objeto_edital: "",
+      descricao_objeto_contrato: "",
+      modalCadastrarObjeto: false,
+      novoObjeto: "",
     };
     this.dotacoesRef = React.createRef();
     this.toast = React.createRef();
+    this.tipoServico = React.createRef();
     addLocale("pt", CALENDAR_PT);
   }
 
@@ -121,7 +130,9 @@ class VisualizarContratos extends Component {
   }
 
   propsToState = contrato => {
-    const tipo_servico = contrato.tipo_servico || { nome: "", uuid: "" };
+    const tipo_servico = contrato.edital
+      ? contrato.edital.objeto
+      : contrato.tipo_servico || { nome: "", uuid: "" };
     const empresa_contratada = contrato.empresa_contratada || { nome: "" };
     this.setState({
       tipoServico: tipo_servico.nome,
@@ -143,7 +154,6 @@ class VisualizarContratos extends Component {
       processo: contrato.processo,
       empresa_contratada: empresa_contratada,
       totalMensal: contrato.total_mensal,
-      objeto: contrato.objeto,
       observacoes: contrato.observacoes,
       gestor: contrato.gestor ? contrato.gestor.uuid : "",
       nucleo: contrato.nucleo_responsavel
@@ -158,6 +168,16 @@ class VisualizarContratos extends Component {
       valor_total: parseFloat(contrato.valor_total),
       unidade_vigencia: contrato.unidade_vigencia,
       edital: contrato.edital,
+      objeto_edital: contrato.edital ? contrato.edital.objeto : null,
+      objeto: contrato.edital
+        ? contrato.edital.descricao_objeto
+        : contrato.objeto,
+      descricao_objeto_edital: contrato.edital
+        ? contrato.edital.descricao_objeto
+        : "",
+      descricao_objeto_contrato: contrato.edital
+        ? contrato.edital.descricao_objeto
+        : contrato.objeto,
     });
   };
 
@@ -206,7 +226,17 @@ class VisualizarContratos extends Component {
 
   habilitarEdicao = () => {
     this.setState({ disabilitado: !this.state.disabilitado });
-    $(".ql-editor").prop("contenteditable", this.state.disabilitado.toString());
+    {
+      this.state.contrato.edital
+        ? $(".ql-editor").prop(
+            "contenteditable",
+            !this.state.disabilitado.toString(),
+          )
+        : $(".ql-editor").prop(
+            "contenteditable",
+            this.state.disabilitado.toString(),
+          );
+    }
   };
 
   handleSubmit = async () => {
@@ -216,6 +246,7 @@ class VisualizarContratos extends Component {
       : null;
     const payload = mapStateToPayload(this.state, dotacoesState);
     this.setState({ disabilitado: true });
+    this.setState({ visible: false });
     this.toast.show({
       severity: "success",
       summary: "Sucesso",
@@ -263,11 +294,41 @@ class VisualizarContratos extends Component {
   cancelaAtualizacao = () => {
     this.setState({ visible: false });
   };
+  cancelaModalObjeto = () => {
+    this.setState({ modalCadastrarObjeto: false });
+  };
+
+  CadastraObjeto = async () => {
+    this.setState({ modalCadastrarObjeto: false });
+    try {
+      const resultado = await criaTipoServico({ nome: this.state.novoObjeto });
+      if (resultado.status === CREATED) {
+        this.tipoServico.current.buscaTiposServico();
+        this.toast.show({
+          severity: "success",
+          summary: "Sucesso",
+          detail: "Objeto cadastrado com sucesso!",
+          life: 7000,
+        });
+      }
+    } catch (erro) {
+      if (erro.response && erro.response.status === BAD_REQUEST) {
+        this.toast.show({
+          severity: "error",
+          summary: "Erro",
+          detail: erro.response.data,
+          life: 7000,
+        });
+      }
+    }
+    this.setState({ novoObjeto: "" });
+  };
 
   render() {
     const {
       contrato,
       tipoServico,
+      tipo_servico,
       nomeEmpresa,
       termo_contrato,
       situacao,
@@ -275,7 +336,6 @@ class VisualizarContratos extends Component {
       data_ordem_inicio,
       data_assinatura,
       empresa_contratada,
-      objeto,
       observacoes,
       gestor,
       nucleo,
@@ -292,6 +352,12 @@ class VisualizarContratos extends Component {
       dataEncerramento,
       valor_total,
       unidade_vigencia,
+      edital,
+      objeto_edital,
+      descricao_objeto_edital,
+      descricao_objeto_contrato,
+      modalCadastrarObjeto,
+      novoObjeto,
     } = this.state;
     return (
       <>
@@ -334,6 +400,44 @@ class VisualizarContratos extends Component {
               Foram feitas alterações em contrato. Deseja aplicá-las em
               documento?
             </Dialog>
+
+            <Dialog
+              header="Adicionar objeto"
+              visible={modalCadastrarObjeto}
+              style={{ width: "60vw" }}
+              modal={true}
+              footer={
+                <div>
+                  <button
+                    className="btn btn-coad-background-outline"
+                    onClick={() => this.cancelaModalObjeto()}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={this.CadastraObjeto}
+                    className="btn btn-coad-primary"
+                    disabled={!novoObjeto.length}
+                  >
+                    Adicionar
+                  </button>
+                </div>
+              }
+              onHide={() => this.cancelaModalObjeto()}
+            >
+              <div>
+                <label htmlFor="objeto">Nome do objeto</label>
+                <br />
+                <InputText
+                  value={novoObjeto || ""}
+                  onChange={e =>
+                    this.setState({ novoObjeto: e.target.value.toUpperCase() })
+                  }
+                  className="w-100"
+                />
+              </div>
+            </Dialog>
+
             <Row className="mb-3">
               <Col lg={6}>
                 <Button
@@ -443,12 +547,24 @@ class VisualizarContratos extends Component {
               </Row>
               <Row>
                 <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                  <Label form="numeroEdital">Número do Edital</Label>
                   <SelecionaEdital
-                    editalSalvo={
-                      this.state.contrato ? this.state.contrato.edital : null
+                    id="numeroEdital"
+                    className="w-100"
+                    editalSalvo={edital}
+                    onSelect={value =>
+                      this.setState({
+                        alteracaoEdital: value,
+                        edital: value,
+                        objeto_edital: value.objeto,
+                        tipoServico: value.objeto.nome,
+                        descricao_objeto_edital: value.descricao_objeto,
+                        tipo_servico: value.objeto,
+                        tipo_servico_uuid: null,
+                        objeto: " ",
+                        descricao_objeto_contrato: value.descricao_objeto,
+                      })
                     }
-                    value={this.state.alteracaoEdital}
-                    onSelect={this.setEdital}
                     disabled={disabilitado}
                   />
                 </Col>
@@ -632,25 +748,99 @@ class VisualizarContratos extends Component {
                 disabled={disabilitado}
               />
             </CoadAccordion>
-            <CoadAccordion titulo={"Objeto de Contrato"}>
-              <Editor
-                style={{ height: "320px" }}
-                value={objeto}
-                // readOnly={disabilitado}
-                onTextChange={e => this.setState({ objeto: e.htmlValue })}
-                headerTemplate={
-                  <span className="ql-formats">
-                    <button className="ql-bold" aria-label="Bold"></button>
-                    <button className="ql-italic" aria-label="Italic"></button>
-                    <button
-                      className="ql-underline"
-                      aria-label="Underline"
-                    ></button>
-                    <button className="ql-list" value="ordered"></button>
-                    <button className="ql-list" value="bullet"></button>
-                  </span>
-                }
-              />
+            <CoadAccordion titulo="Objeto">
+              {contrato.edital ? (
+                <FormGroup>
+                  <div className="p-grid">
+                    <div className="p-col-6">
+                      <Label className="font-weight-bold">
+                        Categoria de objeto
+                      </Label>
+                      <SelecionaTipoServico
+                        className="w-100"
+                        tipoServico={objeto_edital}
+                        onSelect={e => this.setState({ objeto_edital: e })}
+                        disabled={true}
+                        ref={this.tipoServico}
+                      />
+                    </div>
+                    <div className="p-col-6 mt-4">
+                      <AntButton
+                        className="mt-2 font-weight-bold"
+                        disabled={true}
+                        type="link"
+                        size="small"
+                      >
+                        + Cadastrar novo
+                      </AntButton>
+                    </div>
+                    <div className="p-col-12">
+                      <Label className="font-weight-bold">
+                        Descrição do objeto do edital
+                      </Label>
+                      <Editor
+                        style={{ height: "120px" }}
+                        value={descricao_objeto_edital}
+                        headerTemplate={<EditorHeader />}
+                        readOnly={!disabilitado}
+                      />
+                    </div>
+                  </div>
+                </FormGroup>
+              ) : (
+                <FormGroup>
+                  <div className="p-grid">
+                    <div className="p-col-6">
+                      <Label className="font-weight-bold">
+                        Categoria de objeto
+                      </Label>
+                      <SelecionaTipoServico
+                        className="w-100"
+                        tipoServico={tipo_servico}
+                        onSelect={value =>
+                          this.setState({
+                            tipo_servico: value,
+                            tipo_servico_uuid: value.uuid,
+                            tipoServico: value.nome,
+                          })
+                        }
+                        ref={this.tipoServico}
+                        disabled={disabilitado}
+                      />
+                    </div>
+                    <div className="p-col-6 mt-4">
+                      <AntButton
+                        className="mt-2 font-weight-bold"
+                        disabled={disabilitado}
+                        type="link"
+                        size="small"
+                        onClick={() =>
+                          this.setState({ modalCadastrarObjeto: true })
+                        }
+                      >
+                        + Cadastrar novo
+                      </AntButton>
+                    </div>
+                    <div className="p-col-12">
+                      <Label className="font-weight-bold">
+                        Descreva brevemente o objeto do contrato
+                      </Label>
+                      <Editor
+                        style={{ height: "120px" }}
+                        value={descricao_objeto_contrato}
+                        readOnly={!disabilitado}
+                        onTextChange={value =>
+                          this.setState({
+                            objeto: value.htmlValue,
+                            descricao_objeto_contrato: value.htmlValue,
+                          })
+                        }
+                        headerTemplate={<EditorHeader />}
+                      />
+                    </div>
+                  </div>
+                </FormGroup>
+              )}
             </CoadAccordion>
             <CoadAccordion titulo={"Obrigações Contratuais"}>
               <ListarObrigacoesContratuais
