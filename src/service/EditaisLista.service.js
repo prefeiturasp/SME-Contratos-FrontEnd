@@ -7,6 +7,6 @@ export const getListaDeEditais = () => {
     headers: getHeaderToken(),
   };
   return api
-    .get(`${CONFIG.API_URL}/editais/lista`, AUTH_HEADER)
+    .get(`${CONFIG.API_URL}/editais/lista/`, AUTH_HEADER)
     .then(res => res.data);
 };
