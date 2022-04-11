@@ -12,6 +12,8 @@ import ListarModelosAteste from "../pages/ListarModelosAteste";
 import Edital from "../pages/Edital";
 import ListarEditais from "../pages/ListarEditais";
 import GestaoContratos from "../pages/GestaoContratos";
+import ListarAtas from "../pages/ListarAtas";
+import Atas from "../pages/Atas";
 
 const RoutesConfig = [
   {
@@ -52,6 +54,16 @@ const RoutesConfig = [
   {
     path: "/gestao-contratos",
     component: GestaoContratos,
+    exact: false,
+  },
+  {
+    path: "/listar-atas",
+    component: ListarAtas,
+    exact: false,
+  },
+  {
+    path: "/atas",
+    component: Atas,
     exact: false,
   },
   {
@@ -102,6 +114,11 @@ export const MenuConfig = [
         label: "Editais",
         icon: "pi pi-cog pi-th-large",
         to: "/listar-editais",
+      },
+      {
+        label: "Atas",
+        icon: "pi pi-cog pi-th-large",
+        to: "/listar-atas",
       },
       {
         label: "Atribuição Termo Contratos",

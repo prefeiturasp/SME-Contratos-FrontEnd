@@ -17,7 +17,6 @@ export const ToastContextProvider = ({ children }) => {
       summary: titulo,
       detail: mensagem,
       life: 7000,
-      sticky: true,
     });
   };
 
