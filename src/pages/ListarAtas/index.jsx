@@ -15,7 +15,7 @@ export default () => {
             <span className="float-right">
               <Button
                 icon="pi pi-file"
-                label="Criar Ata"
+                label="Nova Ata"
                 style={{ marginBottom: ".80em" }}
                 className="btn-coad-background-outline"
                 onClick={() => {
