@@ -6,7 +6,7 @@ import { Row, Col } from "reactstrap";
 
 import SelecionaTipoEdital from "../SelecionaTipoEdital";
 import { SelecionaTipoServico } from "../SelecionaTipoServico";
-import { SelecionaDataContrato } from "../SelecionaDataContrato";
+import { SelecionaData } from "../SelecionaData";
 import { redirect } from "../../../utils/redirect";
 import "./style.scss";
 import SelecionaSituacaoEdital from "../SelecionaSituacaoEdital";
@@ -131,16 +131,16 @@ export function BuscaEditaisForm({ onBuscarClick }) {
               <h6>Período de Homologação</h6>
               <div className="p-grid">
                 <div className="p-col-6">
-                  <SelecionaDataContrato
-                    tipo={"De"}
+                  <SelecionaData
+                    placeholder={"De"}
                     data={filtros.data_inicial}
                     maxDate={filtros.data_final}
                     onSelect={setaDataInicialContrato}
                   />
                 </div>
                 <div className="p-col-6">
-                  <SelecionaDataContrato
-                    tipo={"Até"}
+                  <SelecionaData
+                    placeholder={"Até"}
                     data={filtros.data_final}
                     minDate={filtros.data_inicial}
                     onSelect={setaDataFinalContrato}
