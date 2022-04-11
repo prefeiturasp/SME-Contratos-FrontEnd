@@ -3,7 +3,7 @@ import { Calendar } from "primereact/calendar";
 import { CALENDAR_PT } from "../../../configs/config.constants";
 import { addLocale } from "primereact/api";
 
-export class SelecionaDataContrato extends Component {
+export class SelecionaData extends Component {
   constructor() {
     super();
     this.state = {};
@@ -17,6 +17,7 @@ export class SelecionaDataContrato extends Component {
   render() {
     return (
       <Calendar
+        {...this.props}
         value={this.props.data}
         onChange={event => this.setaData(event)}
         minDate={new Date(this.props.minDate)}
@@ -24,7 +25,7 @@ export class SelecionaDataContrato extends Component {
         locale="pt"
         dateFormat="dd/mm/yy"
         showIcon={true}
-        placeholder={this.props.tipo}
+        placeholder={this.props.placeholder}
         showButtonBar={true}
       />
     );

@@ -6,7 +6,7 @@ import { InputMask } from "primereact/inputmask";
 import { SelecionaEmpresa } from "../SelecionaEmpresa";
 import { SelecionaSituacaoContrato } from "../SelecionaSituacaoContrato";
 import { SelecionaTipoServico } from "../SelecionaTipoServico";
-import { SelecionaDataContrato } from "../SelecionaDataContrato";
+import { SelecionaData } from "../SelecionaData";
 
 import "./style.scss";
 
@@ -127,16 +127,16 @@ export class BuscaContratosForm extends Component {
                 <h6>Período de Encerramento</h6>
                 <div className="p-grid">
                   <div className="p-col-6">
-                    <SelecionaDataContrato
-                      tipo={"De"}
+                    <SelecionaData
+                      placeholder={"De"}
                       data={this.state.data_inicial}
                       maxDate={this.state.data_final}
                       onSelect={this.setaDataInicialContrato.bind(this)}
                     />
                   </div>
                   <div className="p-col-6">
-                    <SelecionaDataContrato
-                      tipo={"Até"}
+                    <SelecionaData
+                      placeholder={"Até"}
                       data={this.state.data_final}
                       minDate={this.state.data_inicial}
                       onSelect={this.setaDataFinalContrato.bind(this)}
