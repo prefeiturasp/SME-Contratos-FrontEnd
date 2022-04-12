@@ -231,7 +231,7 @@ const Ata = () => {
             )}
           </Row>
           <br />
-          <CoadAccordion titulo="Informações Gerais">
+          <CoadAccordion aberto={true} titulo="Informações Gerais">
             <div className="p-grid">
               <div className="p-col-6">
                 <Label className="font-weight-bold w-100">Número da Ata</Label>
@@ -364,7 +364,7 @@ const Ata = () => {
             </div>
           </CoadAccordion>
 
-          <CoadAccordion titulo="Empresa Contratada">
+          <CoadAccordion aberto={true} titulo="Empresa Contratada">
             <div className="p-grid">
               <div className="p-col-6">
                 <Label className="font-weight-bold">Nome da Empresa</Label>
@@ -373,6 +373,7 @@ const Ata = () => {
                   empresa={ata.empresa}
                   onSelect={e => setAta({ ...ata, empresa: e })}
                   disabled={modoVisualizacao}
+                  filter
                 />
               </div>
 
