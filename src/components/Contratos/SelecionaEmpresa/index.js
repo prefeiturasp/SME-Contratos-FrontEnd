@@ -32,6 +32,7 @@ export class SelecionaEmpresa extends Component {
         autoWidth={false}
         placeholder="Selecione uma Empresa..."
         showClear={true}
+        emptyFilterMessage={"Nenhuma empresa encontrada"}
       />
     );
   }
