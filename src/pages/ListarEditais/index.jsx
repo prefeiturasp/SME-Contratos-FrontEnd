@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
-import ListaEditais from "../../components/ListarEditais";
+import ListaEditais from "../../components/Contratos/ListaEditais";
 import { Messages } from "primereact/messages";
 import { BuscaEditaisForm } from "../../components/Contratos/BuscaEditaisForm";
 import { getListaDeEditais } from "../../service/Editais.service";
