@@ -35,7 +35,6 @@ export default () => {
     filtrosAjustados.data_final = filtros.data_final
       ? filtros.data_final.value.toISOString().slice(0, 10)
       : "";
-    console.log(filtrosAjustados);
     return filtrosAjustados;
   };
 
