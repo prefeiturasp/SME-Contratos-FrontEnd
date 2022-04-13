@@ -12,7 +12,7 @@ import { redirect } from "../../../utils/redirect";
 import "./style.scss";
 import SelecionaSituacaoAta from "../SelecionaSituacaoAta";
 
-export function BuscaAtasForm({ onBuscarClick }) {
+export function BuscaAtasForm({ onBuscarClick, onLimparClick }) {
   const [filtros, setFiltros] = useState({});
 
   const setaSituacao = status => {
@@ -53,6 +53,7 @@ export function BuscaAtasForm({ onBuscarClick }) {
       data_inicial: "",
       data_final: "",
     });
+    onLimparClick();
   };
 
   const footer = (
