@@ -2,17 +2,47 @@ import React, { useState, useEffect } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import ListaAtas from "../../components/Contratos/ListaAtas";
-import { Col, Row } from "reactstrap";
-import { Button } from "primereact/button";
-import { redirect } from "../../utils/redirect";
+import { BuscaAtasForm } from "../../components/Contratos/BuscaAtasForm";
 import { getListaDeAtas } from "../../service/Atas.service";
 
 export default () => {
-  const filtrosIniciais = {};
+  const filtrosIniciais = {
+    numero: "",
+    objeto: "",
+    empresa: "",
+    cnpj_empresa: "",
+    status: "",
+    data_inicial: "",
+    data_final: "",
+  };
+
   const [filtros, setFiltros] = useState(filtrosIniciais);
   const [atas, setAtas] = useState([]);
   const [totalAtas, setTotalAtas] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const ajustarFiltros = filtros => {
+    let filtrosAjustados = { ...filtros };
+    filtrosAjustados.cnpj_empresa = filtros.cnpj_empresa
+      ? filtros.cnpj_empresa.replace(/\D+/g, "")
+      : "";
+    filtrosAjustados.empresa = filtros.empresa ? filtros.empresa.uuid : "";
+    filtrosAjustados.status = filtros.status ? filtros.status.id : "";
+    filtrosAjustados.objeto = filtros.objeto ? filtros.objeto.id : "";
+    filtrosAjustados.data_inicial = filtros.data_inicial
+      ? filtros.data_inicial.value.toISOString().slice(0, 10)
+      : "";
+    filtrosAjustados.data_final = filtros.data_final
+      ? filtros.data_final.value.toISOString().slice(0, 10)
+      : "";
+    console.log(filtrosAjustados);
+    return filtrosAjustados;
+  };
+
+  const onBuscarClick = filtros => {
+    let filtrosAjustados = ajustarFiltros(filtros);
+    setFiltros(filtrosAjustados);
+  };
 
   const mudarPagina = pagina => {
     setFiltros({ ...filtros, page: pagina });
@@ -34,21 +64,8 @@ export default () => {
     <Page>
       <h4>Atas</h4>
       <Container>
-        <Row>
-          <Col lg={12} xl={12}>
-            <span className="float-right">
-              <Button
-                icon="pi pi-file"
-                label="Nova Ata"
-                style={{ marginBottom: ".80em" }}
-                className="btn-coad-background-outline"
-                onClick={() => {
-                  redirect(`#/atas/`);
-                }}
-              />
-            </span>
-          </Col>
-        </Row>
+        <BuscaAtasForm onBuscarClick={filtros => onBuscarClick(filtros)} />
+        <hr />
         <ListaAtas
           loading={loading}
           atas={atas}
