@@ -3,6 +3,7 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { InputMask } from "primereact/inputmask";
 import { Row, Col } from "reactstrap";
+import { InputText } from "primereact/inputtext";
 
 import { SelecionaEmpresa } from "../SelecionaEmpresa";
 import { SelecionaTipoServico } from "../SelecionaTipoServico";
@@ -93,14 +94,12 @@ export function BuscaAtasForm({ onBuscarClick }) {
           <div className="p-grid">
             <div className="p-col-6">
               <h6>Número da Ata</h6>
-              <InputMask
-                mask="***/9999"
+              <InputText
                 value={filtros.numero}
                 onChange={e =>
                   setFiltros({ ...filtros, numero: e.target.value })
                 }
-                autoClear={false}
-                placeholder="Ex: XXXXXXXX/XXXX"
+                placeholder="Digite o número da Ata"
               />
             </div>
 
