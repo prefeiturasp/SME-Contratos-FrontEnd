@@ -43,12 +43,18 @@ export default () => {
     setFiltros(filtrosAjustados);
   };
 
+  const onLimparClick = () => {
+    setAtas([]);
+    setTotalAtas([]);
+    setLoading(false);
+  };
+
   const mudarPagina = pagina => {
     setFiltros({ ...filtros, page: pagina });
   };
 
   useEffect(() => {
-    const buscaEditais = async () => {
+    const buscaAtas = async () => {
       setLoading(true);
       const data = await getListaDeAtas(filtros);
       setAtas(data.results);
@@ -56,14 +62,17 @@ export default () => {
       setLoading(false);
     };
 
-    buscaEditais();
+    buscaAtas();
   }, [filtros]);
 
   return (
     <Page>
       <h4>Atas</h4>
       <Container>
-        <BuscaAtasForm onBuscarClick={filtros => onBuscarClick(filtros)} />
+        <BuscaAtasForm
+          onBuscarClick={filtros => onBuscarClick(filtros)}
+          onLimparClick={onLimparClick}
+        />
         <hr />
         <ListaAtas
           loading={loading}
