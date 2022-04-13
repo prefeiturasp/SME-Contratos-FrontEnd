@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Dropdown } from "primereact/dropdown";
 import { getEmpresasLookup } from "../../../service/Empresas.service";
-import { comNomeUnico } from "../../../utils/helper";
 
 export class SelecionaEmpresa extends Component {
   constructor() {
@@ -12,13 +11,16 @@ export class SelecionaEmpresa extends Component {
   }
 
   async componentDidMount() {
-    const empresas = await getEmpresasLookup();
-    this.setState({ empresas: comNomeUnico(empresas) });
+    this.buscaEmpresas();
   }
 
   selecionaEmpresa(event) {
-    this.setState({ empresaSelecionada: event.value });
     this.props.onSelect(event.value);
+  }
+
+  async buscaEmpresas() {
+    const empresas = await getEmpresasLookup();
+    this.setState({ empresas });
   }
 
   render() {

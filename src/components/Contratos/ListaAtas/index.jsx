@@ -6,7 +6,7 @@ import "./style.scss";
 import { redirect } from "../../../utils/redirect";
 import moment from "moment";
 
-const ListaAtas = ({ atas, totalEditais, mudarPagina, loading }) => {
+const ListaAtas = ({ atas, totalAtas, mudarPagina, loading }) => {
   const [index, setIndex] = useState(0);
   const [expandedRows, setExpandedRows] = useState(null);
 
@@ -63,10 +63,10 @@ const ListaAtas = ({ atas, totalEditais, mudarPagina, loading }) => {
           body={textoDataEncerramento}
         />
       </DataTable>
-      {atas.length < totalEditais && (
+      {atas.length < totalAtas && (
         <Paginator
           rows={10}
-          totalRecords={totalEditais}
+          totalRecords={totalAtas}
           onPageChange={e => mudaPagina(e)}
           first={index}
         />
