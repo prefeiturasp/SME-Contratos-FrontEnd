@@ -128,13 +128,6 @@ export const MenuConfig = [
     ],
   },
   {
-    label: "Estoque / Patrimônio",
-    icon: "pi pi-clone",
-    command: () => {
-      window.location = "#";
-    },
-  },
-  {
     label: "Relatórios",
     icon: "pi pi-chart-bar",
     command: () => {
