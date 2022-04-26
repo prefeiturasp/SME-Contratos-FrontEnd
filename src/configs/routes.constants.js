@@ -14,6 +14,7 @@ import ListarEditais from "../pages/ListarEditais";
 import GestaoContratos from "../pages/GestaoContratos";
 import ListarAtas from "../pages/ListarAtas";
 import Atas from "../pages/Atas";
+import ListarEmpresas from "../pages/ListarEmpresas";
 
 const RoutesConfig = [
   {
@@ -64,6 +65,11 @@ const RoutesConfig = [
   {
     path: "/atas",
     component: Atas,
+    exact: false,
+  },
+  {
+    path: "/listar-empresas",
+    component: ListarEmpresas,
     exact: false,
   },
   {
