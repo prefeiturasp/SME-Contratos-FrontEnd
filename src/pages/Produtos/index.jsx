@@ -306,7 +306,6 @@ const Produtos = () => {
                 optionLabel="nome"
                 options={CATEGORIA_PRODUTO}
                 value={produto.categoria}
-                // onChange={e => {setProduto({ ...produto, categoria: e.target.value }); validaCategoria(e.target.value);  }}
                 onChange={e => validaCategoria(e.target.value)}
                 placeholder="Selecione"
                 disabled={modoVisualizacao}
@@ -319,7 +318,6 @@ const Produtos = () => {
                 optionLabel="nome"
                 options={GRUPO_ALIMENTAR_PRODUTO}
                 value={produto.grupo_alimentar}
-                // onChange={e => {defineDurabilidadeEArmazenabilidade(e.target.value); setProduto({ ...produto, grupo_alimentar: e.target.value });}}
                 onChange={e =>
                   defineDurabilidadeEArmazenabilidade(e.target.value)
                 }
