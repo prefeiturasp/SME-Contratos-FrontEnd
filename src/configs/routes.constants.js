@@ -15,6 +15,7 @@ import GestaoContratos from "../pages/GestaoContratos";
 import ListarAtas from "../pages/ListarAtas";
 import Atas from "../pages/Atas";
 import ListarEmpresas from "../pages/ListarEmpresas";
+import Empresas from "../pages/Empresas";
 import ListarProdutos from "../pages/ListarProdutos";
 import Produtos from "../pages/Produtos";
 
@@ -67,6 +68,11 @@ const RoutesConfig = [
   {
     path: "/atas",
     component: Atas,
+    exact: false,
+  },
+  {
+    path: "/empresas",
+    component: Empresas,
     exact: false,
   },
   {
@@ -124,6 +130,12 @@ export const MenuConfig = [
     icon: "pi pi-file-o",
     items: [
       {
+        label: "Cadastro de Empresas",
+        icon: "pi pi-cog pi-th-large",
+        to: "/listar-empresas",
+
+      },
+      {
         label: "Cadastro de Produtos",
         icon: "pi pi-cog pi-th-large",
         to: "/listar-produtos",
@@ -155,6 +167,14 @@ export const MenuConfig = [
         to: "/atribuicao-termo-contrato",
       },
     ],
+  },
+
+  {
+    label: "Orçamento",
+    icon: "pi pi-money-bill",
+    command: () => {
+      window.location = "#";
+    },
   },
   {
     label: "Relatórios",
