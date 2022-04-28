@@ -78,7 +78,7 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
           </span>
         </Col>
       </Row>
-      <div className="p-grid p-fluid">
+      <div className="p-grid ">
         <div className="card card-w-title filtro">
           <div className="p-grid">
             <div className="p-col-6">
@@ -93,6 +93,7 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
             <div className="p-col-6 ">
               <h6>CNPJ</h6>
               <InputMask
+                className="w-100"
                 mask="99.999.999/9999-99"
                 value={filtros.cnpj_empresa}
                 onChange={e =>
@@ -105,6 +106,7 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
             <div className="p-col-6 ">
               <h6>Tipo de Serviço</h6>
               <SelecionaTipoServicoEmpresa
+                className="w-100"
                 tipoServico={filtros.tipo_servico}
                 onSelect={setaTipoServico}
               />
@@ -112,6 +114,7 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
             <div className="p-col-6 ">
               <h6>Tipo de Fornecedor</h6>
               <SelecionaTipoFornecedorEmpresa
+                className="w-100"
                 tipoFornecedor={filtros.tipo_fornecedor}
                 onSelect={setaTipoFornecedor}
               />
@@ -119,6 +122,7 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
             <div className="p-col-6">
               <h6>Situação</h6>
               <SelecionaSituacaoEmpresa
+                className="w-100"
                 situacao={filtros.situacao}
                 onSelect={setaSituacao}
               />
