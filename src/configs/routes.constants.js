@@ -15,6 +15,7 @@ import GestaoContratos from "../pages/GestaoContratos";
 import ListarAtas from "../pages/ListarAtas";
 import Atas from "../pages/Atas";
 import ListarEmpresas from "../pages/ListarEmpresas";
+import Empresas from "../pages/Empresas";
 
 const RoutesConfig = [
   {
@@ -68,6 +69,11 @@ const RoutesConfig = [
     exact: false,
   },
   {
+    path: "/empresas",
+    component: Empresas,
+    exact: false,
+  },
+  {
     path: "/listar-empresas",
     component: ListarEmpresas,
     exact: false,
@@ -108,6 +114,17 @@ export default RoutesConfig;
 
 export const MenuConfig = [
   {
+    label: "Cadastros",
+    icon: "pi pi-file-o",
+    items: [
+      {
+        label: "Cadastro de Empresas",
+        icon: "pi pi-cog pi-th-large",
+        to: "/listar-empresas",
+      },
+    ],
+  },
+  {
     label: "Contratos",
     icon: "pi pi-list",
     items: [
@@ -132,6 +149,14 @@ export const MenuConfig = [
         to: "/atribuicao-termo-contrato",
       },
     ],
+  },
+
+  {
+    label: "Orçamento",
+    icon: "pi pi-money-bill",
+    command: () => {
+      window.location = "#";
+    },
   },
   {
     label: "Relatórios",
