@@ -32,7 +32,7 @@ const ListaEmpresas = ({ empresas, totalEmpresas, mudarPagina, loading }) => {
         <Column field="nome" header="Nome da Empresa" />
         <Column field="cnpj" header="CNPJ" />
         <Column field="tipo_servico" header="Tipo de Serviço" />
-        <Column field="situacao" header="Status" />
+        <Column field="situacao" header="Situação" />
       </DataTable>
       {empresas.length < totalEmpresas && (
         <Paginator
