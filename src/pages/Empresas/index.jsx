@@ -25,6 +25,7 @@ import {
 } from "../../service/Empresas.service";
 import { removeCaracteresEspeciais } from "../../utils/formatador";
 import "./style.scss";
+import { validarCNPJ } from "../../utils/validadores";
 
 const Empresas = () => {
   const { uuid } = getUrlParams();
@@ -86,20 +87,50 @@ const Empresas = () => {
   };
 
   const criarEmpresa = async () => {
-    let ataFormatada = formatarEmpresa();
-    const resultado = await criaEmpresa(ataFormatada);
-    if (resultado.status === CREATED) {
-      toast.showSuccess("Empresa criada com sucesso");
-      redirect("#/listar-empresas");
+    if (validarCNPJ(removeCaracteresEspeciais(empresa.cnpj))) {
+      try {
+        let ataFormatada = formatarEmpresa();
+        const resultado = await criaEmpresa(ataFormatada);
+        if (resultado.status === CREATED) {
+          toast.showSuccess("Empresa criada com sucesso");
+          redirect("#/listar-empresas");
+        }
+      } catch (e) {
+        mapeiaErros(e.response.data);
+      }
+    } else {
+      toast.showError("Digite um CNPJ válido");
+    }
+  };
+
+  const mapeiaErros = async erros => {
+    if (erros.contatos) {
+      let email = erros.contatos.some(contato => contato.email);
+      if (email) {
+        toast.showError("Insira um endereço de email válido.");
+      }
+    } else if (
+      typeof erros === "string" &&
+      erros.startsWith("IntegrityError")
+    ) {
+      toast.showError("Empresa com este CNPJ já existe.");
     }
   };
 
   const alterarEmpresa = async () => {
-    let empresaFormatada = formatarEmpresa();
-    const resultado = await alteraEmpresa(empresaFormatada);
-    if (resultado.status === OK) {
-      toast.showSuccess("Empresa alterada com sucesso");
-      redirect("#/listar-empresas");
+    if (validarCNPJ(removeCaracteresEspeciais(empresa.cnpj))) {
+      try {
+        let empresaFormatada = formatarEmpresa();
+        const resultado = await alteraEmpresa(empresaFormatada);
+        if (resultado.status === OK) {
+          toast.showSuccess("Empresa alterada com sucesso");
+          redirect("#/listar-empresas");
+        }
+      } catch (e) {
+        mapeiaErros(e.response.data);
+      }
+    } else {
+      toast.showError("Digite um CNPJ válido");
     }
   };
 
