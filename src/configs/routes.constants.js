@@ -15,6 +15,8 @@ import GestaoContratos from "../pages/GestaoContratos";
 import ListarAtas from "../pages/ListarAtas";
 import Atas from "../pages/Atas";
 import ListarEmpresas from "../pages/ListarEmpresas";
+import ListarProdutos from "../pages/ListarProdutos";
+import Produtos from "../pages/Produtos";
 
 const RoutesConfig = [
   {
@@ -73,6 +75,16 @@ const RoutesConfig = [
     exact: false,
   },
   {
+    path: "/listar-produtos",
+    component: ListarProdutos,
+    exact: false,
+  },
+  {
+    path: "/produtos",
+    component: Produtos,
+    exact: false,
+  },
+  {
     path: "/cadastro-unico-contrato",
     component: CadastrarContrato,
     exact: false,
@@ -107,6 +119,17 @@ const RoutesConfig = [
 export default RoutesConfig;
 
 export const MenuConfig = [
+  {
+    label: "Cadastros",
+    icon: "pi pi-file-o",
+    items: [
+      {
+        label: "Cadastro de Produtos",
+        icon: "pi pi-cog pi-th-large",
+        to: "/listar-produtos",
+      },
+    ],
+  },
   {
     label: "Contratos",
     icon: "pi pi-list",
