@@ -3,6 +3,14 @@ import * as CONFIG from "../configs/config.constants";
 import api from "./Api";
 import { formataParametros } from "../utils/formataParametros";
 
+export const getEmpresa = async uuid => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  const url = `empresas/${uuid}/`;
+  return (await api.get(url, AUTH_HEADER)).data;
+};
+
 export const getEmpresasLookup = () => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
@@ -18,4 +26,20 @@ export const getListaDeEmpresas = async filtro => {
     headers: getHeaderToken(),
   };
   return (await api.get(`empresas/${parametros}`, AUTH_HEADER)).data;
+};
+
+export const criaEmpresa = async payload => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  const url = "empresas/";
+  return await api.post(url, payload, AUTH_HEADER);
+};
+
+export const alteraEmpresa = async payload => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  const url = `empresas/${payload.uuid}/`;
+  return await api.patch(url, payload, AUTH_HEADER);
 };
