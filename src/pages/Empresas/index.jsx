@@ -182,6 +182,14 @@ const Empresas = () => {
     else return true;
   };
 
+  const verificaTipoFornecedor = tipo_servico => {
+    if (tipo_servico === TIPO_SERVICO[2]) {
+      return undefined;
+    } else {
+      return empresa.tipo_fornecedor;
+    }
+  };
+
   const mensagemConfirmacao = incluir
     ? "Confirma a alteração desta empresa?"
     : "Confirma a criação de uma nova empresa?";
@@ -356,7 +364,11 @@ const Empresas = () => {
                 options={TIPO_SERVICO}
                 value={empresa.tipo_servico}
                 onChange={e =>
-                  setEmpresa({ ...empresa, tipo_servico: e.target.value })
+                  setEmpresa({
+                    ...empresa,
+                    tipo_servico: e.target.value,
+                    tipo_fornecedor: verificaTipoFornecedor(e.target.value),
+                  })
                 }
                 placeholder="Selecione"
                 disabled={modoVisualizacao}
@@ -431,7 +443,10 @@ const Empresas = () => {
                 className="w-100"
                 value={empresa.numero}
                 onChange={e =>
-                  setEmpresa({ ...empresa, numero: e.target.value })
+                  setEmpresa({
+                    ...empresa,
+                    numero: removeCaracteresEspeciais(e.target.value),
+                  })
                 }
                 disabled={modoVisualizacao}
               />
@@ -443,7 +458,10 @@ const Empresas = () => {
                 className="w-100"
                 value={empresa.complemento}
                 onChange={e =>
-                  setEmpresa({ ...empresa, complemento: e.target.value })
+                  setEmpresa({
+                    ...empresa,
+                    complemento: removeCaracteresEspeciais(e.target.value),
+                  })
                 }
                 disabled={modoVisualizacao}
               />
