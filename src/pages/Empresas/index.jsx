@@ -26,12 +26,34 @@ import {
 import { removeCaracteresEspeciais } from "../../utils/formatador";
 import "./style.scss";
 import { validarCNPJ } from "../../utils/validadores";
+import { deepCopy } from "../../utils/deepCopy";
+
+let valoresIniciais = {
+  contatos: [
+    {
+      email: "",
+      cargo: "",
+      nome: "",
+    },
+  ],
+  razao_social: "",
+  nome: "",
+  endereco: "",
+  numero: "",
+  complemento: "",
+  bairro: "",
+  cidade: "",
+  estado: "",
+};
 
 const Empresas = () => {
   const { uuid } = getUrlParams();
-
   const [visivel, setVisivel] = useState(false);
   const [visivelCancelar, setVisivelCancelar] = useState(false);
+  const [empresaInicial, setEmpresaInicial] = useState(valoresIniciais);
+  const [contatosIniciais, setContatosIniciais] = useState(
+    valoresIniciais.contatos,
+  );
   const [empresa, setEmpresa] = useState({});
   const [contatos, setContatos] = useState([{}]);
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
@@ -47,6 +69,8 @@ const Empresas = () => {
         );
         setContatos(dados.contatos);
         setEmpresa(dados);
+        setEmpresaInicial(dados);
+        setContatosIniciais(deepCopy(dados.contatos));
       })();
     }
   }, [uuid, setEmpresa]);
@@ -190,6 +214,11 @@ const Empresas = () => {
     }
   };
 
+  const cancelarEmpresa = () => {
+    setEmpresa(empresaInicial);
+    setContatos(deepCopy(contatosIniciais));
+  };
+
   const mensagemConfirmacao = incluir
     ? "Confirma a alteração desta empresa?"
     : "Confirma a criação de uma nova empresa?";
@@ -224,7 +253,6 @@ const Empresas = () => {
               onClick={exibeDialog}
             />
             <Button
-              disabled={!habilitaBotao}
               className="btn-coad-background-outline mr-2"
               label="Cancelar"
               onClick={() => setVisivelCancelar(true)}
@@ -245,12 +273,12 @@ const Empresas = () => {
             footer={
               <FormGroup className="pt-4 d-flex justify-content-end">
                 <Button
-                  disabled={!habilitaBotao}
                   className="btn-coad-background-outline"
                   label="Sim"
                   onClick={() => {
+                    setVisivelCancelar(false);
                     toast.showSuccess("Alterações canceladas");
-                    redirect("/#/listar-empresas");
+                    cancelarEmpresa();
                   }}
                 />
                 <Button
@@ -432,7 +460,9 @@ const Empresas = () => {
               <InputText
                 className="w-100"
                 value={empresa.endereco}
-                onChange={e => setEmpresa({ ...empresa, endereco: e.value })}
+                onChange={e =>
+                  setEmpresa({ ...empresa, endereco: e.target.value })
+                }
                 disabled={modoVisualizacao}
               />
             </div>
@@ -472,7 +502,9 @@ const Empresas = () => {
               <InputText
                 className="w-100"
                 value={empresa.bairro}
-                onChange={e => setEmpresa({ ...empresa, bairro: e.value })}
+                onChange={e =>
+                  setEmpresa({ ...empresa, bairro: e.target.value })
+                }
                 disabled={modoVisualizacao}
               />
             </div>
@@ -482,7 +514,9 @@ const Empresas = () => {
               <InputText
                 className="w-100"
                 value={empresa.cidade}
-                onChange={e => setEmpresa({ ...empresa, cidade: e.value })}
+                onChange={e =>
+                  setEmpresa({ ...empresa, cidade: e.target.value })
+                }
                 disabled={modoVisualizacao}
               />
             </div>
@@ -492,7 +526,9 @@ const Empresas = () => {
               <InputText
                 className="w-100"
                 value={empresa.estado}
-                onChange={e => setEmpresa({ ...empresa, estado: e.value })}
+                onChange={e =>
+                  setEmpresa({ ...empresa, estado: e.target.value })
+                }
                 disabled={modoVisualizacao}
               />
             </div>
@@ -571,7 +607,6 @@ const Empresas = () => {
               onClick={exibeDialog}
             />
             <Button
-              disabled={!habilitaBotao}
               className="btn-coad-background-outline mr-2"
               label="Cancelar"
               onClick={() => setVisivelCancelar(true)}
