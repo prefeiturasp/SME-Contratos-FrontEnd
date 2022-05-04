@@ -924,6 +924,24 @@ class VisualizarContratos extends Component {
                 </Col>
               </Row>
             </CoadAccordion>
+            {contrato.lotes && (
+              <CoadAccordion titulo={"Unidade Envolvidas"}>
+                <UnidadesEnvolvidas
+                  contrato={contrato}
+                  disabilitado={disabilitado}
+                  setUnidadesSelecionadas={this.setUnidadesSelecionadas}
+                  messages={this.messages}
+                />
+              </CoadAccordion>
+            )}
+            <CoadAccordion titulo={"Anexos"}>
+              <Anexos
+                disabilitado={disabilitado}
+                selecionarDocsDre={this.selecionarDocsDre}
+                docsDreSelecionados={documentoFiscaDre}
+                contrato={contrato}
+              />
+            </CoadAccordion>
             <CoadAccordion titulo={"Observações"}>
               <Editor
                 style={{ height: "320px" }}
@@ -942,24 +960,6 @@ class VisualizarContratos extends Component {
                     <button className="ql-list" value="bullet"></button>
                   </span>
                 }
-              />
-            </CoadAccordion>
-            {contrato.lotes && (
-              <CoadAccordion titulo={"Unidade Envolvidas"}>
-                <UnidadesEnvolvidas
-                  contrato={contrato}
-                  disabilitado={disabilitado}
-                  setUnidadesSelecionadas={this.setUnidadesSelecionadas}
-                  messages={this.messages}
-                />
-              </CoadAccordion>
-            )}
-            <CoadAccordion titulo={"Anexos"}>
-              <Anexos
-                disabilitado={disabilitado}
-                selecionarDocsDre={this.selecionarDocsDre}
-                docsDreSelecionados={documentoFiscaDre}
-                contrato={contrato}
               />
             </CoadAccordion>
             <Row className="mt-3">
