@@ -32,7 +32,6 @@ export default () => {
       : "";
     filtrosAjustados.categoria = filtros.categoria ? filtros.categoria.id : "";
 
-    console.log(filtrosAjustados, "em Filtros Ajustados");
     return filtrosAjustados;
   };
 

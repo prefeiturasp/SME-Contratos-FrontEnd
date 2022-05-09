@@ -16,7 +16,6 @@ import {
 
 export function BuscaProdutosForm({ onBuscarClick, onLimparClick }) {
   const [filtros, setFiltros] = useState({});
-  console.log(filtros, "filtros");
 
   const handleClickBuscar = () => {
     onBuscarClick(filtros);
