@@ -18,6 +18,34 @@ export default () => {
   const [totalProdutos, setTotalProdutos] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const ajustarFiltros = filtros => {
+    let filtrosAjustados = { ...filtros };
+    filtrosAjustados.nome = filtros.nome && filtros.nome;
+    filtrosAjustados.situacao = filtros.situacao && filtros.situacao.id;
+    filtrosAjustados.armazenabilidade =
+      filtros.armazenabilidade && filtros.armazenabilidade.id;
+    filtrosAjustados.grupo_alimentar = filtros.grupo_alimentar
+      ? filtros.grupo_alimentar.id
+      : "";
+    filtrosAjustados.durabilidade = filtros.durabilidade
+      ? filtros.durabilidade.id
+      : "";
+    filtrosAjustados.categoria = filtros.categoria ? filtros.categoria.id : "";
+
+    return filtrosAjustados;
+  };
+
+  const onBuscarClick = filtros => {
+    let filtrosAjustados = ajustarFiltros(filtros);
+    setFiltros(filtrosAjustados);
+  };
+
+  const onLimparClick = () => {
+    setProdutos([]);
+    setTotalProdutos([]);
+    setLoading(false);
+  };
+
   const mudarPagina = pagina => {
     setFiltros({ ...filtros, page: pagina });
   };
@@ -38,7 +66,10 @@ export default () => {
     <Page>
       <h4>Produtos</h4>
       <Container>
-        <BuscaProdutosForm />
+        <BuscaProdutosForm
+          onBuscarClick={filtros => onBuscarClick(filtros)}
+          onLimparClick={onLimparClick}
+        />
         <hr />
         <ListaProdutos
           loading={loading}
