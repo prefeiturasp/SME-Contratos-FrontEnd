@@ -80,7 +80,6 @@ const Produtos = () => {
 
   const defineDurabilidadeEArmazenabilidade = value => {
     const grupo_alimentar = value.id;
-    // eslint-disable-next-line
     switch (grupo_alimentar) {
       case GRUPO_ALIMENTAR_PRODUTO[0].id:
         setProduto({
@@ -113,6 +112,8 @@ const Produtos = () => {
           durabilidade: DURABILIDADE_PRODUTO[1],
           armazenabilidade: ARMAZENABILIDADE_PRODUTO[0],
         });
+        break;
+      default:
         break;
     }
   };
