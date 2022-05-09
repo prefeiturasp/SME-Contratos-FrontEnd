@@ -113,6 +113,8 @@ const Produtos = () => {
           armazenabilidade: ARMAZENABILIDADE_PRODUTO[0],
         });
         break;
+      default:
+        break;
     }
   };
 

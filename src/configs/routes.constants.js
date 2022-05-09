@@ -133,7 +133,6 @@ export const MenuConfig = [
         label: "Cadastro de Empresas",
         icon: "pi pi-cog pi-th-large",
         to: "/listar-empresas",
-
       },
       {
         label: "Cadastro de Produtos",
