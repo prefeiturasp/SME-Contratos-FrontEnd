@@ -18,6 +18,8 @@ import ListarEmpresas from "../pages/ListarEmpresas";
 import Empresas from "../pages/Empresas";
 import ListarProdutos from "../pages/ListarProdutos";
 import Produtos from "../pages/Produtos";
+import Orcamento from "../pages/Orcamento";
+import DotacaoOrcamentaria from "../pages/DotacaoOrcamentaria";
 
 const RoutesConfig = [
   {
@@ -120,6 +122,16 @@ const RoutesConfig = [
     component: Teste,
     exact: false,
   },
+  {
+    path: "/orcamento",
+    component: Orcamento,
+    exact: false,
+  },
+  {
+    path: "/dotacao-orcamentaria",
+    component: DotacaoOrcamentaria,
+    exact: false,
+  },
 ];
 
 export default RoutesConfig;
@@ -171,9 +183,7 @@ export const MenuConfig = [
   {
     label: "Orçamento",
     icon: "pi pi-money-bill",
-    command: () => {
-      window.location = "#";
-    },
+    to: "/orcamento",
   },
   {
     label: "Relatórios",
