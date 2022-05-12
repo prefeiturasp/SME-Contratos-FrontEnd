@@ -20,6 +20,15 @@ export const getEmpresasLookup = () => {
     .then(res => res.data);
 };
 
+export const getEmpresasLookupCompleto = () => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  return api
+    .get(`${CONFIG.API_URL}/empresas/lookup_completo/`, AUTH_HEADER)
+    .then(res => res.data);
+};
+
 export const getListaDeEmpresas = async filtro => {
   let parametros = formataParametros(filtro);
   const AUTH_HEADER = {
