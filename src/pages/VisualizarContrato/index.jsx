@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import CardSuperior from "./CardSuperior";
+import { InputMask } from "primereact/inputmask";
 import { Toast } from "primereact/toast";
 import CoadAccordion from "../../components/Global/CoadAccordion";
 import { SelecionaTipoServico } from "../../components/Contratos/SelecionaTipoServico";
@@ -180,7 +181,6 @@ class VisualizarContratos extends Component {
         : contrato.objeto,
     });
   };
-
   selecionaTipoServico = value => {
     this.setState({ tipo_servico_uuid: value.target.value });
   };
@@ -702,40 +702,177 @@ class VisualizarContratos extends Component {
             </CoadAccordion>
             <CoadAccordion titulo={"Empresa Contratada"}>
               <Row>
-                <Col lg={6} xl={6} sx={12} md={12} sm={12}>
-                  <Row>
-                    <Col style={{ paddingTop: "0.4rem" }}>
-                      <FormGroup className="p-grid p-fluid">
-                        <Label>Nome Empresa</Label>
-                        <br />
-                        <SelecionaEmpresa
-                          selecionada={empresa_contratada}
-                          onSelect={value =>
-                            this.setState({ empresa_contratada: value })
-                          }
-                          disabled={disabilitado}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col lg={6} xl={6} sx={12} md={6} sm={6}>
-                  <Row>
-                    <Col>
-                      <FormGroup>
-                        <Label>CNPJ Empresa</Label>
-                        <InputText
-                          value={
-                            empresa_contratada ? empresa_contratada.cnpj : ""
-                          }
-                          placeholder={"Digite nome da empresa"}
-                          className="w-100 pb-2"
-                          disabled={true}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </Col>
+                <div className="p-grid">
+                  <div className="p-col-8">
+                    <Label className="font-weight-bold">Nome Fantasia</Label>
+                    <SelecionaEmpresa
+                      className="w-100"
+                      empresa={empresa_contratada}
+                      onSelect={e =>
+                        this.setState({
+                          empresa_contratada: e,
+                          nomeEmpresa: e.nome,
+                        })
+                      }
+                      disabled={disabilitado}
+                      filter
+                    />
+                  </div>
+                  <div className="p-col-8">
+                    <Label className="font-weight-bold">CNPJ da Empresa</Label>
+                    <InputMask
+                      className="w-100"
+                      mask="99.999.999/9999-99"
+                      value={empresa_contratada.cnpj}
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="p-col-8">
+                    <Label className="font-weight-bold">Razão Social</Label>
+                    <Input
+                      className="w-100"
+                      value={empresa_contratada.razao_social}
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="p-col-8">
+                    <Label className="font-weight-bold">Tipo de Serviço</Label>
+                    <Input
+                      className="w-100"
+                      value={
+                        empresa_contratada.tipo_servico
+                          ? empresa_contratada.tipo_servico.nome
+                          : empresa_contratada.tipo_servico
+                      }
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="p-col-8">
+                    <Label className="font-weight-bold">
+                      Tipo de Fornecedor
+                    </Label>
+                    <Input
+                      className="w-100"
+                      value={
+                        empresa_contratada.tipo_fornecedor
+                          ? empresa_contratada.tipo_fornecedor.nome
+                          : empresa_contratada.tipo_fornecedor
+                      }
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+              </Row>
+              <Row>
+                <Label className="font-weight-bold">Endereço</Label>
+                <div className="p-grid">
+                  <div className="p-col-2">
+                    <Label className="font-weight-bold">CEP</Label>
+                    <InputMask
+                      className="w-100"
+                      mask="99.999-999"
+                      value={empresa_contratada.cep}
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="p-col-8">
+                    <Label className="font-weight-bold">Endereço</Label>
+                    <Input
+                      className="w-100"
+                      value={empresa_contratada.endereco}
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="p-col-2">
+                    <Label className="font-weight-bold">Número</Label>
+                    <Input
+                      className="w-100"
+                      value={empresa_contratada.numero}
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="p-col-3">
+                    <Label className="font-weight-bold">Complemento</Label>
+                    <Input
+                      className="w-100"
+                      value={empresa_contratada.complemento}
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="p-col-3">
+                    <Label className="font-weight-bold">Bairro</Label>
+                    <Input
+                      className="w-100"
+                      value={empresa_contratada.bairro}
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="p-col-4">
+                    <Label className="font-weight-bold">Cidade</Label>
+                    <Input
+                      className="w-100"
+                      value={empresa_contratada.cidade}
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="p-col-2">
+                    <Label className="font-weight-bold">UF</Label>
+                    <Input
+                      className="w-100"
+                      value={empresa_contratada.estado}
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+              </Row>
+              <Row>
+                {empresa_contratada.contatos && (
+                  <Label className="font-weight-bold">Contatos</Label>
+                )}
+                {empresa_contratada.contatos &&
+                  empresa_contratada.contatos.map(contato => {
+                    return (
+                      <>
+                        <div className="p-grid">
+                          <div className="p-col-7">
+                            <Label className="font-weight-bold">E-mail</Label>
+                            <Input
+                              className="w-100"
+                              value={contato.email}
+                              disabled={true}
+                            />
+                          </div>
+                          <div className="p-col-5">
+                            <Label className="font-weight-bold">
+                              Cargo/Função
+                            </Label>
+                            <Input
+                              className="w-100"
+                              value={contato.cargo}
+                              disabled={true}
+                            />
+                          </div>
+                          <div className="p-col-8">
+                            <Label className="font-weight-bold">Nome</Label>
+                            <Input
+                              className="w-100"
+                              value={contato.nome}
+                              disabled={true}
+                            />
+                          </div>
+                          <div className="p-col-4">
+                            <Label className="font-weight-bold">Telefone</Label>
+                            <InputMask
+                              className="w-100"
+                              mask="(99) 99999-9999"
+                              value={contato.telefone}
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })}
               </Row>
             </CoadAccordion>
             <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
