@@ -9,6 +9,8 @@ import { SelecionaTipoServico } from "../SelecionaTipoServico";
 import { SelecionaData } from "../SelecionaData";
 
 import "./style.scss";
+import { redirect } from "../../../utils/redirect";
+import { Col, Row } from "reactstrap";
 
 export class BuscaContratosForm extends Component {
   constructor(props) {
@@ -86,6 +88,21 @@ export class BuscaContratosForm extends Component {
 
     return (
       <Card footer={footer} className="filtro filtroBorda">
+        <Row>
+          <Col lg={12} xl={12}>
+            <span className="float-right">
+              <Button
+                icon="pi pi-file"
+                label="Novo Contrato"
+                style={{ marginBottom: ".80em" }}
+                className="btn-coad-background-outline"
+                onClick={() => {
+                  redirect(`#/visualizar-contrato/`);
+                }}
+              />
+            </span>
+          </Col>
+        </Row>
         <div className="p-grid p-fluid">
           <div className="card card-w-title filtro">
             <div className="p-grid">
