@@ -41,6 +41,7 @@ import { criaTipoServico } from "../../service/TiposServico.service";
 import { BAD_REQUEST, CREATED, OK } from "http-status-codes";
 import { UnidadesEnvolvidas } from "../CadastrarContrato/UnidadesEnvolvidas";
 import { SelecionaEdital } from "../../components/Contratos/SelecionaEditalContrato";
+import SelecionaAta from "../../components/Contratos/SelecionaAta";
 
 const nullToUndef = v => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
@@ -86,6 +87,7 @@ class VisualizarContratos extends Component {
       valor_total: "",
       unidade_vigencia: "DIAS",
       edital: null,
+      ata: null,
       alteracaoEdital: null,
       objeto_edital: null,
       objeto: "",
@@ -151,13 +153,13 @@ class VisualizarContratos extends Component {
       tipo_servico_uuid: tipo_servico.uuid,
       situacao: contrato.situacao,
       data_ordem_inicio: contrato.data_ordem_inicio
-        ? new Date(contrato.data_ordem_inicio)
+        ? moment(contrato.data_ordem_inicio, "YYYY-MM-DD")
         : null,
       data_encerramento: contrato.data_encerramento
         ? new Date(contrato.data_encerramento)
         : null,
       data_assinatura: contrato.data_assinatura
-        ? new Date(contrato.data_assinatura)
+        ? moment(contrato.data_assinatura, "YYYY-MM-DD").format("DD/MM/YYYY")
         : null,
       processo: contrato.processo,
       empresa_contratada: empresa_contratada,
@@ -186,6 +188,7 @@ class VisualizarContratos extends Component {
       descricao_objeto_contrato: contrato.edital
         ? contrato.edital.descricao_objeto
         : contrato.objeto,
+      ata: contrato.ata,
     });
   };
   selecionaTipoServico = value => {
@@ -215,22 +218,6 @@ class VisualizarContratos extends Component {
     this.setState({ referencia_encerramento });
   };
 
-  recalculaEncerramento = () => {
-    const dataRef = this.state.data_assinatura;
-    const dias = this.state.vigencia;
-    if (dias && dias.length && dataRef) {
-      const parsedDate =
-        typeof dataRef === "string"
-          ? moment(dataRef).format("YYYY-MM-DD")
-          : dataRef;
-      const data = moment(parsedDate).format("DD/MM/YYYY");
-      const novaData = moment(data, "DD/MM/YYYY").add(dias, "days").calendar();
-      this.setState({
-        dataEncerramento: moment(novaData).format("DD/MM/YYYY"),
-      });
-    }
-  };
-
   habilitarEdicao = () => {
     this.setState({ disabilitado: !this.state.disabilitado });
     this.state.contrato.edital
@@ -249,7 +236,11 @@ class VisualizarContratos extends Component {
     const dotacoesState = this.dotacoesRef.current
       ? this.dotacoesRef.current.getState()
       : null;
-    const payload = mapStateToPayload(this.state, dotacoesState);
+    const payload = mapStateToPayload(
+      this.state,
+      dotacoesState,
+      this.state.incluir,
+    );
     this.setState({ disabilitado: true });
     this.setState({ modalEdicao: false });
     this.toast.show({
@@ -286,10 +277,13 @@ class VisualizarContratos extends Component {
     const dotacoesState = this.dotacoesRef.current
       ? this.dotacoesRef.current.getState()
       : null;
-    const payload = mapStateToPayload(this.state, dotacoesState);
+    const payload = mapStateToPayload(
+      this.state,
+      dotacoesState,
+      this.state.incluir,
+    );
 
     const resultado = await createContrato(payload, uuid);
-    console.log(resultado);
     if (resultado.uuid) {
       this.toast.show({
         severity: "success",
@@ -457,11 +451,28 @@ class VisualizarContratos extends Component {
       novoObjeto,
       incluir,
       referencia_encerramento,
+      ata,
     } = this.state;
+    const habilitaBotao =
+      termo_contrato &&
+      processo &&
+      situacao &&
+      data_assinatura &&
+      data_ordem_inicio &&
+      referencia_encerramento &&
+      vigencia &&
+      dataEncerramento;
+
     return (
       <>
         <Page
-          titulo={`Termo de Contrato n. ${contrato.termo_contrato} - ${nomeEmpresa}`}
+          titulo={
+            contrato.termo_contrato
+              ? `Termo de Contrato n. ${contrato.termo_contrato} - ${
+                  nomeEmpresa ? nomeEmpresa : ""
+                }`
+              : "Novo Termo de Contrato"
+          }
         >
           <Toast ref={el => (this.toast = el)}></Toast>
           <CardSuperior
@@ -580,7 +591,7 @@ class VisualizarContratos extends Component {
                       ? this.handleConfimarCriacao()
                       : this.handleConfimarEdicao()
                   }
-                  disabled={disabilitado}
+                  disabled={disabilitado || !habilitaBotao}
                 >
                   Salvar
                 </Button>
@@ -647,7 +658,7 @@ class VisualizarContratos extends Component {
                   </FormGroup>
                 </Col>
                 <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                  <Label form="situacao">Situação de Contrato</Label>
+                  <Label form="situacao">Status</Label>
                   <br />
                   <SituacaoRadio
                     checado={situacao}
@@ -677,6 +688,20 @@ class VisualizarContratos extends Component {
                       })
                     }
                     disabled={disabilitado}
+                  />
+                </Col>
+                <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                  <SelecionaAta
+                    id="numeroAta"
+                    className="w-100"
+                    value={ata}
+                    edital={edital}
+                    onSelect={event => {
+                      this.setState({
+                        ata: event.value,
+                      });
+                    }}
+                    disabled={disabilitado || !edital}
                   />
                 </Col>
               </Row>
@@ -1268,7 +1293,7 @@ class VisualizarContratos extends Component {
                 <Button
                   className="btn btn-coad-background-outline"
                   onClick={() => this.handleConfimar()}
-                  disabled={disabilitado}
+                  disabled={disabilitado || !habilitaBotao}
                 >
                   Salvar
                 </Button>

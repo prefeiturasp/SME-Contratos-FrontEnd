@@ -1,7 +1,7 @@
 import moment from "moment";
 import { Cor } from "../../configs/colors.constants";
 
-export const mapStateToPayload = (state, dotacoesState) => {
+export const mapStateToPayload = (state, dotacoesState, incluir) => {
   let payload = {};
   if (state) {
     payload = {
@@ -12,7 +12,7 @@ export const mapStateToPayload = (state, dotacoesState) => {
       empresa_contratada: state.empresa_contratada.uuid,
       estado_contrato: state.estado,
       data_ordem_inicio: moment(state.data_ordem_inicio).format("YYYY-MM-DD"),
-      data_encerramento: null,
+      data_encerramento: state.data_encerramento,
       data_assinatura: state.data_assinatura
         ? moment(state.data_assinatura).format("YYYY-MM-DD")
         : null,
@@ -37,8 +37,9 @@ export const mapStateToPayload = (state, dotacoesState) => {
         : state.contrato.edital
         ? state.contrato.edital.uuid
         : null,
+      ata: state.ata.uuid,
     };
-    if (payload.unidades_selecionadas.length === 0) {
+    if (incluir) {
       delete payload.unidades_selecionadas;
       delete payload.dotacoes_orcamentarias;
     }
