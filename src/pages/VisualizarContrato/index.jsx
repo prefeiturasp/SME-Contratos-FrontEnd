@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Page from "../../components/Global/Page";
 import Container from "../../components/Global/Container";
 import CardSuperior from "./CardSuperior";
-import { InputMask } from "primereact/inputmask";
 import { Toast } from "primereact/toast";
 import CoadAccordion from "../../components/Global/CoadAccordion";
 import { SelecionaTipoServico } from "../../components/Contratos/SelecionaTipoServico";
@@ -25,7 +24,6 @@ import {
 } from "../../configs/config.constants";
 import SituacaoRadio from "../../components/Contratos/SelecionaSituacaoContrato/SituacaoRadio";
 import EstadoRadio from "../../components/Contratos/SelecionaEstadoContrato/EstadoRadio";
-import { SelecionaEmpresa } from "../../components/Contratos/SelecionaEmpresa";
 import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
 import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
 import { redirect } from "../../utils/redirect";
@@ -42,6 +40,7 @@ import { criaTipoServico } from "../../service/TiposServico.service";
 import { BAD_REQUEST, CREATED, OK } from "http-status-codes";
 import { UnidadesEnvolvidas } from "../CadastrarContrato/UnidadesEnvolvidas";
 import { SelecionaEdital } from "../../components/Contratos/SelecionaEditalContrato";
+import { AccordionEmpresaContratada } from "../../components/Contratos/AccordionEmpresaContratada";
 
 const nullToUndef = v => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
@@ -94,6 +93,7 @@ class VisualizarContratos extends Component {
       descricao_objeto_contrato: "",
       modalCadastrarObjeto: false,
       novoObjeto: "",
+      empresaAtualizada: "",
     };
     this.dotacoesRef = React.createRef();
     this.toast = React.createRef();
@@ -321,6 +321,11 @@ class VisualizarContratos extends Component {
     }
     this.setState({ novoObjeto: "" });
   };
+  atualizaEmpresa(value) {
+    this.setState({
+      empresa_contratada: value,
+    });
+  }
 
   render() {
     const {
@@ -700,181 +705,19 @@ class VisualizarContratos extends Component {
                 </Col>
               </Row>
             </CoadAccordion>
-            <CoadAccordion titulo={"Empresa Contratada"}>
-              <Row>
-                <div className="p-grid">
-                  <div className="p-col-8">
-                    <Label className="font-weight-bold">Nome Fantasia</Label>
-                    <SelecionaEmpresa
-                      className="w-100"
-                      empresa={empresa_contratada}
-                      onSelect={e =>
-                        this.setState({
-                          empresa_contratada: e,
-                          nomeEmpresa: e.nome,
-                        })
-                      }
-                      disabled={disabilitado}
-                      filter
-                    />
-                  </div>
-                  <div className="p-col-8">
-                    <Label className="font-weight-bold">CNPJ da Empresa</Label>
-                    <InputMask
-                      className="w-100"
-                      mask="99.999.999/9999-99"
-                      value={empresa_contratada.cnpj}
-                      disabled={true}
-                    />
-                  </div>
-                  <div className="p-col-8">
-                    <Label className="font-weight-bold">Razão Social</Label>
-                    <Input
-                      className="w-100"
-                      value={empresa_contratada.razao_social}
-                      disabled={true}
-                    />
-                  </div>
-                  <div className="p-col-8">
-                    <Label className="font-weight-bold">Tipo de Serviço</Label>
-                    <Input
-                      className="w-100"
-                      value={
-                        empresa_contratada.tipo_servico
-                          ? empresa_contratada.tipo_servico.nome
-                          : empresa_contratada.tipo_servico
-                      }
-                      disabled={true}
-                    />
-                  </div>
-                  <div className="p-col-8">
-                    <Label className="font-weight-bold">
-                      Tipo de Fornecedor
-                    </Label>
-                    <Input
-                      className="w-100"
-                      value={
-                        empresa_contratada.tipo_fornecedor
-                          ? empresa_contratada.tipo_fornecedor.nome
-                          : empresa_contratada.tipo_fornecedor
-                      }
-                      disabled={true}
-                    />
-                  </div>
-                </div>
-              </Row>
-              <Row>
-                <Label className="font-weight-bold">Endereço</Label>
-                <div className="p-grid">
-                  <div className="p-col-2">
-                    <Label className="font-weight-bold">CEP</Label>
-                    <InputMask
-                      className="w-100"
-                      mask="99.999-999"
-                      value={empresa_contratada.cep}
-                      disabled={true}
-                    />
-                  </div>
-                  <div className="p-col-8">
-                    <Label className="font-weight-bold">Endereço</Label>
-                    <Input
-                      className="w-100"
-                      value={empresa_contratada.endereco}
-                      disabled={true}
-                    />
-                  </div>
-                  <div className="p-col-2">
-                    <Label className="font-weight-bold">Número</Label>
-                    <Input
-                      className="w-100"
-                      value={empresa_contratada.numero}
-                      disabled={true}
-                    />
-                  </div>
-                  <div className="p-col-3">
-                    <Label className="font-weight-bold">Complemento</Label>
-                    <Input
-                      className="w-100"
-                      value={empresa_contratada.complemento}
-                      disabled={true}
-                    />
-                  </div>
-                  <div className="p-col-3">
-                    <Label className="font-weight-bold">Bairro</Label>
-                    <Input
-                      className="w-100"
-                      value={empresa_contratada.bairro}
-                      disabled={true}
-                    />
-                  </div>
-                  <div className="p-col-4">
-                    <Label className="font-weight-bold">Cidade</Label>
-                    <Input
-                      className="w-100"
-                      value={empresa_contratada.cidade}
-                      disabled={true}
-                    />
-                  </div>
-                  <div className="p-col-2">
-                    <Label className="font-weight-bold">UF</Label>
-                    <Input
-                      className="w-100"
-                      value={empresa_contratada.estado}
-                      disabled={true}
-                    />
-                  </div>
-                </div>
-              </Row>
-              <Row>
-                {empresa_contratada.contatos && (
-                  <Label className="font-weight-bold">Contatos</Label>
-                )}
-                {empresa_contratada.contatos &&
-                  empresa_contratada.contatos.map(contato => {
-                    return (
-                      <>
-                        <div className="p-grid">
-                          <div className="p-col-7">
-                            <Label className="font-weight-bold">E-mail</Label>
-                            <Input
-                              className="w-100"
-                              value={contato.email}
-                              disabled={true}
-                            />
-                          </div>
-                          <div className="p-col-5">
-                            <Label className="font-weight-bold">
-                              Cargo/Função
-                            </Label>
-                            <Input
-                              className="w-100"
-                              value={contato.cargo}
-                              disabled={true}
-                            />
-                          </div>
-                          <div className="p-col-8">
-                            <Label className="font-weight-bold">Nome</Label>
-                            <Input
-                              className="w-100"
-                              value={contato.nome}
-                              disabled={true}
-                            />
-                          </div>
-                          <div className="p-col-4">
-                            <Label className="font-weight-bold">Telefone</Label>
-                            <InputMask
-                              className="w-100"
-                              mask="(99) 99999-9999"
-                              value={contato.telefone}
-                              disabled={true}
-                            />
-                          </div>
-                        </div>
-                      </>
-                    );
-                  })}
-              </Row>
-            </CoadAccordion>
+
+            <AccordionEmpresaContratada
+              atualizaEmpresa={e =>
+                this.setState({
+                  empresa_contratada: e,
+                  nomeEmpresa: e.nome,
+                })
+              }
+              empresaContratada={empresa_contratada}
+              disabilitado={disabilitado}
+              aberto={false}
+            />
+
             <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
               <DotacaoOrcamentaria
                 ref={this.dotacoesRef}
