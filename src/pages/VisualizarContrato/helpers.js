@@ -1,27 +1,29 @@
 import moment from "moment";
 import { Cor } from "../../configs/colors.constants";
 
-export const mapStateToPayload = (state, dotacoesState) => {
+export const mapStateToPayload = (state, dotacoesState, incluir) => {
   let payload = {};
   if (state) {
     payload = {
-      gestor: state.gestor.uuid,
+      gestor: state.gestor ? state.gestor.uuid : null,
       nucleo_responsavel: state.nucleo_responsavel,
       tipo_servico: state.tipo_servico_uuid,
       situacao: state.situacao,
       empresa_contratada: state.empresa_contratada.uuid,
       estado_contrato: state.estado,
       data_ordem_inicio: moment(state.data_ordem_inicio).format("YYYY-MM-DD"),
-      data_encerramento: null,
+      data_encerramento: state.data_encerramento,
       data_assinatura: state.data_assinatura
         ? moment(state.data_assinatura).format("YYYY-MM-DD")
         : null,
-      vigencia_em_dias: state.vigencia_em_dias,
+      vigencia: state.vigencia,
       processo: state.processo,
       total_mensal: state.totalMensal,
       objeto: state.objeto,
       observacoes: state.observacoes,
-      termo_contrato: state.contrato.termo_contrato,
+      termo_contrato: state.contrato.termo_contrato
+        ? state.contrato.termo_contrato
+        : state.termo_contrato,
       coordenador: state.coordenador,
       dotacoes_orcamentarias: dotacoesState
         ? dotacoesState.dotacoes
@@ -35,7 +37,12 @@ export const mapStateToPayload = (state, dotacoesState) => {
         : state.contrato.edital
         ? state.contrato.edital.uuid
         : null,
+      ata: state.ata.uuid,
     };
+    if (incluir) {
+      delete payload.unidades_selecionadas;
+      delete payload.dotacoes_orcamentarias;
+    }
   }
 
   return payload;

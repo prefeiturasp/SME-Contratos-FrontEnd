@@ -18,6 +18,13 @@ export const getListaDeAtas = async filtro => {
   return (await api.get(`atas/${parametros}`, AUTH_HEADER)).data;
 };
 
+export const getAtasPorEdital = async uuid => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  return (await api.get(`atas/atas-por-edital/${uuid}`, AUTH_HEADER)).data;
+};
+
 export const criaAta = async payload => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
