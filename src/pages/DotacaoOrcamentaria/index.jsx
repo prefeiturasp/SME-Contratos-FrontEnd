@@ -24,7 +24,6 @@ const DotacaoOrcamentaria = () => {
   const { uuid } = getUrlParams();
 
   const [visivel, setVisivel] = useState(false);
-  const [visivelCancelar, setVisivelCancelar] = useState(false);
   const [dotacao, setDotacao] = useState({});
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [incluir, setIncluir] = useState(true);
@@ -91,8 +90,8 @@ const DotacaoOrcamentaria = () => {
   };
 
   const mensagemConfirmacao = incluir
-    ? "Confirma a alteração desta dotacao?"
-    : "Confirma a criação de uma nova dotacao?";
+    ? "Confirma a alteração desta dotação?"
+    : "Confirma a criação de uma nova dotação?";
 
   const habilitaBotao =
     !modoVisualizacao &&
@@ -121,10 +120,13 @@ const DotacaoOrcamentaria = () => {
               onClick={exibeDialog}
             />
             <Button
-              disabled={!habilitaBotao}
               className="btn-coad-background-outline mr-2"
               label="Cancelar"
-              onClick={() => setVisivelCancelar(true)}
+              onClick={async () => {
+                toast.showSuccess("Alterações canceladas");
+                await setDotacao({});
+                mudaFocoInput(0);
+              }}
             />
             <ButtonBootstrap
               onClick={() => redirect("#/orcamento")}
@@ -133,35 +135,6 @@ const DotacaoOrcamentaria = () => {
               <i className="fas fa-arrow-left" /> Voltar
             </ButtonBootstrap>
           </FormGroup>
-          <Dialog
-            header={"Cancelar "}
-            visible={visivelCancelar}
-            style={{ width: "60vw" }}
-            modal={true}
-            onHide={() => setVisivelCancelar(false)}
-            footer={
-              <FormGroup className="pt-4 d-flex justify-content-end">
-                <Button
-                  disabled={!habilitaBotao}
-                  className="btn-coad-background-outline"
-                  label="Sim"
-                  onClick={async () => {
-                    toast.showSuccess("Alterações canceladas");
-                    await setDotacao({});
-                    mudaFocoInput(0);
-                    setVisivelCancelar(false);
-                  }}
-                />
-                <Button
-                  className="btn-coad-primary mx-2"
-                  onClick={() => setVisivelCancelar(false)}
-                  label="Não"
-                />
-              </FormGroup>
-            }
-          >
-            <span>Deseja cancelar as alterações dessa dotação?</span>
-          </Dialog>
           <Dialog
             header={"Confirmar"}
             visible={visivel}
@@ -332,10 +305,13 @@ const DotacaoOrcamentaria = () => {
               onClick={exibeDialog}
             />
             <Button
-              disabled={!habilitaBotao}
               className="btn-coad-background-outline mr-2"
               label="Cancelar"
-              onClick={() => setVisivelCancelar(true)}
+              onClick={async () => {
+                toast.showSuccess("Alterações canceladas");
+                await setDotacao({});
+                mudaFocoInput(0);
+              }}
             />
             <ButtonBootstrap
               onClick={() => redirect("#/orcamento")}
