@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Dropdown } from "primereact/dropdown";
-import { getEmpresasLookup } from "../../../service/Empresas.service";
+import { getEmpresasLookupCompleto } from "../../../service/Empresas.service";
 
 export class SelecionaEmpresa extends Component {
   constructor() {
@@ -19,7 +19,7 @@ export class SelecionaEmpresa extends Component {
   }
 
   async buscaEmpresas() {
-    const empresas = await getEmpresasLookup();
+    const empresas = await getEmpresasLookupCompleto();
     this.setState({ empresas });
   }
 
