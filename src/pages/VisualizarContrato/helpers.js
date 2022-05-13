@@ -5,7 +5,7 @@ export const mapStateToPayload = (state, dotacoesState) => {
   let payload = {};
   if (state) {
     payload = {
-      gestor: state.gestor.uuid,
+      gestor: state.gestor ? state.gestor.uuid : null,
       nucleo_responsavel: state.nucleo_responsavel,
       tipo_servico: state.tipo_servico_uuid,
       situacao: state.situacao,
@@ -16,12 +16,14 @@ export const mapStateToPayload = (state, dotacoesState) => {
       data_assinatura: state.data_assinatura
         ? moment(state.data_assinatura).format("YYYY-MM-DD")
         : null,
-      vigencia_em_dias: state.vigencia_em_dias,
+      vigencia: state.vigencia,
       processo: state.processo,
       total_mensal: state.totalMensal,
       objeto: state.objeto,
       observacoes: state.observacoes,
-      termo_contrato: state.contrato.termo_contrato,
+      termo_contrato: state.contrato.termo_contrato
+        ? state.contrato.termo_contrato
+        : state.termo_contrato,
       coordenador: state.coordenador,
       dotacoes_orcamentarias: dotacoesState
         ? dotacoesState.dotacoes
@@ -36,6 +38,10 @@ export const mapStateToPayload = (state, dotacoesState) => {
         ? state.contrato.edital.uuid
         : null,
     };
+    if (payload.unidades_selecionadas.length === 0) {
+      delete payload.unidades_selecionadas;
+      delete payload.dotacoes_orcamentarias;
+    }
   }
 
   return payload;
