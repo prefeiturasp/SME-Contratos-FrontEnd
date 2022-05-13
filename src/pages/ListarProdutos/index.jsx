@@ -64,7 +64,7 @@ export default () => {
 
   return (
     <Page>
-      <h4>Produtos</h4>
+      <h4>Cadastro de Produtos</h4>
       <Container>
         <BuscaProdutosForm
           onBuscarClick={filtros => onBuscarClick(filtros)}
