@@ -15,7 +15,6 @@ import { Row, Col } from "reactstrap";
 
 import CoadAccordion from "../../components/Global/CoadAccordion";
 import { SelecionaData } from "../../components/Contratos/SelecionaData";
-import { SelecionaEmpresa } from "../../components/Contratos/SelecionaEmpresa";
 import { SelecionaEdital } from "../../components/Contratos/SelecionaEditalContrato";
 
 import useToast from "../../hooks/useToast";
@@ -24,6 +23,7 @@ import Page from "../../components/Global/Page";
 
 import { alteraAta, criaAta, getAta } from "../../service/Atas.service";
 import { STATUS_ATA, UNIDADES_VIGENCIA } from "./constantes";
+import { AccordionEmpresaContratada } from "../../components/Contratos/AccordionEmpresaContratada";
 
 const Ata = () => {
   const { uuid } = getUrlParams();
@@ -363,32 +363,12 @@ const Ata = () => {
               </div>
             </div>
           </CoadAccordion>
-
-          <CoadAccordion aberto={true} titulo="Empresa Contratada">
-            <div className="p-grid">
-              <div className="p-col-6">
-                <Label className="font-weight-bold">Nome da Empresa</Label>
-                <SelecionaEmpresa
-                  className="w-100"
-                  empresa={ata.empresa}
-                  onSelect={e => setAta({ ...ata, empresa: e })}
-                  disabled={modoVisualizacao}
-                  filter
-                />
-              </div>
-
-              <div className="p-col-6">
-                <Label className="font-weight-bold">CNPJ da Empresa</Label>
-                <InputMask
-                  className="w-100"
-                  mask="99.999.999/9999-99"
-                  value={ata.empresa ? ata.empresa.cnpj : ""}
-                  disabled={true}
-                />
-              </div>
-            </div>
-          </CoadAccordion>
-
+          <AccordionEmpresaContratada
+            empresaContratada={ata.empresa ? ata.empresa : {}}
+            atualizaEmpresa={e => setAta({ ...ata, empresa: e })}
+            disabilitado={modoVisualizacao}
+            aberto={true}
+          />
           <FormGroup className="d-flex flex-row-reverse mt-3">
             <Button
               disabled={!habilitaBotao}
