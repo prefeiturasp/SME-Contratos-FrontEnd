@@ -22,7 +22,7 @@ export const getAtasPorEdital = async uuid => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
   };
-  return (await api.get(`atas/atas-por-edital/${uuid}`, AUTH_HEADER)).data;
+  return (await api.get(`atas/atas-por-edital/${uuid}/`, AUTH_HEADER)).data;
 };
 
 export const criaAta = async payload => {
