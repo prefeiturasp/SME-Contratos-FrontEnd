@@ -42,7 +42,6 @@ import { SelecionaEdital } from "../../components/Contratos/SelecionaEditalContr
 import { AccordionEmpresaContratada } from "../../components/Contratos/AccordionEmpresaContratada";
 import SelecionaAta from "../../components/Contratos/SelecionaAta";
 
-
 const nullToUndef = v => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
 
@@ -683,13 +682,17 @@ class VisualizarContratos extends Component {
                       this.setState({
                         alteracaoEdital: value,
                         edital: value,
-                        objeto_edital: value.objeto,
-                        tipoServico: value.objeto.nome,
-                        descricao_objeto_edital: value.descricao_objeto,
-                        tipo_servico: value.objeto,
+                        objeto_edital: value ? value.objeto : null,
+                        tipoServico: value ? value.objeto.nome : null,
+                        descricao_objeto_edital: value
+                          ? value.descricao_objeto
+                          : null,
+                        tipo_servico: value ? value.objeto : null,
                         tipo_servico_uuid: null,
                         objeto: " ",
-                        descricao_objeto_contrato: value.descricao_objeto,
+                        descricao_objeto_contrato: value
+                          ? value.descricao_objeto
+                          : null,
                       })
                     }
                     disabled={disabilitado || (!incluir && !contrato.edital)}
