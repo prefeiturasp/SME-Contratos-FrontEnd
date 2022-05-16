@@ -37,7 +37,7 @@ export const mapStateToPayload = (state, dotacoesState, incluir) => {
         : state.contrato.edital
         ? state.contrato.edital.uuid
         : null,
-      ata: state.ata.uuid,
+      ata: state.ata ? state.ata.uuid : null,
     };
     if (incluir) {
       delete payload.unidades_selecionadas;
