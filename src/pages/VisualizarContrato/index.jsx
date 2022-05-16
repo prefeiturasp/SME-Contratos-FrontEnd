@@ -687,7 +687,7 @@ class VisualizarContratos extends Component {
                         descricao_objeto_contrato: value.descricao_objeto,
                       })
                     }
-                    disabled={disabilitado}
+                    disabled={disabilitado || (!incluir && !contrato.edital)}
                   />
                 </Col>
                 <Col xs={12} sm={12} md={12} lg={4} xl={4}>
@@ -730,6 +730,7 @@ class VisualizarContratos extends Component {
                           );
                           this.setState({ dataEncerramento: dataEncerramento });
                         }}
+                        keepInvalid={true}
                         locale="pt"
                         dateFormat="dd/mm/yy"
                         showIcon={true}
@@ -757,6 +758,7 @@ class VisualizarContratos extends Component {
                           );
                           this.setState({ dataEncerramento: dataEncerramento });
                         }}
+                        keepInvalid={true}
                         showIcon={true}
                         locale="pt"
                         dateFormat="dd/mm/yy"
@@ -796,7 +798,7 @@ class VisualizarContratos extends Component {
                       <div className="row">
                         <div className="input-group vigencia-contrato">
                           <div className="col-6">
-                            <Label>Período de Vigência de Contrato</Label>
+                            <Label>Período de Vigência do Contrato</Label>
                             <InputText
                               value={nullToUndef(vigencia)}
                               placeholder="Ex: 365 dias"
@@ -814,7 +816,6 @@ class VisualizarContratos extends Component {
                                   dataEncerramento: dataEncerramento,
                                 });
                               }}
-                              label="Vigência de Contrato"
                               name="vigencia"
                               required
                               type="text"
@@ -853,7 +854,7 @@ class VisualizarContratos extends Component {
                     </Col>
                     <Col sm={12} xs={12} md={12} lg={6} xl={6}>
                       <FormGroup>
-                        <Label>Data de Encerramento de Contrato</Label>
+                        <Label>Data de Encerramento do Contrato</Label>
                         <Input value={dataEncerramento || ""} disabled={true} />
                       </FormGroup>
                     </Col>
