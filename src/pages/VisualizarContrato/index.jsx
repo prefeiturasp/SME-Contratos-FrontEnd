@@ -1139,13 +1139,17 @@ class VisualizarContratos extends Component {
               <Col lg={6} className="d-flex flex-row-reverse">
                 <Button
                   className="btn btn-coad-background-outline"
-                  onClick={() => this.handleConfimar()}
+                  onClick={() =>
+                    incluir
+                      ? this.handleConfimarCriacao()
+                      : this.handleConfimarEdicao()
+                  }
                   disabled={disabilitado || !habilitaBotao}
                 >
                   Salvar
                 </Button>
                 <Button
-                  onClick={() => redirect("#/contratos-continuos")}
+                  onClick={() => redirect("#/gestao-contratos")}
                   className="btn-coad-blue mx-2"
                 >
                   <i className="fas fa-arrow-left" /> Voltar
