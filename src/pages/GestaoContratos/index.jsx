@@ -5,6 +5,7 @@ import TableContrato from "../../components/Contratos/TableContrato";
 import { getContratos } from "../../service/Contratos.service";
 import "./style.scss";
 import { BuscaContratosForm } from "../../components/Contratos/BuscaContratosForm";
+import { GESTAO_CONTRATOS } from "../../configs/urls.constants";
 
 function GestaoContratos() {
   const colunas = [
@@ -69,7 +70,12 @@ function GestaoContratos() {
   }, [filtros]);
 
   return (
-    <Page>
+    <Page
+      breadcrumb={[
+        { label: "Contratos" },
+        { label: "Gestão de Contratos", url: "#" + GESTAO_CONTRATOS },
+      ]}
+    >
       <h4>Gestão de Contratos</h4>
       <Container>
         <BuscaContratosForm onBuscarClick={filtros => onBuscarClick(filtros)} />

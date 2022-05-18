@@ -29,6 +29,7 @@ import {
   SITUACAO_PRODUTO,
 } from "./constantes";
 import "./style.scss";
+import { LISTAR_PRODUTOS, PRODUTOS } from "../../configs/urls.constants";
 
 const Produtos = () => {
   const { uuid } = getUrlParams();
@@ -180,7 +181,13 @@ const Produtos = () => {
 
   return (
     <>
-      <Page>
+      <Page
+        breadcrumb={[
+          { label: "Cadastros" },
+          { label: "Produtos", url: "#" + LISTAR_PRODUTOS },
+          { label: "Novo Produto", url: "#" + PRODUTOS },
+        ]}
+      >
         <h4>{uuid ? "Produto " + produto.nome : "Cadastro de Produtos"}</h4>
         <Container>
           <FormGroup className="d-flex flex-row-reverse mt-3">

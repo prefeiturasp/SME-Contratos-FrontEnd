@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { AppTopbar } from "../../AppTopbar";
 import { AppMenu } from "../../AppMenu";
 import { AppProfile } from "../../AppProfile";
+import { BreadCrumb } from "primereact/breadcrumb";
 import "primereact/resources/themes/nova/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -135,6 +136,8 @@ class Page extends Component {
       "layout-sidebar-light": this.state.layoutColorMode === "light",
     });
 
+    const home = { icon: "pi pi-home", url: "/" };
+
     return (
       <div className={wrapperClass} onClick={this.onWrapperClick}>
         <AppTopbar
@@ -157,7 +160,8 @@ class Page extends Component {
         </div>
 
         <div className="layout-main">
-          <h3 className="pt-3">{this.props.titulo}</h3>
+          <BreadCrumb model={this.props.breadcrumb} home={home} />
+          {this.props.titulo && <h3 className="pt-3">{this.props.titulo}</h3>}
           {this.props.children}
         </div>
 

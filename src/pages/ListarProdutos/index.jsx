@@ -4,6 +4,7 @@ import Container from "../../components/Global/Container";
 import { BuscaProdutosForm } from "../../components/Contratos/BuscaProdutosForm";
 import ListaProdutos from "../../components/Contratos/ListaProdutos";
 import { getListaDeProdutos } from "../../service/Produtos.service";
+import { LISTAR_PRODUTOS } from "../../configs/urls.constants";
 
 export default () => {
   const filtrosIniciais = {
@@ -63,7 +64,12 @@ export default () => {
   }, [filtros]);
 
   return (
-    <Page>
+    <Page
+      breadcrumb={[
+        { label: "Cadastros" },
+        { label: "Produtos", url: "#" + LISTAR_PRODUTOS },
+      ]}
+    >
       <h4>Cadastro de Produtos</h4>
       <Container>
         <BuscaProdutosForm

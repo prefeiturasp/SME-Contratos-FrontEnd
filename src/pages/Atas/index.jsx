@@ -24,6 +24,7 @@ import Page from "../../components/Global/Page";
 import { alteraAta, criaAta, getAta } from "../../service/Atas.service";
 import { STATUS_ATA, UNIDADES_VIGENCIA } from "./constantes";
 import { AccordionEmpresaContratada } from "../../components/Contratos/AccordionEmpresaContratada";
+import { ATAS, LISTAR_ATAS } from "../../configs/urls.constants";
 
 const Ata = () => {
   const { uuid } = getUrlParams();
@@ -138,7 +139,13 @@ const Ata = () => {
 
   return (
     <>
-      <Page>
+      <Page
+        breadcrumb={[
+          { label: "Contratos" },
+          { label: "Atas", url: "#" + LISTAR_ATAS },
+          { label: "Nova Ata", url: "#" + ATAS },
+        ]}
+      >
         <h3>{uuid ? "Ata Nº " + ata.numero : "Cadastro de Atas"}</h3>
         <Container>
           <FormGroup className="d-flex flex-row-reverse mt-3">
