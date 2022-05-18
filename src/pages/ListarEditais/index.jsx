@@ -67,7 +67,7 @@ function ListarEditaisPage() {
     <Page>
       <Messages ref={messages}></Messages>
       <h4>Editais</h4>
-      <Container icone="pi pi-filter-fill" subtitulo="Filtrar Editais">
+      <Container>
         <BuscaEditaisForm onBuscarClick={filtros => onBuscarClick(filtros)} />
         <hr />
         <ListaEditais
