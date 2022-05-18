@@ -11,7 +11,6 @@ import { SelecionaData } from "../SelecionaData";
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
 import { Col, Row } from "reactstrap";
-import Container from "../../Global/Container";
 
 export class BuscaContratosForm extends Component {
   constructor(props) {
