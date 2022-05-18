@@ -71,7 +71,7 @@ function GestaoContratos() {
   return (
     <Page>
       <h4>Gestão de Contratos</h4>
-      <Container icone="pi pi-chart-bar">
+      <Container>
         <BuscaContratosForm onBuscarClick={filtros => onBuscarClick(filtros)} />
         <hr />
         <TableContrato
