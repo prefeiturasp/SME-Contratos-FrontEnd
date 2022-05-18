@@ -12,7 +12,7 @@ const CardLogo = props => {
   const rota = props.rota;
   return (
     <>
-      <Col xl={5}>
+      <Col xl={4}>
         <Card
           className="servico h-75"
           style={styled}
@@ -21,7 +21,7 @@ const CardLogo = props => {
           <CardImg
             cssModule
             src={props.iconeLogo}
-            height="90"
+            height="70"
             alt="Icone de seleção"
           />
           <CardBody>
