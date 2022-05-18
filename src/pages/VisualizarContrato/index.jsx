@@ -30,7 +30,6 @@ import { redirect } from "../../utils/redirect";
 import { mapStateToPayload, corDoPrazo } from "./helpers";
 import { Dialog } from "primereact/dialog";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
-import ListarObrigacoesContratuais from "../../components/Contratos/ListarObrigacoesContratuais";
 import DotacaoOrcamentaria from "../CadastrarContrato/DotacaoOrcamentaria";
 import { Button as AntButton, Switch } from "antd";
 import $ from "jquery";
@@ -1004,13 +1003,6 @@ class VisualizarContratos extends Component {
                   </div>
                 </FormGroup>
               )}
-            </CoadAccordion>
-            <CoadAccordion titulo={"Obrigações Contratuais"}>
-              <ListarObrigacoesContratuais
-                grupos={
-                  contrato.edital ? contrato.edital.grupos_de_obrigacao : []
-                }
-              />
             </CoadAccordion>
             <CoadAccordion titulo={"Gestão de Contrato"}>
               <Row>
