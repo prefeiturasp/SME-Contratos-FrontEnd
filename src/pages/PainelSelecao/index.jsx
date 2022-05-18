@@ -1,14 +1,13 @@
 import React, { Component } from "react";
+
 import Page from "../../components/Global/Page";
-import CardSection from "../../components/Contratos/CardSection";
-import IconeEquipamento from "../../assets/images/icon-equipamento.svg";
-import IconeServico from "../../assets/images/icon-servicos.svg";
-import CardEquipamento from "../../components/Contratos/CardEquipamento";
-import CardServico from "../../components/Contratos/CardServico";
-import { Button, ButtonGroup } from "reactstrap";
+import CardLogo from "../../components/Contratos/CardLogo";
+import { Button, ButtonGroup, Row } from "reactstrap";
 import { Messages } from "primereact/messages";
 import { redirect } from "../../utils/redirect";
 import { getMinhasNotificacoesVigenciaContratos } from "../../service/Notificacoes.service";
+import iconeContratos from "../../../src/assets/images/icon-contratos.svg";
+import IconeOrcamento from "../../../src/assets/images/icon-orcamento.svg";
 
 class PainelSelecao extends Component {
   constructor(props) {
@@ -66,17 +65,18 @@ class PainelSelecao extends Component {
               <i className="pi pi-list mx-4"></i>
             </Button>
           </ButtonGroup>
-
-          <CardSection icone={IconeEquipamento} titulo="Escolha Equipamento">
-            <CardEquipamento />
-          </CardSection>
-
-          <CardSection
-            icone={IconeServico}
-            titulo="Escolha Categoria de Serviço"
-          >
-            <CardServico />
-          </CardSection>
+          <Row>
+            <CardLogo
+              titulo="Contratos"
+              iconeLogo={iconeContratos}
+              rota="#/gestao-contratos"
+            />
+            <CardLogo
+              titulo="Orçamentos"
+              iconeLogo={IconeOrcamento}
+              rota="#/orcamento"
+            />
+          </Row>
         </Page>
       </div>
     );

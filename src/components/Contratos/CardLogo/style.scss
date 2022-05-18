@@ -1,0 +1,23 @@
+.servico {
+  //display: flex initial;
+  .card-body {
+    flex: initial !important;
+  }
+  .card-title {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  justify-content: center !important;
+  height: 100% !important;
+  width: 100%;
+  margin: 20px 0;
+  border: 1px solid #602a2a;
+  border-bottom: 8px #602a2a solid;
+  color: #602a2a;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
