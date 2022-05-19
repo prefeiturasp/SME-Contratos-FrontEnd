@@ -4,6 +4,7 @@ import Container from "../../components/Global/Container";
 import ListaAtas from "../../components/Contratos/ListaAtas";
 import { BuscaAtasForm } from "../../components/Contratos/BuscaAtasForm";
 import { getListaDeAtas } from "../../service/Atas.service";
+import { LISTAR_ATAS } from "../../configs/urls.constants";
 
 export default () => {
   const filtrosIniciais = {
@@ -66,7 +67,12 @@ export default () => {
   }, [filtros]);
 
   return (
-    <Page>
+    <Page
+      breadcrumb={[
+        { label: "Contratos" },
+        { label: "Atas", url: "#" + LISTAR_ATAS },
+      ]}
+    >
       <h4>Atas</h4>
       <Container>
         <BuscaAtasForm

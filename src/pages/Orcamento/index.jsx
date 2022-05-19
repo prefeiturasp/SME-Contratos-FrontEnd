@@ -9,6 +9,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Paginator } from "primereact/paginator";
 import { getListaDotacoes } from "../../service/DotacaoOrcamentaria.service";
+import { ORCAMENTO } from "../../configs/urls.constants";
 
 export default () => {
   const [dotacoes, setDotacoes] = useState([]);
@@ -40,7 +41,7 @@ export default () => {
   }, [pagina]);
 
   return (
-    <Page>
+    <Page breadcrumb={[{ label: "Orçamento", url: "#" + ORCAMENTO }]}>
       <h4>Orçamento</h4>
       <Container>
         <Card className="filtro filtroBorda">

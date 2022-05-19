@@ -5,6 +5,7 @@ import ListaEditais from "../../components/Contratos/ListaEditais";
 import { Messages } from "primereact/messages";
 import { BuscaEditaisForm } from "../../components/Contratos/BuscaEditaisForm";
 import { getListaDeEditais } from "../../service/Editais.service";
+import { LISTAR_EDITAIS } from "../../configs/urls.constants";
 
 function ListarEditaisPage() {
   const filtrosIniciais = {
@@ -64,7 +65,12 @@ function ListarEditaisPage() {
   }, [filtros]);
 
   return (
-    <Page>
+    <Page
+      breadcrumb={[
+        { label: "Contratos" },
+        { label: "Editais", url: "#" + LISTAR_EDITAIS },
+      ]}
+    >
       <Messages ref={messages}></Messages>
       <h4>Editais</h4>
       <Container>

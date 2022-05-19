@@ -19,6 +19,7 @@ import {
   criaDotacaoOrcamentaria,
   getDotacaoOrcamentaria,
 } from "../../service/DotacaoOrcamentaria.service";
+import { DOTACAO_ORCAMENTARIA, ORCAMENTO } from "../../configs/urls.constants";
 
 const DotacaoOrcamentaria = () => {
   const { uuid } = getUrlParams();
@@ -105,7 +106,15 @@ const DotacaoOrcamentaria = () => {
 
   return (
     <>
-      <Page>
+      <Page
+        breadcrumb={[
+          { label: "Orçamento", url: "#" + ORCAMENTO },
+          {
+            label: "Nova Dotação Orçamentária",
+            url: "#" + DOTACAO_ORCAMENTARIA,
+          },
+        ]}
+      >
         <h4>
           {uuid
             ? "Dotação " + dotacao.numero_dotacao

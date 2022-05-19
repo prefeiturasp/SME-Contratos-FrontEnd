@@ -40,6 +40,10 @@ import { UnidadesEnvolvidas } from "../CadastrarContrato/UnidadesEnvolvidas";
 import { SelecionaEdital } from "../../components/Contratos/SelecionaEditalContrato";
 import { AccordionEmpresaContratada } from "../../components/Contratos/AccordionEmpresaContratada";
 import SelecionaAta from "../../components/Contratos/SelecionaAta";
+import {
+  GESTAO_CONTRATOS,
+  VISUALIZAR_CONTRATOS,
+} from "../../configs/urls.constants";
 
 const nullToUndef = v => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
@@ -476,6 +480,11 @@ class VisualizarContratos extends Component {
                 }`
               : "Novo Termo de Contrato"
           }
+          breadcrumb={[
+            { label: "Contratos" },
+            { label: "Gestão de Contratos", url: "#" + GESTAO_CONTRATOS },
+            { label: "Novo Contrato", url: "#" + VISUALIZAR_CONTRATOS },
+          ]}
         >
           <Toast ref={el => (this.toast = el)}></Toast>
           <CardSuperior
