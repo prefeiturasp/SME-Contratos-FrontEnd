@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, CardTitle, CardImg, Col } from "reactstrap";
+import { Card, CardBody, CardTitle, Col } from "reactstrap";
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
 
