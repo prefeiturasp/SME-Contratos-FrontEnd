@@ -1,11 +1,8 @@
 import React, { Component } from "react";
+
 import Page from "../../components/Global/Page";
-import CardSection from "../../components/Contratos/CardSection";
-import IconeEquipamento from "../../assets/images/icon-equipamento.svg";
-import IconeServico from "../../assets/images/icon-servicos.svg";
-import CardEquipamento from "../../components/Contratos/CardEquipamento";
-import CardServico from "../../components/Contratos/CardServico";
-import { Button, ButtonGroup } from "reactstrap";
+import CardLogo from "../../components/Contratos/CardLogo";
+import { Button, ButtonGroup, Row } from "reactstrap";
 import { Messages } from "primereact/messages";
 import { redirect } from "../../utils/redirect";
 import { getMinhasNotificacoesVigenciaContratos } from "../../service/Notificacoes.service";
@@ -66,17 +63,18 @@ class PainelSelecao extends Component {
               <i className="pi pi-list mx-4"></i>
             </Button>
           </ButtonGroup>
-
-          <CardSection icone={IconeEquipamento} titulo="Escolha Equipamento">
-            <CardEquipamento />
-          </CardSection>
-
-          <CardSection
-            icone={IconeServico}
-            titulo="Escolha Categoria de Serviço"
-          >
-            <CardServico />
-          </CardSection>
+          <Row>
+            <CardLogo
+              titulo="Contratos"
+              iconeLogo="fas fa-file-contract"
+              rota="#/gestao-contratos"
+            />
+            <CardLogo
+              titulo="Orçamentos"
+              iconeLogo="far fa-money-bill-alt"
+              rota="#/orcamento"
+            />
+          </Row>
         </Page>
       </div>
     );

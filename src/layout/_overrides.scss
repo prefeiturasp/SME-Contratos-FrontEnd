@@ -276,6 +276,18 @@ $hoverColor: #431e1e;
   width: 40vw;
 }
 
+.p-breadcrumb {
+  background: none;
+  padding: 1rem 0;
+  border: none;
+  .p-menuitem-text {
+    color: $primaryColor !important;
+  }
+  .p-breadcrumb-chevron {
+    color: $primaryColor !important;
+  }
+}
+
 .layout-topbar {
   .layout-topbar-icons {
     button {

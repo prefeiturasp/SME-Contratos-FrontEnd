@@ -5,6 +5,7 @@ import Container from "../../components/Global/Container";
 import { getListaDeEmpresas } from "../../service/Empresas.service";
 import ListaEmpresas from "../../components/Contratos/ListaEmpresas";
 import { BuscaEmpresasForm } from "../../components/Contratos/BuscaEmpresasForm";
+import { LISTAR_EMPRESAS } from "../../configs/urls.constants";
 
 export default () => {
   const filtrosIniciais = {
@@ -64,7 +65,12 @@ export default () => {
   }, [filtros]);
 
   return (
-    <Page>
+    <Page
+      breadcrumb={[
+        { label: "Cadastros" },
+        { label: "Empresas", url: "#" + LISTAR_EMPRESAS },
+      ]}
+    >
       <h4>Cadastro de Empresas</h4>
       <Container>
         <BuscaEmpresasForm

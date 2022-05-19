@@ -8,6 +8,7 @@ import Edital from "./Edital";
 import { getUrlParams } from "../../utils/params";
 import { Alert } from "reactstrap";
 import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
+import { EDITAL, LISTAR_EDITAIS } from "../../configs/urls.constants";
 
 const EditalContainer = () => {
   const { uuid } = getUrlParams();
@@ -48,7 +49,13 @@ const EditalContainer = () => {
 
   return (
     <Fragment>
-      <Page>
+      <Page
+        breadcrumb={[
+          { label: "Contratos" },
+          { label: "Editais", url: "#" + LISTAR_EDITAIS },
+          { label: "Novo Edital", url: "#" + EDITAL },
+        ]}
+      >
         {hasFlashMessage("sucesso") ? (
           <Alert
             color="success"

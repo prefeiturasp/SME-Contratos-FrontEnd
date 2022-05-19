@@ -27,6 +27,7 @@ import { removeCaracteresEspeciais } from "../../utils/formatador";
 import "./style.scss";
 import { validarCNPJ } from "../../utils/validadores";
 import { deepCopy } from "../../utils/deepCopy";
+import { EMPRESAS, LISTAR_EMPRESAS } from "../../configs/urls.constants";
 
 let valoresIniciais = {
   contatos: [
@@ -242,7 +243,13 @@ const Empresas = () => {
 
   return (
     <>
-      <Page>
+      <Page
+        breadcrumb={[
+          { label: "Cadastros" },
+          { label: "Empresas", url: "#" + LISTAR_EMPRESAS },
+          { label: "Nova Empresa", url: "#" + EMPRESAS },
+        ]}
+      >
         <h5>Cadastro de Empresas</h5>
         <Container>
           <FormGroup className="d-flex flex-row-reverse mt-3">

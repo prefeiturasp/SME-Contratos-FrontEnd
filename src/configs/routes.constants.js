@@ -20,115 +20,116 @@ import ListarProdutos from "../pages/ListarProdutos";
 import Produtos from "../pages/Produtos";
 import Orcamento from "../pages/Orcamento";
 import DotacaoOrcamentaria from "../pages/DotacaoOrcamentaria";
+import * as constants from "./urls.constants";
 
 const RoutesConfig = [
   {
-    path: "/",
+    path: constants.HOME,
     component: Home,
     exact: true,
   },
   {
-    path: "/lista_contratos",
+    path: constants.LISTA_CONTRATOS,
     component: ListaContrato,
     exact: false,
   },
   {
-    path: "/painel-selecao",
+    path: constants.PAINEL_SELECAO,
     component: painelSelecao,
     exact: false,
   },
   {
-    path: "/contratos-continuos",
+    path: constants.CONTRATOS_CONTINUOS,
     component: ContratosContinuos,
     exact: false,
   },
   {
-    path: "/visualizar-contrato",
+    path: constants.VISUALIZAR_CONTRATOS,
     component: VisualizarContratos,
     exact: false,
   },
   {
-    path: "/designacao-cargos",
+    path: constants.DESIGNACAO_CARGOS,
     component: DesignacaoCargos,
     exact: false,
   },
   {
-    path: "/atribuicao-termo-contrato",
+    path: constants.ATRIBUICAO_TERMO_CONTRATO,
     component: AtribuicaoTermoContrato,
     exact: false,
   },
   {
-    path: "/gestao-contratos",
+    path: constants.GESTAO_CONTRATOS,
     component: GestaoContratos,
     exact: false,
   },
   {
-    path: "/listar-atas",
+    path: constants.LISTAR_ATAS,
     component: ListarAtas,
     exact: false,
   },
   {
-    path: "/atas",
+    path: constants.ATAS,
     component: Atas,
     exact: false,
   },
   {
-    path: "/empresas",
+    path: constants.EMPRESAS,
     component: Empresas,
     exact: false,
   },
   {
-    path: "/listar-empresas",
+    path: constants.LISTAR_EMPRESAS,
     component: ListarEmpresas,
     exact: false,
   },
   {
-    path: "/listar-produtos",
+    path: constants.LISTAR_PRODUTOS,
     component: ListarProdutos,
     exact: false,
   },
   {
-    path: "/produtos",
+    path: constants.PRODUTOS,
     component: Produtos,
     exact: false,
   },
   {
-    path: "/cadastro-unico-contrato",
+    path: constants.CADASTRAR_CONTRATO,
     component: CadastrarContrato,
     exact: false,
   },
   {
-    path: "/modelo-ateste",
+    path: constants.MODELO_ATESTE,
     component: ModeloAteste,
     exact: false,
   },
   {
-    path: "/listar-modelos-ateste",
+    path: constants.LISTAR_MODELOS_ATESTE,
     component: ListarModelosAteste,
     exact: false,
   },
   {
-    path: "/edital",
+    path: constants.EDITAL,
     component: Edital,
     exact: false,
   },
   {
-    path: "/listar-editais",
+    path: constants.LISTAR_EDITAIS,
     component: ListarEditais,
     exact: false,
   },
   {
-    path: "/teste",
+    path: constants.TESTE,
     component: Teste,
     exact: false,
   },
   {
-    path: "/orcamento",
+    path: constants.ORCAMENTO,
     component: Orcamento,
     exact: false,
   },
   {
-    path: "/dotacao-orcamentaria",
+    path: constants.DOTACAO_ORCAMENTARIA,
     component: DotacaoOrcamentaria,
     exact: false,
   },
@@ -139,43 +140,43 @@ export default RoutesConfig;
 export const MenuConfig = [
   {
     label: "Cadastros",
-    icon: "pi pi-file-o",
+    icon: "pi pi-list",
     items: [
       {
         label: "Cadastro de Empresas",
         icon: "pi pi-cog pi-th-large",
-        to: "/listar-empresas",
+        to: constants.LISTAR_EMPRESAS,
       },
       {
         label: "Cadastro de Produtos",
         icon: "pi pi-cog pi-th-large",
-        to: "/listar-produtos",
+        to: constants.LISTAR_PRODUTOS,
       },
     ],
   },
   {
     label: "Contratos",
-    icon: "pi pi-list",
+    icon: "fas fa-file-contract",
     items: [
       {
         label: "Gestão de Contratos",
         icon: "pi pi-cog pi-th-large",
-        to: "/gestao-contratos",
+        to: constants.GESTAO_CONTRATOS,
       },
       {
         label: "Editais",
         icon: "pi pi-cog pi-th-large",
-        to: "/listar-editais",
+        to: constants.LISTAR_EDITAIS,
       },
       {
         label: "Atas",
         icon: "pi pi-cog pi-th-large",
-        to: "/listar-atas",
+        to: constants.LISTAR_ATAS,
       },
       {
         label: "Atribuição Termo Contratos",
         icon: "pi pi-cog pi-th-large",
-        to: "/atribuicao-termo-contrato",
+        to: constants.ATRIBUICAO_TERMO_CONTRATO,
       },
     ],
   },
@@ -183,7 +184,7 @@ export const MenuConfig = [
   {
     label: "Orçamento",
     icon: "pi pi-money-bill",
-    to: "/orcamento",
+    to: constants.ORCAMENTO,
   },
   {
     label: "Relatórios",
@@ -199,12 +200,12 @@ export const MenuConfig = [
       {
         label: "Designação de Cargos",
         icon: "pi pi-cog pi-th-large",
-        to: "/designacao-cargos",
+        to: constants.DESIGNACAO_CARGOS,
       },
       {
         label: "Modelos de Ateste",
         icon: "pi pi-cog pi-th-large",
-        to: "/listar-modelos-ateste",
+        to: constants.LISTAR_MODELOS_ATESTE,
       },
     ],
   },
