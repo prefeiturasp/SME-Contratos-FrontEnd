@@ -139,7 +139,7 @@ export default RoutesConfig;
 export const MenuConfig = [
   {
     label: "Cadastros",
-    icon: "pi pi-file-o",
+    icon: "pi pi-list",
     items: [
       {
         label: "Cadastro de Empresas",
@@ -155,7 +155,7 @@ export const MenuConfig = [
   },
   {
     label: "Contratos",
-    icon: "pi pi-list",
+    icon: "fas fa-file-contract",
     items: [
       {
         label: "Gestão de Contratos",
