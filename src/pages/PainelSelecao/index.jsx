@@ -6,8 +6,6 @@ import { Button, ButtonGroup, Row } from "reactstrap";
 import { Messages } from "primereact/messages";
 import { redirect } from "../../utils/redirect";
 import { getMinhasNotificacoesVigenciaContratos } from "../../service/Notificacoes.service";
-import iconeContratos from "../../../src/assets/images/icon-contratos.svg";
-import IconeOrcamento from "../../../src/assets/images/icon-orcamento.svg";
 
 class PainelSelecao extends Component {
   constructor(props) {
@@ -68,12 +66,12 @@ class PainelSelecao extends Component {
           <Row>
             <CardLogo
               titulo="Contratos"
-              iconeLogo={iconeContratos}
+              iconeLogo="fas fa-file-contract"
               rota="#/gestao-contratos"
             />
             <CardLogo
               titulo="Orçamentos"
-              iconeLogo={IconeOrcamento}
+              iconeLogo="far fa-money-bill-alt"
               rota="#/orcamento"
             />
           </Row>

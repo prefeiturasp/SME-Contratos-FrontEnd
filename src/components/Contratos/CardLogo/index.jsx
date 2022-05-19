@@ -10,6 +10,7 @@ const styled = {
 
 const CardLogo = props => {
   const rota = props.rota;
+  const icon = props.iconeLogo;
   return (
     <>
       <Col xl={4}>
@@ -18,12 +19,9 @@ const CardLogo = props => {
           style={styled}
           onClick={() => redirect(rota)}
         >
-          <CardImg
-            cssModule
-            src={props.iconeLogo}
-            height="70"
-            alt="Icone de seleção"
-          />
+          <div className="icon">
+            <i className={icon} />
+          </div>
           <CardBody>
             <CardTitle>{props.titulo}</CardTitle>
           </CardBody>
