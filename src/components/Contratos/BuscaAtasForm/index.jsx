@@ -9,7 +9,6 @@ import { SelecionaEmpresa } from "../SelecionaEmpresa";
 import { SelecionaTipoServico } from "../SelecionaTipoServico";
 import { SelecionaData } from "../SelecionaData";
 import { redirect } from "../../../utils/redirect";
-import "./style.scss";
 import SelecionaSituacaoAta from "../SelecionaSituacaoAta";
 
 export function BuscaAtasForm({ onBuscarClick, onLimparClick }) {

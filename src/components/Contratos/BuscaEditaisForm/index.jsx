@@ -8,7 +8,6 @@ import SelecionaTipoEdital from "../SelecionaTipoEdital";
 import { SelecionaTipoServico } from "../SelecionaTipoServico";
 import { SelecionaData } from "../SelecionaData";
 import { redirect } from "../../../utils/redirect";
-import "./style.scss";
 import SelecionaSituacaoEdital from "../SelecionaSituacaoEdital";
 
 export function BuscaEditaisForm({ onBuscarClick }) {
@@ -94,7 +93,7 @@ export function BuscaEditaisForm({ onBuscarClick }) {
       <div className="p-grid p-fluid">
         <div className="card card-w-title filtro">
           <div className="p-grid">
-            <div className="p-col-6">
+            <div className="p-col-6 filter">
               <h6>Nº do Edital</h6>
               <InputMask
                 mask="********/9999"

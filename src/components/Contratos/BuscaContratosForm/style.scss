@@ -1,20 +1,17 @@
 .filtro {
-  .p-card-footer {
-    padding-top: 0px;
-  }
   .card.card-w-title {
-    padding-bottom: 0px;
-  }
-
-  .card {
-    border: none;
+    padding: 0px;
   }
 }
-
 .p-card {
-  box-shadow: none !important;
+  box-shadow: none;
+}
+.p-grid {
+  margin-left: 0;
 }
 .filtro-head {
-  margin-right: 25px;
-  margin-left: -5px;
+  margin-right: -0.5em !important;
+}
+.p-col-6 {
+  padding: 0.5em 0.25em 0.5em 0.5em;
 }
