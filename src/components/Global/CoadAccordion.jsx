@@ -20,7 +20,7 @@ const CoadAccordion = props => {
         <div
           className="card-header coad-card-header-accrodion"
           onClick={toggle}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", background: "#F7EEEE" }}
         >
           <h5 className="mb-0  d-flex justify-content-end">
             <span className="w-100 pt-2">{titulo}</span>
