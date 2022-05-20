@@ -88,7 +88,7 @@ export class BuscaContratosForm extends Component {
 
     return (
       <Card footer={footer} className="filtro filtroBorda">
-        <Row>
+        <Row className="filtro-head">
           <Col lg={12} xl={6} className="float-left">
             <i className="pi pi-filter-fill">Filtrar contratos</i>
           </Col>
