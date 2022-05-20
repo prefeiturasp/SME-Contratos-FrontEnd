@@ -76,7 +76,11 @@ export function BuscaAtasForm({ onBuscarClick, onLimparClick }) {
   return (
     <Card footer={footer} className="filtro filtroBorda">
       <Row>
-        <Col lg={12} xl={12}>
+        <Col lg={12} xl={6} className="float-left">
+          <i className="pi pi-filter-fill">Filtrar Atas</i>
+        </Col>
+
+        <Col lg={12} xl={6}>
           <span className="float-right">
             <Button
               icon="pi pi-file"

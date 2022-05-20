@@ -231,7 +231,7 @@ const Ata = () => {
             )}
           </Row>
           <br />
-          <CoadAccordion aberto={true} titulo="Informações Gerais">
+          <CoadAccordion aberto={false} titulo="Informações Gerais">
             <div className="p-grid">
               <div className="p-col-6">
                 <Label className="font-weight-bold w-100">Número da Ata</Label>
@@ -275,6 +275,7 @@ const Ata = () => {
                   editalSalvo={ata.edital}
                   onSelect={e => setAta({ ...ata, edital: e })}
                   disabled={modoVisualizacao}
+                  filter
                 />
               </div>
 
@@ -367,7 +368,7 @@ const Ata = () => {
             empresaContratada={ata.empresa ? ata.empresa : {}}
             atualizaEmpresa={e => setAta({ ...ata, empresa: e })}
             disabilitado={modoVisualizacao}
-            aberto={true}
+            aberto={false}
           />
           <FormGroup className="d-flex flex-row-reverse mt-3">
             <Button
