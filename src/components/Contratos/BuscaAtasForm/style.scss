@@ -1,20 +1,11 @@
 .filtro {
-  .p-card-footer {
-    padding-top: 0px;
-  }
-  .card.card-w-title {
-    padding-bottom: 0px;
-  }
-
-  .card {
-    border: none;
+  .card.card-w-title-ata {
+    padding: 0px;
   }
 }
-
-.p-card {
-  box-shadow: none !important;
+.ata-grid {
+  margin-left: 0;
 }
-.row {
-  margin-right: 25px;
-  margin-left: -5px;
+.filtro-head-ata {
+  margin-right: -0.5em !important;
 }
