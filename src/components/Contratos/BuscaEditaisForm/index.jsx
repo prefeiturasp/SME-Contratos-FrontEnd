@@ -9,6 +9,7 @@ import { SelecionaTipoServico } from "../SelecionaTipoServico";
 import { SelecionaData } from "../SelecionaData";
 import { redirect } from "../../../utils/redirect";
 import SelecionaSituacaoEdital from "../SelecionaSituacaoEdital";
+import "./style.scss";
 
 export function BuscaEditaisForm({ onBuscarClick }) {
   const [filtros, setFiltros] = useState({});
@@ -71,7 +72,7 @@ export function BuscaEditaisForm({ onBuscarClick }) {
 
   return (
     <Card footer={footer} className="filtro filtroBorda">
-      <Row className="filtro-head">
+      <Row className="filtro-head-edital">
         <Col lg={12} xl={6} className="float-left">
           <i className="pi pi-filter-fill">Filtrar editais</i>
         </Col>
@@ -90,9 +91,9 @@ export function BuscaEditaisForm({ onBuscarClick }) {
           </span>
         </Col>
       </Row>
-      <div className="p-grid p-fluid">
-        <div className="card card-w-title filtro">
-          <div className="p-grid">
+      <div className="p-grid edital-grid p-fluid">
+        <div className="card card-w-title-edital filtro">
+          <div className="p-grid edital-grid">
             <div className="p-col-6 filter">
               <h6>Nº do Edital</h6>
               <InputMask
