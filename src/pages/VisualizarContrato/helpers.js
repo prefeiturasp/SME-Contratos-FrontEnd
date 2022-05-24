@@ -1,7 +1,7 @@
 import moment from "moment";
 import { Cor } from "../../configs/colors.constants";
 
-export const mapStateToPayload = (state, dotacoesState, incluir) => {
+export const mapStateToPayload = (state, incluir) => {
   let payload = {};
   if (state) {
     payload = {
@@ -25,10 +25,8 @@ export const mapStateToPayload = (state, dotacoesState, incluir) => {
         ? state.contrato.termo_contrato
         : state.termo_contrato,
       coordenador: state.coordenador,
-      dotacoes_orcamentarias: dotacoesState
-        ? dotacoesState.dotacoes
-        : state.dotacoes_orcamentarias,
-      valor_total: dotacoesState ? dotacoesState.valorTotal : state.valor_total,
+      dotacoes_orcamentarias: state.dotacoes_orcamentarias,
+      valor_total: state.valor_total,
       unidades_selecionadas: state.unidades_selecionadas,
       unidade_vigencia: state.unidade_vigencia,
       referencia_encerramento: state.referencia_encerramento,
@@ -41,7 +39,6 @@ export const mapStateToPayload = (state, dotacoesState, incluir) => {
     };
     if (incluir) {
       delete payload.unidades_selecionadas;
-      delete payload.dotacoes_orcamentarias;
     }
   }
 

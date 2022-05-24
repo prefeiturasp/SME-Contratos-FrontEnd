@@ -30,7 +30,7 @@ import { redirect } from "../../utils/redirect";
 import { mapStateToPayload, corDoPrazo } from "./helpers";
 import { Dialog } from "primereact/dialog";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
-import DotacaoOrcamentaria from "../CadastrarContrato/DotacaoOrcamentaria";
+import DotacoesOrcamentarias from "./DotacoesOrcamentarias";
 import { Button as AntButton, Switch } from "antd";
 import $ from "jquery";
 import moment from "moment";
@@ -99,7 +99,6 @@ class VisualizarContratos extends Component {
       novoObjeto: "",
       incluir: true,
     };
-    this.dotacoesRef = React.createRef();
     this.toast = React.createRef();
     this.tipoServico = React.createRef();
     addLocale("pt", CALENDAR_PT);
@@ -235,14 +234,7 @@ class VisualizarContratos extends Component {
 
   handleSubmitEditar = async () => {
     const { uuid } = this.state.contrato;
-    const dotacoesState = this.dotacoesRef.current
-      ? this.dotacoesRef.current.getState()
-      : null;
-    const payload = mapStateToPayload(
-      this.state,
-      dotacoesState,
-      this.state.incluir,
-    );
+    const payload = mapStateToPayload(this.state, this.state.incluir);
     this.setState({ disabilitado: true });
     this.setState({ modalEdicao: false });
     this.toast.show({
@@ -276,14 +268,7 @@ class VisualizarContratos extends Component {
 
   handleSubmitCadastro = async () => {
     const { uuid } = this.state.contrato;
-    const dotacoesState = this.dotacoesRef.current
-      ? this.dotacoesRef.current.getState()
-      : null;
-    const payload = mapStateToPayload(
-      this.state,
-      dotacoesState,
-      this.state.incluir,
-    );
+    const payload = mapStateToPayload(this.state, this.state.incluir);
 
     const resultado = await createContrato(payload, uuid);
     if (resultado.uuid) {
@@ -304,32 +289,10 @@ class VisualizarContratos extends Component {
   };
 
   handleConfimarEdicao = () => {
-    if (this.dotacoesRef.current) {
-      const erro = this.dotacoesRef.current.getError();
-      if (erro.length) {
-        this.toast.show({
-          severity: "error",
-          summary: "Erro",
-          detail: erro,
-          life: 7000,
-        });
-      }
-    }
     this.setState({ modalEdicao: true });
   };
 
   handleConfimarCriacao = () => {
-    if (this.dotacoesRef.current) {
-      const erro = this.dotacoesRef.current.getError();
-      if (erro.length) {
-        this.toast.show({
-          severity: "error",
-          summary: "Erro",
-          detail: erro,
-          life: 7000,
-        });
-      }
-    }
     this.setState({ modalCadastro: true });
   };
 
@@ -422,6 +385,15 @@ class VisualizarContratos extends Component {
     }
   };
 
+  validaDotacoes = () => {
+    const dotacoes = this.state.dotacoes_orcamentarias;
+    if (!dotacoes.length) return true;
+    else {
+      let validas = dotacoes.filter(dotacao => dotacao.valor_mensal);
+      return validas.length > 0 && this.state.valor_total;
+    }
+  };
+
   render() {
     const {
       contrato,
@@ -461,14 +433,15 @@ class VisualizarContratos extends Component {
       ata,
     } = this.state;
     const habilitaBotao =
-      termo_contrato &&
-      processo &&
-      situacao &&
-      data_assinatura &&
-      data_ordem_inicio &&
-      referencia_encerramento &&
-      vigencia &&
-      dataEncerramento;
+      // termo_contrato &&
+      // processo &&
+      // situacao &&
+      // data_assinatura &&
+      // data_ordem_inicio &&
+      // referencia_encerramento &&
+      // vigencia &&
+      // dataEncerramento &&
+      this.validaDotacoes();
 
     return (
       <>
@@ -911,11 +884,14 @@ class VisualizarContratos extends Component {
               aberto={false}
             />
 
-            <CoadAccordion titulo={"Informações Orçamentárias de Contrato"}>
-              <DotacaoOrcamentaria
-                ref={this.dotacoesRef}
-                dotacoesSalvas={dotacoes_orcamentarias}
-                valorTotalSalvo={valor_total}
+            <CoadAccordion titulo={"Orçamento e Finanças"}>
+              <DotacoesOrcamentarias
+                dotacoes={dotacoes_orcamentarias}
+                setDotacoes={dotacoes_orcamentarias =>
+                  this.setState({ dotacoes_orcamentarias })
+                }
+                valorTotal={valor_total}
+                setValorTotal={valor_total => this.setState({ valor_total })}
                 disabled={disabilitado}
               />
             </CoadAccordion>
