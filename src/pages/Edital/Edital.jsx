@@ -43,7 +43,7 @@ import {
 import useToast from "../../hooks/useToast";
 import { Modal } from "antd";
 import "./styles.scss";
-import { historico_completo } from "./utils";
+//import { historico_completo } from "./utils";
 
 const Edital = ({ mostraAlerta, edital: _edital }) => {
   addLocale("pt", CALENDAR_PT);
@@ -293,12 +293,12 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
 
   const itemLogAtivo = (index, ativo) => {
     let hSelecionado;
-    historico_completo.forEach(h => {
+    edital.historico.forEach(h => {
       h.ativo = false;
     });
     if (!ativo) {
-      historico_completo[index].ativo = !ativo;
-      hSelecionado = historico_completo[index];
+      edital.historico[index].ativo = !ativo;
+      hSelecionado = edital.historico[index];
     } else {
       hSelecionado = null;
     }
@@ -323,6 +323,10 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
     } else if (campo === "descricao_objeto") {
       return "Descrição do Objeto";
     }
+  };
+
+  const valor_field = field => {
+    return histSelecionado.changes.find(obj => obj.field === field).to;
   };
 
   return (
@@ -779,7 +783,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
         maskClosable={false}
       >
         <section className="body-modal-historico">
-          <div>
+          <div className="ml-1">
             <b>Usuário</b>
           </div>
           <div>
@@ -787,14 +791,17 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
           </div>
           <article>
             <section className="body-logs">
-              {historico_completo.length > 0 &&
-                historico_completo.map((hist, index) => {
+              {edital.historico &&
+                edital.historico.length > 0 &&
+                edital.historico.map((hist, index) => {
                   const { ativo } = hist;
                   const iniciais = retornaIniciais(hist.user.email);
                   return (
                     <div
                       key={index}
-                      className={`${ativo && "ativo-item"} grid-item-log`}
+                      className={`${
+                        ativo && "ativo-item"
+                      } grid-item-log-edital`}
                       onClick={() => {
                         itemLogAtivo(index, ativo);
                       }}
@@ -802,25 +809,26 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
                       <div className="usuario">
                         <div>{iniciais}</div>
                       </div>
-                      <div className="descricao">
-                        <div className="descicao-titulo" title={hist.action}>
+                      <div className="descricao-edital">
+                        <div
+                          className="descicao-titulo-edital"
+                          title={hist.action}
+                        >
                           {hist.action === "CREATE" ? "CRIAÇÃO" : "EDIÇÃO"}
                         </div>
-                        <div className="descicao-entidade">
-                          {hist.user.email}
-                        </div>
+                        <div className="conta-usuario">{hist.user.email}</div>
                       </div>
-                      <div className="descricao">
+                      <div className="descricao-edital">
                         {hist.updated_at !== undefined && (
                           <>
-                            <div className="hora">
+                            <div className="hora-edital">
                               {
                                 moment(hist.updated_at, "YYYY-MM-DD HH:mm:ss")
                                   .format("DD/MM/YYYY HH:mm:ss")
                                   .split(" ")[0]
                               }
                             </div>
-                            <div className="hora">
+                            <div className="hora-edital">
                               {
                                 moment(hist.updated_at, "YYYY-MM-DD HH:mm:ss")
                                   .format("DD/MM/YYYY HH:mm:ss")
@@ -831,14 +839,14 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
                         )}
                         {hist.created_at !== undefined && (
                           <>
-                            <div className="hora">
+                            <div className="hora-edital">
                               {
                                 moment(hist.created_at, "YYYY-MM-DD HH:mm:ss")
                                   .format("DD/MM/YYYY HH:mm:ss")
                                   .split(" ")[0]
                               }
                             </div>
-                            <div className="hora">
+                            <div className="hora-edital">
                               {
                                 moment(hist.created_at, "YYYY-MM-DD HH:mm:ss")
                                   .format("DD/MM/YYYY HH:mm:ss")
@@ -860,7 +868,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
               <header>
                 <div />
                 {histSelecionado !== null ? (
-                  <div className="descricao-do-log">
+                  <div className="descricao-do-log-edital">
                     <div className="header-log">
                       <div className="usuario">
                         <div>{retornaIniciais(histSelecionado.user.email)}</div>
@@ -871,7 +879,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
                       <div>
                         {histSelecionado.updated_at !== undefined && (
                           <>
-                            <div className="hora">
+                            <div className="hora-edital">
                               {
                                 moment(
                                   histSelecionado.updated_at,
@@ -881,7 +889,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
                                   .split(" ")[0]
                               }
                             </div>
-                            <div className="hora">
+                            <div className="hora-edital">
                               {
                                 moment(
                                   histSelecionado.updated_at,
@@ -895,7 +903,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
                         )}
                         {histSelecionado.created_at !== undefined && (
                           <>
-                            <div className="hora">
+                            <div className="hora-edital">
                               {
                                 moment(
                                   histSelecionado.created_at,
@@ -905,7 +913,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
                                   .split(" ")[0]
                               }
                             </div>
-                            <div className="hora">
+                            <div className="hora-edital">
                               {
                                 moment(
                                   histSelecionado.created_at,
@@ -1069,7 +1077,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
                               <b>Criado em: </b>
                               {
                                 moment(
-                                  histSelecionado.criado_em,
+                                  valor_field("criado_em"),
                                   "YYYY-MM-DD HH:mm:ss",
                                 )
                                   .format("DD/MM/YYYY HH:mm:ss")
@@ -1078,107 +1086,52 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
                               -
                               {
                                 moment(
-                                  histSelecionado.criado_em,
+                                  valor_field("criado_em"),
                                   "YYYY-MM-DD HH:mm:ss",
                                 )
                                   .format("DD/MM/YYYY HH:mm:ss")
                                   .split(" ")[1]
                               }
                             </Col>
-                            <Col className="campo col-6">
-                              <b>Edital:</b> {histSelecionado.numero}{" "}
+                            <Col className="campo-edital col-6">
+                              <b>Edital:</b> {valor_field("numero")}
                             </Col>
                             <Col className="col-5">
                               {" "}
-                              <b>Status:</b> {histSelecionado.status.nome}{" "}
+                              <b>Status:</b> {valor_field("status")}
                             </Col>
-                            <Col className="campo col-6">
+                            <Col className="campo-edital col-6">
                               {" "}
-                              <b>Processo:</b> {histSelecionado.processo}{" "}
+                              <b>Processo:</b> {valor_field("processo")}
                             </Col>
                             <Col className="col-5">
                               <b>Homologação: </b>
                               {
                                 moment(
-                                  histSelecionado.data_homologacao,
+                                  valor_field("data_homologacao"),
                                   "YYYY-MM-DD HH:mm:ss",
                                 )
                                   .format("DD/MM/YYYY HH:mm:ss")
                                   .split(" ")[0]
                               }
                             </Col>
-                            <Col className="campo col-12">
-                              <b>Tipo:</b>{" "}
-                              {histSelecionado.tipo_contratacao.nome}
+                            <Col className="campo-edital col-12">
+                              <b>Tipo:</b> {valor_field("tipo_contratacao")}
                             </Col>
-                            <Col className="campo col-12">
-                              <b>Subtipo:</b> {histSelecionado.subtipo}
+                            <Col className="campo-edital col-12">
+                              <b>Subtipo:</b> {valor_field("subtipo")}
                             </Col>
-                            <Col className="campo col-12 mt-2">
-                              <b>Objeto:</b>
-                              {histSelecionado.objeto.nome}
+                            <Col className="campo-edital col-12 mt-4">
+                              <b>Objeto:</b> {valor_field("objeto")}
                             </Col>
-                            <Col className="campo col-12 mt-2">
+                            <Col className="campo-edital col-12 mt-3">
                               <div
                                 dangerouslySetInnerHTML={{
-                                  __html: histSelecionado.descricao_objeto,
+                                  __html: valor_field("descricao_objeto"),
                                 }}
                               />
                             </Col>
                           </Row>
-                          {histSelecionado.grupos_de_obrigacao && (
-                            <div className="mt-3 ml-2">
-                              <b>Grupos de Obrigação</b>
-                            </div>
-                          )}
-                          {histSelecionado.grupos_de_obrigacao &&
-                            histSelecionado.grupos_de_obrigacao.map(
-                              (grupo, index) => (
-                                <table
-                                  key={`${index}_${grupo.nome}_table`}
-                                  className="table table-bordered table-edital"
-                                >
-                                  <col style={{ width: "30%" }} />
-                                  <col style={{ width: "30%" }} />
-                                  <col style={{ width: "40%" }} />
-                                  <thead>
-                                    <tr className="table-head-edital">
-                                      <th>GRUPO</th>
-                                      <th>ITEM</th>
-                                      <th>DESCRIÇÃO</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {grupo.itens_de_obrigacao.map(
-                                      (item, index) => (
-                                        <>
-                                          <tr
-                                            key={`${index}_${grupo.nome}`}
-                                            className="table-body-edital"
-                                          >
-                                            <td>{grupo.nome}</td>
-                                            <td>
-                                              <div
-                                                dangerouslySetInnerHTML={{
-                                                  __html: item.item,
-                                                }}
-                                              />
-                                            </td>
-                                            <td>
-                                              <div
-                                                dangerouslySetInnerHTML={{
-                                                  __html: item.descricao,
-                                                }}
-                                              />
-                                            </td>
-                                          </tr>
-                                        </>
-                                      ),
-                                    )}
-                                  </tbody>
-                                </table>
-                              ),
-                            )}
                         </>
                       )}
                   </div>

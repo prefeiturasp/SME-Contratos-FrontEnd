@@ -46,10 +46,10 @@ $hoverColor: #431e1e;
     }
   }
 
-  .descricao-do-log {
+  .descricao-do-log-edital {
     .header-log {
       display: grid;
-      grid-template-columns: 10% 70% 20%;
+      grid-template-columns: 8% 70% 22%;
       border-bottom: 1px solid #dadada;
 
       .usuario {
@@ -76,13 +76,14 @@ $hoverColor: #431e1e;
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        margin: 20px 10px;
+        margin: 20px 5px;
         font-style: normal;
         font-weight: normal;
         font-size: 14px;
         line-height: 16px;
         letter-spacing: 0.01em;
         color: #42474a;
+        width: 100%;
       }
 
       div:last-child {
@@ -118,14 +119,15 @@ $hoverColor: #431e1e;
       color: black !important;
       border: thin solid black;
 
-      .descicao-titulo {
+      .descricao-titulo-edital {
         color: black !important;
+        width: 100%;
       }
     }
 
-    .grid-item-log {
+    .grid-item-log-edital {
       display: grid;
-      grid-template-columns: 20% 50% 30%;
+      grid-template-columns: 15% 55% 30%;
       background: #f3f3f3;
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
       border-radius: 4px;
@@ -155,21 +157,22 @@ $hoverColor: #431e1e;
         }
       }
 
-      .descricao {
+      .descricao-edital {
         display: flex;
         align-items: center;
         flex-wrap: wrap;
         padding: 5px 0;
 
-        .descicao-titulo {
+        .descicao-titulo-edital {
           color: #5a5a5a;
           font-style: normal;
           font-weight: bold;
           font-size: 14px;
           line-height: 20px;
+          width: 100%;
         }
 
-        .hora {
+        .hora-edital {
           display: flex;
           justify-content: flex-end;
           width: 90%;
@@ -181,8 +184,8 @@ $hoverColor: #431e1e;
       }
     }
   }
-  .campo {
-    margin: 0.25em -0.5em 0 0.5em;
+  .campo-edital {
+    margin: 0.5em -0.5em 0.5em 0.5em;
   }
   .table-edital {
     font-family: Roboto;
