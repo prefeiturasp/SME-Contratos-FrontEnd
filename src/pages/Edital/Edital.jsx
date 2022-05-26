@@ -41,6 +41,9 @@ import {
   STATUS_EDITAL,
 } from "./constantes";
 import useToast from "../../hooks/useToast";
+import { Modal } from "antd";
+import "./styles.scss";
+import { historico_completo } from "./utils";
 
 const Edital = ({ mostraAlerta, edital: _edital }) => {
   addLocale("pt", CALENDAR_PT);
@@ -52,6 +55,8 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
   const [modalExcluir, setmodalExcluir] = useState(false);
   const [modalDuplicar, setmodalDuplicar] = useState(false);
   const [modalCadastrarObjeto, setModalCadastrarObjeto] = useState(false);
+  const [modalHistorico, setModalHistorico] = useState(false);
+  const [histSelecionado, setHistSelecionado] = useState(null);
   const [novoObjeto, setNovoObjeto] = useState("");
   const tipoServico = useRef(null);
   const toast = useToast();
@@ -275,47 +280,103 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
     </div>
   );
 
+  const retornaIniciais = email => {
+    const nome = email.split(" ");
+    let iniciais = "";
+    nome.forEach((n, index) => {
+      if (index <= 1) {
+        iniciais = iniciais.concat(n.charAt(0)).toUpperCase();
+      }
+    });
+    return iniciais;
+  };
+
+  const itemLogAtivo = (index, ativo) => {
+    let hSelecionado;
+    historico_completo.forEach(h => {
+      h.ativo = false;
+    });
+    if (!ativo) {
+      historico_completo[index].ativo = !ativo;
+      hSelecionado = historico_completo[index];
+    } else {
+      hSelecionado = null;
+    }
+    setHistSelecionado(hSelecionado);
+  };
+
+  const ajusta_nome = campo => {
+    if (campo === "numero") {
+      return "Número do Edital";
+    } else if (campo === "status") {
+      return "Status";
+    } else if (campo === "processo") {
+      return "Número do Processo";
+    } else if (campo === "tipo_contratacao") {
+      return "Tipo de Contratação";
+    } else if (campo === "subtipo") {
+      return "Subtipo";
+    } else if (campo === "data_homologacao") {
+      return "Data de Homologação";
+    } else if (campo === "objeto") {
+      return "Categoria de objeto";
+    } else if (campo === "descricao_objeto") {
+      return "Descrição do Objeto";
+    }
+  };
+
   return (
     <Fragment>
-      <FormGroup className="d-flex flex-row-reverse mt-3">
-        <Button
-          disabled={!habilitaBotao}
-          className="btn-coad-primary"
-          label="Salvar"
-          onClick={exibeDialog}
-        />
-        {modoVisualizacao === false && incluir === true ? (
+      <Row className="mb-3">
+        <Col lg={6}>
           <Button
-            disabled={modoVisualizacao}
-            className="btn-coad-background-outline mr-2"
-            label="Excluir Edital"
-            onClick={() => setmodalExcluir(true)}
-          />
-        ) : (
-          ""
-        )}
-        {modoVisualizacao === true && incluir === true ? (
+            className="btn btn-coad-background-outline"
+            //disabled={true}
+            onClick={() => setModalHistorico(true)}
+          >
+            <i className="fas fa-history" /> &nbsp;Histórico
+          </Button>
+        </Col>
+        <Col lg={6} className="d-flex flex-row-reverse">
           <Button
-            className="btn-coad-background-outline mr-2"
-            label="Duplicar"
-            onClick={() => setmodalDuplicar(true)}
+            disabled={!habilitaBotao}
+            className="btn-coad-primary"
+            label="Salvar"
+            onClick={exibeDialog}
           />
-        ) : (
-          ""
-        )}
-        <Button
-          disabled={!habilitaBotao}
-          className="btn-coad-background-outline mr-2"
-          label="Cancelar"
-          onClick={() => setVisivelCancelar(true)}
-        />
-        <ButtonBootstrap
-          onClick={() => redirect("#/listar-editais")}
-          className="btn-coad-blue mx-2"
-        >
-          <i className="fas fa-arrow-left" /> Voltar
-        </ButtonBootstrap>
-      </FormGroup>
+          {modoVisualizacao === false && incluir === true ? (
+            <Button
+              disabled={modoVisualizacao}
+              className="btn-coad-background-outline mr-2"
+              label="Excluir Edital"
+              onClick={() => setmodalExcluir(true)}
+            />
+          ) : (
+            ""
+          )}
+          {modoVisualizacao === true && incluir === true ? (
+            <Button
+              className="btn-coad-background-outline mr-2"
+              label="Duplicar"
+              onClick={() => setmodalDuplicar(true)}
+            />
+          ) : (
+            ""
+          )}
+          <Button
+            disabled={!habilitaBotao}
+            className="btn-coad-background-outline mr-2"
+            label="Cancelar"
+            onClick={() => setVisivelCancelar(true)}
+          />
+          <ButtonBootstrap
+            onClick={() => redirect("#/listar-editais")}
+            className="btn-coad-blue mx-2"
+          >
+            <i className="fas fa-arrow-left" /> Voltar
+          </ButtonBootstrap>
+        </Col>
+      </Row>
       <Dialog
         header={"Cancelar "}
         visible={visivelCancelar}
@@ -618,47 +679,54 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
           </div>
         </FormGroup>
       </CoadAccordion>
-      <FormGroup className="d-flex flex-row-reverse mt-3">
-        <Button
-          disabled={!habilitaBotao}
-          className="btn-coad-primary mr-1"
-          label="Salvar"
-          onClick={exibeDialog}
-        />
-        {modoVisualizacao === false && incluir === true ? (
+      <Row className="mt-3">
+        <Col lg={6}>
+          <Button className="btn btn-coad-background-outline" disabled={true}>
+            <i className="fas fa-history" /> &nbsp;Histórico
+          </Button>
+        </Col>
+        <Col lg={6} className="d-flex flex-row-reverse">
           <Button
-            disabled={modoVisualizacao}
-            className="btn-coad-background-outline mr-2"
-            label="Excluir Edital"
-            onClick={() => setmodalExcluir(true)}
+            disabled={!habilitaBotao}
+            className="btn-coad-primary mr-1"
+            label="Salvar"
+            onClick={exibeDialog}
           />
-        ) : (
-          ""
-        )}
-        {modoVisualizacao === true && incluir === true ? (
+          {modoVisualizacao === false && incluir === true ? (
+            <Button
+              disabled={modoVisualizacao}
+              className="btn-coad-background-outline mr-2"
+              label="Excluir Edital"
+              onClick={() => setmodalExcluir(true)}
+            />
+          ) : (
+            ""
+          )}
+          {modoVisualizacao === true && incluir === true ? (
+            <Button
+              className="btn-coad-background-outline mr-2"
+              label="Duplicar"
+              onClick={() => setmodalDuplicar(true)}
+            />
+          ) : (
+            ""
+          )}
+
           <Button
+            disabled={!habilitaBotao}
             className="btn-coad-background-outline mr-2"
-            label="Duplicar"
-            onClick={() => setmodalDuplicar(true)}
+            label="Cancelar"
+            onClick={() => setVisivelCancelar(true)}
           />
-        ) : (
-          ""
-        )}
 
-        <Button
-          disabled={!habilitaBotao}
-          className="btn-coad-background-outline mr-2"
-          label="Cancelar"
-          onClick={() => setVisivelCancelar(true)}
-        />
-
-        <ButtonBootstrap
-          onClick={() => redirect("#/listar-editais")}
-          className="btn-coad-blue mx-2"
-        >
-          <i className="fas fa-arrow-left" /> Voltar
-        </ButtonBootstrap>
-      </FormGroup>
+          <ButtonBootstrap
+            onClick={() => redirect("#/listar-editais")}
+            className="btn-coad-blue mx-2"
+          >
+            <i className="fas fa-arrow-left" /> Voltar
+          </ButtonBootstrap>
+        </Col>
+      </Row>
       <Dialog
         header="Excluir"
         visible={modalExcluir}
@@ -701,6 +769,424 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
           />
         </div>
       </Dialog>
+      <Modal
+        title="Histórico"
+        visible={modalHistorico}
+        width={1050}
+        okText={"Fechar"}
+        onOk={() => setModalHistorico(false)}
+        onCancel={() => setModalHistorico(false)}
+        maskClosable={false}
+      >
+        <section className="body-modal-historico">
+          <div>
+            <b>Usuário</b>
+          </div>
+          <div>
+            <b>Ações</b>
+          </div>
+          <article>
+            <section className="body-logs">
+              {historico_completo.length > 0 &&
+                historico_completo.map((hist, index) => {
+                  const { ativo } = hist;
+                  const iniciais = retornaIniciais(hist.user.email);
+                  return (
+                    <div
+                      key={index}
+                      className={`${ativo && "ativo-item"} grid-item-log`}
+                      onClick={() => {
+                        itemLogAtivo(index, ativo);
+                      }}
+                    >
+                      <div className="usuario">
+                        <div>{iniciais}</div>
+                      </div>
+                      <div className="descricao">
+                        <div className="descicao-titulo" title={hist.action}>
+                          {hist.action === "CREATE" ? "CRIAÇÃO" : "EDIÇÃO"}
+                        </div>
+                        <div className="descicao-entidade">
+                          {hist.user.email}
+                        </div>
+                      </div>
+                      <div className="descricao">
+                        {hist.updated_at !== undefined && (
+                          <>
+                            <div className="hora">
+                              {
+                                moment(hist.updated_at, "YYYY-MM-DD HH:mm:ss")
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[0]
+                              }
+                            </div>
+                            <div className="hora">
+                              {
+                                moment(hist.updated_at, "YYYY-MM-DD HH:mm:ss")
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[1]
+                              }
+                            </div>
+                          </>
+                        )}
+                        {hist.created_at !== undefined && (
+                          <>
+                            <div className="hora">
+                              {
+                                moment(hist.created_at, "YYYY-MM-DD HH:mm:ss")
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[0]
+                              }
+                            </div>
+                            <div className="hora">
+                              {
+                                moment(hist.created_at, "YYYY-MM-DD HH:mm:ss")
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[1]
+                              }
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+            </section>
+          </article>
+          <article className="detail-log ">
+            <div />
+
+            <div>
+              <header>
+                <div />
+                {histSelecionado !== null ? (
+                  <div className="descricao-do-log">
+                    <div className="header-log">
+                      <div className="usuario">
+                        <div>{retornaIniciais(histSelecionado.user.email)}</div>
+                      </div>
+                      <div className="conta-usuario">
+                        {histSelecionado.user.email}
+                      </div>
+                      <div>
+                        {histSelecionado.updated_at !== undefined && (
+                          <>
+                            <div className="hora">
+                              {
+                                moment(
+                                  histSelecionado.updated_at,
+                                  "YYYY-MM-DD HH:mm:ss",
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[0]
+                              }
+                            </div>
+                            <div className="hora">
+                              {
+                                moment(
+                                  histSelecionado.updated_at,
+                                  "YYYY-MM-DD HH:mm:ss",
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[1]
+                              }
+                            </div>
+                          </>
+                        )}
+                        {histSelecionado.created_at !== undefined && (
+                          <>
+                            <div className="hora">
+                              {
+                                moment(
+                                  histSelecionado.created_at,
+                                  "YYYY-MM-DD HH:mm:ss",
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[0]
+                              }
+                            </div>
+                            <div className="hora">
+                              {
+                                moment(
+                                  histSelecionado.created_at,
+                                  "YYYY-MM-DD HH:mm:ss",
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[1]
+                              }
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {histSelecionado !== undefined &&
+                      histSelecionado.action === "UPDATE" && (
+                        <>
+                          <div className="campo py-2">
+                            <b>Lista de alterações</b>
+                          </div>
+                          <table className="table table-bordered table-edital">
+                            <col style={{ width: "30%" }} />
+                            <col style={{ width: "30%" }} />
+                            <col style={{ width: "40%" }} />
+                            <thead>
+                              <tr className="table-head-edital">
+                                <th>CAMPO</th>
+                                <th>DE</th>
+                                <th>PARA</th>
+                              </tr>
+                            </thead>
+
+                            <tbody>
+                              {histSelecionado.changes.map((change, index) => (
+                                <tr
+                                  key={`${index}_${change.field}`}
+                                  className="table-body-edital"
+                                >
+                                  <td>{ajusta_nome(change.field)}</td>
+                                  <td>
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html: change.from,
+                                      }}
+                                    />
+                                  </td>
+                                  <td>
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html: change.to,
+                                      }}
+                                    />
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+
+                          {histSelecionado.grupos_obrigacoes && (
+                            <div className="campo mt-3 py-2">
+                              <b>Alterações nos grupos de obrigações</b>
+                            </div>
+                          )}
+                          {histSelecionado.grupos_obrigacoes &&
+                            histSelecionado.grupos_obrigacoes.map(
+                              (grupo, index) => (
+                                <>
+                                  {grupo.itens_obrigacao.from && (
+                                    <table
+                                      key={`${index}_${grupo.nome.from}_from`}
+                                      className="table table-bordered table-edital"
+                                    >
+                                      <col style={{ width: "20%" }} />
+                                      <col style={{ width: "30%" }} />
+                                      <col style={{ width: "50%" }} />
+                                      <thead>
+                                        <tr className="table-head-edital"></tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr className="table-head-edital">
+                                          <th colSpan="3">DE</th>
+                                        </tr>
+                                        {grupo.itens_obrigacao.from.map(
+                                          (situacao, i) => (
+                                            <>
+                                              <tr
+                                                key={`${i}_${situacao.item}_from`}
+                                                className="table-body-edital"
+                                              >
+                                                <td>{grupo.nome.from}</td>
+                                                <td>{situacao.item}</td>
+                                                <td>
+                                                  <div
+                                                    dangerouslySetInnerHTML={{
+                                                      __html:
+                                                        situacao.descricao,
+                                                    }}
+                                                  />{" "}
+                                                </td>
+                                              </tr>
+                                            </>
+                                          ),
+                                        )}
+                                      </tbody>
+                                    </table>
+                                  )}
+                                  {grupo.itens_obrigacao.to && (
+                                    <table
+                                      key={`${index}_${grupo.nome.to}_to`}
+                                      className="table table-bordered table-edital"
+                                    >
+                                      <col style={{ width: "20%" }} />
+                                      <col style={{ width: "30%" }} />
+                                      <col style={{ width: "50%" }} />
+                                      <thead>
+                                        <tr className="table-head-edital"></tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr className="table-head-edital">
+                                          <th colSpan="3">PARA</th>
+                                        </tr>
+                                        {grupo.itens_obrigacao.to.map(
+                                          (situacao, i) => (
+                                            <>
+                                              <tr
+                                                key={`${i}_${situacao.item}_to`}
+                                                className="table-body-edital"
+                                              >
+                                                <td>{grupo.nome.to}</td>
+                                                <td>{situacao.item}</td>
+                                                <td>
+                                                  <div
+                                                    dangerouslySetInnerHTML={{
+                                                      __html:
+                                                        situacao.descricao,
+                                                    }}
+                                                  />{" "}
+                                                </td>
+                                              </tr>
+                                            </>
+                                          ),
+                                        )}
+                                      </tbody>
+                                    </table>
+                                  )}
+                                  <hr className="linha" />
+                                </>
+                              ),
+                            )}
+                        </>
+                      )}
+
+                    {histSelecionado !== undefined &&
+                      histSelecionado.action === "CREATE" && (
+                        <>
+                          <Row>
+                            <Col className="campo col-6 mt-2 mb-2">
+                              <b>Criação de edital</b>
+                            </Col>
+                            <Col className="col-5 mt-2 ">
+                              <b>Criado em: </b>
+                              {
+                                moment(
+                                  histSelecionado.criado_em,
+                                  "YYYY-MM-DD HH:mm:ss",
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[0]
+                              }{" "}
+                              -
+                              {
+                                moment(
+                                  histSelecionado.criado_em,
+                                  "YYYY-MM-DD HH:mm:ss",
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[1]
+                              }
+                            </Col>
+                            <Col className="campo col-6">
+                              <b>Edital:</b> {histSelecionado.numero}{" "}
+                            </Col>
+                            <Col className="col-5">
+                              {" "}
+                              <b>Status:</b> {histSelecionado.status.nome}{" "}
+                            </Col>
+                            <Col className="campo col-6">
+                              {" "}
+                              <b>Processo:</b> {histSelecionado.processo}{" "}
+                            </Col>
+                            <Col className="col-5">
+                              <b>Homologação: </b>
+                              {
+                                moment(
+                                  histSelecionado.data_homologacao,
+                                  "YYYY-MM-DD HH:mm:ss",
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[0]
+                              }
+                            </Col>
+                            <Col className="campo col-12">
+                              <b>Tipo:</b>{" "}
+                              {histSelecionado.tipo_contratacao.nome}
+                            </Col>
+                            <Col className="campo col-12">
+                              <b>Subtipo:</b> {histSelecionado.subtipo}
+                            </Col>
+                            <Col className="campo col-12 mt-2">
+                              <b>Objeto:</b>
+                              {histSelecionado.objeto.nome}
+                            </Col>
+                            <Col className="campo col-12 mt-2">
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: histSelecionado.descricao_objeto,
+                                }}
+                              />
+                            </Col>
+                          </Row>
+                          {histSelecionado.grupos_de_obrigacao && (
+                            <div className="mt-3 ml-2">
+                              <b>Grupos de Obrigação</b>
+                            </div>
+                          )}
+                          {histSelecionado.grupos_de_obrigacao &&
+                            histSelecionado.grupos_de_obrigacao.map(
+                              (grupo, index) => (
+                                <table className="table table-bordered table-edital">
+                                  <col style={{ width: "30%" }} />
+                                  <col style={{ width: "30%" }} />
+                                  <col style={{ width: "40%" }} />
+                                  <thead>
+                                    <tr className="table-head-edital">
+                                      <th>GRUPO</th>
+                                      <th>ITEM</th>
+                                      <th>DESCRIÇÃO</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {grupo.itens_de_obrigacao.map(
+                                      (item, index) => (
+                                        <>
+                                          <tr
+                                            key={`${index}_${grupo.nome}`}
+                                            className="table-body-edital"
+                                          >
+                                            <td>{grupo.nome}</td>
+                                            <td>
+                                              <div
+                                                dangerouslySetInnerHTML={{
+                                                  __html: item.item,
+                                                }}
+                                              />
+                                            </td>
+                                            <td>
+                                              <div
+                                                dangerouslySetInnerHTML={{
+                                                  __html: item.descricao,
+                                                }}
+                                              />
+                                            </td>
+                                          </tr>
+                                        </>
+                                      ),
+                                    )}
+                                  </tbody>
+                                </table>
+                              ),
+                            )}
+                        </>
+                      )}
+                  </div>
+                ) : (
+                  <div />
+                )}
+              </header>
+            </div>
+          </article>
+        </section>
+      </Modal>
     </Fragment>
   );
 };
