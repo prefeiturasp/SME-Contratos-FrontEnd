@@ -1134,7 +1134,10 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
                           {histSelecionado.grupos_de_obrigacao &&
                             histSelecionado.grupos_de_obrigacao.map(
                               (grupo, index) => (
-                                <table className="table table-bordered table-edital">
+                                <table
+                                  key={`${index}_${grupo.nome}_table`}
+                                  className="table table-bordered table-edital"
+                                >
                                   <col style={{ width: "30%" }} />
                                   <col style={{ width: "30%" }} />
                                   <col style={{ width: "40%" }} />
