@@ -25,6 +25,8 @@ import { alteraAta, criaAta, getAta } from "../../service/Atas.service";
 import { STATUS_ATA, UNIDADES_VIGENCIA } from "./constantes";
 import { AccordionEmpresaContratada } from "../../components/Contratos/AccordionEmpresaContratada";
 import { ATAS, LISTAR_ATAS } from "../../configs/urls.constants";
+import "./styles.scss";
+import { ModalHistoricoAta } from "./ModalHistoricoAta";
 
 const Ata = () => {
   const { uuid } = getUrlParams();
@@ -34,6 +36,7 @@ const Ata = () => {
   const [ata, setAta] = useState({});
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [incluir, setIncluir] = useState(true);
+  const [modalHistorico, setModalHistorico] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
@@ -148,26 +151,36 @@ const Ata = () => {
       >
         <h3>{uuid ? "Ata Nº " + ata.numero : "Cadastro de Atas"}</h3>
         <Container>
-          <FormGroup className="d-flex flex-row-reverse mt-3">
-            <Button
-              disabled={!habilitaBotao}
-              className="btn-coad-primary"
-              label="Salvar"
-              onClick={exibeDialog}
-            />
-            <Button
-              disabled={!habilitaBotao}
-              className="btn-coad-background-outline mr-2"
-              label="Cancelar"
-              onClick={() => setVisivelCancelar(true)}
-            />
-            <ButtonBootstrap
-              onClick={() => redirect("#/listar-atas")}
-              className="btn-coad-blue mx-2"
-            >
-              <i className="fas fa-arrow-left" /> Voltar
-            </ButtonBootstrap>
-          </FormGroup>
+          <Row className="mb-3">
+            <Col lg={6}>
+              <Button
+                className="btn btn-coad-background-outline"
+                onClick={() => setModalHistorico(true)}
+              >
+                <i className="fas fa-history mr-1" /> Histórico
+              </Button>
+            </Col>
+            <Col lg={6} className="d-flex flex-row-reverse">
+              <Button
+                disabled={!habilitaBotao}
+                className="btn-coad-primary"
+                label="Salvar"
+                onClick={exibeDialog}
+              />
+              <Button
+                disabled={!habilitaBotao}
+                className="btn-coad-background-outline mr-2"
+                label="Cancelar"
+                onClick={() => setVisivelCancelar(true)}
+              />
+              <ButtonBootstrap
+                onClick={() => redirect("#/listar-atas")}
+                className="btn-coad-blue mx-2"
+              >
+                <i className="fas fa-arrow-left" /> Voltar
+              </ButtonBootstrap>
+            </Col>
+          </Row>
           <Dialog
             header={"Cancelar "}
             visible={visivelCancelar}
@@ -377,26 +390,41 @@ const Ata = () => {
             disabilitado={modoVisualizacao}
             aberto={false}
           />
-          <FormGroup className="d-flex flex-row-reverse mt-3">
-            <Button
-              disabled={!habilitaBotao}
-              className="btn-coad-primary mr-1"
-              label="Salvar"
-              onClick={exibeDialog}
-            />
-            <Button
-              disabled={!habilitaBotao}
-              className="btn-coad-background-outline mr-2"
-              label="Cancelar"
-              onClick={() => setVisivelCancelar(true)}
-            />
-            <ButtonBootstrap
-              onClick={() => redirect("#/listar-atas")}
-              className="btn-coad-blue mx-2"
-            >
-              <i className="fas fa-arrow-left" /> Voltar
-            </ButtonBootstrap>
-          </FormGroup>
+          <Row className="mt-3">
+            <Col lg={6}>
+              <Button
+                className="btn btn-coad-background-outline"
+                onClick={() => setModalHistorico(true)}
+              >
+                <i className="fas fa-history mr-1" /> Histórico
+              </Button>
+            </Col>
+            <Col lg={6} className="d-flex flex-row-reverse">
+              <Button
+                disabled={!habilitaBotao}
+                className="btn-coad-primary"
+                label="Salvar"
+                onClick={exibeDialog}
+              />
+              <Button
+                disabled={!habilitaBotao}
+                className="btn-coad-background-outline mr-2"
+                label="Cancelar"
+                onClick={() => setVisivelCancelar(true)}
+              />
+              <ButtonBootstrap
+                onClick={() => redirect("#/listar-atas")}
+                className="btn-coad-blue mx-2"
+              >
+                <i className="fas fa-arrow-left" /> Voltar
+              </ButtonBootstrap>
+            </Col>
+          </Row>
+          <ModalHistoricoAta
+            historico={ata.historico ? ata.historico : {}}
+            abreModalHistorico={modalHistorico}
+            fechaModalHistorico={e => setModalHistorico(e)}
+          />
         </Container>
       </Page>
     </>
