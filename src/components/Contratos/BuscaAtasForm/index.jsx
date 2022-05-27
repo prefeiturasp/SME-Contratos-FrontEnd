@@ -9,8 +9,8 @@ import { SelecionaEmpresa } from "../SelecionaEmpresa";
 import { SelecionaTipoServico } from "../SelecionaTipoServico";
 import { SelecionaData } from "../SelecionaData";
 import { redirect } from "../../../utils/redirect";
-import "./style.scss";
 import SelecionaSituacaoAta from "../SelecionaSituacaoAta";
+import "./style.scss";
 
 export function BuscaAtasForm({ onBuscarClick, onLimparClick }) {
   const [filtros, setFiltros] = useState({});
@@ -75,9 +75,9 @@ export function BuscaAtasForm({ onBuscarClick, onLimparClick }) {
 
   return (
     <Card footer={footer} className="filtro filtroBorda">
-      <Row>
+      <Row className="filtro-head-ata">
         <Col lg={12} xl={6} className="float-left">
-          <i className="pi pi-filter-fill">Filtrar Atas</i>
+          <i className="pi pi-filter-fill"></i>Filtrar Atas
         </Col>
 
         <Col lg={12} xl={6}>
@@ -94,12 +94,13 @@ export function BuscaAtasForm({ onBuscarClick, onLimparClick }) {
           </span>
         </Col>
       </Row>
-      <div className="p-grid p-fluid">
-        <div className="card card-w-title filtro">
-          <div className="p-grid">
+      <div className="p-grid ata-grid p-fluid">
+        <div className="card card-w-title-ata filtro">
+          <div className="p-grid ata-grid">
             <div className="p-col-6">
               <h6>Número da Ata</h6>
               <InputText
+                className="w-100"
                 value={filtros.numero}
                 onChange={e =>
                   setFiltros({ ...filtros, numero: e.target.value })
