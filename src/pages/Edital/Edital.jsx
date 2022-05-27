@@ -43,7 +43,6 @@ import {
 import useToast from "../../hooks/useToast";
 import { Modal } from "antd";
 import "./styles.scss";
-//import { historico_completo } from "./utils";
 
 const Edital = ({ mostraAlerta, edital: _edital }) => {
   addLocale("pt", CALENDAR_PT);
@@ -335,10 +334,9 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
         <Col lg={6}>
           <Button
             className="btn btn-coad-background-outline"
-            //disabled={true}
             onClick={() => setModalHistorico(true)}
           >
-            <i className="fas fa-history" /> &nbsp;Histórico
+            <i className="fas fa-history mr-1" /> Histórico
           </Button>
         </Col>
         <Col lg={6} className="d-flex flex-row-reverse">
@@ -685,8 +683,11 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
       </CoadAccordion>
       <Row className="mt-3">
         <Col lg={6}>
-          <Button className="btn btn-coad-background-outline" disabled={true}>
-            <i className="fas fa-history" /> &nbsp;Histórico
+          <Button
+            className="btn btn-coad-background-outline"
+            onClick={() => setModalHistorico(true)}
+          >
+            <i className="fas fa-history mr-1" /> Histórico
           </Button>
         </Col>
         <Col lg={6} className="d-flex flex-row-reverse">
