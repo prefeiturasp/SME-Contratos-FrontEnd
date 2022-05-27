@@ -353,7 +353,7 @@ export function ModalHistoricoEdital({
                   {histSelecionado !== undefined &&
                     histSelecionado.action === "CREATE" && (
                       <>
-                        <Row>
+                        <Row className="row-hist">
                           <Col className="campo col-6 mt-2 mb-2">
                             <b>Criação de edital</b>
                           </Col>
