@@ -41,6 +41,8 @@ import {
   STATUS_EDITAL,
 } from "./constantes";
 import useToast from "../../hooks/useToast";
+import "./styles.scss";
+import { ModalHistoricoEdital } from "./ModalHistoricoEdital";
 
 const Edital = ({ mostraAlerta, edital: _edital }) => {
   addLocale("pt", CALENDAR_PT);
@@ -52,6 +54,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
   const [modalExcluir, setmodalExcluir] = useState(false);
   const [modalDuplicar, setmodalDuplicar] = useState(false);
   const [modalCadastrarObjeto, setModalCadastrarObjeto] = useState(false);
+  const [modalHistorico, setModalHistorico] = useState(false);
   const [novoObjeto, setNovoObjeto] = useState("");
   const tipoServico = useRef(null);
   const toast = useToast();
@@ -277,45 +280,55 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
 
   return (
     <Fragment>
-      <FormGroup className="d-flex flex-row-reverse mt-3">
-        <Button
-          disabled={!habilitaBotao}
-          className="btn-coad-primary"
-          label="Salvar"
-          onClick={exibeDialog}
-        />
-        {modoVisualizacao === false && incluir === true ? (
+      <Row className="mb-3">
+        <Col lg={6}>
           <Button
-            disabled={modoVisualizacao}
-            className="btn-coad-background-outline mr-2"
-            label="Excluir Edital"
-            onClick={() => setmodalExcluir(true)}
-          />
-        ) : (
-          ""
-        )}
-        {modoVisualizacao === true && incluir === true ? (
+            className="btn btn-coad-background-outline"
+            onClick={() => setModalHistorico(true)}
+          >
+            <i className="fas fa-history mr-1" /> Histórico
+          </Button>
+        </Col>
+        <Col lg={6} className="d-flex flex-row-reverse">
           <Button
-            className="btn-coad-background-outline mr-2"
-            label="Duplicar"
-            onClick={() => setmodalDuplicar(true)}
+            disabled={!habilitaBotao}
+            className="btn-coad-primary"
+            label="Salvar"
+            onClick={exibeDialog}
           />
-        ) : (
-          ""
-        )}
-        <Button
-          disabled={!habilitaBotao}
-          className="btn-coad-background-outline mr-2"
-          label="Cancelar"
-          onClick={() => setVisivelCancelar(true)}
-        />
-        <ButtonBootstrap
-          onClick={() => redirect("#/listar-editais")}
-          className="btn-coad-blue mx-2"
-        >
-          <i className="fas fa-arrow-left" /> Voltar
-        </ButtonBootstrap>
-      </FormGroup>
+          {modoVisualizacao === false && incluir === true ? (
+            <Button
+              disabled={modoVisualizacao}
+              className="btn-coad-background-outline mr-2"
+              label="Excluir Edital"
+              onClick={() => setmodalExcluir(true)}
+            />
+          ) : (
+            ""
+          )}
+          {modoVisualizacao === true && incluir === true ? (
+            <Button
+              className="btn-coad-background-outline mr-2"
+              label="Duplicar"
+              onClick={() => setmodalDuplicar(true)}
+            />
+          ) : (
+            ""
+          )}
+          <Button
+            disabled={!habilitaBotao}
+            className="btn-coad-background-outline mr-2"
+            label="Cancelar"
+            onClick={() => setVisivelCancelar(true)}
+          />
+          <ButtonBootstrap
+            onClick={() => redirect("#/listar-editais")}
+            className="btn-coad-blue mx-2"
+          >
+            <i className="fas fa-arrow-left" /> Voltar
+          </ButtonBootstrap>
+        </Col>
+      </Row>
       <Dialog
         header={"Cancelar "}
         visible={visivelCancelar}
@@ -618,47 +631,57 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
           </div>
         </FormGroup>
       </CoadAccordion>
-      <FormGroup className="d-flex flex-row-reverse mt-3">
-        <Button
-          disabled={!habilitaBotao}
-          className="btn-coad-primary mr-1"
-          label="Salvar"
-          onClick={exibeDialog}
-        />
-        {modoVisualizacao === false && incluir === true ? (
+      <Row className="mt-3">
+        <Col lg={6}>
           <Button
-            disabled={modoVisualizacao}
-            className="btn-coad-background-outline mr-2"
-            label="Excluir Edital"
-            onClick={() => setmodalExcluir(true)}
-          />
-        ) : (
-          ""
-        )}
-        {modoVisualizacao === true && incluir === true ? (
+            className="btn btn-coad-background-outline"
+            onClick={() => setModalHistorico(true)}
+          >
+            <i className="fas fa-history mr-1" /> Histórico
+          </Button>
+        </Col>
+        <Col lg={6} className="d-flex flex-row-reverse">
           <Button
-            className="btn-coad-background-outline mr-2"
-            label="Duplicar"
-            onClick={() => setmodalDuplicar(true)}
+            disabled={!habilitaBotao}
+            className="btn-coad-primary mr-1"
+            label="Salvar"
+            onClick={exibeDialog}
           />
-        ) : (
-          ""
-        )}
+          {modoVisualizacao === false && incluir === true ? (
+            <Button
+              disabled={modoVisualizacao}
+              className="btn-coad-background-outline mr-2"
+              label="Excluir Edital"
+              onClick={() => setmodalExcluir(true)}
+            />
+          ) : (
+            ""
+          )}
+          {modoVisualizacao === true && incluir === true ? (
+            <Button
+              className="btn-coad-background-outline mr-2"
+              label="Duplicar"
+              onClick={() => setmodalDuplicar(true)}
+            />
+          ) : (
+            ""
+          )}
 
-        <Button
-          disabled={!habilitaBotao}
-          className="btn-coad-background-outline mr-2"
-          label="Cancelar"
-          onClick={() => setVisivelCancelar(true)}
-        />
+          <Button
+            disabled={!habilitaBotao}
+            className="btn-coad-background-outline mr-2"
+            label="Cancelar"
+            onClick={() => setVisivelCancelar(true)}
+          />
 
-        <ButtonBootstrap
-          onClick={() => redirect("#/listar-editais")}
-          className="btn-coad-blue mx-2"
-        >
-          <i className="fas fa-arrow-left" /> Voltar
-        </ButtonBootstrap>
-      </FormGroup>
+          <ButtonBootstrap
+            onClick={() => redirect("#/listar-editais")}
+            className="btn-coad-blue mx-2"
+          >
+            <i className="fas fa-arrow-left" /> Voltar
+          </ButtonBootstrap>
+        </Col>
+      </Row>
       <Dialog
         header="Excluir"
         visible={modalExcluir}
@@ -701,6 +724,11 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
           />
         </div>
       </Dialog>
+      <ModalHistoricoEdital
+        historico={edital.historico ? edital.historico : {}}
+        abreModalHistorico={modalHistorico}
+        fechaModalHistorico={e => setModalHistorico(e)}
+      />
     </Fragment>
   );
 };
