@@ -1,8 +1,8 @@
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import CurrencyInput from "react-currency-input";
-import { Row, Col, Label, Input, FormGroup } from "reactstrap";
+import { Row, Col, Label } from "reactstrap";
 import SelecionaDotacaoOrcamentaria from "../../components/Contratos/SelecionaDotacaoOrcamentaria";
 
 export default ({
@@ -12,8 +12,6 @@ export default ({
   valorTotal,
   setValorTotal,
 }) => {
-  //const [filtros, setFiltros] = useState();
-
   useEffect(() => {}, []);
 
   return (
