@@ -25,6 +25,8 @@ import { alteraAta, criaAta, getAta } from "../../service/Atas.service";
 import { STATUS_ATA, UNIDADES_VIGENCIA } from "./constantes";
 import { AccordionEmpresaContratada } from "../../components/Contratos/AccordionEmpresaContratada";
 import { ATAS, LISTAR_ATAS } from "../../configs/urls.constants";
+import Produtos from "./Produtos";
+import "./styles.scss";
 
 const Ata = () => {
   const { uuid } = getUrlParams();
@@ -32,6 +34,7 @@ const Ata = () => {
   const [visivel, setVisivel] = useState(false);
   const [visivelCancelar, setVisivelCancelar] = useState(false);
   const [ata, setAta] = useState({});
+  const [produtos, setProdutos] = useState([]);
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [incluir, setIncluir] = useState(true);
   const toast = useToast();
@@ -147,7 +150,7 @@ const Ata = () => {
         ]}
       >
         <h3>{uuid ? "Ata Nº " + ata.numero : "Cadastro de Atas"}</h3>
-        <Container>
+        <Container className="container-atas">
           <FormGroup className="d-flex flex-row-reverse mt-3">
             <Button
               disabled={!habilitaBotao}
@@ -377,6 +380,13 @@ const Ata = () => {
             disabilitado={modoVisualizacao}
             aberto={false}
           />
+          <CoadAccordion aberto={false} titulo="Informações Gerais">
+            <Produtos
+              produtos={produtos}
+              setProdutos={setProdutos}
+              disabled={modoVisualizacao}
+            />
+          </CoadAccordion>
           <FormGroup className="d-flex flex-row-reverse mt-3">
             <Button
               disabled={!habilitaBotao}
