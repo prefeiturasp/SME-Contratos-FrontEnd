@@ -438,14 +438,14 @@ class VisualizarContratos extends Component {
       ata,
     } = this.state;
     const habilitaBotao =
-      // termo_contrato &&
-      // processo &&
-      // situacao &&
-      // data_assinatura &&
-      // data_ordem_inicio &&
-      // referencia_encerramento &&
-      // vigencia &&
-      // dataEncerramento &&
+      termo_contrato &&
+      processo &&
+      situacao &&
+      data_assinatura &&
+      data_ordem_inicio &&
+      referencia_encerramento &&
+      vigencia &&
+      dataEncerramento &&
       this.validaDotacoes();
 
     return (
