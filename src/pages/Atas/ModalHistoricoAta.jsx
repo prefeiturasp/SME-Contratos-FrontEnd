@@ -4,7 +4,7 @@ import { Row, Col } from "reactstrap";
 import { Modal } from "antd";
 import "./styles.scss";
 
-export function ModalHistoricoEdital({
+export function ModalHistoricoAta({
   historico,
   abreModalHistorico,
   fechaModalHistorico,
@@ -38,21 +38,21 @@ export function ModalHistoricoEdital({
 
   const ajusta_nome = campo => {
     if (campo === "numero") {
-      return "Número do Edital";
+      return "Número da Ata";
     } else if (campo === "status") {
       return "Status";
-    } else if (campo === "processo") {
-      return "Número do Processo";
-    } else if (campo === "tipo_contratacao") {
-      return "Tipo de Contratação";
-    } else if (campo === "subtipo") {
-      return "Subtipo";
-    } else if (campo === "data_homologacao") {
-      return "Data de Homologação";
-    } else if (campo === "objeto") {
-      return "Categoria de objeto";
-    } else if (campo === "descricao_objeto") {
-      return "Descrição do Objeto";
+    } else if (campo === "edital") {
+      return "Número do Edital";
+    } else if (campo === "data_assinatura") {
+      return "Data de Assinatura";
+    } else if (campo === "data_encerramento") {
+      return "Data de Encerramento";
+    } else if (campo === "vigencia") {
+      return "Vigência";
+    } else if (campo === "unidade_vigencia") {
+      return "Unidade Vigência";
+    } else if (campo === "empresa") {
+      return "Empresa";
     }
   };
 
@@ -87,7 +87,7 @@ export function ModalHistoricoEdital({
                 return (
                   <div
                     key={index}
-                    className={`${ativo && "ativo-item"} grid-item-log-edital`}
+                    className={`${ativo && "ativo-item"} grid-item-log-ata`}
                     onClick={() => {
                       itemLogAtivo(index, ativo);
                     }}
@@ -95,26 +95,23 @@ export function ModalHistoricoEdital({
                     <div className="usuario">
                       <div>{iniciais}</div>
                     </div>
-                    <div className="descricao-edital">
-                      <div
-                        className="descicao-titulo-edital"
-                        title={hist.action}
-                      >
+                    <div className="descricao-ata">
+                      <div className="descicao-titulo-ata" title={hist.action}>
                         {hist.action === "CREATE" ? "CRIAÇÃO" : "EDIÇÃO"}
                       </div>
                       <div className="conta-usuario">{hist.user.email}</div>
                     </div>
-                    <div className="descricao-edital">
+                    <div className="descricao-ata">
                       {hist.updated_at !== undefined && (
                         <>
-                          <div className="hora-edital">
+                          <div className="hora-ata">
                             {
                               moment(hist.updated_at, "YYYY-MM-DD HH:mm:ss")
                                 .format("DD/MM/YYYY HH:mm:ss")
                                 .split(" ")[0]
                             }
                           </div>
-                          <div className="hora-edital">
+                          <div className="hora-ata">
                             {
                               moment(hist.updated_at, "YYYY-MM-DD HH:mm:ss")
                                 .format("DD/MM/YYYY HH:mm:ss")
@@ -125,14 +122,14 @@ export function ModalHistoricoEdital({
                       )}
                       {hist.created_at !== undefined && (
                         <>
-                          <div className="hora-edital">
+                          <div className="hora-ata">
                             {
                               moment(hist.created_at, "YYYY-MM-DD HH:mm:ss")
                                 .format("DD/MM/YYYY HH:mm:ss")
                                 .split(" ")[0]
                             }
                           </div>
-                          <div className="hora-edital">
+                          <div className="hora-ata">
                             {
                               moment(hist.created_at, "YYYY-MM-DD HH:mm:ss")
                                 .format("DD/MM/YYYY HH:mm:ss")
@@ -154,7 +151,7 @@ export function ModalHistoricoEdital({
             <header>
               <div />
               {histSelecionado !== null ? (
-                <div className="descricao-do-log-edital">
+                <div className="descricao-do-log-ata">
                   <div className="header-log">
                     <div className="usuario">
                       <div>{retornaIniciais(histSelecionado.user.email)}</div>
@@ -165,7 +162,7 @@ export function ModalHistoricoEdital({
                     <div>
                       {histSelecionado.updated_at !== undefined && (
                         <>
-                          <div className="hora-edital">
+                          <div className="hora-ata">
                             {
                               moment(
                                 histSelecionado.updated_at,
@@ -175,7 +172,7 @@ export function ModalHistoricoEdital({
                                 .split(" ")[0]
                             }
                           </div>
-                          <div className="hora-edital">
+                          <div className="hora-ata">
                             {
                               moment(
                                 histSelecionado.updated_at,
@@ -189,7 +186,7 @@ export function ModalHistoricoEdital({
                       )}
                       {histSelecionado.created_at !== undefined && (
                         <>
-                          <div className="hora-edital">
+                          <div className="hora-ata">
                             {
                               moment(
                                 histSelecionado.created_at,
@@ -199,7 +196,7 @@ export function ModalHistoricoEdital({
                                 .split(" ")[0]
                             }
                           </div>
-                          <div className="hora-edital">
+                          <div className="hora-ata">
                             {
                               moment(
                                 histSelecionado.created_at,
@@ -220,12 +217,12 @@ export function ModalHistoricoEdital({
                         <div className="campo py-2">
                           <b>Lista de alterações</b>
                         </div>
-                        <table className="table table-bordered table-edital">
+                        <table className="table table-bordered table-ata">
                           <col style={{ width: "30%" }} />
                           <col style={{ width: "30%" }} />
                           <col style={{ width: "40%" }} />
                           <thead>
-                            <tr className="table-head-edital">
+                            <tr className="table-head-ata">
                               <th>CAMPO</th>
                               <th>DE</th>
                               <th>PARA</th>
@@ -236,22 +233,36 @@ export function ModalHistoricoEdital({
                             {histSelecionado.changes.map((change, index) => (
                               <tr
                                 key={`${index}_${change.field}`}
-                                className="table-body-edital"
+                                className="table-body-ata"
                               >
                                 <td>{ajusta_nome(change.field)}</td>
                                 <td>
-                                  <div
-                                    dangerouslySetInnerHTML={{
-                                      __html: change.from,
-                                    }}
-                                  />
+                                  {(change.field === "data_assinatura") |
+                                  (change.field === "data_encerramento") ? (
+                                    moment(change.from, "YYYY-MM-DD HH:mm:ss")
+                                      .format("DD/MM/YYYY HH:mm:ss")
+                                      .split(" ")[0]
+                                  ) : (
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html: change.from,
+                                      }}
+                                    />
+                                  )}
                                 </td>
                                 <td>
-                                  <div
-                                    dangerouslySetInnerHTML={{
-                                      __html: change.to,
-                                    }}
-                                  />
+                                  {(change.field === "data_assinatura") |
+                                  (change.field === "data_encerramento") ? (
+                                    moment(change.to, "YYYY-MM-DD HH:mm:ss")
+                                      .format("DD/MM/YYYY HH:mm:ss")
+                                      .split(" ")[0]
+                                  ) : (
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html: change.to,
+                                      }}
+                                    />
+                                  )}
                                 </td>
                               </tr>
                             ))}
@@ -270,16 +281,16 @@ export function ModalHistoricoEdital({
                                 {grupo.itens_obrigacao.from && (
                                   <table
                                     key={`${index}_${grupo.nome.from}_from`}
-                                    className="table table-bordered table-edital"
+                                    className="table table-bordered table-ata"
                                   >
                                     <col style={{ width: "20%" }} />
                                     <col style={{ width: "30%" }} />
                                     <col style={{ width: "50%" }} />
                                     <thead>
-                                      <tr className="table-head-edital"></tr>
+                                      <tr className="table-head-ata"></tr>
                                     </thead>
                                     <tbody>
-                                      <tr className="table-head-edital">
+                                      <tr className="table-head-ata">
                                         <th colSpan="3">DE</th>
                                       </tr>
                                       {grupo.itens_obrigacao.from.map(
@@ -287,7 +298,7 @@ export function ModalHistoricoEdital({
                                           <>
                                             <tr
                                               key={`${i}_${situacao.item}_from`}
-                                              className="table-body-edital"
+                                              className="table-body-ata"
                                             >
                                               <td>{grupo.nome.from}</td>
                                               <td>{situacao.item}</td>
@@ -308,16 +319,16 @@ export function ModalHistoricoEdital({
                                 {grupo.itens_obrigacao.to && (
                                   <table
                                     key={`${index}_${grupo.nome.to}_to`}
-                                    className="table table-bordered table-edital"
+                                    className="table table-bordered table-ata"
                                   >
                                     <col style={{ width: "20%" }} />
                                     <col style={{ width: "30%" }} />
                                     <col style={{ width: "50%" }} />
                                     <thead>
-                                      <tr className="table-head-edital"></tr>
+                                      <tr className="table-head-ata"></tr>
                                     </thead>
                                     <tbody>
-                                      <tr className="table-head-edital">
+                                      <tr className="table-head-ata">
                                         <th colSpan="3">PARA</th>
                                       </tr>
                                       {grupo.itens_obrigacao.to.map(
@@ -325,7 +336,7 @@ export function ModalHistoricoEdital({
                                           <>
                                             <tr
                                               key={`${i}_${situacao.item}_to`}
-                                              className="table-body-edital"
+                                              className="table-body-ata"
                                             >
                                               <td>{grupo.nome.to}</td>
                                               <td>{situacao.item}</td>
@@ -354,10 +365,13 @@ export function ModalHistoricoEdital({
                     histSelecionado.action === "CREATE" && (
                       <>
                         <Row className="row-hist">
-                          <Col className="campo col-6 mt-2 mb-2">
-                            <b>Criação de edital</b>
+                          <Col className="campo-ata col-12 mt-2 mb-2">
+                            <b>Criação de Ata</b>
                           </Col>
-                          <Col className="col-5 mt-2 ">
+                          <Col className="campo-ata col-12 mt-2">
+                            <b>Ata nº:</b> {valor_field("numero")}
+                          </Col>
+                          <Col className="campo-ata col-6">
                             <b>Criado em: </b>
                             {
                               moment(
@@ -377,43 +391,46 @@ export function ModalHistoricoEdital({
                                 .split(" ")[1]
                             }
                           </Col>
-                          <Col className="campo-edital col-6">
-                            <b>Edital:</b> {valor_field("numero")}
-                          </Col>
-                          <Col className="col-5">
+
+                          <Col className="col-5 mt-1">
                             {" "}
                             <b>Status:</b> {valor_field("status")}
                           </Col>
-                          <Col className="campo-edital col-6">
+
+                          <Col className="campo-ata col-12">
                             {" "}
-                            <b>Processo:</b> {valor_field("processo")}
+                            <b>Número do Edital:</b> {valor_field("edital")}
                           </Col>
-                          <Col className="col-5">
-                            <b>Homologação: </b>
+
+                          <Col className="campo-ata col-6">
+                            <b>Data de Assinatura: </b>
                             {
                               moment(
-                                valor_field("data_homologacao"),
+                                valor_field("data_assinatura"),
                                 "YYYY-MM-DD HH:mm:ss",
                               )
                                 .format("DD/MM/YYYY HH:mm:ss")
                                 .split(" ")[0]
                             }
                           </Col>
-                          <Col className="campo-edital col-12">
-                            <b>Tipo:</b> {valor_field("tipo_contratacao")}
+                          <Col className="col-5 mt-1">
+                            {" "}
+                            <b>Vigência:</b> {valor_field("vigencia")}{" "}
+                            {valor_field("unidade_vigencia")}
                           </Col>
-                          <Col className="campo-edital col-12">
-                            <b>Subtipo:</b> {valor_field("subtipo")}
+                          <Col className="campo-ata col-6">
+                            <b>Data de Encerramento: </b>
+                            {
+                              moment(
+                                valor_field("data_encerramento"),
+                                "YYYY-MM-DD HH:mm:ss",
+                              )
+                                .format("DD/MM/YYYY HH:mm:ss")
+                                .split(" ")[0]
+                            }
                           </Col>
-                          <Col className="campo-edital col-12 mt-4">
-                            <b>Objeto:</b> {valor_field("objeto")}
-                          </Col>
-                          <Col className="campo-edital col-12 mt-3">
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: valor_field("descricao_objeto"),
-                              }}
-                            />
+                          <Col className="campo-ata col-12 mt-4">
+                            <b>Empresa:</b> {valor_field("empresa")}
                           </Col>
                         </Row>
                       </>
