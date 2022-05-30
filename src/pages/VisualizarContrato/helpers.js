@@ -12,7 +12,7 @@ export const mapStateToPayload = (state, incluir) => {
       empresa_contratada: state.empresa_contratada.uuid,
       estado_contrato: state.estado,
       data_ordem_inicio: moment(state.data_ordem_inicio).format("YYYY-MM-DD"),
-      data_encerramento: state.data_encerramento,
+      data_encerramento: moment(state.data_encerramento).format("YYYY-MM-DD"),
       data_assinatura: state.data_assinatura
         ? moment(state.data_assinatura).format("YYYY-MM-DD")
         : null,
@@ -25,7 +25,13 @@ export const mapStateToPayload = (state, incluir) => {
         ? state.contrato.termo_contrato
         : state.termo_contrato,
       coordenador: state.coordenador,
-      dotacoes_orcamentarias: state.dotacoes_orcamentarias,
+      dotacoes: state.dotacoes_orcamentarias.map(dotacao => {
+        return {
+          dotacao_orcamentaria: dotacao.uuid,
+          valor: dotacao.valor,
+          empenhos: dotacao.empenhos,
+        };
+      }),
       valor_total: state.valor_total,
       unidades_selecionadas: state.unidades_selecionadas,
       unidade_vigencia: state.unidade_vigencia,

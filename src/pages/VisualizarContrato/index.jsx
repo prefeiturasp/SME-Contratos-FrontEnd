@@ -157,10 +157,10 @@ class VisualizarContratos extends Component {
         ? moment(contrato.data_ordem_inicio, "YYYY-MM-DD")
         : null,
       data_encerramento: contrato.data_encerramento
-        ? new Date(contrato.data_encerramento)
+        ? moment(contrato.data_encerramento, "YYYY-MM-DD")
         : null,
       data_assinatura: contrato.data_assinatura
-        ? moment(contrato.data_assinatura, "YYYY-MM-DD").format("DD/MM/YYYY")
+        ? moment(contrato.data_assinatura, "YYYY-MM-DD")
         : null,
       processo: contrato.processo,
       empresa_contratada: empresa_contratada,
@@ -172,8 +172,12 @@ class VisualizarContratos extends Component {
         : "",
       estado: contrato.estado_contrato,
       vigencia: contrato.vigencia,
-      dotacoes_orcamentarias: contrato.dotacoes_orcamentarias.map(el => ({
-        ...el,
+      dotacoes_orcamentarias: contrato.dotacoes.map(el => ({
+        empenhos: el.empenhos.map(emp => ({
+          ...emp,
+          valor_previsto: parseFloat(emp.valor_previsto),
+        })),
+        ...el.dotacao_orcamentaria,
         valor: parseFloat(el.valor),
       })),
       valor_total: parseFloat(contrato.valor_total),
@@ -387,10 +391,11 @@ class VisualizarContratos extends Component {
 
   validaDotacoes = () => {
     const dotacoes = this.state.dotacoes_orcamentarias;
-    if (!dotacoes.length) return true;
+
+    if (!dotacoes.length) return false;
     else {
-      let validas = dotacoes.filter(dotacao => dotacao.valor_mensal);
-      return validas.length > 0 && this.state.valor_total;
+      let validas = dotacoes.filter(dotacao => dotacao.valor);
+      return validas.length !== 0 && this.state.valor_total;
     }
   };
 

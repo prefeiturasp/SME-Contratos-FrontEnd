@@ -26,6 +26,7 @@ export default ({
               setDotacoes(event.value);
             }}
             disabled={disabled}
+            filter
           />
         </Col>
       </Row>
@@ -49,16 +50,16 @@ export default ({
                 thousandSeparator="."
                 prefix="R$ "
                 className="form-control"
-                value={dotacao.valor_mensal}
+                value={dotacao.valor}
                 onChange={(value, floatValue) => {
-                  dotacao.valor_mensal = floatValue;
+                  dotacao.valor = floatValue;
                   setDotacoes(dotacoes);
                 }}
               />
             </Col>
             <Col lg={1} xl={1}>
               <Button
-                className="btn btn-coad-background-outline"
+                className="btn btn-coad-background-outline btn-empenho"
                 onClick={() => {
                   let dotacoesCopy = dotacoes;
                   dotacoesCopy.splice(index, 1);
@@ -71,10 +72,10 @@ export default ({
             </Col>
             <Col lg={3} xl={3}>
               <Button
-                className="btn btn-coad-background-outline"
+                className="btn btn-coad-background-outline btn-empenho"
                 onClick={() => {
-                  dotacao.empenho = dotacao.empenho
-                    ? [...dotacao.empenho, {}]
+                  dotacao.empenhos = dotacao.empenhos
+                    ? [...dotacao.empenhos, {}]
                     : [{}];
                   setDotacoes(dotacoes);
                 }}
@@ -85,18 +86,19 @@ export default ({
             </Col>
           </Row>
 
-          {dotacao.empenho &&
-            dotacao.empenho.map((empenho, indexEmp) => (
+          {dotacao.empenhos &&
+            dotacao.empenhos.map((empenho, indexEmp) => (
               <Row key={indexEmp}>
                 <Col lg={5} xl={5}>
                   <Label form="numeroProcesso">Número do Empenho</Label>
                   <InputText
-                    value={empenho.numero_empenho}
+                    value={empenho.numero}
                     className="w-100"
                     onChange={e => {
-                      empenho.numero_empenho = e.target.value;
+                      empenho.numero = e.target.value;
                       setDotacoes(dotacoes);
                     }}
+                    disabled={disabled}
                   />
                 </Col>
                 <Col lg={3} xl={3}>
@@ -116,7 +118,7 @@ export default ({
                 </Col>
                 <Col lg={1} xl={1}>
                   <Button
-                    className="btn btn-coad-background-outline"
+                    className="btn btn-coad-background-outline btn-empenho"
                     onClick={() => {
                       let dotacoesCopy = dotacoes;
                       dotacoesCopy[index].empenho.splice(indexEmp, 1);

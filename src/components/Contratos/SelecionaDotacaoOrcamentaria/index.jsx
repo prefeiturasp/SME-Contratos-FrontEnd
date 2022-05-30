@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MultiSelect } from "primereact/multiselect";
 import { Label } from "reactstrap";
-import { getListaDotacoes } from "../../../service/DotacaoOrcamentaria.service";
+import { getDotacoesLookup } from "../../../service/DotacaoOrcamentaria.service";
 
 const SelecionaDotacaoOrcamentaria = props => {
   const [dotacoes, setDotacoes] = useState([]);
@@ -10,8 +10,8 @@ const SelecionaDotacaoOrcamentaria = props => {
   useEffect(() => {
     (async () => {
       try {
-        const dotacoesPayload = await getListaDotacoes();
-        setDotacoes(dotacoesPayload.results);
+        const dotacoesPayload = await getDotacoesLookup();
+        setDotacoes(dotacoesPayload);
       } catch (erro) {
         throw erro;
       }
