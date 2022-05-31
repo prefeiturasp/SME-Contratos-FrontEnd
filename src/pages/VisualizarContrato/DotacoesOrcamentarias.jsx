@@ -81,7 +81,7 @@ export default ({
                 }}
                 disabled={disabled}
               >
-                + Empenho
+                Adicionar Empenho
               </Button>
             </Col>
           </Row>
@@ -121,7 +121,7 @@ export default ({
                     className="btn btn-coad-background-outline btn-empenho"
                     onClick={() => {
                       let dotacoesCopy = dotacoes;
-                      dotacoesCopy[index].empenho.splice(indexEmp, 1);
+                      dotacoesCopy[index].empenhos.splice(indexEmp, 1);
                       setDotacoes(dotacoesCopy);
                     }}
                     disabled={disabled}
