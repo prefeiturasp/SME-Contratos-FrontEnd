@@ -18,6 +18,14 @@ export const getListaDeProdutos = async filtro => {
   return (await api.get(`produtos/${parametros}`, AUTH_HEADER)).data;
 };
 
+export const getProdutosSimples = async filtro => {
+  let parametros = formataParametros(filtro);
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  return (await api.get(`produtos/simples/${parametros}`, AUTH_HEADER)).data;
+};
+
 export const criaProduto = async payload => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
