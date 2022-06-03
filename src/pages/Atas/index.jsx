@@ -25,8 +25,9 @@ import { alteraAta, criaAta, getAta } from "../../service/Atas.service";
 import { STATUS_ATA, UNIDADES_VIGENCIA } from "./constantes";
 import { AccordionEmpresaContratada } from "../../components/Contratos/AccordionEmpresaContratada";
 import { ATAS, LISTAR_ATAS } from "../../configs/urls.constants";
-import "./styles.scss";
 import { ModalHistoricoAta } from "./ModalHistoricoAta";
+import Produtos from "./Produtos";
+import "./styles.scss";
 
 const Ata = () => {
   const { uuid } = getUrlParams();
@@ -34,6 +35,7 @@ const Ata = () => {
   const [visivel, setVisivel] = useState(false);
   const [visivelCancelar, setVisivelCancelar] = useState(false);
   const [ata, setAta] = useState({});
+  const [produtos, setProdutos] = useState([]);
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [incluir, setIncluir] = useState(true);
   const [modalHistorico, setModalHistorico] = useState(false);
@@ -42,18 +44,25 @@ const Ata = () => {
   useEffect(() => {
     if (uuid) {
       (async () => {
-        const dados = await getAta(uuid);
-        dados.data_assinatura = moment(
-          dados.data_assinatura,
-          "YYYY-MM-DD",
+        const ata = await getAta(uuid);
+        ata.data_assinatura = moment(
+          ata.data_assinatura,
+          "DD/MM/YYYY",
         ).toDate();
-        let numeroSeparado = dados.numero.split("/");
-        dados.numero = numeroSeparado[0];
-        dados.numero_ano = numeroSeparado[1];
-        dados.unidade_vigencia = UNIDADES_VIGENCIA.find(
-          e => e.id === dados.unidade_vigencia,
+        let numeroSeparado = ata.numero.split("/");
+        ata.numero = numeroSeparado[0];
+        ata.numero_ano = numeroSeparado[1];
+        ata.unidade_vigencia = UNIDADES_VIGENCIA.find(
+          e => e.id === ata.unidade_vigencia,
         );
-        setAta(dados);
+        setAta(ata);
+        setProdutos(
+          ata.produtos.map(produto => {
+            produto.nome = produto.produto.nome;
+            produto.unidade_medida = produto.produto.unidade_medida;
+            return produto;
+          }),
+        );
       })();
     }
   }, [uuid, setAta]);
@@ -71,7 +80,7 @@ const Ata = () => {
       setAta({ ...ata, data_encerramento: "" });
       return false;
     }
-    let dataInicio = moment(data_assinatura.value);
+    let dataInicio = moment(data_assinatura);
     if (unidade === UNIDADES_VIGENCIA[0])
       return dataInicio.add("days", vigencia).format("DD/MM/yyyy");
     else
@@ -93,7 +102,7 @@ const Ata = () => {
     let ataFormatada = { ...ata };
     delete ataFormatada.numero_ano;
     ataFormatada.numero += "/" + ata.numero_ano;
-    ataFormatada.data_assinatura = moment(ata.data_assinatura.value).format(
+    ataFormatada.data_assinatura = moment(ata.data_assinatura).format(
       "yyyy-MM-DD",
     );
     ataFormatada.data_encerramento = moment(
@@ -104,6 +113,19 @@ const Ata = () => {
     ataFormatada.empresa = ata.empresa.uuid;
     ataFormatada.status = ata.status.id;
     ataFormatada.unidade_vigencia = ata.unidade_vigencia.id;
+    ataFormatada.produtos = produtos.map(produto => {
+      let produtoNew = produto;
+      if (produto.anexo) {
+        produtoNew.anexo = produto.anexo.base64;
+      }
+      if (produto.produto) {
+        produtoNew.produto = produto.produto.uuid;
+      } else {
+        produtoNew.produto = produto.uuid;
+        delete produtoNew.uuid;
+      }
+      return produtoNew;
+    });
     return ataFormatada;
   };
 
@@ -150,7 +172,7 @@ const Ata = () => {
         ]}
       >
         <h3>{uuid ? "Ata Nº " + ata.numero : "Cadastro de Atas"}</h3>
-        <Container>
+        <Container className="container-atas">
           <Row className="mb-3">
             <Col lg={6}>
               <Button
@@ -319,13 +341,13 @@ const Ata = () => {
                   data={ata.data_assinatura}
                   onSelect={data => {
                     let dataEncerramento = calculaDataEncerramento(
-                      data,
+                      data.value,
                       ata.vigencia,
                       ata.unidade_vigencia,
                     );
                     setAta({
                       ...ata,
-                      data_assinatura: data,
+                      data_assinatura: data.value,
                       data_encerramento: dataEncerramento,
                     });
                   }}
@@ -390,6 +412,13 @@ const Ata = () => {
             disabilitado={modoVisualizacao}
             aberto={false}
           />
+          <CoadAccordion aberto={false} titulo="Produtos">
+            <Produtos
+              produtos={produtos}
+              setProdutos={setProdutos}
+              disabled={modoVisualizacao}
+            />
+          </CoadAccordion>
           <Row className="mt-3">
             <Col lg={6}>
               <Button
