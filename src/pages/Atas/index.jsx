@@ -113,20 +113,12 @@ const Ata = () => {
     ataFormatada.unidade_vigencia = ata.unidade_vigencia.id;
     ataFormatada.produtos = produtos.map(produto => {
       let produtoNew = produto;
-      console.log(produtoNew.anexo);
-      //delete produtoNew.anexo;
-      // if(produto.anexo){
-      //   delete produtoNew.anexo.objectURL;
-      //   delete produtoNew.anexo.base64;
-      // }
       if (produto.anexo) {
         produtoNew.anexo = produto.anexo.base64;
       }
       if (produto.produto) {
         produtoNew.produto = produto.produto.uuid;
       } else {
-        console.log(produtoNew);
-        console.log(produto);
         produtoNew.produto = produto.uuid;
         delete produtoNew.uuid;
       }
