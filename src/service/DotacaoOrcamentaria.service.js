@@ -11,6 +11,16 @@ export const getListaDotacoes = async filtro => {
     .data;
 };
 
+export const getDotacoesLookup = async filtro => {
+  let parametros = formataParametros(filtro);
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  return (
+    await api.get(`dotacoes-orcamentarias/lookup/${parametros}`, AUTH_HEADER)
+  ).data;
+};
+
 export const getDotacaoOrcamentaria = async uuid => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
