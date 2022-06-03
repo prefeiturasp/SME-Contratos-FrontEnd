@@ -13,13 +13,28 @@ const Produtos = ({ produtos, setProdutos, disabled }) => {
   const [produtoSelecionado, setProdutoSelecionado] = useState({});
   const inputFile = useRef(null);
 
-  const adicionaProduto = () => {
+  const fileToBase64 = async file => {
+    let result_file = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result.split("base64,")[1];
+        return resolve(`data:${file.type};base64,${base64}`);
+      };
+      reader.readAsDataURL(file);
+    });
+    return result_file;
+  };
+
+  const adicionaProduto = async () => {
     let newProduto = { ...produto };
     if (inputFile.current.files) {
-      console.log(inputFile.current.files);
+      newProduto.anexo = inputFile.current.files[0];
+      newProduto.anexo.objectURL = window.URL.createObjectURL(newProduto.anexo);
+      newProduto.anexo.base64 = await fileToBase64(newProduto.anexo);
+      clearInputFile();
     }
     let newProdutos = [...produtos];
-    newProdutos.push({ newProduto, ...produtoSelecionado });
+    newProdutos.push({ ...newProduto, ...produtoSelecionado });
     setProdutos(newProdutos);
     setProduto({});
     setProdutoSelecionado({});
@@ -31,10 +46,20 @@ const Produtos = ({ produtos, setProdutos, disabled }) => {
     setProdutos(newProdutos);
   };
 
+  const abrirAnexo = rowData => {
+    if (rowData.anexo)
+      window.open(
+        rowData.anexo.objectURL ? rowData.anexo.objectURL : rowData.anexo,
+      );
+  };
+
   const colunaAcoes = (rowData, rowInfo) => {
     return (
       <span className="icones-acoes">
-        <i className="fas fa-paperclip mr-3"></i>
+        <i
+          className="fas fa-paperclip mr-3"
+          onClick={() => abrirAnexo(rowData)}
+        ></i>
         <i
           className="fas fa-trash-alt"
           onClick={() => deletarProduto(rowInfo.rowIndex)}
@@ -42,6 +67,18 @@ const Produtos = ({ produtos, setProdutos, disabled }) => {
       </span>
     );
   };
+
+  const clearInputFile = () => {
+    inputFile.current.clear();
+    inputFile.current.files = null;
+  };
+
+  let habilitaBotao =
+    produtoSelecionado.nome &&
+    produto.quantidade_total &&
+    produto.valor_unitario &&
+    produto.valor_total &&
+    inputFile.current.files;
 
   return (
     <>
@@ -69,12 +106,12 @@ const Produtos = ({ produtos, setProdutos, disabled }) => {
           <Label className="font-weight-bold w-100">Quantidade Total</Label>
           <InputNumber
             className="w-100"
-            value={produto.qtd_total}
+            value={produto.quantidade_total}
             format={false}
             onChange={e => {
               setProduto({
                 ...produto,
-                qtd_total: e.value,
+                quantidade_total: e.value,
               });
             }}
             disabled={disabled}
@@ -115,28 +152,40 @@ const Produtos = ({ produtos, setProdutos, disabled }) => {
       </div>
       <div className="p-grid mt-3">
         <div className="p-col-12">
-          <div className="ml-auto">
-            <FileUpload
-              name="demo"
-              mode="basic"
-              ref={inputFile}
-              chooseOptions={{
-                label: "Anexar Ficha técnica",
-                icon: "pi pi-paperclip",
-                className: "btn-coad-background-outline",
-              }}
-              accept=".png, .pdf, .jpeg, .jpg"
-              customUpload
-              uploadHandler={() => {
-                inputFile.current.clear();
-              }}
-            />
-            <Button
-              className="btn-coad-background-outline ml-3"
-              onClick={adicionaProduto}
-            >
-              <i className="fas fa-plus mr-1" /> Adicionar Produto
-            </Button>
+          <div className="button-row">
+            <div>
+              <Button
+                className="btn-coad-background-outline ml-3"
+                onClick={adicionaProduto}
+                disabled={disabled || !habilitaBotao}
+              >
+                <i className="fas fa-plus mr-1" /> Adicionar Produto
+              </Button>
+            </div>
+
+            <div>
+              <FileUpload
+                name="demo"
+                mode="basic"
+                ref={inputFile}
+                chooseOptions={{
+                  label: "Anexar Ficha Técnica",
+                  icon: "pi pi-paperclip",
+                  className: "btn-coad-background-outline",
+                }}
+                accept=".png, .pdf, .jpeg, .jpg"
+                customUpload
+                onSelect={() => {
+                  setProduto({ ...produto });
+                }}
+                uploadHandler={() => {
+                  clearInputFile();
+                  setProduto({ ...produto });
+                }}
+                disabled={disabled}
+              />
+              <div className="formatos-aceitos">PDF, PNG, JPG ou JPEG</div>
+            </div>
           </div>
         </div>
       </div>
@@ -152,15 +201,10 @@ const Produtos = ({ produtos, setProdutos, disabled }) => {
           >
             <Column field="nome" header="Nome do Produto" />
             <Column field="unidade_medida" header="Unid." />
-            <Column field="qtd_total" header="Qtde. Total" />
+            <Column field="quantidade_total" header="Qtde. Total" />
             <Column field="valor_unitario" header="Valor Unit." />
             <Column field="valor_total" header="Valor Total" />
             <Column header="Ações" body={colunaAcoes} />
-            {/* <Column
-            field="data_encerramento"
-            header="Data de Encerramento"
-            body={textoDataEncerramento}
-          /> */}
           </DataTable>
         </div>
       )}

@@ -42,18 +42,25 @@ const Ata = () => {
   useEffect(() => {
     if (uuid) {
       (async () => {
-        const dados = await getAta(uuid);
-        dados.data_assinatura = moment(
-          dados.data_assinatura,
-          "YYYY-MM-DD",
+        const ata = await getAta(uuid);
+        ata.data_assinatura = moment(
+          ata.data_assinatura,
+          "DD/MM/YYYY",
         ).toDate();
-        let numeroSeparado = dados.numero.split("/");
-        dados.numero = numeroSeparado[0];
-        dados.numero_ano = numeroSeparado[1];
-        dados.unidade_vigencia = UNIDADES_VIGENCIA.find(
-          e => e.id === dados.unidade_vigencia,
+        let numeroSeparado = ata.numero.split("/");
+        ata.numero = numeroSeparado[0];
+        ata.numero_ano = numeroSeparado[1];
+        ata.unidade_vigencia = UNIDADES_VIGENCIA.find(
+          e => e.id === ata.unidade_vigencia,
         );
-        setAta(dados);
+        setAta(ata);
+        setProdutos(
+          ata.produtos.map(produto => {
+            produto.nome = produto.produto.nome;
+            produto.unidade_medida = produto.produto.unidade_medida;
+            return produto;
+          }),
+        );
       })();
     }
   }, [uuid, setAta]);
@@ -71,7 +78,7 @@ const Ata = () => {
       setAta({ ...ata, data_encerramento: "" });
       return false;
     }
-    let dataInicio = moment(data_assinatura.value);
+    let dataInicio = moment(data_assinatura);
     if (unidade === UNIDADES_VIGENCIA[0])
       return dataInicio.add("days", vigencia).format("DD/MM/yyyy");
     else
@@ -93,7 +100,7 @@ const Ata = () => {
     let ataFormatada = { ...ata };
     delete ataFormatada.numero_ano;
     ataFormatada.numero += "/" + ata.numero_ano;
-    ataFormatada.data_assinatura = moment(ata.data_assinatura.value).format(
+    ataFormatada.data_assinatura = moment(ata.data_assinatura).format(
       "yyyy-MM-DD",
     );
     ataFormatada.data_encerramento = moment(
@@ -104,6 +111,27 @@ const Ata = () => {
     ataFormatada.empresa = ata.empresa.uuid;
     ataFormatada.status = ata.status.id;
     ataFormatada.unidade_vigencia = ata.unidade_vigencia.id;
+    ataFormatada.produtos = produtos.map(produto => {
+      let produtoNew = produto;
+      console.log(produtoNew.anexo);
+      //delete produtoNew.anexo;
+      // if(produto.anexo){
+      //   delete produtoNew.anexo.objectURL;
+      //   delete produtoNew.anexo.base64;
+      // }
+      if (produto.anexo) {
+        produtoNew.anexo = produto.anexo.base64;
+      }
+      if (produto.produto) {
+        produtoNew.produto = produto.produto.uuid;
+      } else {
+        console.log(produtoNew);
+        console.log(produto);
+        produtoNew.produto = produto.uuid;
+        delete produtoNew.uuid;
+      }
+      return produtoNew;
+    });
     return ataFormatada;
   };
 
@@ -309,13 +337,13 @@ const Ata = () => {
                   data={ata.data_assinatura}
                   onSelect={data => {
                     let dataEncerramento = calculaDataEncerramento(
-                      data,
+                      data.value,
                       ata.vigencia,
                       ata.unidade_vigencia,
                     );
                     setAta({
                       ...ata,
-                      data_assinatura: data,
+                      data_assinatura: data.value,
                       data_encerramento: dataEncerramento,
                     });
                   }}
@@ -380,7 +408,7 @@ const Ata = () => {
             disabilitado={modoVisualizacao}
             aberto={false}
           />
-          <CoadAccordion aberto={false} titulo="Informações Gerais">
+          <CoadAccordion aberto={false} titulo="Produtos">
             <Produtos
               produtos={produtos}
               setProdutos={setProdutos}

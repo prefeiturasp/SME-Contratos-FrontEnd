@@ -4,4 +4,14 @@
       color: #602a2a;
     }
   }
+
+  .button-row {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .formatos-aceitos {
+    text-align: center;
+    font-weight: bold;
+  }
 }

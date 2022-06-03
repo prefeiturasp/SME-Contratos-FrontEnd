@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dropdown } from "primereact/dropdown";
 import { Label } from "reactstrap";
-import { getListaDeProdutos } from "../../../service/Produtos.service";
+import { getProdutosSimples } from "../../../service/Produtos.service";
 
 const SelecionaProduto = props => {
   const [produtos, setProdutos] = useState([]);
@@ -10,8 +10,8 @@ const SelecionaProduto = props => {
   useEffect(() => {
     (async () => {
       try {
-        const produtos = await getListaDeProdutos();
-        setProdutos(produtos.results);
+        const produtos = await getProdutosSimples();
+        setProdutos(produtos);
       } catch (erro) {
         throw erro;
       }
