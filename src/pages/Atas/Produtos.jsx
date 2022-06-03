@@ -7,23 +7,12 @@ import SelecionaProduto from "../../components/Contratos/SelecionaProduto";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { FileUpload } from "primereact/fileupload";
+import { fileToBase64 } from "../../utils/fileToBase64";
 
 const Produtos = ({ produtos, setProdutos, disabled }) => {
   const [produto, setProduto] = useState({});
   const [produtoSelecionado, setProdutoSelecionado] = useState({});
   const inputFile = useRef(null);
-
-  const fileToBase64 = async file => {
-    let result_file = await new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = reader.result.split("base64,")[1];
-        return resolve(`data:${file.type};base64,${base64}`);
-      };
-      reader.readAsDataURL(file);
-    });
-    return result_file;
-  };
 
   const adicionaProduto = async () => {
     let newProduto = { ...produto };
