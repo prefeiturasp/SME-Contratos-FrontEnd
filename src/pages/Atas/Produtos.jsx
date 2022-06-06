@@ -108,7 +108,7 @@ const Produtos = ({ produtos, setProdutos, disabled }) => {
         </div>
 
         <div className="p-col-4">
-          <Label className="font-weight-bold w-100">Valor Unitario</Label>
+          <Label className="font-weight-bold w-100">Valor Unitário</Label>
           <InputNumber
             className="w-100"
             value={produto.valor_unitario}
