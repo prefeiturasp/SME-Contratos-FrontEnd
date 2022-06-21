@@ -74,7 +74,7 @@ export function BuscaEditaisForm({ onBuscarClick }) {
     <Card footer={footer} className="filtro filtroBorda">
       <Row className="filtro-head-edital">
         <Col lg={12} xl={6} className="float-left">
-          <i className="pi pi-filter-fill">Filtrar editais</i>
+          <i className="pi pi-filter-fill"></i>Filtrar editais
         </Col>
 
         <Col lg={12} xl={6}>
