@@ -218,152 +218,113 @@ export function ModalHistoricoAta({
                     {histSelecionado !== undefined &&
                       histSelecionado.action === "UPDATE" && (
                         <>
-                          <div className="campo py-2">
-                            <b>Lista de alterações</b>
+                          <div className="campo p-2">
+                            <b>Lista de alterações </b>
                           </div>
-                          <table className="table table-bordered table-ata">
-                            <col style={{ width: "30%" }} />
-                            <col style={{ width: "30%" }} />
-                            <col style={{ width: "40%" }} />
-                            <thead>
-                              <tr className="table-head-ata">
-                                <th>CAMPO</th>
-                                <th>DE</th>
-                                <th>PARA</th>
-                              </tr>
-                            </thead>
-
-                            <tbody>
-                              {histSelecionado.changes.map((change, index) => (
-                                <tr
-                                  key={`${index}_${change.field}`}
-                                  className="table-body-ata"
-                                >
-                                  <td>{ajusta_nome(change.field)}</td>
-                                  <td>
-                                    {(change.field === "data_assinatura") |
-                                    (change.field === "data_encerramento") ? (
-                                      moment(change.from, "YYYY-MM-DD HH:mm:ss")
-                                        .format("DD/MM/YYYY HH:mm:ss")
-                                        .split(" ")[0]
-                                    ) : (
-                                      <div
-                                        dangerouslySetInnerHTML={{
-                                          __html: change.from,
-                                        }}
-                                      />
-                                    )}
-                                  </td>
-                                  <td>
-                                    {(change.field === "data_assinatura") |
-                                    (change.field === "data_encerramento") ? (
-                                      moment(change.to, "YYYY-MM-DD HH:mm:ss")
-                                        .format("DD/MM/YYYY HH:mm:ss")
-                                        .split(" ")[0]
-                                    ) : (
-                                      <div
-                                        dangerouslySetInnerHTML={{
-                                          __html: change.to,
-                                        }}
-                                      />
-                                    )}
-                                  </td>
+                          {histSelecionado.changes && (
+                            <table className="table table-bordered table-ata">
+                              <col style={{ width: "30%" }} />
+                              <col style={{ width: "30%" }} />
+                              <col style={{ width: "40%" }} />
+                              <thead>
+                                <tr className="table-head-ata">
+                                  <th>CAMPO</th>
+                                  <th>DE</th>
+                                  <th>PARA</th>
                                 </tr>
-                              ))}
-                            </tbody>
-                          </table>
+                              </thead>
 
-                          {histSelecionado.grupos_obrigacoes && (
-                            <div className="campo mt-3 py-2">
-                              <b>Alterações nos grupos de obrigações</b>
-                            </div>
+                              <tbody>
+                                {histSelecionado.changes.map(
+                                  (change, index) => (
+                                    <tr
+                                      key={`${index}_${change.field}`}
+                                      className="table-body-ata"
+                                    >
+                                      <td>{ajusta_nome(change.field)}</td>
+                                      <td>
+                                        {(change.field === "data_assinatura") |
+                                        (change.field ===
+                                          "data_encerramento") ? (
+                                          moment(
+                                            change.from,
+                                            "YYYY-MM-DD HH:mm:ss",
+                                          )
+                                            .format("DD/MM/YYYY HH:mm:ss")
+                                            .split(" ")[0]
+                                        ) : (
+                                          <div
+                                            dangerouslySetInnerHTML={{
+                                              __html: change.from,
+                                            }}
+                                          />
+                                        )}
+                                      </td>
+                                      <td>
+                                        {(change.field === "data_assinatura") |
+                                        (change.field ===
+                                          "data_encerramento") ? (
+                                          moment(
+                                            change.to,
+                                            "YYYY-MM-DD HH:mm:ss",
+                                          )
+                                            .format("DD/MM/YYYY HH:mm:ss")
+                                            .split(" ")[0]
+                                        ) : (
+                                          <div
+                                            dangerouslySetInnerHTML={{
+                                              __html: change.to,
+                                            }}
+                                          />
+                                        )}
+                                      </td>
+                                    </tr>
+                                  ),
+                                )}
+                              </tbody>
+                            </table>
                           )}
-                          {histSelecionado.grupos_obrigacoes &&
-                            histSelecionado.grupos_obrigacoes.map(
-                              (grupo, index) => (
-                                <>
-                                  {grupo.itens_obrigacao.from && (
-                                    <table
-                                      key={`${index}_${grupo.nome.from}_from`}
-                                      className="table table-bordered table-ata"
-                                    >
-                                      <col style={{ width: "20%" }} />
-                                      <col style={{ width: "30%" }} />
-                                      <col style={{ width: "50%" }} />
-                                      <thead>
-                                        <tr className="table-head-ata"></tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr className="table-head-ata">
-                                          <th colSpan="3">DE</th>
-                                        </tr>
-                                        {grupo.itens_obrigacao.from.map(
-                                          (situacao, i) => (
-                                            <>
-                                              <tr
-                                                key={`${i}_${situacao.item}_from`}
-                                                className="table-body-ata"
-                                              >
-                                                <td>{grupo.nome.from}</td>
-                                                <td>{situacao.item}</td>
-                                                <td>
-                                                  <div
-                                                    dangerouslySetInnerHTML={{
-                                                      __html:
-                                                        situacao.descricao,
-                                                    }}
-                                                  />{" "}
-                                                </td>
-                                              </tr>
-                                            </>
-                                          ),
-                                        )}
-                                      </tbody>
-                                    </table>
+
+                          {histSelecionado.objetos && (
+                            <>
+                              <div className="campo-ata mt-3">
+                                <b>Produtos </b>
+                              </div>
+                              <table className="table table-bordered table-ata mt-0">
+                                <col style={{ width: "30%" }} />
+                                <col style={{ width: "18%" }} />
+                                <col style={{ width: "18%" }} />
+                                <col style={{ width: "18%" }} />
+                                <col style={{ width: "16%" }} />
+                                <thead>
+                                  <tr className="table-head-ata">
+                                    <th>Nome do Produto</th>
+                                    <th>Qtde. Total</th>
+                                    <th>Valor Unit.</th>
+                                    <th>Valor Total</th>
+                                    <th>Situação</th>
+                                  </tr>
+                                </thead>
+
+                                <tbody>
+                                  {histSelecionado.objetos.map(
+                                    (objeto, index) => (
+                                      <tr
+                                        key={`${index}_${objeto.produto}`}
+                                        className="table-body-ata"
+                                      >
+                                        <td>{objeto.produto}</td>
+                                        <td>{objeto.quantidade_total}</td>
+                                        <td>{objeto.valor_unitario}</td>
+                                        <td>{objeto.valor_total}</td>
+                                        <td>{objeto.situacao}</td>
+                                      </tr>
+                                    ),
                                   )}
-                                  {grupo.itens_obrigacao.to && (
-                                    <table
-                                      key={`${index}_${grupo.nome.to}_to`}
-                                      className="table table-bordered table-ata"
-                                    >
-                                      <col style={{ width: "20%" }} />
-                                      <col style={{ width: "30%" }} />
-                                      <col style={{ width: "50%" }} />
-                                      <thead>
-                                        <tr className="table-head-ata"></tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr className="table-head-ata">
-                                          <th colSpan="3">PARA</th>
-                                        </tr>
-                                        {grupo.itens_obrigacao.to.map(
-                                          (situacao, i) => (
-                                            <>
-                                              <tr
-                                                key={`${i}_${situacao.item}_to`}
-                                                className="table-body-ata"
-                                              >
-                                                <td>{grupo.nome.to}</td>
-                                                <td>{situacao.item}</td>
-                                                <td>
-                                                  <div
-                                                    dangerouslySetInnerHTML={{
-                                                      __html:
-                                                        situacao.descricao,
-                                                    }}
-                                                  />{" "}
-                                                </td>
-                                              </tr>
-                                            </>
-                                          ),
-                                        )}
-                                      </tbody>
-                                    </table>
-                                  )}
-                                  <hr className="linha" />
-                                </>
-                              ),
-                            )}
+                                </tbody>
+                              </table>
+                            </>
+                          )}
                         </>
                       )}
 
@@ -438,6 +399,44 @@ export function ModalHistoricoAta({
                             <Col className="campo-ata col-12 mt-4">
                               <b>Empresa:</b> {valor_field("empresa")}
                             </Col>
+                            {histSelecionado.objetos && (
+                              <Col className="col-12">
+                                <table className="table table-bordered table-ata">
+                                  <col style={{ width: "30%" }} />
+                                  <col style={{ width: "18%" }} />
+                                  <col style={{ width: "18%" }} />
+                                  <col style={{ width: "18%" }} />
+                                  <col style={{ width: "16%" }} />
+                                  <thead>
+                                    <tr className="table-head-ata">
+                                      <th>Nome do Produto</th>
+                                      <th>Qtde. Total</th>
+                                      <th>Valor Unit.</th>
+                                      <th>Valor Total</th>
+                                      <th>Situação</th>
+                                    </tr>
+                                  </thead>
+
+                                  <tbody>
+                                    {histSelecionado.objetos.map(
+                                      (objeto, index) => (
+                                        <tr
+                                          key={`${index}_${objeto.produto}`}
+                                          className="table-body-ata"
+                                        >
+                                          <td>{objeto.produto}</td>
+                                          <td>{objeto.quantidade_total}</td>
+                                          <td>{objeto.valor_unitario}</td>
+                                          <td>{objeto.valor_total}</td>
+                                          <td>{objeto.situacao}</td>
+                                        </tr>
+                                      ),
+                                    )}
+                                  </tbody>
+                                </table>
+                                <br />
+                              </Col>
+                            )}
                           </Row>
                         </>
                       )}
