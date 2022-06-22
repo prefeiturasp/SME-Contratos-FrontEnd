@@ -3,12 +3,9 @@ import ListaContrato from "../pages/ListaContrato";
 import painelSelecao from "../pages/PainelSelecao";
 import ContratosContinuos from "../pages/ContratosContinuos";
 import VisualizarContratos from "../pages/VisualizarContrato";
-import DesignacaoCargos from "../pages/DesignacaoCargos";
 import AtribuicaoTermoContrato from "../pages/AtribuicaoTermoContrato";
 import Teste from "../pages/Teste";
 import CadastrarContrato from "../pages/CadastrarContrato";
-import ModeloAteste from "../pages/ModeloAteste";
-import ListarModelosAteste from "../pages/ListarModelosAteste";
 import Edital from "../pages/Edital";
 import ListarEditais from "../pages/ListarEditais";
 import GestaoContratos from "../pages/GestaoContratos";
@@ -46,11 +43,6 @@ const RoutesConfig = [
   {
     path: constants.VISUALIZAR_CONTRATOS,
     component: VisualizarContratos,
-    exact: false,
-  },
-  {
-    path: constants.DESIGNACAO_CARGOS,
-    component: DesignacaoCargos,
     exact: false,
   },
   {
@@ -96,16 +88,6 @@ const RoutesConfig = [
   {
     path: constants.CADASTRAR_CONTRATO,
     component: CadastrarContrato,
-    exact: false,
-  },
-  {
-    path: constants.MODELO_ATESTE,
-    component: ModeloAteste,
-    exact: false,
-  },
-  {
-    path: constants.LISTAR_MODELOS_ATESTE,
-    component: ListarModelosAteste,
     exact: false,
   },
   {
@@ -192,21 +174,5 @@ export const MenuConfig = [
     command: () => {
       window.location = "#";
     },
-  },
-  {
-    label: "Configurações",
-    icon: "pi pi-cog",
-    items: [
-      {
-        label: "Designação de Cargos",
-        icon: "pi pi-cog pi-th-large",
-        to: constants.DESIGNACAO_CARGOS,
-      },
-      {
-        label: "Modelos de Ateste",
-        icon: "pi pi-cog pi-th-large",
-        to: constants.LISTAR_MODELOS_ATESTE,
-      },
-    ],
   },
 ];
