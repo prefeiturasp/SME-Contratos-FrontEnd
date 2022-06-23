@@ -162,24 +162,9 @@ const VisualizarContratos = () => {
     setDocsDre(docs);
   };
 
-  const alteraDiasVigencia = dias => {
-    setContrato({ ...contrato, vigencia: dias });
-  };
-
   const alteraDataAssinatura = data => {
     const data_assinatura = moment(data).format("YYYY-MM-DD");
     setContrato({ ...contrato, data_assinatura });
-  };
-
-  const alteraDataOrdemInicio = data => {
-    const data_ordem_inicio = moment(data).format("YYYY-MM-DD");
-    setContrato({ ...contrato, data_ordem_inicio });
-  };
-
-  const alteraReferenciaEncerramento = referencia_encerramento => {
-    console.log(referencia_encerramento);
-    console.log(contrato);
-    setContrato({ ...contrato, referencia_encerramento });
   };
 
   const habilitarEdicao = () => {
@@ -711,7 +696,6 @@ const VisualizarContratos = () => {
                             dataEncerramento: dataEncerramento,
                             referencia_encerramento: e.target.value,
                           });
-                          console.log(contrato);
                         }}
                         disabled={modoVisualizacao}
                         className="w-100"
