@@ -53,59 +53,26 @@ const referenciaEncerramentoOptions = [
   { label: "Data da ordem de início", value: DATA_ORDEM_INICIO },
 ];
 
-const stateInicial = {
-  coordenador: null,
-  termo_contrato: null,
-  tipo_servico: null,
-  tipoServicoSelecionado: null,
-  data_ordem_inicio: null,
-  data_assinatura: null,
-  situacao: null,
-  observacoes: "",
-  situacaoContrato: [],
-  gestor: null,
-  nucleo: null,
-  estado: null,
-  unidades: [],
-  tipoServico: null,
-  disabilitado: true,
-  processo: null,
-  vigencia: null,
-  dotacoes_orcamentarias: [],
-  modalEdicao: false,
-  modalCadastro: false,
-  usernameGestor: null,
-  usuarios: [],
-  totalMensal: 0.0,
-  dataEncerramento: null,
-  referencia_encerramento: DATA_ORDEM_INICIO,
-  unidades_selecionadas: [],
-  valor_total: "",
-  unidade_vigencia: "DIAS",
-  edital: null,
-  ata: null,
-  alteracaoEdital: null,
-  objeto_edital: null,
-  objeto: "",
-  descricao_objeto_edital: "",
-  descricao_objeto_contrato: "",
-  modalCadastrarObjeto: false,
-  novoObjeto: "",
-};
-
 const VisualizarContratos = () => {
   const toast = useToast();
   const tipoServicoRef = useRef(null);
-  const [state, setState] = useState(stateInicial);
 
   const [incluir, setIncluir] = useState(true);
-  const [contrato, setContrato] = useState({});
+  const [contrato, setContrato] = useState({
+    referencia_encerramento: DATA_ORDEM_INICIO,
+    unidade_vigencia: "DIAS",
+  });
   const [empresa, setEmpresa] = useState({});
-  const [dotacoes, setDotacoes] = useState({});
+  const [dotacoes, setDotacoes] = useState([]);
+  const [objeto, setObjeto] = useState({});
   const [valorTotal, setValorTotal] = useState({});
   const [gestao, setGestao] = useState({});
   const [docsDre, setDocsDre] = useState({});
+  const [observacoes, setObservacoes] = useState("");
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
+  const [modalEdicao, setModalEdicao] = useState(false);
+  const [modalCadastro, setModalCadastro] = useState(false);
+  const [modalCadastrarObjeto, setModalCadastrarObjeto] = useState(false);
   addLocale("pt", CALENDAR_PT);
 
   useEffect(async () => {
@@ -114,47 +81,40 @@ const VisualizarContratos = () => {
     const usuarios = await getUsuariosLookup();
     if (param.uuid) {
       const contrato = await getContratoByUUID(param.uuid);
-      setState({
-        ...state,
-
-        usuarios,
-      });
 
       setIncluir(false);
-      propsToState(contrato);
+      propsToState(contrato, usuarios);
       $(".ql-editor").prop("contenteditable", "false");
     } else {
-      setState({
-        ...state,
-        usuarios,
-      });
+      setGestao({ usuarios });
       setModoVisualizacao(false);
     }
   }, []);
 
-  const propsToState = contrato => {
+  const propsToState = (contrato, usuarios) => {
     const tipo_servico = contrato.edital
       ? contrato.edital.objeto
       : contrato.tipo_servico || { nome: "", uuid: "" };
     const empresa_contratada = contrato.empresa_contratada || { nome: "" };
     setEmpresa(empresa_contratada);
     setContrato({
+      ...contrato,
       termo_contrato: contrato.termo_contrato,
       processo: contrato.processo,
       situacao: contrato.situacao,
       edital: contrato.edital,
       ata: contrato.ata,
       data_assinatura: contrato.data_assinatura
-        ? moment(contrato.data_assinatura, "YYYY-MM-DD")
+        ? moment(contrato.data_assinatura, "YYYY-MM-DD").toDate()
         : null,
       data_ordem_inicio: contrato.data_ordem_inicio
-        ? moment(contrato.data_ordem_inicio, "YYYY-MM-DD")
+        ? moment(contrato.data_ordem_inicio, "YYYY-MM-DD").toDate()
         : null,
       vigencia: contrato.vigencia,
       unidade_vigencia: contrato.unidade_vigencia,
       data_encerramento: contrato.data_encerramento,
       dataEncerramento: contrato.data_encerramento
-        ? moment(contrato.data_encerramento, "YYYY-MM-DD")
+        ? moment(contrato.data_encerramento, "YYYY-MM-DD").format("DD/MM/YYYY")
         : null,
     });
     const dotacoes = contrato.dotacoes.map(el => ({
@@ -166,6 +126,7 @@ const VisualizarContratos = () => {
       valor: parseFloat(el.valor),
     }));
     setDotacoes(dotacoes);
+    setValorTotal(parseFloat(contrato.valor_total));
 
     setGestao({
       coordenador: contrato.coordenador,
@@ -174,21 +135,13 @@ const VisualizarContratos = () => {
       nucleo_responsavel: contrato.nucleo_responsavel
         ? contrato.nucleo_responsavel.uuid
         : "",
+      usuarios,
     });
 
-    setState({
-      ...state,
+    setObjeto({
       tipoServico: tipo_servico.nome,
-      tipoServicoSelecionado: tipo_servico,
       tipo_servico: tipo_servico,
       tipo_servico_uuid: tipo_servico.uuid,
-
-      totalMensal: contrato.total_mensal,
-      observacoes: contrato.observacoes,
-      estado: contrato.estado_contrato,
-
-      valor_total: parseFloat(contrato.valor_total),
-
       objeto_edital: contrato.edital ? contrato.edital.objeto : null,
       objeto: contrato.edital
         ? contrato.edital.descricao_objeto
@@ -200,6 +153,8 @@ const VisualizarContratos = () => {
         ? contrato.edital.descricao_objeto
         : contrato.objeto,
     });
+
+    setObservacoes(contrato.observacoes);
   };
 
   const selecionarDocsDre = files => {
@@ -222,6 +177,8 @@ const VisualizarContratos = () => {
   };
 
   const alteraReferenciaEncerramento = referencia_encerramento => {
+    console.log(referencia_encerramento);
+    console.log(contrato);
     setContrato({ ...contrato, referencia_encerramento });
   };
 
@@ -234,44 +191,37 @@ const VisualizarContratos = () => {
 
   const handleSubmitEditar = async () => {
     const { uuid } = contrato;
-    //TODO: corrigir mapstate
+    const state = {
+      contrato,
+      empresa,
+      dotacoes,
+      valorTotal,
+      objeto,
+      gestao,
+      observacoes,
+    };
     const payload = mapStateToPayload(state, incluir);
     setModoVisualizacao(true);
-    setState({ ...state, modalEdicao: false });
-    toast.show({
-      severity: "success",
-      summary: "Sucesso",
-      detail: "Alterações realizadas com sucesso",
-      life: 7000,
-    });
+    setModalEdicao(false);
+
     $(".ql-editor").prop("contenteditable", modoVisualizacao.toString());
+
     const resultado = await updateContrato(payload, uuid);
     if (resultado.status === OK) {
-      setState({
-        ...state,
+      setContrato({
+        ...contrato,
         dataEncerramento: moment(resultado.data.data_encerramento).format(
           "DD/MM/YYYY",
         ),
-        contrato: {
-          ...state.contrato,
-          dias_para_o_encerramento: resultado.data.dias_para_o_encerramento,
-          edital:
-            typeof resultado.data.edital === "object"
-              ? resultado.data.edital
-              : state.contrato.edital,
-        },
-      });
-
-      setContrato({
-        ...contrato,
         dias_para_o_encerramento: resultado.data.dias_para_o_encerramento,
         edital:
           typeof resultado.data.edital === "object"
             ? resultado.data.edital
-            : state.contrato.edital,
+            : contrato.edital,
       });
       cancelaAtualizacao();
       window.scrollTo(0, 0);
+      toast.showSuccess("Alterações realizadas com sucesso");
     } else {
       alert("Ocorreu um erro, tente novamente!");
     }
@@ -279,71 +229,60 @@ const VisualizarContratos = () => {
 
   const handleSubmitCadastro = async () => {
     const { uuid } = contrato;
-    //TODO: corrigir mapstate
+    const state = {
+      contrato,
+      empresa,
+      dotacoes,
+      valorTotal,
+      objeto,
+      gestao,
+      observacoes,
+    };
     const payload = mapStateToPayload(state, incluir);
 
     const resultado = await createContrato(payload, uuid);
     if (resultado.uuid) {
-      toast.show({
-        severity: "success",
-        summary: "Sucesso",
-        detail: "Contrato criado com sucesso",
-        life: 7000,
-      });
+      toast.showSuccess("Contrato criado com sucesso");
       redirect("/#/gestao-contratos");
     } else {
-      toast.show({
-        severity: "error",
-        detail: "Ocorreu um erro, tente novamente!",
-        life: 7000,
-      });
+      toast.showError("Ocorreu um erro, tente novamente!");
     }
   };
 
   const handleConfimarEdicao = () => {
-    setState({ ...state, modalEdicao: true });
+    setModalEdicao(true);
   };
 
   const handleConfimarCriacao = () => {
-    setState({ ...state, modalCadastro: true });
+    setModalCadastro(true);
   };
 
   const cancelaAtualizacao = () => {
-    setState({ ...state, modalEdicao: false });
+    setModalEdicao(false);
   };
 
   const cancelaCadastro = () => {
-    setState({ ...state, modalCadastro: false });
+    setModalCadastro(false);
   };
 
   const cancelaModalObjeto = () => {
-    setState({ ...state, modalCadastrarObjeto: false });
+    setModalCadastrarObjeto(false);
   };
 
   const CadastraObjeto = async () => {
-    setState({ ...state, modalCadastrarObjeto: false });
+    setModalCadastrarObjeto(false);
     try {
-      const resultado = await criaTipoServico({ nome: state.novoObjeto });
+      const resultado = await criaTipoServico({ nome: objeto.novoObjeto });
       if (resultado.status === CREATED) {
         tipoServicoRef.current.buscaTiposServico();
-        toast.show({
-          severity: "success",
-          summary: "Sucesso",
-          detail: "Objeto cadastrado com sucesso!",
-          life: 7000,
-        });
+        toast.showSuccess("Objeto cadastrado com sucesso!");
       }
     } catch (erro) {
       if (erro.response && erro.response.status === BAD_REQUEST) {
-        toast.show({
-          severity: "error",
-          summary: "Erro",
-          detail: erro.response.data,
-          life: 7000,
-        });
+        toast.showError("Erro");
       }
     }
-    setState({ ...state, novoObjeto: "" });
+    setObjeto({ ...objeto, novoObjeto: "" });
   };
 
   const calculaDataEncerramento = (
@@ -364,14 +303,14 @@ const VisualizarContratos = () => {
         ? moment(data_assinatura)
         : moment(data_ordem_inicio);
     if (!dataInicio || !vigencia || !unidade) {
-      setState({ ...state, dataEncerramento: "" });
+      setContrato({ ...contrato, dataEncerramento: "" });
       return false;
     }
     if (unidade === "DIAS") {
       let data_encerramento = dataInicio.add("days", vigencia);
       let vencimento = data_encerramento.diff(moment(), "days");
       setContrato({
-        ...state.contrato,
+        ...contrato,
         dias_para_o_encerramento: vencimento,
       });
       return data_encerramento.format("DD/MM/yyyy");
@@ -381,7 +320,7 @@ const VisualizarContratos = () => {
         .subtract(1, "days");
       let vencimento = data_encerramento.diff(moment(), "days");
       setContrato({
-        ...state.contrato,
+        ...contrato,
         dias_para_o_encerramento: vencimento,
       });
       return data_encerramento.format("DD/MM/yyyy");
@@ -392,24 +331,18 @@ const VisualizarContratos = () => {
     if (!dotacoes.length) return false;
     else {
       let validas = dotacoes.filter(dotacao => dotacao.valor);
-      return validas.length !== 0 && state.valor_total;
+      return validas.length !== 0 && valorTotal;
     }
   };
 
   const {
     tipoServico,
     tipo_servico,
-    observacoes,
-    estado,
-    modalEdicao,
-    modalCadastro,
-    usuarios,
-    objeto_edital,
     descricao_objeto_edital,
     descricao_objeto_contrato,
-    modalCadastrarObjeto,
+    objeto_edital,
     novoObjeto,
-  } = state;
+  } = objeto;
 
   const {
     termo_contrato,
@@ -425,7 +358,8 @@ const VisualizarContratos = () => {
     dataEncerramento,
   } = contrato;
 
-  const { gestor, usernameGestor, nucleo_responsavel, coordenador } = gestao;
+  const { gestor, usernameGestor, nucleo_responsavel, coordenador, usuarios } =
+    gestao;
 
   const habilitaBotao =
     termo_contrato &&
@@ -456,7 +390,7 @@ const VisualizarContratos = () => {
       >
         <CardSuperior
           tipoServico={tipoServico}
-          situacaoContratual={estado}
+          situacaoContratual={contrato.estado_contrato || ""}
           estadoContrato={situacao || ""}
           totalmensal={contrato.total_mensal}
           dataEncerramento={contrato.data_encerramento}
@@ -531,7 +465,7 @@ const VisualizarContratos = () => {
                 <button
                   onClick={CadastraObjeto}
                   className="btn btn-coad-primary"
-                  disabled={!state.novoObjeto.length}
+                  disabled={!objeto.novoObjeto || !objeto.novoObjeto.length}
                 >
                   Adicionar
                 </button>
@@ -545,8 +479,8 @@ const VisualizarContratos = () => {
               <InputText
                 value={novoObjeto || ""}
                 onChange={e =>
-                  setState({
-                    ...state,
+                  setObjeto({
+                    ...objeto,
                     novoObjeto: e.target.value.toUpperCase(),
                   })
                 }
@@ -659,8 +593,8 @@ const VisualizarContratos = () => {
                   className="w-100"
                   editalSalvo={edital}
                   onSelect={value => {
-                    setState({
-                      ...state,
+                    setObjeto({
+                      ...objeto,
                       alteracaoEdital: value,
                       edital: value,
                       objeto_edital: value ? value.objeto : null,
@@ -705,11 +639,7 @@ const VisualizarContratos = () => {
                     <br />
 
                     <Calendar
-                      value={
-                        data_assinatura
-                          ? moment(data_assinatura).format("DD/MM/YYYY")
-                          : null
-                      }
+                      value={data_assinatura}
                       onChange={e => {
                         alteraDataAssinatura(e.value);
                         let dataEncerramento = calculaDataEncerramento(
@@ -722,6 +652,7 @@ const VisualizarContratos = () => {
                         setContrato({
                           ...contrato,
                           dataEncerramento: dataEncerramento,
+                          data_assinatura: e.value,
                         });
                       }}
                       keepInvalid={true}
@@ -736,13 +667,8 @@ const VisualizarContratos = () => {
                     <Label>Data da Ordem de Início</Label>
                     <br />
                     <Calendar
-                      value={
-                        data_ordem_inicio
-                          ? moment(data_ordem_inicio).format("DD/MM/YYYY")
-                          : null
-                      }
+                      value={data_ordem_inicio}
                       onChange={e => {
-                        alteraDataOrdemInicio(e.value);
                         let dataEncerramento = calculaDataEncerramento(
                           data_assinatura,
                           e.value,
@@ -753,6 +679,7 @@ const VisualizarContratos = () => {
                         setContrato({
                           ...contrato,
                           dataEncerramento: dataEncerramento,
+                          data_ordem_inicio: e.value,
                         });
                       }}
                       keepInvalid={true}
@@ -769,10 +696,9 @@ const VisualizarContratos = () => {
                       <Label>Referência para cálculo do encerramento</Label>
                       <Dropdown
                         options={referenciaEncerramentoOptions}
-                        value={state.referencia_encerramento}
-                        defaultValue={state.referencia_encerramento}
+                        value={referencia_encerramento}
+                        defaultValue={referencia_encerramento}
                         onChange={e => {
-                          alteraReferenciaEncerramento(e.target.value);
                           let dataEncerramento = calculaDataEncerramento(
                             data_assinatura,
                             data_ordem_inicio,
@@ -783,7 +709,9 @@ const VisualizarContratos = () => {
                           setContrato({
                             ...contrato,
                             dataEncerramento: dataEncerramento,
+                            referencia_encerramento: e.target.value,
                           });
+                          console.log(contrato);
                         }}
                         disabled={modoVisualizacao}
                         className="w-100"
@@ -801,7 +729,6 @@ const VisualizarContratos = () => {
                             value={nullToUndef(vigencia)}
                             placeholder="Ex: 365 dias"
                             onChange={e => {
-                              alteraDiasVigencia(e.target.value);
                               let dataEncerramento = calculaDataEncerramento(
                                 data_assinatura,
                                 data_ordem_inicio,
@@ -812,6 +739,7 @@ const VisualizarContratos = () => {
                               setContrato({
                                 ...contrato,
                                 dataEncerramento: dataEncerramento,
+                                vigencia: e.target.value,
                               });
                             }}
                             name="vigencia"
@@ -825,10 +753,6 @@ const VisualizarContratos = () => {
                             type="select"
                             value={unidade_vigencia}
                             onChange={event => {
-                              setContrato({
-                                ...contrato,
-                                unidade_vigencia: event.target.value,
-                              });
                               let dataEncerramento = calculaDataEncerramento(
                                 data_assinatura,
                                 data_ordem_inicio,
@@ -839,6 +763,7 @@ const VisualizarContratos = () => {
                               setContrato({
                                 ...contrato,
                                 dataEncerramento: dataEncerramento,
+                                unidade_vigencia: event.target.value,
                               });
                             }}
                             name="unidade_vigencia"
@@ -909,7 +834,7 @@ const VisualizarContratos = () => {
                     <SelecionaTipoServico
                       className="w-100"
                       tipoServico={objeto_edital}
-                      onSelect={e => setState({ ...state, objeto_edital: e })}
+                      onSelect={e => setObjeto({ ...objeto, objeto_edital: e })}
                       disabled={true}
                       ref={tipoServicoRef}
                     />
@@ -948,8 +873,8 @@ const VisualizarContratos = () => {
                       className="w-100"
                       tipoServico={tipo_servico}
                       onSelect={value =>
-                        setState({
-                          ...state,
+                        setObjeto({
+                          ...objeto,
                           tipo_servico: value,
                           tipo_servico_uuid: value.uuid,
                           tipoServico: value.nome,
@@ -965,9 +890,7 @@ const VisualizarContratos = () => {
                       disabled={modoVisualizacao}
                       type="link"
                       size="small"
-                      onClick={() =>
-                        setState({ ...state, modalCadastrarObjeto: true })
-                      }
+                      onClick={() => setModalCadastrarObjeto(true)}
                     >
                       + Cadastrar novo
                     </AntButton>
@@ -981,8 +904,8 @@ const VisualizarContratos = () => {
                       value={descricao_objeto_contrato}
                       readOnly={!modoVisualizacao}
                       onTextChange={value =>
-                        setState({
-                          ...state,
+                        setObjeto({
+                          ...objeto,
                           objeto: value.htmlValue,
                           descricao_objeto_contrato: value.htmlValue,
                         })
@@ -1093,9 +1016,7 @@ const VisualizarContratos = () => {
               style={{ height: "320px" }}
               value={observacoes}
               // readOnly={modoVisualizacao}
-              onTextChange={e =>
-                setState({ ...state, observacoes: e.htmlValue })
-              }
+              onTextChange={e => setObservacoes(e.htmlValue)}
               headerTemplate={
                 <span className="ql-formats">
                   <button className="ql-bold" aria-label="Bold"></button>
