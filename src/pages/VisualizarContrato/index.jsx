@@ -44,6 +44,7 @@ import {
   VISUALIZAR_CONTRATOS,
 } from "../../configs/urls.constants";
 import useToast from "../../hooks/useToast";
+import { MultiSelect } from "primereact/multiselect";
 
 const nullToUndef = v => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
@@ -905,28 +906,66 @@ const VisualizarContratos = () => {
             <Row>
               <Col lg={12} xl={12}>
                 <FormGroup>
-                  <Label form="coordenador">Coordenador COAD</Label>
-                  <Input
-                    type="select"
-                    disabled={modoVisualizacao}
+                  <Label form="coordenador">Gestor do Contrato</Label>
+                  <MultiSelect
+                    id="dotacoes"
+                    className="w-100"
+                    value={coordenador}
                     onChange={e =>
                       setGestao({ ...gestao, coordenador: e.target.value })
                     }
-                    value={coordenador || ""}
-                  >
-                    {usuarios
-                      ? usuarios.map((usuario, i) => {
-                          return (
-                            <option key={i} value={usuario.uuid}>
-                              {usuario.nome}
-                            </option>
-                          );
-                        })
-                      : ""}
-                  </Input>
+                    disabled={modoVisualizacao}
+                    filter
+                    optionLabel="nome"
+                    options={usuarios}
+                    placeholder="Selecione..."
+                    maxSelectedLabels={1}
+                    selectedItemsLabel={"{0} usuários selecionados"}
+                  />
                 </FormGroup>
               </Col>
             </Row>
+            {coordenador &&
+              coordenador.map((usuario, index) => (
+                <>
+                  <Row className="mt-3" key={index}>
+                    <Col lg={5} xl={5}>
+                      <Label form="numeroProcesso">Gestor do Contrato</Label>
+                      <InputText
+                        value={usuario.nome}
+                        className="w-100"
+                        disabled={true}
+                      />
+                    </Col>
+                    <Col lg={3} xl={3}>
+                      <Label form="numeroProcesso">
+                        E-mail Gestor de Contrato
+                      </Label>
+                      <InputText
+                        value={usuario.email}
+                        className="w-100"
+                        disabled={true}
+                      />
+                    </Col>
+                    <Col lg={1} xl={1}>
+                      <Button
+                        className="btn btn-coad-background-outline btn-empenho"
+                        onClick={() => {
+                          let coordenadorCopy = coordenador;
+                          coordenadorCopy.splice(index, 1);
+                          setGestao({
+                            ...gestao,
+                            coordenador: coordenadorCopy,
+                          });
+                        }}
+                        disabled={modoVisualizacao}
+                      >
+                        X
+                      </Button>
+                    </Col>
+                  </Row>
+                </>
+              ))}
             <Row>
               <Col xs={12} sm={12} md={12} lg={8} xl={8}>
                 <FormGroup className="p-grid p-fluid pt-2 ml-1">
