@@ -344,8 +344,7 @@ const VisualizarContratos = () => {
     dataEncerramento,
   } = contrato;
 
-  const { gestor, usernameGestor, nucleo_responsavel, coordenador, usuarios } =
-    gestao;
+  const { coordenador, usuarios } = gestao;
 
   const habilitaBotao =
     termo_contrato &&
@@ -904,7 +903,7 @@ const VisualizarContratos = () => {
           </CoadAccordion>
           <CoadAccordion titulo={"Gestão de Contrato"}>
             <Row>
-              <Col lg={12} xl={12}>
+              <Col lg={8} xl={8}>
                 <FormGroup>
                   <Label form="coordenador">Gestor do Contrato</Label>
                   <MultiSelect
@@ -937,7 +936,7 @@ const VisualizarContratos = () => {
                         disabled={true}
                       />
                     </Col>
-                    <Col lg={3} xl={3}>
+                    <Col lg={5} xl={5}>
                       <Label form="numeroProcesso">
                         E-mail Gestor de Contrato
                       </Label>
@@ -966,56 +965,6 @@ const VisualizarContratos = () => {
                   </Row>
                 </>
               ))}
-            <Row>
-              <Col xs={12} sm={12} md={12} lg={8} xl={8}>
-                <FormGroup className="p-grid p-fluid pt-2 ml-1">
-                  <Label form="gestor">Gestor do Contrato</Label>
-                  <br />
-                  <BuscaIncrementalServidores
-                    placeholder={"Selecione o gestor do contrato"}
-                    onUpdate={valor => setGestao({ ...gestao, gestor: valor })}
-                    disabled={modoVisualizacao}
-                    userName={usernameGestor}
-                    onClear={() => {}}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                <SelecionarNucleos
-                  selected={nucleo_responsavel}
-                  onSelect={value =>
-                    setGestao({ ...gestao, nucleo_responsavel: value })
-                  }
-                  disabled={modoVisualizacao}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={12} lg={8} xl={8}>
-                <FormGroup>
-                  <Label form="email-gestor">E-mail Gestor do Contrato</Label>
-                  <InputText
-                    id="email-gestor"
-                    value={gestor ? gestor.email : ""}
-                    disabled={true}
-                    className="w-100"
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                <FormGroup>
-                  <Label form="telefone-gestor">
-                    Telefone Gestor do Contrato
-                  </Label>
-                  <InputText
-                    id="telefone-gestor"
-                    value={"(11) 98888-7777"} // TODO: Confirmar se essa informacao deve estar hardcoded.
-                    className="w-100"
-                    disabled={true}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
           </CoadAccordion>
           {contrato.lotes && (
             <CoadAccordion titulo={"Unidade Envolvidas"}>
