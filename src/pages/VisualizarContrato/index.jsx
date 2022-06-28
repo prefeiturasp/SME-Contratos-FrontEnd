@@ -23,8 +23,6 @@ import {
   REFERENCIA_ENCERRAMENTO,
 } from "../../configs/config.constants";
 import SituacaoRadio from "../../components/Contratos/SelecionaSituacaoContrato/SituacaoRadio";
-import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
-import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
 import { redirect } from "../../utils/redirect";
 import { mapStateToPayload, corDoPrazo } from "./helpers";
 import { Dialog } from "primereact/dialog";
@@ -44,6 +42,7 @@ import {
   VISUALIZAR_CONTRATOS,
 } from "../../configs/urls.constants";
 import useToast from "../../hooks/useToast";
+import { MultiSelect } from "primereact/multiselect";
 
 const nullToUndef = v => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
@@ -132,12 +131,7 @@ const VisualizarContratos = () => {
     setValorTotal(parseFloat(contrato.valor_total));
 
     setGestao({
-      coordenador: contrato.coordenador,
-      usernameGestor: contrato.gestor ? contrato.gestor.username : "",
-      gestor: contrato.gestor ? contrato.gestor.uuid : "",
-      nucleo_responsavel: contrato.nucleo_responsavel
-        ? contrato.nucleo_responsavel.uuid
-        : "",
+      gestores: contrato.gestores ? contrato.gestores.map(r => r.gestor) : "",
       usuarios,
     });
 
@@ -346,8 +340,7 @@ const VisualizarContratos = () => {
     dataEncerramento,
   } = contrato;
 
-  const { gestor, usernameGestor, nucleo_responsavel, coordenador, usuarios } =
-    gestao;
+  const { gestores, usuarios } = gestao;
 
   const habilitaBotao =
     termo_contrato &&
@@ -358,6 +351,8 @@ const VisualizarContratos = () => {
     referencia_encerramento &&
     vigencia &&
     dataEncerramento &&
+    gestores &&
+    gestores.length > 0 &&
     validaDotacoes();
 
   return (
@@ -906,80 +901,68 @@ const VisualizarContratos = () => {
           </CoadAccordion>
           <CoadAccordion titulo={"Gestão de Contrato"}>
             <Row>
-              <Col lg={12} xl={12}>
+              <Col lg={8} xl={8}>
                 <FormGroup>
-                  <Label form="coordenador">Coordenador COAD</Label>
-                  <Input
-                    type="select"
-                    disabled={modoVisualizacao}
-                    onChange={e =>
-                      setGestao({ ...gestao, coordenador: e.target.value })
-                    }
-                    value={coordenador || ""}
-                  >
-                    {usuarios
-                      ? usuarios.map((usuario, i) => {
-                          return (
-                            <option key={i} value={usuario.uuid}>
-                              {usuario.nome}
-                            </option>
-                          );
-                        })
-                      : ""}
-                  </Input>
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={12} lg={8} xl={8}>
-                <FormGroup className="p-grid p-fluid pt-2 ml-1">
-                  <Label form="gestor">Gestor do Contrato</Label>
-                  <br />
-                  <BuscaIncrementalServidores
-                    placeholder={"Selecione o gestor do contrato"}
-                    onUpdate={valor => setGestao({ ...gestao, gestor: valor })}
-                    disabled={modoVisualizacao}
-                    userName={usernameGestor}
-                    onClear={() => {}}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                <SelecionarNucleos
-                  selected={nucleo_responsavel}
-                  onSelect={value =>
-                    setGestao({ ...gestao, nucleo_responsavel: value })
-                  }
-                  disabled={modoVisualizacao}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={12} lg={8} xl={8}>
-                <FormGroup>
-                  <Label form="email-gestor">E-mail Gestor do Contrato</Label>
-                  <InputText
-                    id="email-gestor"
-                    value={gestor ? gestor.email : ""}
-                    disabled={true}
+                  <Label form="coordenador">Gestor do Contrato</Label>
+                  <MultiSelect
+                    id="dotacoes"
                     className="w-100"
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                <FormGroup>
-                  <Label form="telefone-gestor">
-                    Telefone Gestor do Contrato
-                  </Label>
-                  <InputText
-                    id="telefone-gestor"
-                    value={"(11) 98888-7777"} // TODO: Confirmar se essa informacao deve estar hardcoded.
-                    className="w-100"
-                    disabled={true}
+                    value={gestores}
+                    onChange={e => {
+                      setGestao({ ...gestao, gestores: e.target.value });
+                    }}
+                    disabled={modoVisualizacao}
+                    filter
+                    optionLabel="nome"
+                    options={usuarios}
+                    placeholder="Selecione..."
+                    maxSelectedLabels={1}
+                    selectedItemsLabel={"{0} usuários selecionados"}
                   />
                 </FormGroup>
               </Col>
             </Row>
+            {gestores &&
+              gestores.map((usuario, index) => (
+                <>
+                  <Row className="mt-3" key={index}>
+                    <Col lg={5} xl={5}>
+                      <Label form="numeroProcesso">Gestor do Contrato</Label>
+                      <InputText
+                        value={usuario.nome}
+                        className="w-100"
+                        disabled={true}
+                      />
+                    </Col>
+                    <Col lg={5} xl={5}>
+                      <Label form="numeroProcesso">
+                        E-mail Gestor de Contrato
+                      </Label>
+                      <InputText
+                        value={usuario.email}
+                        className="w-100"
+                        disabled={true}
+                      />
+                    </Col>
+                    <Col lg={1} xl={1}>
+                      <Button
+                        className="btn btn-coad-background-outline btn-empenho"
+                        onClick={() => {
+                          let gestoresCopy = gestores;
+                          gestoresCopy.splice(index, 1);
+                          setGestao({
+                            ...gestao,
+                            gestores: gestoresCopy,
+                          });
+                        }}
+                        disabled={modoVisualizacao}
+                      >
+                        X
+                      </Button>
+                    </Col>
+                  </Row>
+                </>
+              ))}
           </CoadAccordion>
           {contrato.lotes && (
             <CoadAccordion titulo={"Unidade Envolvidas"}>
