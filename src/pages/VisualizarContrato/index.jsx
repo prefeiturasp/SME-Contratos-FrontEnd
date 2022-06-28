@@ -908,8 +908,6 @@ const VisualizarContratos = () => {
                     value={gestores}
                     onChange={e => {
                       setGestao({ ...gestao, gestores: e.target.value });
-                      console.log(gestao.gestores);
-                      console.log(usuarios);
                     }}
                     disabled={modoVisualizacao}
                     filter
