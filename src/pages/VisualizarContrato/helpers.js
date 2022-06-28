@@ -1,51 +1,50 @@
 import moment from "moment";
 import { Cor } from "../../configs/colors.constants";
 
-export const mapStateToPayload = (state, incluir) => {
+export const mapStateToPayload = (
+  { contrato, empresa, dotacoes, valorTotal, objeto, gestao, observacoes },
+  incluir,
+) => {
   let payload = {};
-  if (state) {
-    payload = {
-      gestor: state.gestor ? state.gestor.uuid : null,
-      nucleo_responsavel: state.nucleo_responsavel,
-      tipo_servico: state.tipo_servico_uuid,
-      situacao: state.situacao,
-      empresa_contratada: state.empresa_contratada.uuid,
-      estado_contrato: state.estado,
-      data_ordem_inicio: moment(state.data_ordem_inicio).format("YYYY-MM-DD"),
-      data_encerramento: moment(state.data_encerramento).format("YYYY-MM-DD"),
-      data_assinatura: state.data_assinatura
-        ? moment(state.data_assinatura).format("YYYY-MM-DD")
-        : null,
-      vigencia: state.vigencia,
-      processo: state.processo,
-      total_mensal: state.totalMensal,
-      objeto: state.objeto,
-      observacoes: state.observacoes,
-      termo_contrato: state.contrato.termo_contrato
-        ? state.contrato.termo_contrato
-        : state.termo_contrato,
-      coordenador: state.coordenador,
-      dotacoes: state.dotacoes_orcamentarias.map(dotacao => {
-        return {
-          dotacao_orcamentaria: dotacao.uuid,
-          valor: dotacao.valor,
-          empenhos: dotacao.empenhos,
-        };
-      }),
-      valor_total: state.valor_total,
-      unidades_selecionadas: state.unidades_selecionadas,
-      unidade_vigencia: state.unidade_vigencia,
-      referencia_encerramento: state.referencia_encerramento,
-      edital: state.alteracaoEdital
-        ? state.alteracaoEdital.uuid
-        : state.contrato.edital
-        ? state.contrato.edital.uuid
-        : null,
-      ata: state.ata ? state.ata.uuid : null,
-    };
-    if (incluir) {
-      delete payload.unidades_selecionadas;
-    }
+
+  payload = {
+    gestores: gestao.gestores.map(user => {
+      return { gestor: user.uuid };
+    }),
+    objeto: objeto.tipo_servico_uuid,
+    situacao: contrato.situacao,
+    empresa_contratada: empresa.uuid,
+    data_ordem_inicio: moment(contrato.data_ordem_inicio).format("YYYY-MM-DD"),
+    data_encerramento: moment(contrato.data_encerramento).format("YYYY-MM-DD"),
+    data_assinatura: contrato.data_assinatura
+      ? moment(contrato.data_assinatura).format("YYYY-MM-DD")
+      : null,
+    vigencia: contrato.vigencia,
+    processo: contrato.processo,
+    total_mensal: contrato.total_mensal,
+    descricao_objeto: objeto.objeto,
+    observacoes: observacoes,
+    termo_contrato: contrato.termo_contrato,
+    dotacoes: dotacoes.map(dotacao => {
+      return {
+        dotacao_orcamentaria: dotacao.uuid,
+        valor: dotacao.valor,
+        empenhos: dotacao.empenhos,
+      };
+    }),
+    valor_total: valorTotal,
+    unidades_selecionadas: [],
+    unidade_vigencia: contrato.unidade_vigencia,
+    referencia_encerramento: contrato.referencia_encerramento,
+    edital: objeto.alteracaoEdital
+      ? objeto.alteracaoEdital.uuid
+      : contrato.edital
+      ? contrato.edital.uuid
+      : null,
+    ata: contrato.ata ? contrato.ata.uuid : null,
+  };
+  if (incluir) {
+    delete payload.unidades_selecionadas;
   }
 
   return payload;
