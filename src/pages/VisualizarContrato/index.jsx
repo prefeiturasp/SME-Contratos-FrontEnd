@@ -351,6 +351,8 @@ const VisualizarContratos = () => {
     referencia_encerramento &&
     vigencia &&
     dataEncerramento &&
+    gestores &&
+    gestores.length > 0 &&
     validaDotacoes();
 
   return (
