@@ -23,8 +23,6 @@ import {
   REFERENCIA_ENCERRAMENTO,
 } from "../../configs/config.constants";
 import SituacaoRadio from "../../components/Contratos/SelecionaSituacaoContrato/SituacaoRadio";
-import SelecionarNucleos from "../../components/Contratos/SelecionarNucleos";
-import { BuscaIncrementalServidores } from "../../components/Contratos/BuscaIncrementalServidores";
 import { redirect } from "../../utils/redirect";
 import { mapStateToPayload, corDoPrazo } from "./helpers";
 import { Dialog } from "primereact/dialog";
@@ -133,12 +131,7 @@ const VisualizarContratos = () => {
     setValorTotal(parseFloat(contrato.valor_total));
 
     setGestao({
-      coordenador: contrato.coordenador,
-      usernameGestor: contrato.gestor ? contrato.gestor.username : "",
-      gestor: contrato.gestor ? contrato.gestor.uuid : "",
-      nucleo_responsavel: contrato.nucleo_responsavel
-        ? contrato.nucleo_responsavel.uuid
-        : "",
+      gestores: contrato.gestores ? contrato.gestores.map(r => r.gestor) : "",
       usuarios,
     });
 
@@ -347,7 +340,7 @@ const VisualizarContratos = () => {
     dataEncerramento,
   } = contrato;
 
-  const { coordenador, usuarios } = gestao;
+  const { gestores, usuarios } = gestao;
 
   const habilitaBotao =
     termo_contrato &&
@@ -912,10 +905,12 @@ const VisualizarContratos = () => {
                   <MultiSelect
                     id="dotacoes"
                     className="w-100"
-                    value={coordenador}
-                    onChange={e =>
-                      setGestao({ ...gestao, coordenador: e.target.value })
-                    }
+                    value={gestores}
+                    onChange={e => {
+                      setGestao({ ...gestao, gestores: e.target.value });
+                      console.log(gestao.gestores);
+                      console.log(usuarios);
+                    }}
                     disabled={modoVisualizacao}
                     filter
                     optionLabel="nome"
@@ -927,8 +922,8 @@ const VisualizarContratos = () => {
                 </FormGroup>
               </Col>
             </Row>
-            {coordenador &&
-              coordenador.map((usuario, index) => (
+            {gestores &&
+              gestores.map((usuario, index) => (
                 <>
                   <Row className="mt-3" key={index}>
                     <Col lg={5} xl={5}>
@@ -953,11 +948,11 @@ const VisualizarContratos = () => {
                       <Button
                         className="btn btn-coad-background-outline btn-empenho"
                         onClick={() => {
-                          let coordenadorCopy = coordenador;
-                          coordenadorCopy.splice(index, 1);
+                          let gestoresCopy = gestores;
+                          gestoresCopy.splice(index, 1);
                           setGestao({
                             ...gestao,
-                            coordenador: coordenadorCopy,
+                            gestores: gestoresCopy,
                           });
                         }}
                         disabled={modoVisualizacao}

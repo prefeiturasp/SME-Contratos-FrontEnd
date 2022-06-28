@@ -8,8 +8,9 @@ export const mapStateToPayload = (
   let payload = {};
 
   payload = {
-    gestor: gestao.gestor ? gestao.gestor.uuid : null,
-    nucleo_responsavel: gestao.nucleo_responsavel,
+    gestores: gestao.gestores.map(user => {
+      return { gestor: user.uuid };
+    }),
     objeto: objeto.tipo_servico_uuid,
     situacao: contrato.situacao,
     empresa_contratada: empresa.uuid,
@@ -24,7 +25,6 @@ export const mapStateToPayload = (
     descricao_objeto: objeto.objeto,
     observacoes: observacoes,
     termo_contrato: contrato.termo_contrato,
-    coordenador: gestao.coordenador,
     dotacoes: dotacoes.map(dotacao => {
       return {
         dotacao_orcamentaria: dotacao.uuid,
