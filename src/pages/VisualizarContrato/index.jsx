@@ -75,26 +75,29 @@ const VisualizarContratos = () => {
   const [modalCadastrarObjeto, setModalCadastrarObjeto] = useState(false);
   addLocale("pt", CALENDAR_PT);
 
-  useEffect(async () => {
-    const param = getUrlParams();
+  useEffect(() => {
+    let buscarDados = async () => {
+      const param = getUrlParams();
 
-    const usuarios = await getUsuariosLookup();
-    if (param.uuid) {
-      const contrato = await getContratoByUUID(param.uuid);
+      const usuarios = await getUsuariosLookup();
+      if (param.uuid) {
+        const contrato = await getContratoByUUID(param.uuid);
 
-      setIncluir(false);
-      propsToState(contrato, usuarios);
-      $(".ql-editor").prop("contenteditable", "false");
-    } else {
-      setGestao({ usuarios });
-      setModoVisualizacao(false);
-    }
+        setIncluir(false);
+        propsToState(contrato, usuarios);
+        $(".ql-editor").prop("contenteditable", "false");
+      } else {
+        setGestao({ usuarios });
+        setModoVisualizacao(false);
+      }
+    };
+    buscarDados();
   }, []);
 
   const propsToState = (contrato, usuarios) => {
     const tipo_servico = contrato.edital
       ? contrato.edital.objeto
-      : contrato.tipo_servico || { nome: "", uuid: "" };
+      : contrato.objeto || { nome: "", uuid: "" };
     const empresa_contratada = contrato.empresa_contratada || { nome: "" };
     setEmpresa(empresa_contratada);
     setContrato({
@@ -145,13 +148,13 @@ const VisualizarContratos = () => {
       objeto_edital: contrato.edital ? contrato.edital.objeto : null,
       objeto: contrato.edital
         ? contrato.edital.descricao_objeto
-        : contrato.objeto,
+        : contrato.descricao_objeto,
       descricao_objeto_edital: contrato.edital
         ? contrato.edital.descricao_objeto
         : "",
       descricao_objeto_contrato: contrato.edital
         ? contrato.edital.descricao_objeto
-        : contrato.objeto,
+        : contrato.descricao_objeto,
     });
 
     setObservacoes(contrato.observacoes);
