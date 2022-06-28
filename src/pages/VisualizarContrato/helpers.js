@@ -10,7 +10,7 @@ export const mapStateToPayload = (
   payload = {
     gestor: gestao.gestor ? gestao.gestor.uuid : null,
     nucleo_responsavel: gestao.nucleo_responsavel,
-    tipo_servico: objeto.tipo_servico_uuid,
+    objeto: objeto.tipo_servico_uuid,
     situacao: contrato.situacao,
     empresa_contratada: empresa.uuid,
     data_ordem_inicio: moment(contrato.data_ordem_inicio).format("YYYY-MM-DD"),
@@ -21,7 +21,7 @@ export const mapStateToPayload = (
     vigencia: contrato.vigencia,
     processo: contrato.processo,
     total_mensal: contrato.total_mensal,
-    objeto: objeto.objeto,
+    descricao_objeto: objeto.objeto,
     observacoes: observacoes,
     termo_contrato: contrato.termo_contrato,
     coordenador: gestao.coordenador,

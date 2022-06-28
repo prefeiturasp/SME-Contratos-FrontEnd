@@ -7,7 +7,7 @@ export const getTiposServicoLookup = () => {
     headers: getHeaderToken(),
   };
   return api
-    .get(`${CONFIG.API_URL}/tipos-servico/lookup/`, AUTH_HEADER)
+    .get(`${CONFIG.API_URL}/objetos/lookup/`, AUTH_HEADER)
     .then(res => res.data);
 };
 
@@ -15,6 +15,6 @@ export const criaTipoServico = async payload => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
   };
-  const url = "tipos-servico/";
+  const url = "objetos/";
   return await api.post(url, payload, AUTH_HEADER);
 };
