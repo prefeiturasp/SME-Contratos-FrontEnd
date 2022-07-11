@@ -43,6 +43,7 @@ import {
 import useToast from "../../hooks/useToast";
 import "./styles.scss";
 import { ModalHistoricoEdital } from "./ModalHistoricoEdital";
+import $ from "jquery";
 
 const Edital = ({ mostraAlerta, edital: _edital }) => {
   addLocale("pt", CALENDAR_PT);
@@ -70,6 +71,11 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
       setModoVisualizacao(false);
     }
   }, [edital]);
+
+  const habilitarEdicao = () => {
+    setModoVisualizacao(!modoVisualizacao);
+    $(".ql-editor").prop("contenteditable", modoVisualizacao.toString());
+  };
 
   const fechaDialog = () => {
     setVisivel(false);
@@ -391,7 +397,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
             <Label className="px-3">Modo de edição</Label>
             <Switch
               defaultChecked={!modoVisualizacao}
-              onChange={() => setModoVisualizacao(!modoVisualizacao)}
+              onChange={() => habilitarEdicao()}
             />
           </Col>
         ) : (
@@ -573,11 +579,13 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
                 style={{ height: "120px" }}
                 value={edital.descricao_objeto}
                 headerTemplate={<EditorHeader />}
-                onTextChange={e =>
-                  setEdital({ ...edital, descricao_objeto: e.htmlValue })
+                onTextChange={value =>
+                  setEdital({
+                    ...edital,
+                    descricao_objeto: value.htmlValue,
+                  })
                 }
                 className="editor-coad w-100"
-                readOnly={modoVisualizacao}
               />
             </div>
           </div>

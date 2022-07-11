@@ -43,7 +43,6 @@ import {
 } from "../../configs/urls.constants";
 import useToast from "../../hooks/useToast";
 import { MultiSelect } from "primereact/multiselect";
-
 const nullToUndef = v => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
 
@@ -93,6 +92,13 @@ const VisualizarContratos = () => {
     buscarDados();
   }, []);
 
+  useEffect(() => {
+    $(".ql-editor").prop(
+      "contenteditable",
+      (!contrato.edital && !modoVisualizacao).toString(),
+    );
+  }, [contrato, modoVisualizacao]);
+
   const propsToState = (contrato, usuarios) => {
     const tipo_servico = contrato.edital
       ? contrato.edital.objeto
@@ -136,17 +142,9 @@ const VisualizarContratos = () => {
     });
 
     setObjeto({
-      tipoServico: tipo_servico.nome,
+      nome_objeto: tipo_servico.nome,
       tipo_servico: tipo_servico,
-      tipo_servico_uuid: tipo_servico.uuid,
-      objeto_edital: contrato.edital ? contrato.edital.objeto : null,
-      objeto: contrato.edital
-        ? contrato.edital.descricao_objeto
-        : contrato.descricao_objeto,
-      descricao_objeto_edital: contrato.edital
-        ? contrato.edital.descricao_objeto
-        : "",
-      descricao_objeto_contrato: contrato.edital
+      descricao_objeto: contrato.edital
         ? contrato.edital.descricao_objeto
         : contrato.descricao_objeto,
     });
@@ -170,7 +168,6 @@ const VisualizarContratos = () => {
       ? $(".ql-editor").prop("contenteditable", !modoVisualizacao.toString())
       : $(".ql-editor").prop("contenteditable", modoVisualizacao.toString());
   };
-
   const handleSubmitEditar = async () => {
     const { uuid } = contrato;
     const state = {
@@ -317,14 +314,7 @@ const VisualizarContratos = () => {
     }
   };
 
-  const {
-    tipoServico,
-    tipo_servico,
-    descricao_objeto_edital,
-    descricao_objeto_contrato,
-    objeto_edital,
-    novoObjeto,
-  } = objeto;
+  const { nome_objeto, tipo_servico, descricao_objeto, novoObjeto } = objeto;
 
   const {
     termo_contrato,
@@ -372,7 +362,7 @@ const VisualizarContratos = () => {
         ]}
       >
         <CardSuperior
-          tipoServico={tipoServico}
+          tipoServico={nome_objeto}
           situacaoContratual={contrato.estado_contrato || ""}
           estadoContrato={situacao || ""}
           totalmensal={contrato.total_mensal}
@@ -578,23 +568,13 @@ const VisualizarContratos = () => {
                   onSelect={value => {
                     setObjeto({
                       ...objeto,
-                      alteracaoEdital: value,
-                      edital: value,
-                      objeto_edital: value ? value.objeto : null,
-                      tipoServico: value ? value.objeto.nome : null,
-                      descricao_objeto_edital: value
-                        ? value.descricao_objeto
-                        : null,
+                      nome_objeto: value ? value.objeto.nome : null,
+                      descricao_objeto: value ? value.descricao_objeto : null,
                       tipo_servico: value ? value.objeto : null,
-                      tipo_servico_uuid: null,
-                      objeto: " ",
-                      descricao_objeto_contrato: value
-                        ? value.descricao_objeto
-                        : null,
                     });
                     setContrato({ ...contrato, edital: value });
                   }}
-                  disabled={modoVisualizacao || (!incluir && !contrato.edital)}
+                  disabled={modoVisualizacao}
                 />
               </Col>
               <Col xs={12} sm={12} md={12} lg={4} xl={4}>
@@ -806,98 +786,56 @@ const VisualizarContratos = () => {
             />
           </CoadAccordion>
           <CoadAccordion titulo="Objeto">
-            {contrato.edital ? (
-              <FormGroup>
-                <div className="p-grid">
-                  <div className="p-col-6">
-                    <Label className="font-weight-bold">
-                      Categoria de objeto
-                    </Label>
-                    <SelecionaTipoServico
-                      className="w-100"
-                      tipoServico={objeto_edital}
-                      onSelect={e => setObjeto({ ...objeto, objeto_edital: e })}
-                      disabled={true}
-                      ref={tipoServicoRef}
-                    />
-                  </div>
-                  <div className="p-col-6 mt-4">
-                    <AntButton
-                      className="mt-2 font-weight-bold"
-                      disabled={true}
-                      type="link"
-                      size="small"
-                    >
-                      + Cadastrar novo
-                    </AntButton>
-                  </div>
-                  <div className="p-col-12">
-                    <Label className="font-weight-bold">
-                      Descrição do objeto do edital
-                    </Label>
-                    <Editor
-                      style={{ height: "120px" }}
-                      value={descricao_objeto_edital}
-                      headerTemplate={<EditorHeader />}
-                      readOnly={!modoVisualizacao}
-                    />
-                  </div>
+            <FormGroup>
+              <div className="p-grid">
+                <div className="p-col-6">
+                  <Label className="font-weight-bold">
+                    Categoria de objeto
+                  </Label>
+                  <SelecionaTipoServico
+                    className="w-100"
+                    tipoServico={tipo_servico}
+                    onSelect={value =>
+                      setObjeto({
+                        ...objeto,
+                        tipo_servico: value,
+                        nome_objeto: value.nome,
+                      })
+                    }
+                    ref={tipoServicoRef}
+                    disabled={contrato.edital ? true : modoVisualizacao}
+                  />
                 </div>
-              </FormGroup>
-            ) : (
-              <FormGroup>
-                <div className="p-grid">
-                  <div className="p-col-6">
-                    <Label className="font-weight-bold">
-                      Categoria de objeto
-                    </Label>
-                    <SelecionaTipoServico
-                      className="w-100"
-                      tipoServico={tipo_servico}
-                      onSelect={value =>
-                        setObjeto({
-                          ...objeto,
-                          tipo_servico: value,
-                          tipo_servico_uuid: value.uuid,
-                          tipoServico: value.nome,
-                        })
-                      }
-                      ref={tipoServicoRef}
-                      disabled={modoVisualizacao}
-                    />
-                  </div>
-                  <div className="p-col-6 mt-4">
-                    <AntButton
-                      className="mt-2 font-weight-bold"
-                      disabled={modoVisualizacao}
-                      type="link"
-                      size="small"
-                      onClick={() => setModalCadastrarObjeto(true)}
-                    >
-                      + Cadastrar novo
-                    </AntButton>
-                  </div>
-                  <div className="p-col-12">
-                    <Label className="font-weight-bold">
-                      Descreva brevemente o objeto do contrato
-                    </Label>
-                    <Editor
-                      style={{ height: "120px" }}
-                      value={descricao_objeto_contrato}
-                      readOnly={!modoVisualizacao}
-                      onTextChange={value =>
-                        setObjeto({
-                          ...objeto,
-                          objeto: value.htmlValue,
-                          descricao_objeto_contrato: value.htmlValue,
-                        })
-                      }
-                      headerTemplate={<EditorHeader />}
-                    />
-                  </div>
+
+                <div className="p-col-6 mt-4">
+                  <AntButton
+                    className="mt-2 font-weight-bold"
+                    disabled={contrato.edital ? true : modoVisualizacao}
+                    type="link"
+                    size="small"
+                    onClick={() => setModalCadastrarObjeto(true)}
+                  >
+                    + Cadastrar novo
+                  </AntButton>
                 </div>
-              </FormGroup>
-            )}
+                <div className="p-col-12">
+                  <Label className="font-weight-bold">
+                    Descrição do objeto do edital
+                  </Label>
+                  <Editor
+                    style={{ height: "120px" }}
+                    value={descricao_objeto}
+                    headerTemplate={<EditorHeader />}
+                    onTextChange={value =>
+                      setObjeto({
+                        ...objeto,
+                        descricao_objeto: value.htmlValue,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </FormGroup>
           </CoadAccordion>
           <CoadAccordion titulo={"Gestão de Contrato"}>
             <Row>
