@@ -11,7 +11,7 @@ export const mapStateToPayload = (
     gestores: gestao.gestores.map(user => {
       return { gestor: user.uuid };
     }),
-    objeto: objeto.tipo_servico_uuid,
+    objeto: objeto.tipo_servico.uuid,
     situacao: contrato.situacao,
     empresa_contratada: empresa.uuid,
     data_ordem_inicio: moment(contrato.data_ordem_inicio).format("YYYY-MM-DD"),
@@ -22,7 +22,7 @@ export const mapStateToPayload = (
     vigencia: contrato.vigencia,
     processo: contrato.processo,
     total_mensal: contrato.total_mensal,
-    descricao_objeto: objeto.objeto,
+    descricao_objeto: objeto.descricao_objeto,
     observacoes: observacoes,
     termo_contrato: contrato.termo_contrato,
     dotacoes: dotacoes.map(dotacao => {
