@@ -13,6 +13,22 @@ $mainColor: #602a2a;
       color: #fff;
     }
   }
+  .row-anexo {
+    justify-content: space-between;
+    align-items: end;
+  }
+  .title-anexo {
+    color: #602a2a;
+    font-size: 20px;
+    font-weight: bold;
+    padding-left: 1rem;
+  }
+  .aviso-anexo {
+    border: 1px;
+    border: #602a2a;
+    text-align: right;
+    padding-right: 1rem;
+  }
 }
 
 .btn-empenho {
