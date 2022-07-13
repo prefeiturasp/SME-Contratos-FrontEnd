@@ -4,22 +4,23 @@ import * as CONFIG from "../../configs/config.constants";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
 import { getUrlParams } from "../../utils/params";
-import { getDocumentosFiscaisByContrato } from "../../service/DocumentosContrato.service";
+import { getAnexosByContrato } from "../../service/DocumentosContrato.service";
 import "./style.scss";
+import { Toast } from "primereact/toast";
 
 // https://github.com/fortana-co/react-dropzone-uploader
 class Anexos extends Component {
   state = {
-    url: `${CONFIG.API_URL}/documentos-fiscais/`,
+    url: `${CONFIG.API_URL}/anexos-contratos/`,
     anexos: [],
     uuidContrato: null,
   };
-
+  toast = React.createRef();
   carregaAnexosContrato = async () => {
     const { anexos } = this.state;
     const param = getUrlParams();
     this.setState({ uuidContrato: param.uuid });
-    const docs = await getDocumentosFiscaisByContrato(param.uuid);
+    const docs = await getAnexosByContrato(param.uuid);
     docs.forEach(value => {
       const fileName = value.anexo.split("/").slice(-1)[0];
       anexos.push({ href: value.anexo, name: fileName });
@@ -28,13 +29,23 @@ class Anexos extends Component {
   };
 
   getUploadParams = ({ file }) => {
-    const { uuidContrato, url } = this.state;
-    const fields = {
-      anexo: file,
-      contrato: uuidContrato,
-      tipo_unidade: "FISCAL_DRE", //RETIRAR
-    };
-    return { fields, url: url };
+    const nomeArquivo = file.name.split(".").slice()[0];
+
+    if (nomeArquivo.length > 50) {
+      this.toast.show({
+        severity: "error",
+        detail:
+          "Nome de arquivo excede o limite de caracteres. Por favor, renomeie o arquivo",
+        life: 7000,
+      });
+    } else {
+      const { uuidContrato, url } = this.state;
+      const fields = {
+        anexo: file,
+        contrato: uuidContrato,
+      };
+      return { fields, url: url };
+    }
   };
 
   componentDidMount() {
@@ -46,6 +57,7 @@ class Anexos extends Component {
     const { anexos } = this.state;
     return (
       <div className="coad-anexos">
+        <Toast ref={el => (this.toast = el)}></Toast>
         <Row>
           <Col className="pb-5">
             <Row className="row-anexo">
@@ -57,7 +69,7 @@ class Anexos extends Component {
             </Row>
             <Dropzone
               getUploadParams={this.getUploadParams}
-              // onChangeStatus={handleChangeStatus}
+              onChangeStatus={this.handleChangeStatus}
               inputContent="Clique ou arraste arquivos nesta área para upload"
               inputWithFilesContent="Adicionar mais arquivos"
               maxSizeBytes={1024 * 1024 * 15}
