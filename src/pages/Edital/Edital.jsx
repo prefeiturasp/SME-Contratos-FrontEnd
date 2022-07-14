@@ -57,6 +57,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
   const [modalCadastrarObjeto, setModalCadastrarObjeto] = useState(false);
   const [modalHistorico, setModalHistorico] = useState(false);
   const [novoObjeto, setNovoObjeto] = useState("");
+  const [novoNumeroEdital, setNovoNumeroEdital] = useState("");
   const tipoServico = useRef(null);
   const toast = useToast();
 
@@ -153,13 +154,26 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
   const duplicaEdital = async () => {
     setmodalDuplicar(false);
     const copia = R.omit(
-      ["uuid", "criado_em", "alterado_em", "numero"],
+      [
+        "uuid",
+        "criado_em",
+        "alterado_em",
+        "numero",
+        "data_homologacao",
+        "status",
+        "tipo_contratacao",
+        "objeto",
+      ],
       edital,
     );
     try {
       const resposta = await criaEdital({
         ...copia,
-        numero: `${edital.numero} Cópia`,
+        numero: novoNumeroEdital.toString(),
+        data_homologacao: moment(edital.data_homologacao).format("YYYY-MM-DD"),
+        status: edital.status.id,
+        tipo_contratacao: edital.tipo_contratacao.id,
+        objeto: edital.objeto.uuid,
       });
       if (resposta.status === CREATED) {
         setEdital(resposta.data);
@@ -251,6 +265,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
         label="Sim"
         style={{ marginRight: ".25em" }}
         onClick={duplicaEdital}
+        disabled={!novoNumeroEdital}
         className="btn-coad-background-outline"
       />
 
@@ -710,6 +725,14 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
       >
         <div>
           <p>Deseja duplicar este edital?</p>
+          <InputMask
+            className="w-100"
+            mask="********/9999"
+            value={novoNumeroEdital || ""}
+            onChange={e => setNovoNumeroEdital(e.target.value)}
+            autoClear={false}
+            placeholder="Número do novo edital"
+          />
         </div>
       </Dialog>
       <Dialog
