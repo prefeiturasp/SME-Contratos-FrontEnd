@@ -180,6 +180,7 @@ const Edital = ({ mostraAlerta, edital: _edital }) => {
         toast.showSuccess("Edital duplicado com sucesso");
         redirect(`#/edital/?uuid=${resposta.data.uuid}`);
       }
+      setNovoNumeroEdital("");
     } catch (erro) {
       if (erro.response && erro.response.status === BAD_REQUEST) {
         redirect("#/listar-editais/");
