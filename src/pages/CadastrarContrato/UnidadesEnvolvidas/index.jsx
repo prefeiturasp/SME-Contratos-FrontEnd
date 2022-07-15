@@ -10,7 +10,7 @@ export class UnidadesEnvolvidas extends Component {
     super(props);
     this.state = {
       unidades: null,
-      unidadesSelecionadas: null,
+      unidadesSelecionadas: [],
       todosSelecionados: false,
       lote: "",
       rf_fiscal: "",
@@ -22,8 +22,9 @@ export class UnidadesEnvolvidas extends Component {
   componentDidUpdate = () => {
     if (
       this.props.contrato &&
+      this.props.contrato.lotes &&
       this.props.contrato.lotes.length > 0 &&
-      !this.state.unidadesSelecionadas
+      this.state.unidadesSelecionadas.length === 0
     ) {
       this.setState(
         {
@@ -76,15 +77,10 @@ export class UnidadesEnvolvidas extends Component {
   };
 
   adicionarUnidadesSelecionadas = () => {
-    const { unidades, lote, rf_fiscal, nome_fiscal, suplentes } = this.state;
+    const { unidades, lote } = this.state;
     let { unidadesSelecionadas } = this.state;
     if (unidades.filter(unidade => unidade.checked).length === 0) {
-      this.props.messages.show({
-        severity: "warn",
-        life: 10000,
-        detail: "É preciso selecionar ao menos uma unidade",
-      });
-      window.scrollTo(0, 0);
+      this.props.toast.showWarn("É preciso selecionar ao menos uma unidade");
     } else {
       unidades
         .filter(unidade => unidade.checked)
@@ -97,20 +93,14 @@ export class UnidadesEnvolvidas extends Component {
                 unidade.cd_equipamento,
             )
           ) {
-            this.props.messages.show({
-              severity: "error",
-              life: 10000,
-              detail: `Unidade ${unidade.cd_equipamento} já pertence a um lote`,
-            });
-            window.scrollTo(0, 0);
+            this.props.toast.showError(
+              `Unidade ${unidade.cd_equipamento} já pertence a um lote`,
+            );
           } else {
             if (!unidadesSelecionadas) unidadesSelecionadas = [];
             unidadesSelecionadas.push({
               unidade: unidade,
               lote: lote,
-              rf_fiscal: rf_fiscal,
-              nome_fiscal: nome_fiscal,
-              suplentes: suplentes,
             });
             this.setState({
               unidadesSelecionadas,
@@ -133,7 +123,6 @@ export class UnidadesEnvolvidas extends Component {
     return (
       <div>
         {!disabilitado && <FiltroUnidades setUnidades={this.setUnidades} />}
-        <hr />
         {unidades && (
           <Fragment>
             <TabelaUnidadesParaSelecionar
@@ -142,7 +131,6 @@ export class UnidadesEnvolvidas extends Component {
               todosSelecionados={todosSelecionados}
               selecionarTodos={this.selecionarTodos}
             />
-            <hr />
             <AdicionarComplementos
               adicionarUnidadesSelecionadas={this.adicionarUnidadesSelecionadas}
               setFiscalESuplentes={this.setFiscalESuplentes}

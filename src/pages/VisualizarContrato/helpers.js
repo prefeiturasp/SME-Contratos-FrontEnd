@@ -1,10 +1,16 @@
 import moment from "moment";
 import { Cor } from "../../configs/colors.constants";
 
-export const mapStateToPayload = (
-  { contrato, empresa, dotacoes, valorTotal, objeto, gestao, observacoes },
-  incluir,
-) => {
+export const mapStateToPayload = ({
+  contrato,
+  empresa,
+  dotacoes,
+  valorTotal,
+  objeto,
+  gestao,
+  observacoes,
+  unidadesSelecionadas,
+}) => {
   let payload = {};
 
   payload = {
@@ -33,7 +39,7 @@ export const mapStateToPayload = (
       };
     }),
     valor_total: valorTotal,
-    unidades_selecionadas: [],
+    unidades_selecionadas: unidadesSelecionadas,
     unidade_vigencia: contrato.unidade_vigencia,
     referencia_encerramento: contrato.referencia_encerramento,
     edital: objeto.alteracaoEdital
@@ -43,9 +49,6 @@ export const mapStateToPayload = (
       : null,
     ata: contrato.ata ? contrato.ata.uuid : null,
   };
-  if (incluir) {
-    delete payload.unidades_selecionadas;
-  }
 
   return payload;
 };
