@@ -8,6 +8,7 @@ if (process.env.NODE_ENV === "production") {
   // This way we can pass params to static files. see Dockerfile.
   // when build default env is production
   API_URL = "API_URL_REPLACE_ME";
+  SIGPAE_API_URL = "SIGPAE_API_URL_REPLACE_ME";
   SAFI_EQUIPAMENTOS_API_URL = "SAFI_EQUIPAMENTOS_URL_REPLACE_ME";
   JWT_AUTH = "API_URL_REPLACE_ME/api-token-auth/";
   //   USER_URL = "API_URL_REPLACE_ME/users/";
