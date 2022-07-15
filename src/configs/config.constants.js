@@ -1,4 +1,5 @@
 export let API_URL;
+export let SIGPAE_API_URL;
 export let JWT_AUTH;
 export let ALIAS_TOKEN;
 export let SAFI_EQUIPAMENTOS_API_URL;
@@ -13,6 +14,7 @@ if (process.env.NODE_ENV === "production") {
   //   API_MOCK = "API_MOCK_REPLACE_ME";
 } else {
   API_URL = process.env.REACT_APP_API_URL;
+  SIGPAE_API_URL = process.env.REACT_APP_SIGPAE_API_URL;
   SAFI_EQUIPAMENTOS_API_URL = process.env.REACT_APP_SAFI_EQUIPAMENTOS_API_URL;
   JWT_AUTH = `${API_URL}/api-token-auth/`;
   ALIAS_TOKEN = "TOKEN";
