@@ -8,5 +8,5 @@ export const getEquipamentos = async filtro => {
   };
   let parametros = formataParametros(filtro);
   const url = `equipamentos/${parametros}`;
-  return (await api.get(url, AUTH_HEADER)).data.slice(0, 100);
+  return (await api.get(url, AUTH_HEADER)).data;
 };
