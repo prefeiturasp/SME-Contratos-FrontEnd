@@ -65,6 +65,7 @@ const VisualizarContratos = () => {
   const [objeto, setObjeto] = useState({});
   const [valorTotal, setValorTotal] = useState({});
   const [gestao, setGestao] = useState({});
+  const [unidadesSelecionadas, setUnidadesSelecionadas] = useState();
   const [docsDre, setDocsDre] = useState({});
   const [observacoes, setObservacoes] = useState("");
   const [modoVisualizacao, setModoVisualizacao] = useState(true);
@@ -178,8 +179,9 @@ const VisualizarContratos = () => {
       objeto,
       gestao,
       observacoes,
+      unidadesSelecionadas,
     };
-    const payload = mapStateToPayload(state, incluir);
+    const payload = mapStateToPayload(state);
     setModoVisualizacao(true);
     setModalEdicao(false);
 
@@ -216,8 +218,9 @@ const VisualizarContratos = () => {
       objeto,
       gestao,
       observacoes,
+      unidadesSelecionadas,
     };
-    const payload = mapStateToPayload(state, incluir);
+    const payload = mapStateToPayload(state);
 
     const resultado = await createContrato(payload, uuid);
     if (resultado.uuid) {
@@ -902,15 +905,15 @@ const VisualizarContratos = () => {
                 </>
               ))}
           </CoadAccordion>
-          {contrato.lotes && (
-            <CoadAccordion titulo={"Unidade Envolvidas"}>
-              <UnidadesEnvolvidas
-                contrato={contrato}
-                disabilitado={modoVisualizacao}
-                setUnidadesSelecionadas={() => {}}
-              />
-            </CoadAccordion>
-          )}
+
+          <CoadAccordion titulo={"Unidades Atendidas"}>
+            <UnidadesEnvolvidas
+              contrato={contrato}
+              disabilitado={modoVisualizacao}
+              toast={toast}
+              setUnidadesSelecionadas={setUnidadesSelecionadas}
+            />
+          </CoadAccordion>
           <CoadAccordion titulo={"Anexos"}>
             <Anexos
               disabilitado={modoVisualizacao}

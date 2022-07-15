@@ -3,22 +3,27 @@ import React from "react";
 export const TabelaUnidadesParaSelecionar = props => {
   const { unidades, todosSelecionados, checkUnidade, selecionarTodos } = props;
   return (
-    <div className="tabela-unidades">
-      <label htmlFor="check" className="checkbox-label">
-        <input type="checkbox" name="check" checked={todosSelecionados} />
-        <span
-          onClick={() => selecionarTodos()}
-          className="checkbox-custom"
-        />{" "}
-        <span className="text">Selecionar todos</span>
-      </label>
+    <div className="tabela-unidades mt-4">
       <table>
         <thead>
           <tr className="row">
+            <th className="col-check">
+              <label htmlFor="check" className="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="check"
+                  checked={todosSelecionados}
+                />
+                <span
+                  onClick={() => selecionarTodos()}
+                  className="checkbox-custom"
+                />{" "}
+              </label>
+            </th>
             <th className="col-2">Código EOL</th>
             <th className="col-3">Nome da Unidade</th>
             <th className="col-3">Endereço</th>
-            <th className="col-2">DRE</th>
+            <th className="col-dre">DRE</th>
             <th className="col-2">Tipo de Unidade</th>
           </tr>
         </thead>
@@ -26,7 +31,7 @@ export const TabelaUnidadesParaSelecionar = props => {
           {unidades.map((unidade, key) => {
             return (
               <tr key={key} className="row">
-                <td className="col-2">
+                <td className="col-check">
                   <label htmlFor="check" className="checkbox-label">
                     <input
                       type="checkbox"
@@ -37,14 +42,16 @@ export const TabelaUnidadesParaSelecionar = props => {
                       onClick={() => checkUnidade(key)}
                       className="checkbox-custom"
                     />{" "}
-                    <span className="text">{unidade.cd_equipamento}</span>
                   </label>
+                </td>
+                <td className="col-2">
+                  <span className="text">{unidade.cd_equipamento}</span>
                 </td>
                 <td className="col-3">{unidade.nm_equipamento}</td>
                 <td className="col-3">
                   {unidade.logradouro}, {unidade.bairro}
                 </td>
-                <td className="col-2">
+                <td className="col-dre">
                   {unidade.nm_exibicao_diretoria_referencia}
                 </td>
                 <td className="col-2">
