@@ -64,6 +64,7 @@ export class FiltroUnidades extends Component {
       tp_unidade: [],
       tp_unidade_escolar: [],
       loading: false,
+      buscaCodigoEOL: false,
     };
   }
 
@@ -80,9 +81,11 @@ export class FiltroUnidades extends Component {
     this.setState({
       cd_equipamento: "",
       nm_equipamento: "",
+      subprefeituras_selecionadas: [],
       dres_selecionadas: [],
       tp_unidade: [],
       tp_unidade_escolar: [],
+      buscaCodigoEOL: false,
     });
   };
 
@@ -117,6 +120,22 @@ export class FiltroUnidades extends Component {
     this.setState({ loading: false });
   };
 
+  setBuscaCodigoEOL = codigo => {
+    if (codigo !== "") {
+      this.setState({
+        cd_equipamento: codigo,
+        nm_equipamento: "",
+        subprefeituras_selecionadas: [],
+        dres_selecionadas: [],
+        tp_unidade: [],
+        tp_unidade_escolar: [],
+        buscaCodigoEOL: true,
+      });
+    } else {
+      this.setState({ cd_equipamento: codigo, buscaCodigoEOL: false });
+    }
+  };
+
   render() {
     const {
       dres,
@@ -128,10 +147,23 @@ export class FiltroUnidades extends Component {
       tp_unidade,
       tp_unidade_escolar,
       loading,
+      buscaCodigoEOL,
     } = this.state;
     return (
       <div>
         <div className="row">
+          <div className="col-4">
+            <label>Código EOL</label>
+            <InputText
+              className="w-100"
+              value={cd_equipamento}
+              name="cd_equipamento"
+              onChange={event => {
+                this.setBuscaCodigoEOL(event.target.value);
+              }}
+              placeholder="Código EOL da instituição"
+            />
+          </div>
           <div className="col-4">
             <Label form="coordenador">Tipo de Unidade</Label>
             <MultiSelect
@@ -144,6 +176,7 @@ export class FiltroUnidades extends Component {
                   tp_unidade_escolar: "",
                 });
               }}
+              disabled={buscaCodigoEOL}
               optionLabel="nome"
               options={tipos_unidade}
               placeholder="Selecione..."
@@ -151,18 +184,7 @@ export class FiltroUnidades extends Component {
               selectedItemsLabel={"{0} tipos selecionados"}
             />
           </div>
-          <div className="col-4">
-            <label>Código EOL</label>
-            <InputText
-              className="w-100"
-              value={cd_equipamento}
-              name="cd_equipamento"
-              onChange={event =>
-                this.setState({ cd_equipamento: event.target.value })
-              }
-              placeholder="Código EOL da instituição"
-            />
-          </div>
+
           <div className="col-4">
             <Label form="coordenador">DRE</Label>
             <MultiSelect
@@ -172,6 +194,7 @@ export class FiltroUnidades extends Component {
               onChange={event =>
                 this.setState({ dres_selecionadas: event.target.value })
               }
+              disabled={buscaCodigoEOL}
               optionLabel="diretoria"
               options={dres}
               placeholder="Selecione..."
@@ -179,11 +202,14 @@ export class FiltroUnidades extends Component {
               selectedItemsLabel={"{0} DREs selecionadas"}
             />
           </div>
+        </div>
+        <div className="row mt-2">
           <div className="col-4">
             <label>Nome da Unidade</label>
             <InputText
               className="w-100"
               value={nm_equipamento}
+              disabled={buscaCodigoEOL}
               onChange={event =>
                 this.setState({ nm_equipamento: event.target.value })
               }
@@ -198,6 +224,7 @@ export class FiltroUnidades extends Component {
                 id="tipo_escola"
                 className="w-100"
                 value={tp_unidade_escolar}
+                disabled={buscaCodigoEOL}
                 onChange={event =>
                   this.setState({ tp_unidade_escolar: event.target.value })
                 }
@@ -215,6 +242,7 @@ export class FiltroUnidades extends Component {
               id="dres"
               className="w-100"
               value={subprefeituras_selecionadas}
+              disabled={buscaCodigoEOL}
               onChange={event =>
                 this.setState({
                   subprefeituras_selecionadas: event.target.value,
