@@ -18,7 +18,7 @@ export const TabelaUnidades = ({
   const excluirLote = lote => {
     lote.unidades.forEach(uni => {
       let index = unidadesSelecionadas.findIndex(x => x.unidade === uni);
-      if (index) removerUnidadeSelecionada(index);
+      if (index >= 0) removerUnidadeSelecionada(index);
     });
   };
 
@@ -39,6 +39,7 @@ export const TabelaUnidades = ({
     unidadesSelecionadas &&
     unidadesSelecionadas.length > 0 && (
       <div className="tabela-unidades-selecionadas pt-3">
+        <h6>Lotes Adicionados</h6>
         {lotes.map((lote, index) => (
           <div className="accordion" key={index}>
             <div
@@ -61,7 +62,7 @@ export const TabelaUnidades = ({
                   ) : (
                     <i className="fas fa-chevron-down"></i>
                   )}
-                  <span> unidades</span>
+                  <span> Unidades</span>
                 </button>
               </div>
             </div>
@@ -72,9 +73,10 @@ export const TabelaUnidades = ({
                     <thead>
                       <tr>
                         <th>Código EOL</th>
-                        <th>Un. que recebem serviço</th>
-                        <th>Equipamento</th>
+                        <th>Nome da unidade</th>
+                        <th>Tipo de unidade</th>
                         <th>DRE</th>
+                        <th>Subprefeitura</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -94,6 +96,7 @@ export const TabelaUnidades = ({
                                 unidadeSelecionada.nm_exibicao_diretoria_referencia
                               }
                             </td>
+                            <td>{unidadeSelecionada.nomeSubprefeitura}</td>
                           </tr>
                         );
                       })}
