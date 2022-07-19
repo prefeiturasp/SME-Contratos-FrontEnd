@@ -69,6 +69,7 @@ export const TabelaUnidades = ({
             <Collapse isOpen={collapse[index]}>
               <Card>
                 <CardBody>
+                  <p className="font-weight-bold">Unidades do Lote</p>
                   <table>
                     <thead>
                       <tr>
