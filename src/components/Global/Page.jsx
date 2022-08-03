@@ -16,6 +16,7 @@ import "../../App.scss";
 import LOGO from "../../assets/images/logoSGC.svg";
 import { NavLink } from "react-router-dom";
 import { MenuConfig } from "../../configs/routes.constants";
+import { Button, Col, Row } from "reactstrap";
 
 class Page extends Component {
   constructor() {
@@ -161,7 +162,23 @@ class Page extends Component {
 
         <div className="layout-main">
           <BreadCrumb model={this.props.breadcrumb} home={home} />
-          {this.props.titulo && <h3 className="pt-3">{this.props.titulo}</h3>}
+          <Row>
+            <Col lg={10}>
+              {this.props.titulo && (
+                <h3 className="pt-3">{this.props.titulo}</h3>
+              )}
+            </Col>
+            <Col lg={2} className="comeback">
+              {this.props.titulo && (
+                <Button
+                  onClick={this.props.comeback}
+                  className="btn btn-coad-background-outline"
+                >
+                  <i className="fas fa-arrow-left" /> Voltar
+                </Button>
+              )}
+            </Col>
+          </Row>
           {this.props.children}
         </div>
 
