@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import Page from "../../components/Global/Page";
-import Container from "../../components/Global/Container";
 import CardSuperior from "./CardSuperior";
 import CoadAccordion from "../../components/Global/CoadAccordion";
 import { SelecionaTipoServico } from "../../components/Contratos/SelecionaTipoServico";
@@ -18,6 +17,7 @@ import { getUrlParams } from "../../utils/params";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { addLocale } from "primereact/api";
+import { TabView, TabPanel } from "primereact/tabview";
 import {
   CALENDAR_PT,
   REFERENCIA_ENCERRAMENTO,
@@ -28,7 +28,7 @@ import { mapStateToPayload, corDoPrazo } from "./helpers";
 import { Dialog } from "primereact/dialog";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
 import DotacoesOrcamentarias from "./DotacoesOrcamentarias";
-import { Button as AntButton, Switch } from "antd";
+import { Button as AntButton } from "antd";
 import $ from "jquery";
 import moment from "moment";
 import { criaTipoServico } from "../../service/TiposServico.service";
@@ -56,6 +56,7 @@ const VisualizarContratos = () => {
   const tipoServicoRef = useRef(null);
 
   const [incluir, setIncluir] = useState(true);
+  const [accordionIncluir, setAccordionIncluir] = useState(false);
   const [contrato, setContrato] = useState({
     referencia_encerramento: DATA_ORDEM_INICIO,
     unidade_vigencia: "DIAS",
@@ -68,10 +69,12 @@ const VisualizarContratos = () => {
   const [unidadesSelecionadas, setUnidadesSelecionadas] = useState();
   const [docsDre, setDocsDre] = useState({});
   const [observacoes, setObservacoes] = useState("");
-  const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [modalEdicao, setModalEdicao] = useState(false);
   const [modalCadastro, setModalCadastro] = useState(false);
+  const [modalVoltar, setModalVoltar] = useState(false);
+  const [modalCancelar, setModalCancelar] = useState(false);
   const [modalCadastrarObjeto, setModalCadastrarObjeto] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   addLocale("pt", CALENDAR_PT);
 
   useEffect(() => {
@@ -81,24 +84,20 @@ const VisualizarContratos = () => {
       const usuarios = await getUsuariosLookup();
       if (param.uuid) {
         const contrato = await getContratoByUUID(param.uuid);
-
         setIncluir(false);
         propsToState(contrato, usuarios);
         $(".ql-editor").prop("contenteditable", "false");
       } else {
         setGestao({ usuarios });
-        setModoVisualizacao(false);
+        setAccordionIncluir(true);
       }
     };
     buscarDados();
   }, []);
 
   useEffect(() => {
-    $(".ql-editor").prop(
-      "contenteditable",
-      (!contrato.edital && !modoVisualizacao).toString(),
-    );
-  }, [contrato, modoVisualizacao]);
+    $(".ql-editor").prop("contenteditable", (!contrato.edital).toString());
+  }, [contrato]);
 
   const propsToState = (contrato, usuarios) => {
     const tipo_servico = contrato.edital
@@ -163,12 +162,6 @@ const VisualizarContratos = () => {
     setContrato({ ...contrato, data_assinatura });
   };
 
-  const habilitarEdicao = () => {
-    setModoVisualizacao(!modoVisualizacao);
-    contrato.edital
-      ? $(".ql-editor").prop("contenteditable", !modoVisualizacao.toString())
-      : $(".ql-editor").prop("contenteditable", modoVisualizacao.toString());
-  };
   const handleSubmitEditar = async () => {
     const { uuid } = contrato;
     const state = {
@@ -182,10 +175,7 @@ const VisualizarContratos = () => {
       unidadesSelecionadas,
     };
     const payload = mapStateToPayload(state);
-    setModoVisualizacao(true);
     setModalEdicao(false);
-
-    $(".ql-editor").prop("contenteditable", modoVisualizacao.toString());
 
     const resultado = await updateContrato(payload, uuid);
     if (resultado.status === OK) {
@@ -202,7 +192,7 @@ const VisualizarContratos = () => {
       });
       cancelaAtualizacao();
       window.scrollTo(0, 0);
-      toast.showSuccess("Alterações realizadas com sucesso");
+      toast.showSuccess("Contrato gravado com sucesso!");
     } else {
       alert("Ocorreu um erro, tente novamente!");
     }
@@ -238,7 +228,22 @@ const VisualizarContratos = () => {
   const handleConfimarCriacao = () => {
     setModalCadastro(true);
   };
-
+  const handleOnClickVoltar = () => {
+    setModalVoltar(true);
+  };
+  const cancelaOnClickVoltar = () => {
+    setModalVoltar(false);
+  };
+  const handleCancelar = () => {
+    setModalCancelar(true);
+  };
+  const ConfirmaCancelar = () => {
+    toast.showSuccess("Informações foram canceladas com sucesso!");
+    redirect("/#/gestao-contratos");
+  };
+  const fechaCancelar = () => {
+    setModalCancelar(false);
+  };
   const cancelaAtualizacao = () => {
     setModalEdicao(false);
   };
@@ -363,6 +368,7 @@ const VisualizarContratos = () => {
           { label: "Gestão de Contratos", url: "#" + GESTAO_CONTRATOS },
           { label: "Novo Contrato", url: "#" + VISUALIZAR_CONTRATOS },
         ]}
+        onClickVoltar={() => handleOnClickVoltar()}
       >
         <CardSuperior
           tipoServico={nome_objeto}
@@ -372,604 +378,635 @@ const VisualizarContratos = () => {
           dataEncerramento={contrato.data_encerramento}
           diasEncerramento={contrato.dias_para_o_encerramento}
         />
-        <Container>
-          <Dialog
-            header="Aplicar alterações"
-            visible={modalEdicao}
-            style={{ width: "50vw" }}
-            modal={true}
-            onHide={() => cancelaAtualizacao()}
-            footer={
-              <div>
-                <button
-                  className="btn btn-coad-background-outline"
-                  onClick={() => cancelaAtualizacao()}
-                >
-                  Não
-                </button>
-                <button
-                  className="btn btn-coad-primary"
-                  onClick={handleSubmitEditar}
-                >
-                  Sim
-                </button>
-              </div>
-            }
-          >
-            Foram feitas alterações em contrato. Deseja aplicá-las em documento?
-          </Dialog>
+        <TabView
+          activeIndex={activeIndex}
+          onTabChange={e => setActiveIndex(e.index)}
+        >
+          <TabPanel header="Informações Gerais">
+            <Dialog
+              header="Aplicar alterações"
+              visible={modalEdicao}
+              style={{ width: "50vw" }}
+              modal={true}
+              onHide={() => cancelaAtualizacao()}
+              footer={
+                <div>
+                  <button
+                    className="btn btn-coad-background-outline"
+                    onClick={() => cancelaAtualizacao()}
+                  >
+                    Não
+                  </button>
+                  <button
+                    className="btn btn-coad-primary"
+                    onClick={handleSubmitEditar}
+                  >
+                    Sim
+                  </button>
+                </div>
+              }
+            >
+              Foram feitas alterações em contrato. Deseja aplicá-las no
+              documento?
+            </Dialog>
+            <Dialog
+              header="Cancelar preenchimento"
+              visible={modalCancelar}
+              style={{ width: "50vw" }}
+              modal={true}
+              onHide={() => fechaCancelar()}
+              footer={
+                <div className="mb-2">
+                  <button
+                    className="btn btn-coad-background-outline"
+                    onClick={() => fechaCancelar()}
+                  >
+                    Não
+                  </button>
+                  <button
+                    className="btn btn-coad-primary"
+                    onClick={ConfirmaCancelar}
+                  >
+                    Sim
+                  </button>
+                </div>
+              }
+            >
+              Deseja cancelar o preenchimento das informações?
+            </Dialog>
 
-          <Dialog
-            header="Aplicar alterações"
-            visible={modalCadastro}
-            style={{ width: "50vw" }}
-            modal={true}
-            onHide={() => cancelaCadastro()}
-            footer={
-              <div>
-                <button
-                  className="btn btn-coad-background-outline"
-                  onClick={() => cancelaCadastro()}
-                >
-                  Não
-                </button>
-                <button
-                  className="btn btn-coad-primary"
-                  onClick={handleSubmitCadastro}
-                >
-                  Sim
-                </button>
-              </div>
-            }
-          >
-            Deseja cadastrar este contrato?
-          </Dialog>
+            <Dialog
+              header="As informações inseridas não foram salvas."
+              visible={modalVoltar}
+              style={{ width: "50vw" }}
+              modal={true}
+              onHide={() => cancelaOnClickVoltar()}
+              footer={
+                <div className="footer mb-2">
+                  <button
+                    className="btn btn-coad-background-outline"
+                    onClick={() => redirect("#/gestao-contratos")}
+                  >
+                    Voltar sem salvar
+                  </button>
+                  <button
+                    className="btn btn-coad-primary"
+                    onClick={() => cancelaOnClickVoltar()}
+                  >
+                    Permanecer
+                  </button>
+                </div>
+              }
+            >
+              {" "}
+              Deseja retornar à tela anterior e perder todas as alterações
+              inseridas?
+            </Dialog>
 
-          <Dialog
-            header="Adicionar objeto"
-            visible={modalCadastrarObjeto}
-            style={{ width: "60vw" }}
-            modal={true}
-            footer={
-              <div>
-                <button
-                  className="btn btn-coad-background-outline"
-                  onClick={() => cancelaModalObjeto()}
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={CadastraObjeto}
-                  className="btn btn-coad-primary"
-                  disabled={!objeto.novoObjeto || !objeto.novoObjeto.length}
-                >
-                  Adicionar
-                </button>
-              </div>
-            }
-            onHide={() => cancelaModalObjeto()}
-          >
-            <div>
-              <label htmlFor="objeto">Nome do objeto</label>
-              <br />
-              <InputText
-                value={novoObjeto || ""}
-                onChange={e =>
-                  setObjeto({
-                    ...objeto,
-                    novoObjeto: e.target.value.toUpperCase(),
-                  })
-                }
-                className="w-100"
-              />
-            </div>
-          </Dialog>
+            <Dialog
+              header="Aplicar alterações"
+              visible={modalCadastro}
+              style={{ width: "50vw" }}
+              modal={true}
+              onHide={() => cancelaCadastro()}
+              footer={
+                <div className="mb-2">
+                  <button
+                    className="btn btn-coad-background-outline"
+                    onClick={() => cancelaCadastro()}
+                  >
+                    Não
+                  </button>
+                  <button
+                    className="btn btn-coad-primary"
+                    onClick={handleSubmitCadastro}
+                  >
+                    Sim
+                  </button>
+                </div>
+              }
+            >
+              Deseja cadastrar este contrato?
+            </Dialog>
 
-          <Row className="mb-3">
-            <Col lg={6}>
-              <Button
-                className="btn btn-coad-background-outline"
-                disabled={true}
-              >
-                <i className="fas fa-history" /> Histórico
-              </Button>
-            </Col>
-            <Col lg={6} className="d-flex flex-row-reverse">
-              <Button
-                className="btn btn-coad-background-outline"
-                onClick={() =>
-                  incluir ? handleConfimarCriacao() : handleConfimarEdicao()
-                }
-                disabled={modoVisualizacao || !habilitaBotao}
-              >
-                Salvar
-              </Button>
-              <Button
-                onClick={() => redirect("#/gestao-contratos")}
-                className="btn-coad-blue mx-2"
-              >
-                <i className="fas fa-arrow-left" /> Voltar
-              </Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={8}>
-              <h2>
-                <i className="fas fa-file-signature"></i> Visualizar/Alterar
-                contrato
-              </h2>
-            </Col>
-            {!incluir && (
-              <Col lg={4} className="">
-                <Col className="d-flex justify-content-end">
-                  <Label className="px-3">Modo de edição</Label>
-                  <Switch
-                    checked={!modoVisualizacao}
-                    defaultChecked={false}
-                    onChange={() => habilitarEdicao()}
-                  />
-                </Col>
-              </Col>
-            )}
-          </Row>
-          <CoadAccordion titulo={"Informações Gerais"}>
-            <Row>
-              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                <FormGroup>
-                  <Label form="termoContrato">
-                    Número do Termo de Contrato
-                  </Label>
-                  <InputText
-                    id="termoContrato"
-                    value={termo_contrato || ""}
-                    onChange={e =>
-                      setContrato({
-                        ...contrato,
-                        termo_contrato: e.target.value,
-                      })
-                    }
-                    placeholder={"Ex: 001/002"}
-                    className="w-100"
-                    readOnly={modoVisualizacao}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                <FormGroup>
-                  <Label form="numeroProcesso">Número de Processo</Label>
-                  <InputText
-                    id="numeroProcesso"
-                    value={nullToUndef(processo)}
-                    onChange={e =>
-                      setContrato({ ...contrato, processo: e.target.value })
-                    }
-                    placeholder={"Ex: 0000.2019/0000000-0"}
-                    className="w-100"
-                    disabled={modoVisualizacao}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                <Label form="situacao">Status</Label>
+            <Dialog
+              header="Adicionar objeto"
+              visible={modalCadastrarObjeto}
+              style={{ width: "60vw" }}
+              modal={true}
+              footer={
+                <div>
+                  <button
+                    className="btn btn-coad-background-outline"
+                    onClick={() => cancelaModalObjeto()}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={CadastraObjeto}
+                    className="btn btn-coad-primary"
+                    disabled={!objeto.novoObjeto || !objeto.novoObjeto.length}
+                  >
+                    Adicionar
+                  </button>
+                </div>
+              }
+              onHide={() => cancelaModalObjeto()}
+            >
+              <div>
+                <label htmlFor="objeto">Nome do objeto</label>
                 <br />
-                <SituacaoRadio
-                  checado={situacao}
-                  onSelect={value =>
-                    setContrato({ ...contrato, situacao: value })
-                  }
-                  disabled={modoVisualizacao}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                <Label form="numeroEdital">Número do Edital</Label>
-                <SelecionaEdital
-                  id="numeroEdital"
-                  className="w-100"
-                  editalSalvo={edital}
-                  onSelect={value => {
+                <InputText
+                  value={novoObjeto || ""}
+                  onChange={e =>
                     setObjeto({
                       ...objeto,
-                      nome_objeto: value ? value.objeto.nome : null,
-                      descricao_objeto: value ? value.descricao_objeto : null,
-                      tipo_servico: value ? value.objeto : null,
-                    });
-                    setContrato({ ...contrato, edital: value });
-                  }}
-                  disabled={modoVisualizacao}
-                />
-              </Col>
-              <Col xs={12} sm={12} md={12} lg={4} xl={4}>
-                <SelecionaAta
-                  id="numeroAta"
+                      novoObjeto: e.target.value.toUpperCase(),
+                    })
+                  }
                   className="w-100"
-                  value={ata}
-                  edital={edital}
-                  onSelect={event => {
-                    setContrato({
-                      ...contrato,
-                      ata: event.value,
-                    });
-                  }}
-                  disabled={modoVisualizacao || !edital}
                 />
+              </div>
+            </Dialog>
+
+            <Row className="mb-3">
+              <Col lg={6}></Col>
+              <Col lg={6} className="d-flex flex-row-reverse">
+                <Button
+                  className="btn btn-coad-primary"
+                  onClick={() =>
+                    incluir ? handleConfimarCriacao() : handleConfimarEdicao()
+                  }
+                  disabled={!habilitaBotao}
+                >
+                  Salvar Contrato
+                </Button>
+                <Button
+                  onClick={() => handleCancelar()}
+                  className="btn btn-coad-background-outline mx-2"
+                >
+                  Cancelar
+                </Button>
               </Col>
             </Row>
-            <hr />
-            <Row>
-              <Col sm={12} xs={12} lg={9} xl={9}>
-                <Row>
-                  <Col xs={12} sm={12} md={12} lg={6} xl={6} className="mb-3">
-                    <Label>Data de Assinatura de Contrato</Label>
-                    <br />
+            <CoadAccordion
+              aberto={accordionIncluir}
+              titulo={"Informações do Contrato"}
+            >
+              <Row>
+                <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                  <FormGroup>
+                    <Label form="termoContrato">
+                      Número do Termo de Contrato
+                    </Label>
+                    <InputText
+                      id="termoContrato"
+                      value={termo_contrato || ""}
+                      onChange={e =>
+                        setContrato({
+                          ...contrato,
+                          termo_contrato: e.target.value,
+                        })
+                      }
+                      placeholder={"Ex: 001/002"}
+                      className="w-100"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                  <FormGroup>
+                    <Label form="numeroProcesso">Número de Processo</Label>
+                    <InputText
+                      id="numeroProcesso"
+                      value={nullToUndef(processo)}
+                      onChange={e =>
+                        setContrato({ ...contrato, processo: e.target.value })
+                      }
+                      placeholder={"Ex: 0000.2019/0000000-0"}
+                      className="w-100"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                  <Label form="situacao">Status</Label>
+                  <br />
+                  <SituacaoRadio
+                    checado={situacao}
+                    onSelect={value =>
+                      setContrato({ ...contrato, situacao: value })
+                    }
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                  <Label form="numeroEdital">Número do Edital</Label>
+                  <SelecionaEdital
+                    id="numeroEdital"
+                    className="w-100"
+                    editalSalvo={edital}
+                    onSelect={value => {
+                      setObjeto({
+                        ...objeto,
+                        nome_objeto: value ? value.objeto.nome : null,
+                        descricao_objeto: value ? value.descricao_objeto : null,
+                        tipo_servico: value ? value.objeto : null,
+                      });
+                      setContrato({ ...contrato, edital: value });
+                    }}
+                  />
+                </Col>
+                <Col xs={12} sm={12} md={12} lg={4} xl={4}>
+                  <SelecionaAta
+                    id="numeroAta"
+                    className="w-100"
+                    value={ata}
+                    edital={edital}
+                    onSelect={event => {
+                      setContrato({
+                        ...contrato,
+                        ata: event.value,
+                      });
+                    }}
+                    disabled={!edital}
+                  />
+                </Col>
+              </Row>
+              <hr />
+              <Row>
+                <Col sm={12} xs={12} lg={9} xl={9}>
+                  <Row>
+                    <Col xs={12} sm={12} md={12} lg={6} xl={6} className="mb-3">
+                      <Label>Data de Assinatura de Contrato</Label>
+                      <br />
 
-                    <Calendar
-                      value={data_assinatura}
-                      onChange={e => {
-                        alteraDataAssinatura(e.value);
-                        let dataEncerramento = calculaDataEncerramento(
-                          e.value,
-                          data_ordem_inicio,
-                          referencia_encerramento,
-                          vigencia,
-                          unidade_vigencia,
-                        );
-                        setContrato({
-                          ...contrato,
-                          dataEncerramento: dataEncerramento,
-                          data_assinatura: e.value,
-                        });
-                      }}
-                      keepInvalid={true}
-                      locale="pt"
-                      dateFormat="dd/mm/yy"
-                      showIcon={true}
-                      disabled={modoVisualizacao}
-                      id="data_assinatura"
-                    />
-                  </Col>
-                  <Col xs={12} sm={12} md={12} lg={6} xl={6} className="mb-3">
-                    <Label>Data da Ordem de Início</Label>
-                    <br />
-                    <Calendar
-                      value={data_ordem_inicio}
-                      onChange={e => {
-                        let dataEncerramento = calculaDataEncerramento(
-                          data_assinatura,
-                          e.value,
-                          referencia_encerramento,
-                          vigencia,
-                          unidade_vigencia,
-                        );
-                        setContrato({
-                          ...contrato,
-                          dataEncerramento: dataEncerramento,
-                          data_ordem_inicio: e.value,
-                        });
-                      }}
-                      keepInvalid={true}
-                      showIcon={true}
-                      locale="pt"
-                      dateFormat="dd/mm/yy"
-                      disabled={modoVisualizacao}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col sm={12} xs={12} md={12} lg={6} xl={6}>
-                    <FormGroup>
-                      <Label>Referência para cálculo do encerramento</Label>
-                      <Dropdown
-                        options={referenciaEncerramentoOptions}
-                        value={referencia_encerramento}
-                        defaultValue={referencia_encerramento}
+                      <Calendar
+                        value={data_assinatura}
                         onChange={e => {
+                          alteraDataAssinatura(e.value);
                           let dataEncerramento = calculaDataEncerramento(
-                            data_assinatura,
+                            e.value,
                             data_ordem_inicio,
-                            e.target.value,
+                            referencia_encerramento,
                             vigencia,
                             unidade_vigencia,
                           );
                           setContrato({
                             ...contrato,
                             dataEncerramento: dataEncerramento,
-                            referencia_encerramento: e.target.value,
+                            data_assinatura: e.value,
                           });
                         }}
-                        disabled={modoVisualizacao}
-                        className="w-100"
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col sm={12} xs={12} md={12} lg={6} xl={6}>
-                    <div className="row">
-                      <div className="input-group vigencia-contrato">
-                        <div className="col-6">
-                          <Label>Período de Vigência do Contrato</Label>
-                          <InputText
-                            value={nullToUndef(vigencia)}
-                            placeholder="Ex: 365 dias"
-                            onChange={e => {
-                              let dataEncerramento = calculaDataEncerramento(
-                                data_assinatura,
-                                data_ordem_inicio,
-                                referencia_encerramento,
-                                e.target.value,
-                                unidade_vigencia,
-                              );
-                              setContrato({
-                                ...contrato,
-                                dataEncerramento: dataEncerramento,
-                                vigencia: e.target.value,
-                              });
-                            }}
-                            name="vigencia"
-                            required
-                            type="text"
-                            disabled={modoVisualizacao}
-                          />
-                        </div>
-                        <div className="input-group-append mt-auto col-6">
-                          <Input
-                            type="select"
-                            value={unidade_vigencia}
-                            onChange={event => {
-                              let dataEncerramento = calculaDataEncerramento(
-                                data_assinatura,
-                                data_ordem_inicio,
-                                referencia_encerramento,
-                                vigencia,
-                                event.target.value,
-                              );
-                              setContrato({
-                                ...contrato,
-                                dataEncerramento: dataEncerramento,
-                                unidade_vigencia: event.target.value,
-                              });
-                            }}
-                            name="unidade_vigencia"
-                            disabled={modoVisualizacao}
-                          >
-                            <option value="DIAS">Dias</option>
-                            <option value="MESES">Meses</option>
-                          </Input>
-                        </div>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col sm={12} xs={12} md={12} lg={6} xl={6}>
-                    <FormGroup>
-                      <Label>Data de Encerramento do Contrato</Label>
-                      <Input value={dataEncerramento || ""} disabled={true} />
-                    </FormGroup>
-                  </Col>
-                </Row>
-              </Col>
-              <Col sm={12} xs={12} lg={3} xl={3}>
-                <Row>
-                  <Col>
-                    <Label for="dataAssinatura">Contagem Vencimento</Label>
-                    <br />
-                    <Card className="text-center p-5">
-                      <h2
-                        style={{
-                          color: corDoPrazo(contrato.dias_para_o_encerramento),
-                        }}
-                        className="font-weight-bold"
-                      >
-                        {contrato.dias_para_o_encerramento} dias
-                      </h2>
-                    </Card>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </CoadAccordion>
-
-          <AccordionEmpresaContratada
-            atualizaEmpresa={e => setEmpresa(e)}
-            empresaContratada={empresa}
-            disabilitado={modoVisualizacao}
-            aberto={false}
-          />
-
-          <CoadAccordion titulo={"Orçamento e Finanças"}>
-            <DotacoesOrcamentarias
-              dotacoes={dotacoes}
-              setDotacoes={dotacoes_orcamentarias =>
-                setDotacoes(dotacoes_orcamentarias)
-              }
-              valorTotal={valorTotal}
-              setValorTotal={valor_total => setValorTotal(valor_total)}
-              disabled={modoVisualizacao}
-            />
-          </CoadAccordion>
-          <CoadAccordion titulo="Objeto">
-            <FormGroup>
-              <div className="p-grid">
-                <div className="p-col-6">
-                  <Label className="font-weight-bold">
-                    Categoria de objeto
-                  </Label>
-                  <SelecionaTipoServico
-                    className="w-100"
-                    tipoServico={tipo_servico}
-                    onSelect={value =>
-                      setObjeto({
-                        ...objeto,
-                        tipo_servico: value,
-                        nome_objeto: value.nome,
-                      })
-                    }
-                    ref={tipoServicoRef}
-                    disabled={contrato.edital ? true : modoVisualizacao}
-                  />
-                </div>
-
-                <div className="p-col-6 mt-4">
-                  <AntButton
-                    className="mt-2 font-weight-bold"
-                    disabled={contrato.edital ? true : modoVisualizacao}
-                    type="link"
-                    size="small"
-                    onClick={() => setModalCadastrarObjeto(true)}
-                  >
-                    + Cadastrar novo
-                  </AntButton>
-                </div>
-                <div className="p-col-12">
-                  <Label className="font-weight-bold">
-                    Descrição do objeto do edital
-                  </Label>
-                  <Editor
-                    style={{ height: "120px" }}
-                    value={descricao_objeto}
-                    headerTemplate={<EditorHeader />}
-                    onTextChange={value =>
-                      setObjeto({
-                        ...objeto,
-                        descricao_objeto: value.htmlValue,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-            </FormGroup>
-          </CoadAccordion>
-          <CoadAccordion titulo={"Gestão de Contrato"}>
-            <Row>
-              <Col lg={8} xl={8}>
-                <FormGroup>
-                  <Label form="coordenador">Gestor do Contrato</Label>
-                  <MultiSelect
-                    id="dotacoes"
-                    className="w-100"
-                    value={gestores}
-                    onChange={e => {
-                      setGestao({ ...gestao, gestores: e.target.value });
-                    }}
-                    disabled={modoVisualizacao}
-                    filter
-                    optionLabel="nome"
-                    options={usuarios}
-                    placeholder="Selecione..."
-                    maxSelectedLabels={1}
-                    selectedItemsLabel={"{0} usuários selecionados"}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-            {gestores &&
-              gestores.map((usuario, index) => (
-                <>
-                  <Row className="mt-3" key={index}>
-                    <Col lg={5} xl={5}>
-                      <Label form="numeroProcesso">Gestor do Contrato</Label>
-                      <InputText
-                        value={usuario.nome}
-                        className="w-100"
-                        disabled={true}
+                        keepInvalid={true}
+                        locale="pt"
+                        dateFormat="dd/mm/yy"
+                        showIcon={true}
+                        id="data_assinatura"
                       />
                     </Col>
-                    <Col lg={5} xl={5}>
-                      <Label form="numeroProcesso">
-                        E-mail Gestor de Contrato
-                      </Label>
-                      <InputText
-                        value={usuario.email}
-                        className="w-100"
-                        disabled={true}
-                      />
-                    </Col>
-                    <Col lg={1} xl={1}>
-                      <Button
-                        className="btn btn-coad-background-outline btn-empenho"
-                        onClick={() => {
-                          let gestoresCopy = gestores;
-                          gestoresCopy.splice(index, 1);
-                          setGestao({
-                            ...gestao,
-                            gestores: gestoresCopy,
+                    <Col xs={12} sm={12} md={12} lg={6} xl={6} className="mb-3">
+                      <Label>Data da Ordem de Início</Label>
+                      <br />
+                      <Calendar
+                        value={data_ordem_inicio}
+                        onChange={e => {
+                          let dataEncerramento = calculaDataEncerramento(
+                            data_assinatura,
+                            e.value,
+                            referencia_encerramento,
+                            vigencia,
+                            unidade_vigencia,
+                          );
+                          setContrato({
+                            ...contrato,
+                            dataEncerramento: dataEncerramento,
+                            data_ordem_inicio: e.value,
                           });
                         }}
-                        disabled={modoVisualizacao}
-                      >
-                        X
-                      </Button>
+                        keepInvalid={true}
+                        showIcon={true}
+                        locale="pt"
+                        dateFormat="dd/mm/yy"
+                      />
                     </Col>
                   </Row>
-                </>
-              ))}
-          </CoadAccordion>
+                  <Row>
+                    <Col sm={12} xs={12} md={12} lg={6} xl={6}>
+                      <FormGroup>
+                        <Label>Referência para cálculo do encerramento</Label>
+                        <Dropdown
+                          options={referenciaEncerramentoOptions}
+                          value={referencia_encerramento}
+                          defaultValue={referencia_encerramento}
+                          onChange={e => {
+                            let dataEncerramento = calculaDataEncerramento(
+                              data_assinatura,
+                              data_ordem_inicio,
+                              e.target.value,
+                              vigencia,
+                              unidade_vigencia,
+                            );
+                            setContrato({
+                              ...contrato,
+                              dataEncerramento: dataEncerramento,
+                              referencia_encerramento: e.target.value,
+                            });
+                          }}
+                          className="w-100"
+                        />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={12} xs={12} md={12} lg={6} xl={6}>
+                      <div className="row">
+                        <div className="input-group vigencia-contrato">
+                          <div className="col-6">
+                            <Label>Período de Vigência do Contrato</Label>
+                            <InputText
+                              value={nullToUndef(vigencia)}
+                              placeholder="Ex: 365 dias"
+                              onChange={e => {
+                                let dataEncerramento = calculaDataEncerramento(
+                                  data_assinatura,
+                                  data_ordem_inicio,
+                                  referencia_encerramento,
+                                  e.target.value,
+                                  unidade_vigencia,
+                                );
+                                setContrato({
+                                  ...contrato,
+                                  dataEncerramento: dataEncerramento,
+                                  vigencia: e.target.value,
+                                });
+                              }}
+                              name="vigencia"
+                              required
+                              type="text"
+                            />
+                          </div>
+                          <div className="input-group-append mt-auto col-6">
+                            <Input
+                              type="select"
+                              value={unidade_vigencia}
+                              onChange={event => {
+                                let dataEncerramento = calculaDataEncerramento(
+                                  data_assinatura,
+                                  data_ordem_inicio,
+                                  referencia_encerramento,
+                                  vigencia,
+                                  event.target.value,
+                                );
+                                setContrato({
+                                  ...contrato,
+                                  dataEncerramento: dataEncerramento,
+                                  unidade_vigencia: event.target.value,
+                                });
+                              }}
+                              name="unidade_vigencia"
+                            >
+                              <option value="DIAS">Dias</option>
+                              <option value="MESES">Meses</option>
+                            </Input>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col sm={12} xs={12} md={12} lg={6} xl={6}>
+                      <FormGroup>
+                        <Label>Data de Encerramento do Contrato</Label>
+                        <Input value={dataEncerramento || ""} disabled={true} />
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col sm={12} xs={12} lg={3} xl={3}>
+                  <Row>
+                    <Col>
+                      <Label for="dataAssinatura">Contagem Vencimento</Label>
+                      <br />
+                      <Card className="text-center p-5">
+                        <h2
+                          style={{
+                            color: corDoPrazo(
+                              contrato.dias_para_o_encerramento,
+                            ),
+                          }}
+                          className="font-weight-bold"
+                        >
+                          {contrato.dias_para_o_encerramento} dias
+                        </h2>
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </CoadAccordion>
 
-          <CoadAccordion titulo={"Unidades Atendidas"}>
-            <UnidadesEnvolvidas
-              contrato={contrato}
-              disabilitado={modoVisualizacao}
-              toast={toast}
-              setUnidadesSelecionadas={setUnidadesSelecionadas}
+            <AccordionEmpresaContratada
+              atualizaEmpresa={e => setEmpresa(e)}
+              empresaContratada={empresa}
+              aberto={false}
             />
-          </CoadAccordion>
-          <CoadAccordion titulo={"Anexos"}>
-            <Anexos
-              disabilitado={modoVisualizacao}
-              selecionarDocsDre={selecionarDocsDre}
-              docsDreSelecionados={docsDre}
-              contrato={contrato}
-            />
-          </CoadAccordion>
-          <CoadAccordion titulo={"Observações"}>
-            <Editor
-              style={{ height: "320px" }}
-              value={observacoes}
-              // readOnly={modoVisualizacao}
-              onTextChange={e => setObservacoes(e.htmlValue)}
-              headerTemplate={
-                <span className="ql-formats">
-                  <button className="ql-bold" aria-label="Bold"></button>
-                  <button className="ql-italic" aria-label="Italic"></button>
-                  <button
-                    className="ql-underline"
-                    aria-label="Underline"
-                  ></button>
-                  <button className="ql-list" value="ordered"></button>
-                  <button className="ql-list" value="bullet"></button>
-                </span>
-              }
-            />
-          </CoadAccordion>
-          <Row className="mt-3">
-            <Col lg={6}>
-              <Button
-                className="btn btn-coad-background-outline"
-                disabled={true}
-              >
-                <i className="fas fa-history" /> Histórico
-              </Button>
-            </Col>
-            <Col lg={6} className="d-flex flex-row-reverse">
-              <Button
-                className="btn btn-coad-background-outline"
-                onClick={() =>
-                  incluir ? handleConfimarCriacao() : handleConfimarEdicao()
+
+            <CoadAccordion titulo={"Orçamento e Finanças"}>
+              <DotacoesOrcamentarias
+                dotacoes={dotacoes}
+                setDotacoes={dotacoes_orcamentarias =>
+                  setDotacoes(dotacoes_orcamentarias)
                 }
-                disabled={modoVisualizacao || !habilitaBotao}
-              >
-                Salvar
-              </Button>
-              <Button
-                onClick={() => redirect("#/gestao-contratos")}
-                className="btn-coad-blue mx-2"
-              >
-                <i className="fas fa-arrow-left" /> Voltar
-              </Button>
-            </Col>
-          </Row>
-        </Container>
+                valorTotal={valorTotal}
+                setValorTotal={valor_total => setValorTotal(valor_total)}
+              />
+            </CoadAccordion>
+            <CoadAccordion titulo="Objeto de Contrato">
+              <FormGroup>
+                <div className="p-grid">
+                  <div className="p-col-6">
+                    <Label className="font-weight-bold">
+                      Categoria de objeto
+                    </Label>
+                    <SelecionaTipoServico
+                      className="w-100"
+                      tipoServico={tipo_servico}
+                      onSelect={value =>
+                        setObjeto({
+                          ...objeto,
+                          tipo_servico: value,
+                          nome_objeto: value.nome,
+                        })
+                      }
+                      ref={tipoServicoRef}
+                      disabled={contrato.edital ? true : false}
+                    />
+                  </div>
+
+                  <div className="p-col-6 mt-4">
+                    <AntButton
+                      className="mt-2 font-weight-bold"
+                      disabled={contrato.edital ? true : false}
+                      type="link"
+                      size="small"
+                      onClick={() => setModalCadastrarObjeto(true)}
+                    >
+                      + Cadastrar novo
+                    </AntButton>
+                  </div>
+                  <div className="p-col-12">
+                    <Label className="font-weight-bold">
+                      Descrição do objeto do edital
+                    </Label>
+                    <Editor
+                      style={{ height: "120px" }}
+                      value={descricao_objeto}
+                      headerTemplate={<EditorHeader />}
+                      onTextChange={value =>
+                        setObjeto({
+                          ...objeto,
+                          descricao_objeto: value.htmlValue,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              </FormGroup>
+            </CoadAccordion>
+            <CoadAccordion titulo={"Gestão de Contrato"}>
+              <Row>
+                <Col lg={8} xl={8}>
+                  <FormGroup>
+                    <Label form="coordenador">Gestor do Contrato</Label>
+                    <MultiSelect
+                      id="dotacoes"
+                      className="w-100"
+                      value={gestores}
+                      onChange={e => {
+                        setGestao({ ...gestao, gestores: e.target.value });
+                      }}
+                      filter
+                      optionLabel="nome"
+                      options={usuarios}
+                      placeholder="Selecione..."
+                      maxSelectedLabels={1}
+                      selectedItemsLabel={"{0} usuários selecionados"}
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              {gestores &&
+                gestores.map((usuario, index) => (
+                  <>
+                    <Row className="mt-3" key={index}>
+                      <Col lg={5} xl={5}>
+                        <Label form="numeroProcesso">Gestor do Contrato</Label>
+                        <InputText
+                          value={usuario.nome}
+                          className="w-100"
+                          disabled={true}
+                        />
+                      </Col>
+                      <Col lg={5} xl={5}>
+                        <Label form="numeroProcesso">
+                          E-mail Gestor de Contrato
+                        </Label>
+                        <InputText
+                          value={usuario.email}
+                          className="w-100"
+                          disabled={true}
+                        />
+                      </Col>
+                      <Col lg={1} xl={1}>
+                        <Button
+                          className="btn btn-coad-background-outline btn-empenho"
+                          onClick={() => {
+                            let gestoresCopy = gestores;
+                            gestoresCopy.splice(index, 1);
+                            setGestao({
+                              ...gestao,
+                              gestores: gestoresCopy,
+                            });
+                          }}
+                        >
+                          X
+                        </Button>
+                      </Col>
+                    </Row>
+                  </>
+                ))}
+            </CoadAccordion>
+
+            <CoadAccordion titulo={"Unidades Atendidas"}>
+              <UnidadesEnvolvidas
+                contrato={contrato}
+                toast={toast}
+                setUnidadesSelecionadas={setUnidadesSelecionadas}
+              />
+            </CoadAccordion>
+            <CoadAccordion titulo={"Anexos"}>
+              <Anexos
+                selecionarDocsDre={selecionarDocsDre}
+                docsDreSelecionados={docsDre}
+                contrato={contrato}
+              />
+            </CoadAccordion>
+            <CoadAccordion titulo={"Observações"}>
+              <Editor
+                style={{ height: "320px" }}
+                value={observacoes}
+                onTextChange={e => setObservacoes(e.htmlValue)}
+                headerTemplate={
+                  <span className="ql-formats">
+                    <button className="ql-bold" aria-label="Bold"></button>
+                    <button className="ql-italic" aria-label="Italic"></button>
+                    <button
+                      className="ql-underline"
+                      aria-label="Underline"
+                    ></button>
+                    <button className="ql-list" value="ordered"></button>
+                    <button className="ql-list" value="bullet"></button>
+                  </span>
+                }
+              />
+            </CoadAccordion>
+            <Row className="my-4">
+              <Col lg={6}>
+                <Button
+                  onClick={() => handleOnClickVoltar()}
+                  className="btn btn-coad-background-outline mx-2"
+                >
+                  <i className="fas fa-arrow-left" /> Voltar
+                </Button>
+              </Col>
+              <Col lg={6} className="d-flex flex-row-reverse">
+                <Button
+                  className="btn btn-coad-primary"
+                  onClick={() =>
+                    incluir ? handleConfimarCriacao() : handleConfimarEdicao()
+                  }
+                  disabled={!habilitaBotao}
+                >
+                  Salvar Contrato
+                </Button>
+                <Button
+                  onClick={() => handleCancelar()}
+                  className="btn btn-coad-background-outline mx-2"
+                >
+                  Cancelar
+                </Button>
+              </Col>
+            </Row>
+          </TabPanel>
+          {!incluir && (
+            <TabPanel header="Intercorrências">
+              Intercorrências em construção...
+            </TabPanel>
+          )}
+          {!incluir && (
+            <TabPanel header="Aditamentos">
+              Aditamentos em construção...
+            </TabPanel>
+          )}
+        </TabView>
       </Page>
     </>
   );

@@ -25,8 +25,8 @@ export default props => {
   } = props;
   const styleTipoMensal = { color: "#42474A", fontWeight: "bold" };
   return (
-    <Row className="w-100">
-      <Col sm={12} md={12} xs={12} lg={8} xl={8}>
+    <Row className="w-100 cards-contratos">
+      <Col sm={12} md={12} xs={12} lg={8} xl={8} className="card-servico">
         <Card size="small" className="coad-card-superior">
           <Row>
             <Col span={8}>
@@ -61,7 +61,7 @@ export default props => {
           </Row>
         </Card>
       </Col>
-      <Col sm={12} xs={12} md={12} xl={4} lg={4}>
+      <Col sm={12} xs={12} md={12} xl={4} lg={4} className="card-contagem">
         <Card size="small" className="coad-card-superior">
           <Row>
             <Col>
