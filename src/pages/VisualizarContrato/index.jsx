@@ -56,7 +56,7 @@ const VisualizarContratos = () => {
   const tipoServicoRef = useRef(null);
 
   const [incluir, setIncluir] = useState(true);
-  const [accodionIncluir, setAccodionIncluir] = useState(false);
+  const [accordionIncluir, setAccordionIncluir] = useState(false);
   const [contrato, setContrato] = useState({
     referencia_encerramento: DATA_ORDEM_INICIO,
     unidade_vigencia: "DIAS",
@@ -89,7 +89,7 @@ const VisualizarContratos = () => {
         $(".ql-editor").prop("contenteditable", "false");
       } else {
         setGestao({ usuarios });
-        setAccodionIncluir(true);
+        setAccordionIncluir(true);
       }
     };
     buscarDados();
@@ -228,10 +228,10 @@ const VisualizarContratos = () => {
   const handleConfimarCriacao = () => {
     setModalCadastro(true);
   };
-  const handleComeBack = () => {
+  const handleOnClickVoltar = () => {
     setModalVoltar(true);
   };
-  const cancelaComeBack = () => {
+  const cancelaOnClickVoltar = () => {
     setModalVoltar(false);
   };
   const handleCancelar = () => {
@@ -368,7 +368,7 @@ const VisualizarContratos = () => {
           { label: "Gestão de Contratos", url: "#" + GESTAO_CONTRATOS },
           { label: "Novo Contrato", url: "#" + VISUALIZAR_CONTRATOS },
         ]}
-        comeback={() => handleComeBack()}
+        onClickVoltar={() => handleOnClickVoltar()}
       >
         <CardSuperior
           tipoServico={nome_objeto}
@@ -440,7 +440,7 @@ const VisualizarContratos = () => {
               visible={modalVoltar}
               style={{ width: "50vw" }}
               modal={true}
-              onHide={() => cancelaComeBack()}
+              onHide={() => cancelaOnClickVoltar()}
               footer={
                 <div className="footer mb-2">
                   <button
@@ -451,7 +451,7 @@ const VisualizarContratos = () => {
                   </button>
                   <button
                     className="btn btn-coad-primary"
-                    onClick={() => cancelaComeBack()}
+                    onClick={() => cancelaOnClickVoltar()}
                   >
                     Permanecer
                   </button>
@@ -533,7 +533,6 @@ const VisualizarContratos = () => {
               <Col lg={6}></Col>
               <Col lg={6} className="d-flex flex-row-reverse">
                 <Button
-                  //className="btn btn-coad-background-outline"
                   className="btn btn-coad-primary"
                   onClick={() =>
                     incluir ? handleConfimarCriacao() : handleConfimarEdicao()
@@ -551,7 +550,7 @@ const VisualizarContratos = () => {
               </Col>
             </Row>
             <CoadAccordion
-              aberto={accodionIncluir}
+              aberto={accordionIncluir}
               titulo={"Informações do Contrato"}
             >
               <Row>
@@ -972,7 +971,7 @@ const VisualizarContratos = () => {
             <Row className="my-4">
               <Col lg={6}>
                 <Button
-                  onClick={() => handleComeBack()}
+                  onClick={() => handleOnClickVoltar()}
                   className="btn btn-coad-background-outline mx-2"
                 >
                   <i className="fas fa-arrow-left" /> Voltar
@@ -980,7 +979,6 @@ const VisualizarContratos = () => {
               </Col>
               <Col lg={6} className="d-flex flex-row-reverse">
                 <Button
-                  //className="btn btn-coad-background-outline"
                   className="btn btn-coad-primary"
                   onClick={() =>
                     incluir ? handleConfimarCriacao() : handleConfimarEdicao()

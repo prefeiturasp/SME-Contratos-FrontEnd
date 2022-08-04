@@ -171,7 +171,7 @@ class Page extends Component {
             <Col lg={2} className="comeback">
               {this.props.titulo && (
                 <Button
-                  onClick={this.props.comeback}
+                  onClick={this.props.onClickVoltar}
                   className="btn btn-coad-background-outline"
                 >
                   <i className="fas fa-arrow-left" /> Voltar
