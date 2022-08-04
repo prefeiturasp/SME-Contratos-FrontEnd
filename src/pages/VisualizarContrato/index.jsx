@@ -416,7 +416,7 @@ const VisualizarContratos = () => {
               modal={true}
               onHide={() => fechaCancelar()}
               footer={
-                <div>
+                <div className="mb-2">
                   <button
                     className="btn btn-coad-background-outline"
                     onClick={() => fechaCancelar()}
@@ -442,7 +442,7 @@ const VisualizarContratos = () => {
               modal={true}
               onHide={() => cancelaComeBack()}
               footer={
-                <div className="footer">
+                <div className="footer mb-2">
                   <button
                     className="btn btn-coad-background-outline"
                     onClick={() => redirect("#/gestao-contratos")}
@@ -470,7 +470,7 @@ const VisualizarContratos = () => {
               modal={true}
               onHide={() => cancelaCadastro()}
               footer={
-                <div>
+                <div className="mb-2">
                   <button
                     className="btn btn-coad-background-outline"
                     onClick={() => cancelaCadastro()}
