@@ -8,6 +8,7 @@ import { Editor } from "primereact/editor";
 import { Dropdown } from "primereact/dropdown";
 import EditorHeader from "../../components/Shared/EditorHeader";
 import Anexos from "./Anexos";
+import Aditamentos from "./Aditamentos";
 import {
   createContrato,
   getContratoByUUID,
@@ -1005,7 +1006,7 @@ const VisualizarContratos = () => {
           )}
           {!incluir && (
             <TabPanel header="Aditamentos">
-              Aditamentos em construção...
+              <Aditamentos contrato={contrato} />
             </TabPanel>
           )}
         </TabView>
