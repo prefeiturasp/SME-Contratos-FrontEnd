@@ -859,7 +859,6 @@ const VisualizarContratos = () => {
                     </Label>
                     <Editor
                       id="descricao-objeto"
-                      readonly={true}
                       style={{ height: "120px" }}
                       value={descricao_objeto}
                       headerTemplate={<EditorHeader />}
