@@ -288,6 +288,20 @@ $hoverColor: #431e1e;
   }
 }
 
+.p-checkbox {
+  .p-highlight {
+    border-color: #602a2a !important;
+    background: #602a2a !important;
+  }
+}
+
+.p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.1rem #a78282;
+  border-color: #602a2a;
+}
+
 .layout-topbar {
   .layout-topbar-icons {
     button {

@@ -8,6 +8,7 @@ import { Editor } from "primereact/editor";
 import { Dropdown } from "primereact/dropdown";
 import EditorHeader from "../../components/Shared/EditorHeader";
 import Anexos from "./Anexos";
+import Aditamentos from "./Aditamentos";
 import {
   createContrato,
   getContratoByUUID,
@@ -29,7 +30,6 @@ import { Dialog } from "primereact/dialog";
 import { getUsuariosLookup } from "../../service/Usuarios.service";
 import DotacoesOrcamentarias from "./DotacoesOrcamentarias";
 import { Button as AntButton } from "antd";
-import $ from "jquery";
 import moment from "moment";
 import { criaTipoServico } from "../../service/TiposServico.service";
 import { BAD_REQUEST, CREATED, OK } from "http-status-codes";
@@ -86,7 +86,6 @@ const VisualizarContratos = () => {
         const contrato = await getContratoByUUID(param.uuid);
         setIncluir(false);
         propsToState(contrato, usuarios);
-        $(".ql-editor").prop("contenteditable", "false");
       } else {
         setGestao({ usuarios });
         setAccordionIncluir(true);
@@ -95,9 +94,11 @@ const VisualizarContratos = () => {
     buscarDados();
   }, []);
 
-  useEffect(() => {
-    $(".ql-editor").prop("contenteditable", (!contrato.edital).toString());
-  }, [contrato]);
+  const element = document.getElementById("descricao-objeto");
+  element &&
+    (contrato.edital
+      ? element.classList.add("desativar")
+      : element.classList.remove("desativar"));
 
   const propsToState = (contrato, usuarios) => {
     const tipo_servico = contrato.edital
@@ -176,7 +177,6 @@ const VisualizarContratos = () => {
     };
     const payload = mapStateToPayload(state);
     setModalEdicao(false);
-
     const resultado = await updateContrato(payload, uuid);
     if (resultado.status === OK) {
       setContrato({
@@ -854,9 +854,12 @@ const VisualizarContratos = () => {
                   </div>
                   <div className="p-col-12">
                     <Label className="font-weight-bold">
-                      Descrição do objeto do edital
+                      {contrato.edital
+                        ? "Descrição do objeto do edital"
+                        : "Descreva brevemente o objeto do contrato"}
                     </Label>
                     <Editor
+                      id="descricao-objeto"
                       style={{ height: "120px" }}
                       value={descricao_objeto}
                       headerTemplate={<EditorHeader />}
@@ -1003,7 +1006,7 @@ const VisualizarContratos = () => {
           )}
           {!incluir && (
             <TabPanel header="Aditamentos">
-              Aditamentos em construção...
+              <Aditamentos contrato={contrato} />
             </TabPanel>
           )}
         </TabView>
