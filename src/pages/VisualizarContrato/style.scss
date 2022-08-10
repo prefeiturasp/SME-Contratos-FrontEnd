@@ -73,3 +73,35 @@ $mainColor: #602a2a;
 .desativar {
   pointer-events: none;
 }
+
+.form-aditamentos {
+  padding: 16px;
+
+  .check-objeto {
+    padding: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #602a2a;
+    border-radius: 3px;
+
+    label {
+      margin-bottom: 0;
+      margin-left: 12px;
+    }
+  }
+
+  .checked {
+    background: rgba(67, 30, 30, 0.1);
+  }
+
+  h5 {
+    width: 100%;
+    border-bottom: 0.5px solid #ccc;
+    line-height: 0.2em;
+    margin: 16px 0;
+
+    span {
+      background: #fff;
+      padding-right: 6px;
+    }
+  }
+}
