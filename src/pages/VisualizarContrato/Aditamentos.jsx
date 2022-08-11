@@ -77,11 +77,13 @@ export default ({ contrato }) => {
       aditamento.razoes_aditamento;
     if (mostrarDatasEValores())
       desabilitar =
+        desabilitar &&
         aditamento.data_final &&
         aditamento.data_inicial &&
         aditamento.valor_mensal_atualizado &&
         aditamento.valor_total_atualizado;
-    if (mostrarValorTotal()) desabilitar = aditamento.valor_aditamento;
+    if (mostrarValorTotal())
+      desabilitar = desabilitar && aditamento.valor_aditamento;
     return !desabilitar;
   };
 
@@ -129,7 +131,7 @@ export default ({ contrato }) => {
                   })
                 }
                 autoClear={false}
-                placeholder="Ex.: XXXXX/XXXX"
+                placeholder="Ex.: XXXXX/0000"
               />
             </Col>
           </Row>
