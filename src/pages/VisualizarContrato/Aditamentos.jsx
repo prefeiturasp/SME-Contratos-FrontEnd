@@ -1,5 +1,4 @@
 import { Button } from "primereact/button";
-import { Calendar } from "primereact/calendar";
 import { Checkbox } from "primereact/checkbox";
 import { Editor } from "primereact/editor";
 import { InputMask } from "primereact/inputmask";
@@ -14,6 +13,7 @@ import {
 } from "../../service/Aditamentos.service";
 import useToast from "../../hooks/useToast";
 import { Dialog } from "primereact/dialog";
+import { SelecionaData } from "../../components/Contratos/SelecionaData";
 
 export default ({ contrato }) => {
   const [aditamento, setAditamento] = useState(null);
@@ -185,39 +185,33 @@ export default ({ contrato }) => {
               <Col lg={4} xl={4} className="mt-3">
                 <Label>Atualizar a partir DE</Label>
                 <br />
-                <Calendar
+                <SelecionaData
                   className="w-100"
-                  value={aditamento.data_inicial}
-                  onChange={e => {
+                  placeholder={"De"}
+                  data={aditamento.data_inicial}
+                  maxDate={aditamento.data_final}
+                  onSelect={e => {
                     setAditamento({
                       ...aditamento,
-                      data_inicial: e.value,
+                      data_inicial: e,
                     });
                   }}
-                  readOnlyInput
-                  locale="pt"
-                  dateFormat="dd/mm/yy"
-                  showIcon={true}
-                  id="data_assinatura"
                 />
               </Col>
               <Col lg={4} xl={4} className="mt-3">
                 <Label>ATÉ</Label>
                 <br />
-                <Calendar
+                <SelecionaData
                   className="w-100"
-                  value={aditamento.data_final}
-                  onChange={e => {
+                  placeholder={"Até"}
+                  data={aditamento.data_final}
+                  minDate={aditamento.data_inicial}
+                  onSelect={e => {
                     setAditamento({
                       ...aditamento,
-                      data_final: e.value,
+                      data_final: e,
                     });
                   }}
-                  readOnlyInput
-                  locale="pt"
-                  dateFormat="dd/mm/yy"
-                  showIcon={true}
-                  id="data_assinatura"
                 />
               </Col>
             </Row>
