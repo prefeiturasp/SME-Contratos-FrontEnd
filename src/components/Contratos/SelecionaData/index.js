@@ -28,6 +28,7 @@ export class SelecionaData extends Component {
         showIcon={true}
         placeholder={this.props.placeholder}
         showButtonBar={true}
+        keepInvalid={true}
       />
     );
   }
