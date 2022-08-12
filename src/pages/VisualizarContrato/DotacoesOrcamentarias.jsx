@@ -61,7 +61,7 @@ export default ({
               <Button
                 className="btn btn-coad-background-outline btn-empenho"
                 onClick={() => {
-                  let dotacoesCopy = dotacoes;
+                  let dotacoesCopy = [...dotacoes];
                   dotacoesCopy.splice(index, 1);
                   setDotacoes(dotacoesCopy);
                 }}
@@ -77,7 +77,7 @@ export default ({
                   dotacao.empenhos = dotacao.empenhos
                     ? [...dotacao.empenhos, {}]
                     : [{}];
-                  setDotacoes(dotacoes);
+                  setDotacoes([...dotacoes]);
                 }}
                 disabled={disabled}
               >
@@ -120,7 +120,7 @@ export default ({
                   <Button
                     className="btn btn-coad-background-outline btn-empenho"
                     onClick={() => {
-                      let dotacoesCopy = dotacoes;
+                      let dotacoesCopy = [...dotacoes];
                       dotacoesCopy[index].empenhos.splice(indexEmp, 1);
                       setDotacoes(dotacoesCopy);
                     }}
