@@ -4,7 +4,7 @@ export const TabelaUnidadesParaSelecionar = props => {
   const { unidades, todosSelecionados, checkUnidade, selecionarTodos } = props;
   return (
     <div className="tabela-unidades mt-4">
-      <table>
+      <table className="tabela-resultado-buscas-unidades">
         <thead>
           <tr className="row">
             <th className="col-check">
