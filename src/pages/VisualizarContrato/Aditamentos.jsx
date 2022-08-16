@@ -17,6 +17,7 @@ import { SelecionaData } from "../../components/Contratos/SelecionaData";
 
 export default ({ contrato }) => {
   const [aditamento, setAditamento] = useState(null);
+  const [aditamentos, setAditamentos] = useState([]);
   const [objetos, setObjetos] = useState([]);
   const [modalCancelar, setModalCancelar] = useState(false);
   const toast = useToast();
@@ -28,6 +29,7 @@ export default ({ contrato }) => {
     };
 
     buscaObjetos();
+    setAditamentos(contrato.aditamentos);
   }, []);
 
   const cancelarAditamento = () => {
@@ -47,6 +49,7 @@ export default ({ contrato }) => {
     if (resultado.uuid) {
       toast.showSuccess("Aditamento gravado com sucesso!");
       setAditamento(null);
+      setAditamentos([...aditamentos, resultado]);
     } else {
       toast.showError("Ocorreu um erro, tente novamente!");
     }
@@ -89,7 +92,7 @@ export default ({ contrato }) => {
 
   return (
     <div className="form-aditamentos">
-      {!aditamento && (
+      {!aditamento && aditamentos.length === 0 && (
         <Row>
           <Col lg={12} xl={12}>
             <div className="text-center w-100 mt-4 mb-4">
@@ -106,6 +109,66 @@ export default ({ contrato }) => {
             </div>
           </Col>
         </Row>
+      )}
+
+      {!aditamento && aditamentos.length > 0 && (
+        <>
+          <Row className="mb-3">
+            <Col lg={12} className="d-flex flex-row-reverse">
+              <Button
+                className="btn btn-coad-background-outline"
+                onClick={() =>
+                  setAditamento({
+                    objeto_aditamento: [],
+                  })
+                }
+              >
+                Novo Aditamento
+              </Button>
+            </Col>
+          </Row>
+          {aditamentos.map((adit, index) => (
+            <div key={index}>
+              <Row className="mb-3">
+                <Col lg={6}>
+                  <span>Termo aditivo nº: {adit.termo_aditivo}</span>
+                </Col>
+                <Col lg={6} className="d-flex flex-row-reverse">
+                  <Button className="btn btn-coad-primary" onClick={() => {}}>
+                    -
+                  </Button>
+                  <Button
+                    onClick={() => {}}
+                    className="btn btn-coad-background-outline mx-2"
+                  >
+                    +
+                  </Button>
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <table className="tabela-aditamentos">
+                  <tr>
+                    <td>a</td>
+                    <td>a</td>
+                    <td>a</td>
+                    <td>a</td>
+                  </tr>
+                  <tr>
+                    <td>aaaa</td>
+                  </tr>
+                  <tr>
+                    <td>aaaa</td>
+                  </tr>
+                </table>
+              </Row>
+            </div>
+          ))}
+          <Row>
+            <Col lg={12} xl={12}>
+              xdd
+            </Col>
+          </Row>
+        </>
       )}
 
       {aditamento && (

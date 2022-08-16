@@ -108,6 +108,7 @@ const VisualizarContratos = () => {
     setEmpresa(empresa_contratada);
     setContrato({
       ...contrato,
+      aditamentos: contrato.aditamentos,
       termo_contrato: contrato.termo_contrato,
       processo: contrato.processo,
       situacao: contrato.situacao,
