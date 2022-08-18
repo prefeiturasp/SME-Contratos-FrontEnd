@@ -14,9 +14,11 @@ import {
 import useToast from "../../hooks/useToast";
 import { Dialog } from "primereact/dialog";
 import { SelecionaData } from "../../components/Contratos/SelecionaData";
+import { formatadoMonetario } from "../../utils/formatador";
 
 export default ({ contrato }) => {
   const [aditamento, setAditamento] = useState(null);
+  const [aditamentos, setAditamentos] = useState([]);
   const [objetos, setObjetos] = useState([]);
   const [modalCancelar, setModalCancelar] = useState(false);
   const toast = useToast();
@@ -28,7 +30,8 @@ export default ({ contrato }) => {
     };
 
     buscaObjetos();
-  }, []);
+    setAditamentos(contrato.aditamentos);
+  }, [contrato.aditamentos]);
 
   const cancelarAditamento = () => {
     toast.showSuccess("Aditamento cancelado com sucesso!");
@@ -47,6 +50,7 @@ export default ({ contrato }) => {
     if (resultado.uuid) {
       toast.showSuccess("Aditamento gravado com sucesso!");
       setAditamento(null);
+      setAditamentos([...aditamentos, resultado]);
     } else {
       toast.showError("Ocorreu um erro, tente novamente!");
     }
@@ -89,7 +93,7 @@ export default ({ contrato }) => {
 
   return (
     <div className="form-aditamentos">
-      {!aditamento && (
+      {!aditamento && aditamentos.length === 0 && (
         <Row>
           <Col lg={12} xl={12}>
             <div className="text-center w-100 mt-4 mb-4">
@@ -106,6 +110,120 @@ export default ({ contrato }) => {
             </div>
           </Col>
         </Row>
+      )}
+
+      {!aditamento && aditamentos.length > 0 && (
+        <>
+          <Row className="mb-3">
+            <Col lg={12} className="d-flex flex-row-reverse pr-0">
+              <Button
+                className="btn btn-coad-background-outline"
+                onClick={() =>
+                  setAditamento({
+                    objeto_aditamento: [],
+                  })
+                }
+              >
+                Novo Aditamento
+              </Button>
+            </Col>
+          </Row>
+          {aditamentos.map((adit, index) => (
+            <div key={index}>
+              {index !== 0 && <hr className="mt-4 mb-4" />}
+              <Row className="mb-3">
+                <Col lg={6} className="pl-0">
+                  <div className="titulo-termo">
+                    Termo aditivo nº: {adit.termo_aditivo}
+                  </div>
+                </Col>
+                <Col lg={6} className="d-flex flex-row-reverse pr-0">
+                  <Button
+                    className="btn btn-coad-background-outline"
+                    onClick={() => {}}
+                  >
+                    <i className="fas fa-trash" />
+                  </Button>
+                  <Button
+                    onClick={() => {}}
+                    className="btn btn-coad-background-outline mx-2"
+                  >
+                    <i className="fas fa-pencil-alt" />
+                  </Button>
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <div className="tabela-aditamentos">
+                  <div className="grid-row">
+                    {adit.data_inicial && (
+                      <div className="grid-item">
+                        <p className="titulo-item">Atualizar a partir DE:</p>
+                        <span className="conteudo-item">
+                          {moment(adit.data_inicial).format("DD/MM/yyyy")}
+                        </span>
+                      </div>
+                    )}
+                    {adit.data_final && (
+                      <div className="grid-item">
+                        <p className="titulo-item">ATÉ:</p>
+                        <span className="conteudo-item">
+                          {moment(adit.data_final).format("DD/MM/yyyy")}
+                        </span>
+                      </div>
+                    )}
+                    {adit.valor_mensal_atualizado && (
+                      <div className="grid-item">
+                        <p className="titulo-item">Valor mensal atualizado:</p>
+                        <span className="conteudo-item">
+                          {formatadoMonetario(adit.valor_mensal_atualizado)}
+                        </span>
+                      </div>
+                    )}
+                    {adit.valor_total_atualizado && (
+                      <div className="grid-item">
+                        <p className="titulo-item">Valor total atualizado:</p>
+                        <span className="conteudo-item">
+                          {formatadoMonetario(adit.valor_total_atualizado)}
+                        </span>
+                      </div>
+                    )}
+                    {adit.valor_aditamento && (
+                      <div className="grid-item">
+                        <p className="titulo-item">Valor do aditamento:</p>
+                        <span className="conteudo-item">
+                          {formatadoMonetario(adit.valor_aditamento)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="grid-row">
+                    <div className="grid-item">
+                      <p className="titulo-item">Objeto do termo aditivo:</p>
+                      <span className="conteudo-item">
+                        {adit.objeto_aditamento.map((objeto, index) => (
+                          <p className="mb-0" key={index}>
+                            {objeto}
+                          </p>
+                        ))}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="grid-row">
+                    <div className="grid-item">
+                      <p className="titulo-item">Razões do aditamento:</p>
+                      <span
+                        className="conteudo-item"
+                        dangerouslySetInnerHTML={{
+                          __html: adit.razoes_aditamento,
+                        }}
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </Row>
+            </div>
+          ))}
+        </>
       )}
 
       {aditamento && (
