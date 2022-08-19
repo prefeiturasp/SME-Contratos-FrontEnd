@@ -10,6 +10,8 @@ import EditorHeader from "../../components/Shared/EditorHeader";
 import {
   getObjetosAditamentos,
   createAditamento,
+  excluiAditamento,
+  alteraAditamento,
 } from "../../service/Aditamentos.service";
 import useToast from "../../hooks/useToast";
 import { Dialog } from "primereact/dialog";
@@ -21,6 +23,10 @@ export default ({ contrato }) => {
   const [aditamentos, setAditamentos] = useState([]);
   const [objetos, setObjetos] = useState([]);
   const [modalCancelar, setModalCancelar] = useState(false);
+  const [modalDeletar, setModalDeletar] = useState(false);
+  const [uuidDelecao, setUuidDelecao] = useState(null);
+  const [edicao, setEdicao] = useState(false);
+
   const toast = useToast();
 
   useEffect(() => {
@@ -39,18 +45,40 @@ export default ({ contrato }) => {
     setModalCancelar(false);
   };
 
-  const salvarAditamento = async () => {
+  const getPayload = () => {
     let payload = { ...aditamento };
     payload.contrato = contrato.uuid;
     if (payload.data_final)
-      payload.data_final = moment(payload.data_final).format("yyyy-MM-DD");
+      payload.data_final = moment(payload.data_final).format("YYYY-MM-DD");
     if (payload.data_inicial)
-      payload.data_inicial = moment(payload.data_inicial).format("yyyy-MM-DD");
+      payload.data_inicial = moment(payload.data_inicial).format("YYYY-MM-DD");
+    return payload;
+  };
+
+  const salvarAditamento = async () => {
+    let payload = getPayload();
     const resultado = await createAditamento(payload);
     if (resultado.uuid) {
       toast.showSuccess("Aditamento gravado com sucesso!");
       setAditamento(null);
       setAditamentos([...aditamentos, resultado]);
+    } else {
+      toast.showError("Ocorreu um erro, tente novamente!");
+    }
+  };
+
+  const editarAditamento = async () => {
+    let payload = getPayload();
+    const resultado = await alteraAditamento(payload);
+    if (resultado.data.uuid) {
+      toast.showSuccess("Aditamento gravado com sucesso!");
+      setAditamento(null);
+      let newAditamentos = [...aditamentos];
+      let index = newAditamentos.findIndex(
+        obj => obj.uuid === resultado.data.uuid,
+      );
+      newAditamentos[index] = resultado.data;
+      setAditamentos(newAditamentos);
     } else {
       toast.showError("Ocorreu um erro, tente novamente!");
     }
@@ -71,6 +99,22 @@ export default ({ contrato }) => {
     return aditamento.objeto_aditamento.includes(
       "MODIFICACAO_VALOR_CONTRATUAL",
     );
+  };
+
+  const deletaAditamento = async uuid => {
+    const resultado = await excluiAditamento(uuid);
+    if (resultado) {
+      toast.showSuccess(
+        "O contrato retornou para a situação anterior.",
+        "Aditamento deletado com sucesso!",
+      );
+      let newAditamentos = [...aditamentos];
+      newAditamentos = newAditamentos.filter(adit => adit.uuid !== uuid);
+      setAditamentos([...newAditamentos]);
+      setModalDeletar(false);
+    } else {
+      toast.showError("Ocorreu um erro, tente novamente!");
+    }
   };
 
   const validaCampos = () => {
@@ -140,13 +184,49 @@ export default ({ contrato }) => {
                 <Col lg={6} className="d-flex flex-row-reverse pr-0">
                   <Button
                     className="btn btn-coad-background-outline"
-                    onClick={() => {}}
+                    onClick={() => {
+                      setModalDeletar(true);
+                      setUuidDelecao(adit.uuid);
+                    }}
+                    tooltip="Excluir"
+                    tooltipOptions={{ position: "top" }}
                   >
                     <i className="fas fa-trash" />
                   </Button>
                   <Button
-                    onClick={() => {}}
+                    onClick={() => {
+                      let newAdit = adit;
+                      newAdit.objeto_aditamento = newAdit.objeto_aditamento.map(
+                        obj => obj.id,
+                      );
+                      if (newAdit.valor_aditamento)
+                        newAdit.valor_aditamento = parseFloat(
+                          newAdit.valor_aditamento,
+                        );
+                      if (newAdit.valor_mensal_atualizado)
+                        newAdit.valor_mensal_atualizado = parseFloat(
+                          newAdit.valor_mensal_atualizado,
+                        );
+                      if (newAdit.valor_total_atualizado)
+                        newAdit.valor_total_atualizado = parseFloat(
+                          newAdit.valor_total_atualizado,
+                        );
+                      if (newAdit.data_inicial)
+                        newAdit.data_inicial = moment(
+                          newAdit.data_inicial,
+                          "yyyy-MM-DD",
+                        ).toDate();
+                      if (newAdit.data_final)
+                        newAdit.data_final = moment(
+                          newAdit.data_final,
+                          "yyyy-MM-DD",
+                        ).toDate();
+                      setAditamento(adit);
+                      setEdicao(true);
+                    }}
                     className="btn btn-coad-background-outline mx-2"
+                    tooltip="Editar"
+                    tooltipOptions={{ position: "top" }}
                   >
                     <i className="fas fa-pencil-alt" />
                   </Button>
@@ -202,7 +282,7 @@ export default ({ contrato }) => {
                       <span className="conteudo-item">
                         {adit.objeto_aditamento.map((objeto, index) => (
                           <p className="mb-0" key={index}>
-                            {objeto}
+                            {objeto.nome}
                           </p>
                         ))}
                       </span>
@@ -221,6 +301,31 @@ export default ({ contrato }) => {
                   </div>
                 </div>
               </Row>
+              <Dialog
+                header="Remover aditivo"
+                visible={modalDeletar}
+                style={{ width: "50vw" }}
+                modal={true}
+                onHide={() => setModalDeletar(false)}
+                footer={
+                  <div className="mb-2">
+                    <button
+                      className="btn btn-coad-background-outline"
+                      onClick={() => setModalDeletar(false)}
+                    >
+                      Não
+                    </button>
+                    <button
+                      className="btn btn-coad-primary"
+                      onClick={() => deletaAditamento(uuidDelecao)}
+                    >
+                      Sim
+                    </button>
+                  </div>
+                }
+              >
+                Deseja remover esse aditivo do contrato?
+              </Dialog>
             </div>
           ))}
         </>
@@ -231,7 +336,9 @@ export default ({ contrato }) => {
           <Row>
             <Col lg={12} xl={12}>
               <h5>
-                <span>Cadastro de novo aditamento:</span>
+                <span>
+                  {edicao ? "Edição de" : "Cadastro de novo"} aditamento:
+                </span>
               </h5>
             </Col>
           </Row>
@@ -415,7 +522,9 @@ export default ({ contrato }) => {
             <Col lg={12} className="d-flex flex-row-reverse">
               <Button
                 className="btn btn-coad-primary"
-                onClick={() => salvarAditamento()}
+                onClick={() =>
+                  edicao ? editarAditamento() : salvarAditamento()
+                }
                 disabled={validaCampos()}
               >
                 Salvar Aditamento
