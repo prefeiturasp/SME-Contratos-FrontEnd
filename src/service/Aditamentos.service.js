@@ -33,6 +33,24 @@ export const createAditamento = payLoad => {
     });
 };
 
+export const excluiAditamento = async uuid => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  const url = `aditamentos/${uuid}/`;
+  return await Api.delete(url, AUTH_HEADER).catch(() => {
+    return false;
+  });
+};
+
+export const alteraAditamento = async payload => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  const url = `aditamentos/${payload.uuid}/`;
+  return await Api.put(url, payload, AUTH_HEADER);
+};
+
 export const getObjetosAditamentos = () => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
