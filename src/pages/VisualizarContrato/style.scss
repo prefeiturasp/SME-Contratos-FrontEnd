@@ -78,6 +78,8 @@ $mainColor: #602a2a;
   padding: 16px;
 
   .check-objeto {
+    display: flex;
+    align-items: center;
     padding: 8px;
     margin-bottom: 8px;
     border: 1px solid #602a2a;
@@ -129,5 +131,19 @@ $mainColor: #602a2a;
     font-size: 18px;
     font-weight: 500;
     padding-top: 10px;
+  }
+
+  .texto-suspensao {
+    color: #b40c02;
+    text-align: right;
+  }
+
+  .dias-suspensao {
+    justify-content: space-between;
+    padding: 0 15px;
+  }
+
+  .red {
+    color: red;
   }
 }

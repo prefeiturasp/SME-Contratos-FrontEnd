@@ -20,8 +20,8 @@ export class SelecionaData extends Component {
         {...this.props}
         value={this.props.data}
         onChange={event => this.setaData(event)}
-        minDate={this.props.minDate ? new Date(this.props.minDate.value) : null}
-        maxDate={this.props.maxDate ? new Date(this.props.maxDate.value) : null}
+        minDate={this.props.minDate ? new Date(this.props.minDate) : null}
+        maxDate={this.props.maxDate ? new Date(this.props.maxDate) : null}
         readOnlyInput
         locale="pt"
         dateFormat="dd/mm/yy"
