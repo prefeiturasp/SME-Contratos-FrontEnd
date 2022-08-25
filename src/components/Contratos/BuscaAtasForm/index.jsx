@@ -29,13 +29,13 @@ export function BuscaAtasForm({ onBuscarClick, onLimparClick }) {
 
   const setaDataInicialAta = data_inicial => {
     if (data_inicial) {
-      setFiltros({ ...filtros, data_inicial });
+      setFiltros({ ...filtros, data_inicial: data_inicial.value });
     }
   };
 
   const setaDataFinalAta = data_final => {
     if (data_final) {
-      setFiltros({ ...filtros, data_final });
+      setFiltros({ ...filtros, data_final: data_final.value });
     }
   };
 

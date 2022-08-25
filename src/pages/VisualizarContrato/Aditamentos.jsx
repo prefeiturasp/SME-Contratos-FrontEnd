@@ -418,7 +418,7 @@ export default ({ contrato }) => {
                   onSelect={e => {
                     setAditamento({
                       ...aditamento,
-                      data_inicial: e,
+                      data_inicial: e.value,
                     });
                   }}
                 />
@@ -434,7 +434,7 @@ export default ({ contrato }) => {
                   onSelect={e => {
                     setAditamento({
                       ...aditamento,
-                      data_final: e,
+                      data_final: e.value,
                     });
                   }}
                 />

@@ -28,13 +28,13 @@ export function BuscaEditaisForm({ onBuscarClick }) {
 
   const setaDataInicialContrato = data_inicial => {
     if (data_inicial) {
-      setFiltros({ ...filtros, data_inicial });
+      setFiltros({ ...filtros, data_inicial: data_inicial.value });
     }
   };
 
   const setaDataFinalContrato = data_final => {
     if (data_final) {
-      setFiltros({ ...filtros, data_final });
+      setFiltros({ ...filtros, data_final: data_final.value });
     }
   };
 

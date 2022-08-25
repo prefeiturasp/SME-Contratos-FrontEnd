@@ -41,13 +41,13 @@ export class BuscaContratosForm extends Component {
 
   setaDataInicialContrato(dataInicial) {
     if (dataInicial) {
-      this.setState({ data_inicial: dataInicial });
+      this.setState({ data_inicial: dataInicial.value });
     }
   }
 
   setaDataFinalContrato(dataFinal) {
     if (dataFinal) {
-      this.setState({ data_final: dataFinal });
+      this.setState({ data_final: dataFinal.value });
     }
   }
 
