@@ -43,6 +43,7 @@ import {
 } from "../../configs/urls.constants";
 import useToast from "../../hooks/useToast";
 import { MultiSelect } from "primereact/multiselect";
+import Intercorrencias from "./Intercorrencias";
 const nullToUndef = v => (v === null ? undefined : v);
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
 
@@ -1002,7 +1003,7 @@ const VisualizarContratos = () => {
           </TabPanel>
           {!incluir && (
             <TabPanel header="Intercorrências">
-              Intercorrências em construção...
+              <Intercorrencias contrato={contrato} />
             </TabPanel>
           )}
           {!incluir && (
