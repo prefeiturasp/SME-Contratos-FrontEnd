@@ -2,11 +2,17 @@ import { getHeaderToken } from "./auth.service";
 import * as CONFIG from "../configs/config.constants";
 import Api from "./Api";
 
-export const createIntercorrencia = payLoad => {
+export const createIntercorrencia = payload => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
   };
-  return Api.post(`${CONFIG.API_URL}/intercorrencias/`, payLoad, AUTH_HEADER)
+  return Api.post(
+    `${
+      CONFIG.API_URL
+    }/intercorrencias/${payload.tipo_intercorrencia.toLowerCase()}/`,
+    payload,
+    AUTH_HEADER,
+  )
     .then(
       res => res.data,
       res => {
@@ -18,12 +24,22 @@ export const createIntercorrencia = payLoad => {
     });
 };
 
-export const getMotivosIntercorrencia = () => {
+export const getMotivosSuspensaoIntercorrencia = () => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
   };
   return Api.get(
-    `${CONFIG.API_URL}/intercorrencias/motivos-suspensao/`,
+    `${CONFIG.API_URL}/intercorrencias/suspensao/motivos-suspensao/`,
+    AUTH_HEADER,
+  ).then(res => res.data);
+};
+
+export const getMotivosRescisaoIntercorrencia = () => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  return Api.get(
+    `${CONFIG.API_URL}/intercorrencias/rescisao/motivos-rescisao/`,
     AUTH_HEADER,
   ).then(res => res.data);
 };
