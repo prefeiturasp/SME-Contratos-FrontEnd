@@ -10,11 +10,13 @@ import { REFERENCIA_ENCERRAMENTO } from "../../configs/config.constants";
 import { RadioButton } from "primereact/radiobutton";
 import {
   createIntercorrencia,
-  getMotivosIntercorrencia,
+  getMotivosSuspensaoIntercorrencia,
+  getMotivosRescisaoIntercorrencia,
 } from "../../service/Intercorrencias.service";
 import { InputText } from "primereact/inputtext";
 import { Editor } from "primereact/editor";
 import EditorHeader from "../../components/Shared/EditorHeader";
+import { Checkbox } from "primereact/checkbox";
 
 const tipoIntercorrenciaOptions = [
   { label: "Suspensão", value: "SUSPENSAO" },
@@ -34,7 +36,8 @@ const opcoesSuspensao = [
 export default ({ contrato }) => {
   const [intercorrencia, setIntercorrencia] = useState(null);
   const [diferenca, setDiferenca] = useState(0);
-  const [motivos, setMotivos] = useState([{}]);
+  const [motivosSuspensao, setMotivosSuspensao] = useState([{}]);
+  const [motivosRescisao, setMotivosRescisao] = useState([{}]);
   const [modalCancelar, setModalCancelar] = useState(false);
   const [modalSalvar, setModalSalvar] = useState(false);
 
@@ -42,9 +45,12 @@ export default ({ contrato }) => {
 
   useEffect(() => {
     const buscaMotivos = async () => {
-      let response = await getMotivosIntercorrencia();
-      let obj = response.map(x => ({ label: x.nome, value: x.id }));
-      setMotivos(obj);
+      let motSuspensao = await getMotivosSuspensaoIntercorrencia();
+      motSuspensao = motSuspensao.map(x => ({ label: x.nome, value: x.id }));
+      setMotivosSuspensao(motSuspensao);
+
+      let motRecisao = await getMotivosRescisaoIntercorrencia();
+      setMotivosRescisao(motRecisao);
     };
 
     buscaMotivos();
@@ -59,6 +65,10 @@ export default ({ contrato }) => {
   const getPayload = () => {
     let payload = { ...intercorrencia };
     payload.contrato = contrato.uuid;
+    if (payload.data_rescisao)
+      payload.data_rescisao = moment(payload.data_rescisao).format(
+        "YYYY-MM-DD",
+      );
     if (payload.data_final)
       payload.data_final = moment(payload.data_final).format("YYYY-MM-DD");
     if (payload.data_inicial)
@@ -72,6 +82,7 @@ export default ({ contrato }) => {
     if (resultado.uuid) {
       toast.showSuccess("Intercorrência gravado com sucesso!");
       setIntercorrencia(null);
+      setModalSalvar(false);
     } else {
       toast.showError("Ocorreu um erro, tente novamente!");
     }
@@ -104,17 +115,27 @@ export default ({ contrato }) => {
 
   const validaCampos = () => {
     let desabilitar = false;
-    desabilitar =
-      intercorrencia.tipo_intercorrencia &&
-      intercorrencia.data_inicial &&
-      intercorrencia.data_final &&
-      intercorrencia.motivo_suspensao &&
-      intercorrencia.descricao_suspensao;
-    if (
-      intercorrencia.motivo_suspensao === motivos[0].value ||
-      intercorrencia.motivo_suspensao === motivos[1].value
-    )
-      desabilitar = desabilitar && intercorrencia.opcao_suspensao;
+    desabilitar = intercorrencia.tipo_intercorrencia;
+    if (intercorrencia.tipo_intercorrencia === "SUSPENSAO") {
+      desabilitar =
+        intercorrencia.tipo_intercorrencia &&
+        intercorrencia.data_inicial &&
+        intercorrencia.data_final &&
+        intercorrencia.motivo_suspensao &&
+        intercorrencia.descricao_suspensao;
+      if (
+        intercorrencia.motivo_suspensao === motivosSuspensao[0].value ||
+        intercorrencia.motivo_suspensao === motivosSuspensao[1].value
+      )
+        desabilitar = desabilitar && intercorrencia.opcao_suspensao;
+    }
+    if (intercorrencia.tipo_intercorrencia === "RESCISAO") {
+      desabilitar =
+        intercorrencia.data_rescisao &&
+        intercorrencia.motivo_rescisao &&
+        intercorrencia.motivo_rescisao.length > 0;
+    }
+
     return !desabilitar;
   };
 
@@ -144,7 +165,7 @@ export default ({ contrato }) => {
           <Row>
             <Col lg={12} xl={12}>
               <h5>
-                <span>Cadastro de nova intercorrência:</span>
+                <span>Cadastro de Nova Intercorrência:</span>
               </h5>
             </Col>
           </Row>
@@ -160,7 +181,7 @@ export default ({ contrato }) => {
                     tipo_intercorrencia: e.target.value,
                   });
                 }}
-                placeholder="Selecione um Tipo"
+                placeholder="Selecione uma intercorrência"
                 className="w-100"
               />
             </Col>
@@ -205,7 +226,28 @@ export default ({ contrato }) => {
                 </Col>
               </>
             )}
+            {intercorrencia.tipo_intercorrencia === "RESCISAO" && (
+              <Col lg={4} xl={4} className="mt-3">
+                <Label>Data de Rescisão</Label>
+                <br />
+                <SelecionaData
+                  className="w-100"
+                  placeholder={"Selecione uma data"}
+                  data={intercorrencia.data_rescisao}
+                  minDate={retornaDataInicioContrato()}
+                  maxDate={contrato.data_encerramento}
+                  onSelect={e => {
+                    setIntercorrencia({
+                      ...intercorrencia,
+                      data_rescisao: e.value,
+                    });
+                  }}
+                />
+              </Col>
+            )}
           </Row>
+
+          {/* SUSPENSAO */}
 
           {intercorrencia.data_inicial && intercorrencia.data_final && (
             <>
@@ -281,7 +323,7 @@ export default ({ contrato }) => {
                 <Col lg={8} xl={8} className="mt-3">
                   <Label>Motivo da Suspensão Contratual</Label>
                   <Dropdown
-                    options={motivos}
+                    options={motivosSuspensao}
                     value={intercorrencia.motivo_suspensao}
                     onChange={e => {
                       setIntercorrencia({
@@ -289,7 +331,7 @@ export default ({ contrato }) => {
                         motivo_suspensao: e.target.value,
                       });
                     }}
-                    placeholder="Selecione um Motivo"
+                    placeholder="Selecione um motivo para suspensão"
                     className="w-100"
                   />
                 </Col>
@@ -297,7 +339,7 @@ export default ({ contrato }) => {
             </>
           )}
 
-          {intercorrencia.motivo_suspensao === motivos[0].value && (
+          {intercorrencia.motivo_suspensao === motivosSuspensao[0].value && (
             <Row>
               <Col lg={6} xl={6} className="mt-3">
                 <div
@@ -353,7 +395,7 @@ export default ({ contrato }) => {
               </Col>
             </Row>
           )}
-          {intercorrencia.motivo_suspensao === motivos[1].value && (
+          {intercorrencia.motivo_suspensao === motivosSuspensao[1].value && (
             <Row>
               <Col lg={6} xl={6} className="mt-3">
                 <div
@@ -425,6 +467,66 @@ export default ({ contrato }) => {
                     })
                   }
                 />
+              </Col>
+            </Row>
+          )}
+
+          {/* RESCISAO */}
+
+          {intercorrencia.tipo_intercorrencia === "RESCISAO" && (
+            <Row>
+              <Col lg={12} xl={12} className="mt-3">
+                <Label>
+                  Selecione um ou mais motivos para rescisão contratual{" "}
+                  <span className="font-weight-bold">
+                    previstos no art. 78 da Lei n° 8.66/93
+                  </span>
+                </Label>
+                {motivosRescisao.map((obj, index) => {
+                  return (
+                    <div
+                      className={`check-objeto ${
+                        intercorrencia.motivo_rescisao &&
+                        intercorrencia.motivo_rescisao.includes(obj.id)
+                          ? "checked"
+                          : ""
+                      }`}
+                      key={index}
+                    >
+                      <Checkbox
+                        inputId={obj.id}
+                        value={obj.id}
+                        onChange={e => {
+                          let motivosSelecionados =
+                            intercorrencia.motivo_rescisao
+                              ? [...intercorrencia.motivo_rescisao]
+                              : [];
+                          if (e.checked)
+                            motivosSelecionados = [
+                              ...motivosSelecionados,
+                              e.value,
+                            ];
+                          else {
+                            motivosSelecionados = motivosSelecionados.filter(
+                              val => val !== e.value,
+                            );
+                          }
+                          setIntercorrencia({
+                            ...intercorrencia,
+                            motivo_rescisao: motivosSelecionados,
+                          });
+                        }}
+                        checked={
+                          intercorrencia.motivo_rescisao &&
+                          intercorrencia.motivo_rescisao.includes(obj.id)
+                        }
+                      />
+                      <label htmlFor={obj.id} className="p-checkbox-label">
+                        {obj.nome}
+                      </label>
+                    </div>
+                  );
+                })}
               </Col>
             </Row>
           )}
