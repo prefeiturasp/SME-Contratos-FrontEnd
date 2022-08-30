@@ -12,11 +12,13 @@ import {
   createIntercorrencia,
   getMotivosSuspensaoIntercorrencia,
   getMotivosRescisaoIntercorrencia,
+  createAnexoIntercorrencia,
 } from "../../service/Intercorrencias.service";
 import { InputText } from "primereact/inputtext";
 import { Editor } from "primereact/editor";
 import EditorHeader from "../../components/Shared/EditorHeader";
 import { Checkbox } from "primereact/checkbox";
+import AnexosIntercorrencia from "./AnexosIntercorrencia";
 
 const tipoIntercorrenciaOptions = [
   { label: "Suspensão", value: "SUSPENSAO" },
@@ -76,11 +78,30 @@ export default ({ contrato }) => {
     return payload;
   };
 
+  const getTextoSucesso = tipo => {
+    if (tipo === "SUSPENSAO") return "suspenso";
+    if (tipo === "RESCISAO") return "encerrado";
+    if (tipo === "IMPEDIMENTO") return "impedido";
+  };
+
   const salvarIntercorrencia = async () => {
     let payload = getPayload();
+    let anexos = payload.anexos;
+    delete payload.anexos;
     const resultado = await createIntercorrencia(payload);
     if (resultado.uuid) {
-      toast.showSuccess("Intercorrência gravado com sucesso!");
+      toast.showSuccess(
+        `O contrato foi ${getTextoSucesso(
+          payload.tipo_intercorrencia,
+        )} conforme intercorrência informada.`,
+        "Intercorrência gravada com sucesso!",
+      );
+      anexos.map(anexo => {
+        let formData = new FormData();
+        formData.append("impedimento", resultado.uuid);
+        formData.append("anexo", anexo.anexo);
+        return createAnexoIntercorrencia(formData);
+      });
       setIntercorrencia(null);
       setModalSalvar(false);
     } else {
@@ -106,11 +127,11 @@ export default ({ contrato }) => {
   };
 
   const retornaDataEncerramento = () => {
-    return intercorrencia.acrescentar_dias
-      ? moment(contrato.dataEncerramento, "DD/MM/YYYY")
+    return !intercorrencia.acrescentar_dias
+      ? contrato.dataEncerramento
+      : moment(contrato.dataEncerramento, "DD/MM/YYYY")
           .add("days", diferenca)
-          .format("DD/MM/YYYY")
-      : contrato.dataEncerramento;
+          .format("DD/MM/YYYY");
   };
 
   const validaCampos = () => {
@@ -185,7 +206,8 @@ export default ({ contrato }) => {
                 className="w-100"
               />
             </Col>
-            {intercorrencia.tipo_intercorrencia === "SUSPENSAO" && (
+            {(intercorrencia.tipo_intercorrencia === "SUSPENSAO" ||
+              intercorrencia.tipo_intercorrencia === "IMPEDIMENTO") && (
               <>
                 <Col lg={4} xl={4} className="mt-3">
                   <Label>DE</Label>
@@ -249,95 +271,105 @@ export default ({ contrato }) => {
 
           {/* SUSPENSAO */}
 
-          {intercorrencia.data_inicial && intercorrencia.data_final && (
-            <>
-              <Row className="mt-3 dias-suspensao">
-                <span className="font-weight-bold">
-                  Deseja acrescentar os dias de suspensão ao prazo de
-                  encerramento do contrato?
-                </span>
-                <span className="texto-suspensao">
-                  {diferenca} dias de suspensão
-                </span>
-              </Row>
+          {intercorrencia.tipo_intercorrencia === "SUSPENSAO" &&
+            intercorrencia.data_inicial &&
+            intercorrencia.data_final && (
+              <>
+                <Row className="mt-3 dias-suspensao">
+                  <span className="font-weight-bold">
+                    Deseja acrescentar os dias de suspensão ao prazo de
+                    encerramento do contrato?
+                  </span>
+                  <span className="texto-suspensao">
+                    {diferenca} dias de suspensão
+                  </span>
+                </Row>
 
-              <Row>
-                <Col lg={6} xl={6} className="mt-3">
-                  <div
-                    className={`check-objeto ${
-                      intercorrencia.acrescentar_dias === true ? "checked" : ""
-                    }`}
-                  >
-                    <RadioButton
-                      inputId="acrescentar"
-                      value={true}
-                      onChange={e =>
+                <Row>
+                  <Col lg={6} xl={6} className="mt-3">
+                    <div
+                      className={`check-objeto ${
+                        intercorrencia.acrescentar_dias === true
+                          ? "checked"
+                          : ""
+                      }`}
+                    >
+                      <RadioButton
+                        inputId="acrescentar"
+                        value={true}
+                        onChange={e =>
+                          setIntercorrencia({
+                            ...intercorrencia,
+                            acrescentar_dias: e.value,
+                          })
+                        }
+                        checked={intercorrencia.acrescentar_dias === true}
+                      />
+                      <label className="mb-0 ml-2 w-75" htmlFor="acrescentar">
+                        Sim, acrescentar dias de suspensão ao prazo final.
+                      </label>
+                    </div>
+                  </Col>
+                  <Col lg={6} xl={6} className="mt-3">
+                    <div
+                      className={`check-objeto ${
+                        intercorrencia.acrescentar_dias === false
+                          ? "checked"
+                          : ""
+                      }`}
+                    >
+                      <RadioButton
+                        inputId="nao_acrescentar"
+                        value={false}
+                        onChange={e =>
+                          setIntercorrencia({
+                            ...intercorrencia,
+                            acrescentar_dias: e.value,
+                          })
+                        }
+                        checked={intercorrencia.acrescentar_dias === false}
+                      />
+                      <label
+                        className="mb-0 ml-2 w-75"
+                        htmlFor="nao_acrescentar"
+                      >
+                        Não, manter data de encerramento atual.
+                      </label>
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col lg={4} xl={4} className="mt-3">
+                    <Label>Data de Encerramento do Contrato</Label>
+                    <br />
+                    <InputText
+                      className={
+                        "w-100 " +
+                        (intercorrencia.acrescentar_dias ? "red" : "")
+                      }
+                      value={retornaDataEncerramento()}
+                      disabled={true}
+                    />
+                  </Col>
+                  <Col lg={8} xl={8} className="mt-3">
+                    <Label>Motivo da Suspensão Contratual</Label>
+                    <Dropdown
+                      options={motivosSuspensao}
+                      value={intercorrencia.motivo_suspensao}
+                      onChange={e => {
                         setIntercorrencia({
                           ...intercorrencia,
-                          acrescentar_dias: e.value,
-                        })
-                      }
-                      checked={intercorrencia.acrescentar_dias === true}
+                          motivo_suspensao: e.target.value,
+                        });
+                      }}
+                      placeholder="Selecione um motivo para suspensão"
+                      className="w-100"
                     />
-                    <label className="mb-0 ml-2 w-75" htmlFor="acrescentar">
-                      Sim, acrescentar dias de suspensão ao prazo final.
-                    </label>
-                  </div>
-                </Col>
-                <Col lg={6} xl={6} className="mt-3">
-                  <div
-                    className={`check-objeto ${
-                      intercorrencia.acrescentar_dias === false ? "checked" : ""
-                    }`}
-                  >
-                    <RadioButton
-                      inputId="nao_acrescentar"
-                      value={false}
-                      onChange={e =>
-                        setIntercorrencia({
-                          ...intercorrencia,
-                          acrescentar_dias: e.value,
-                        })
-                      }
-                      checked={intercorrencia.acrescentar_dias === false}
-                    />
-                    <label className="mb-0 ml-2 w-75" htmlFor="nao_acrescentar">
-                      Não, manter data de encerramento atual.
-                    </label>
-                  </div>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col lg={4} xl={4} className="mt-3">
-                  <Label>Data de Encerramento do Contrato</Label>
-                  <br />
-                  <InputText
-                    className={
-                      "w-100 " + (intercorrencia.acrescentar_dias ? "red" : "")
-                    }
-                    value={retornaDataEncerramento()}
-                    disabled={true}
-                  />
-                </Col>
-                <Col lg={8} xl={8} className="mt-3">
-                  <Label>Motivo da Suspensão Contratual</Label>
-                  <Dropdown
-                    options={motivosSuspensao}
-                    value={intercorrencia.motivo_suspensao}
-                    onChange={e => {
-                      setIntercorrencia({
-                        ...intercorrencia,
-                        motivo_suspensao: e.target.value,
-                      });
-                    }}
-                    placeholder="Selecione um motivo para suspensão"
-                    className="w-100"
-                  />
-                </Col>
-              </Row>
-            </>
-          )}
+                  </Col>
+                </Row>
+              </>
+            )}
 
           {intercorrencia.motivo_suspensao === motivosSuspensao[0].value && (
             <Row>
@@ -531,6 +563,58 @@ export default ({ contrato }) => {
             </Row>
           )}
 
+          {/* IMPEDIMENTO */}
+          {intercorrencia.tipo_intercorrencia === "IMPEDIMENTO" && (
+            <>
+              <Row>
+                <Col lg={12} xl={12} className="mt-3">
+                  <div>
+                    <span className="font-weight-bold">
+                      Tempo de impedimento:{" "}
+                    </span>
+                    <span className="red">{diferenca} dias</span>
+                  </div>
+
+                  <div>
+                    <span className="font-weight-bold">Vigência: </span>
+                    <span>{contrato.vigencia} dias</span>
+                  </div>
+
+                  <div>
+                    <span className="font-weight-bold">
+                      Data de encerramento atualizada:{" "}
+                    </span>
+                    <span className="red">{retornaDataEncerramento()}</span>
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={12} xl={12} className="mt-3">
+                  <Label>
+                    Descreva o fato ou ato de terceiro que motivou o
+                    impedimento.
+                  </Label>
+                  <Editor
+                    style={{ height: "120px" }}
+                    value={intercorrencia.descricao_impedimento}
+                    headerTemplate={<EditorHeader />}
+                    onTextChange={value =>
+                      setIntercorrencia({
+                        ...intercorrencia,
+                        descricao_impedimento: value.htmlValue,
+                      })
+                    }
+                  />
+                </Col>
+              </Row>
+              <AnexosIntercorrencia
+                contrato={contrato}
+                intercorrencia={intercorrencia}
+                setIntercorrencia={setIntercorrencia}
+              />
+            </>
+          )}
+
           <Row className="my-4">
             <Col lg={12} className="d-flex flex-row-reverse">
               <Button
@@ -600,23 +684,35 @@ export default ({ contrato }) => {
               </div>
             }
           >
-            {intercorrencia.acrescentar_dias ? (
-              <span>
-                Ao registrar essa intercorrência, o contrato será{" "}
-                <strong>suspenso</strong> e a contagem do{" "}
-                <strong>prazo de vencimento alterada</strong>. Os dias de
-                interrupção serão acrescidos ao prazo de encerramento do
-                contrato.
-              </span>
-            ) : (
-              <span>
-                Ao registrar essa intercorrência, o contrato será{" "}
-                <strong>suspenso</strong> e a contagem do{" "}
-                <strong>prazo de vencimento mantida</strong>. Os dias de
-                interrupção não serão acrescidos ao prazo de encerramento do
-                contrato.
-              </span>
-            )}
+            {intercorrencia.tipo_intercorrencia === "SUSPENSAO" &&
+              intercorrencia.acrescentar_dias && (
+                <span>
+                  Ao registrar essa intercorrência, o contrato será{" "}
+                  <strong>suspenso</strong> e a contagem do{" "}
+                  <strong>prazo de vencimento alterada</strong>. Os dias de
+                  interrupção serão acrescidos ao prazo de encerramento do
+                  contrato.
+                </span>
+              )}
+            {intercorrencia.tipo_intercorrencia === "SUSPENSAO" &&
+              !intercorrencia.acrescentar_dias && (
+                <span>
+                  Ao registrar essa intercorrência, o contrato será{" "}
+                  <strong>suspenso</strong> e a contagem do{" "}
+                  <strong>prazo de vencimento mantida</strong>. Os dias de
+                  interrupção não serão acrescidos ao prazo de encerramento do
+                  contrato.
+                </span>
+              )}
+            {intercorrencia.tipo_intercorrencia === "IMPEDIMENTO" &&
+              !intercorrencia.acrescentar_dias && (
+                <span>
+                  Ao registrar essa intercorrência, a contagem do prazo de
+                  vencimento será <strong>interrompida</strong> e a data de
+                  encerramento <strong>atualizada</strong>, o prazo de vigência
+                  do contrato permanecerá o mesmo.
+                </span>
+              )}
             <br />
             <strong>Você confirma o registro da intercorrência?</strong>
           </Dialog>

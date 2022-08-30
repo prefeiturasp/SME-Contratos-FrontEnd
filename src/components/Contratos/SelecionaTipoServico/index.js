@@ -32,6 +32,7 @@ export class SelecionaTipoServico extends Component {
         value={this.props.tipoServico}
         onChange={event => this.selecionaTipoServico(event)}
         autoWidth={false}
+        maxLength={10}
         placeholder="Selecione um Objeto..."
         showClear={true}
       />

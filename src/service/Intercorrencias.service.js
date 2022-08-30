@@ -24,6 +24,27 @@ export const createIntercorrencia = payload => {
     });
 };
 
+export const createAnexoIntercorrencia = payload => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  AUTH_HEADER.headers["Content-Type"] = "multipart/form-data";
+  return Api.post(
+    `${CONFIG.API_URL}/intercorrencias/anexos-impedimento/`,
+    payload,
+    AUTH_HEADER,
+  )
+    .then(
+      res => res.data,
+      res => {
+        return { statusCode: res.statusCode, result: res };
+      },
+    )
+    .catch(error => {
+      return { error: error };
+    });
+};
+
 export const getMotivosSuspensaoIntercorrencia = () => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
