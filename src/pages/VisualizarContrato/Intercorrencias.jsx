@@ -183,11 +183,7 @@ export default ({ contrato }) => {
             <div className="text-center w-100 mt-4 mb-4">
               <button
                 className="btn btn-coad-background-outline"
-                onClick={() =>
-                  setIntercorrencia({
-                    objeto_intercorrencia: [],
-                  })
-                }
+                onClick={() => setIntercorrencia([])}
               >
                 + Adicionar Intercorrência
               </button>
