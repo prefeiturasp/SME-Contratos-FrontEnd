@@ -382,7 +382,6 @@ export default ({ contrato }) => {
                   )}
                   {inter.anexos_impedimento && (
                     <div className="grid-row">
-                      {console.log(inter)}
                       <div className="grid-item">
                         <p className="titulo-item pb-3">Documentos anexados:</p>
                         {inter.anexos_impedimento.map((anexo, index) => (
