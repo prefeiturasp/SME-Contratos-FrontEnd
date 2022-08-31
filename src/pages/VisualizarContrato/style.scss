@@ -152,6 +152,11 @@ $mainColor: #602a2a;
     padding: 0 15px;
   }
 
+  .tempo-impedimento {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .red {
     color: red;
   }

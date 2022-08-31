@@ -145,7 +145,6 @@ export default ({ contrato }) => {
     desabilitar = intercorrencia.tipo_intercorrencia;
     if (intercorrencia.tipo_intercorrencia === "SUSPENSAO") {
       desabilitar =
-        intercorrencia.tipo_intercorrencia &&
         intercorrencia.data_inicial &&
         intercorrencia.data_final &&
         intercorrencia.motivo_suspensao &&
@@ -161,6 +160,14 @@ export default ({ contrato }) => {
         intercorrencia.data_rescisao &&
         intercorrencia.motivo_rescisao &&
         intercorrencia.motivo_rescisao.length > 0;
+    }
+    if (intercorrencia.tipo_intercorrencia === "IMPEDIMENTO") {
+      desabilitar =
+        intercorrencia.data_inicial &&
+        intercorrencia.data_final &&
+        intercorrencia.descricao_impedimento &&
+        intercorrencia.anexos &&
+        intercorrencia.anexos.length > 0;
     }
 
     return !desabilitar;
@@ -787,7 +794,7 @@ export default ({ contrato }) => {
           {intercorrencia.tipo_intercorrencia === "IMPEDIMENTO" && (
             <>
               <Row>
-                <Col lg={12} xl={12} className="mt-3">
+                <Col lg={12} xl={12} className="mt-3 tempo-impedimento">
                   <div>
                     <span className="font-weight-bold">
                       Tempo de impedimento:{" "}
@@ -825,6 +832,14 @@ export default ({ contrato }) => {
                       })
                     }
                   />
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={12} xl={12} className="mt-3">
+                  <div className="red">
+                    Anexe documento contemporâneo à ocorrência do fato ou ato
+                    referido em que a Administração reconheça o impedimento.
+                  </div>
                 </Col>
               </Row>
               <AnexosIntercorrencia
