@@ -126,8 +126,8 @@ export default ({ contrato }) => {
     }
   };
 
-  const retornaDataEncerramento = () => {
-    return !intercorrencia.acrescentar_dias
+  const retornaDataEncerramento = impedimento => {
+    return !impedimento && !intercorrencia.acrescentar_dias
       ? contrato.dataEncerramento
       : moment(contrato.dataEncerramento, "DD/MM/YYYY")
           .add("days", diferenca)
@@ -591,7 +591,9 @@ export default ({ contrato }) => {
                     <span className="font-weight-bold">
                       Data de encerramento atualizada:{" "}
                     </span>
-                    <span className="red">{retornaDataEncerramento()}</span>
+                    <span className="red">
+                      {retornaDataEncerramento("impedimento")}
+                    </span>
                   </div>
                 </Col>
               </Row>
