@@ -35,6 +35,7 @@ export default ({ intercorrencia, setIntercorrencia }) => {
         name: file.file.name,
         href: file.meta.previewUrl,
         anexo: file.file,
+        meta: file.meta,
       };
       let newAnexos = [...anexos, newFile];
       setAnexos(newAnexos);
