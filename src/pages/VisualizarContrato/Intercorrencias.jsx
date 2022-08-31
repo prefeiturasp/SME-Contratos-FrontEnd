@@ -96,12 +96,14 @@ export default ({ contrato }) => {
         )} conforme intercorrência informada.`,
         "Intercorrência gravada com sucesso!",
       );
-      anexos.map(anexo => {
-        let formData = new FormData();
-        formData.append("impedimento", resultado.uuid);
-        formData.append("anexo", anexo.anexo);
-        return createAnexoIntercorrencia(formData);
-      });
+      if (anexos) {
+        anexos.map(anexo => {
+          let formData = new FormData();
+          formData.append("impedimento", resultado.uuid);
+          formData.append("anexo", anexo.anexo);
+          return createAnexoIntercorrencia(formData);
+        });
+      }
       setIntercorrencia(null);
       setModalSalvar(false);
     } else {
@@ -378,137 +380,140 @@ export default ({ contrato }) => {
               </>
             )}
 
-          {intercorrencia.motivo_suspensao === motivosSuspensao[0].value && (
-            <Row>
-              <Col lg={6} xl={6} className="mt-3">
-                <div
-                  className={`check-objeto ${
-                    intercorrencia.opcao_suspensao === opcoesSuspensao[0]
-                      ? "checked"
-                      : ""
-                  }`}
-                >
-                  <RadioButton
-                    inputId="opcao1"
-                    value={opcoesSuspensao[0]}
-                    onChange={e =>
-                      setIntercorrencia({
-                        ...intercorrencia,
-                        opcao_suspensao: e.value,
-                      })
-                    }
-                    checked={
+          {intercorrencia.tipo_intercorrencia === "SUSPENSAO" &&
+            intercorrencia.motivo_suspensao === motivosSuspensao[0].value && (
+              <Row>
+                <Col lg={6} xl={6} className="mt-3">
+                  <div
+                    className={`check-objeto ${
                       intercorrencia.opcao_suspensao === opcoesSuspensao[0]
-                    }
-                  />
-                  <label className="mb-0 ml-2 w-75" htmlFor="opcao1">
-                    {opcoesSuspensao[0]}
-                  </label>
-                </div>
-              </Col>
-              <Col lg={6} xl={6} className="mt-3">
-                <div
-                  className={`check-objeto ${
-                    intercorrencia.opcao_suspensao === opcoesSuspensao[1]
-                      ? "checked"
-                      : ""
-                  }`}
-                >
-                  <RadioButton
-                    inputId="opcao2"
-                    value={opcoesSuspensao[1]}
-                    onChange={e =>
-                      setIntercorrencia({
-                        ...intercorrencia,
-                        opcao_suspensao: e.value,
-                      })
-                    }
-                    checked={
+                        ? "checked"
+                        : ""
+                    }`}
+                  >
+                    <RadioButton
+                      inputId="opcao1"
+                      value={opcoesSuspensao[0]}
+                      onChange={e =>
+                        setIntercorrencia({
+                          ...intercorrencia,
+                          opcao_suspensao: e.value,
+                        })
+                      }
+                      checked={
+                        intercorrencia.opcao_suspensao === opcoesSuspensao[0]
+                      }
+                    />
+                    <label className="mb-0 ml-2 w-75" htmlFor="opcao1">
+                      {opcoesSuspensao[0]}
+                    </label>
+                  </div>
+                </Col>
+                <Col lg={6} xl={6} className="mt-3">
+                  <div
+                    className={`check-objeto ${
                       intercorrencia.opcao_suspensao === opcoesSuspensao[1]
-                    }
-                  />
-                  <label className="mb-0 ml-2 w-75" htmlFor="opcao2">
-                    {opcoesSuspensao[1]}
-                  </label>
-                </div>
-              </Col>
-            </Row>
-          )}
-          {intercorrencia.motivo_suspensao === motivosSuspensao[1].value && (
-            <Row>
-              <Col lg={6} xl={6} className="mt-3">
-                <div
-                  className={`check-objeto ${
-                    intercorrencia.opcao_suspensao === opcoesSuspensao[2]
-                      ? "checked"
-                      : ""
-                  }`}
-                >
-                  <RadioButton
-                    inputId="opcao3"
-                    value={opcoesSuspensao[2]}
-                    onChange={e =>
-                      setIntercorrencia({
-                        ...intercorrencia,
-                        opcao_suspensao: e.value,
-                      })
-                    }
-                    checked={
+                        ? "checked"
+                        : ""
+                    }`}
+                  >
+                    <RadioButton
+                      inputId="opcao2"
+                      value={opcoesSuspensao[1]}
+                      onChange={e =>
+                        setIntercorrencia({
+                          ...intercorrencia,
+                          opcao_suspensao: e.value,
+                        })
+                      }
+                      checked={
+                        intercorrencia.opcao_suspensao === opcoesSuspensao[1]
+                      }
+                    />
+                    <label className="mb-0 ml-2 w-75" htmlFor="opcao2">
+                      {opcoesSuspensao[1]}
+                    </label>
+                  </div>
+                </Col>
+              </Row>
+            )}
+          {intercorrencia.tipo_intercorrencia === "SUSPENSAO" &&
+            intercorrencia.motivo_suspensao === motivosSuspensao[1].value && (
+              <Row>
+                <Col lg={6} xl={6} className="mt-3">
+                  <div
+                    className={`check-objeto ${
                       intercorrencia.opcao_suspensao === opcoesSuspensao[2]
-                    }
-                  />
-                  <label className="mb-0 ml-2 w-75" htmlFor="opcao3">
-                    {opcoesSuspensao[2]}
-                  </label>
-                </div>
-              </Col>
-              <Col lg={6} xl={6} className="mt-3">
-                <div
-                  className={`check-objeto ${
-                    intercorrencia.opcao_suspensao === opcoesSuspensao[3]
-                      ? "checked"
-                      : ""
-                  }`}
-                >
-                  <RadioButton
-                    inputId="opcao4"
-                    value={opcoesSuspensao[3]}
-                    onChange={e =>
+                        ? "checked"
+                        : ""
+                    }`}
+                  >
+                    <RadioButton
+                      inputId="opcao3"
+                      value={opcoesSuspensao[2]}
+                      onChange={e =>
+                        setIntercorrencia({
+                          ...intercorrencia,
+                          opcao_suspensao: e.value,
+                        })
+                      }
+                      checked={
+                        intercorrencia.opcao_suspensao === opcoesSuspensao[2]
+                      }
+                    />
+                    <label className="mb-0 ml-2 w-75" htmlFor="opcao3">
+                      {opcoesSuspensao[2]}
+                    </label>
+                  </div>
+                </Col>
+                <Col lg={6} xl={6} className="mt-3">
+                  <div
+                    className={`check-objeto ${
+                      intercorrencia.opcao_suspensao === opcoesSuspensao[3]
+                        ? "checked"
+                        : ""
+                    }`}
+                  >
+                    <RadioButton
+                      inputId="opcao4"
+                      value={opcoesSuspensao[3]}
+                      onChange={e =>
+                        setIntercorrencia({
+                          ...intercorrencia,
+                          opcao_suspensao: e.value,
+                        })
+                      }
+                      checked={
+                        intercorrencia.opcao_suspensao === opcoesSuspensao[3]
+                      }
+                    />
+                    <label className="mb-0 ml-2 w-75" htmlFor="opcao4">
+                      {opcoesSuspensao[3]}
+                    </label>
+                  </div>
+                </Col>
+              </Row>
+            )}
+
+          {intercorrencia.tipo_intercorrencia === "SUSPENSAO" &&
+            intercorrencia.motivo_suspensao && (
+              <Row>
+                <Col lg={12} xl={12} className="mt-3">
+                  <Label>Descreva o motivo da suspensão contratual:</Label>
+                  <Editor
+                    style={{ height: "120px" }}
+                    value={intercorrencia.descricao_suspensao}
+                    headerTemplate={<EditorHeader />}
+                    onTextChange={value =>
                       setIntercorrencia({
                         ...intercorrencia,
-                        opcao_suspensao: e.value,
+                        descricao_suspensao: value.htmlValue,
                       })
                     }
-                    checked={
-                      intercorrencia.opcao_suspensao === opcoesSuspensao[3]
-                    }
                   />
-                  <label className="mb-0 ml-2 w-75" htmlFor="opcao4">
-                    {opcoesSuspensao[3]}
-                  </label>
-                </div>
-              </Col>
-            </Row>
-          )}
-
-          {intercorrencia.motivo_suspensao && (
-            <Row>
-              <Col lg={12} xl={12} className="mt-3">
-                <Label>Descreva o motivo da suspensão contratual:</Label>
-                <Editor
-                  style={{ height: "120px" }}
-                  value={intercorrencia.descricao_suspensao}
-                  headerTemplate={<EditorHeader />}
-                  onTextChange={value =>
-                    setIntercorrencia({
-                      ...intercorrencia,
-                      descricao_suspensao: value.htmlValue,
-                    })
-                  }
-                />
-              </Col>
-            </Row>
-          )}
+                </Col>
+              </Row>
+            )}
 
           {/* RESCISAO */}
 
