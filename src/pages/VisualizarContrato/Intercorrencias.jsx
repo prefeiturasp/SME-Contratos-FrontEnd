@@ -197,11 +197,7 @@ export default ({ contrato }) => {
             <Col lg={12} className="d-flex flex-row-reverse pr-0">
               <Button
                 className="btn btn-coad-background-outline"
-                onClick={() =>
-                  setIntercorrencia({
-                    objeto_intercorrencia: [],
-                  })
-                }
+                onClick={() => setIntercorrencia([])}
               >
                 Nova Intercorrência
               </Button>
