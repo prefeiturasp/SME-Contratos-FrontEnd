@@ -37,6 +37,7 @@ const opcoesSuspensao = [
 
 export default ({ contrato }) => {
   const [intercorrencia, setIntercorrencia] = useState(null);
+  const [intercorrencias, setIntercorrencias] = useState([]);
   const [diferenca, setDiferenca] = useState(0);
   const [motivosSuspensao, setMotivosSuspensao] = useState([{}]);
   const [motivosRescisao, setMotivosRescisao] = useState([{}]);
@@ -56,12 +57,17 @@ export default ({ contrato }) => {
     };
 
     buscaMotivos();
-  }, []);
+    setIntercorrencias(contrato.intercorrencias);
+  }, [contrato.intercorrencias]);
 
   const cancelarIntercorrencia = () => {
     toast.showSuccess("Intercorrência cancelada com sucesso!");
     setIntercorrencia(null);
     setModalCancelar(false);
+  };
+
+  const abrirAnexo = anexo => {
+    if (anexo) window.open(anexo.objectURL ? anexo.objectURL : anexo);
   };
 
   const getPayload = () => {
@@ -171,23 +177,228 @@ export default ({ contrato }) => {
 
   return (
     <div className="form-aditamentos">
-      {!intercorrencia && (
+      {!intercorrencia && intercorrencias.length === 0 && (
         <Row>
           <Col lg={12} xl={12}>
             <div className="text-center w-100 mt-4 mb-4">
               <button
                 className="btn btn-coad-background-outline"
-                onClick={() =>
-                  setIntercorrencia({
-                    objeto_aditamento: [],
-                  })
-                }
+                onClick={() => setIntercorrencia([])}
               >
                 + Adicionar Intercorrência
               </button>
             </div>
           </Col>
         </Row>
+      )}
+      {!intercorrencia && intercorrencias.length > 0 && (
+        <>
+          <Row className="mb-3">
+            <Col lg={12} className="d-flex flex-row-reverse pr-0">
+              <Button
+                className="btn btn-coad-background-outline"
+                onClick={() => setIntercorrencia([])}
+              >
+                Nova Intercorrência
+              </Button>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col lg={6} className="pl-0">
+              <div className="titulo-termo">Registro de Intercorrência</div>
+            </Col>
+          </Row>
+
+          {intercorrencias.map((inter, index) => (
+            <div key={index}>
+              {index !== 0 && <hr className="mt-4 mb-4" />}
+              <Row className="mb-3">
+                <div className="tabela-aditamentos">
+                  <div className="grid-row">
+                    {inter.tipo_intercorrencia && (
+                      <div className="grid-item">
+                        <p className="titulo-item">Tipo de intercorrência:</p>
+                        <span className="conteudo-item">
+                          {inter.tipo_intercorrencia}
+                        </span>
+                      </div>
+                    )}
+                    {inter.data_inicial && (
+                      <div className="grid-item">
+                        <p className="titulo-item">DE:</p>
+                        <span className="conteudo-item">
+                          {moment(inter.data_inicial).format("DD/MM/yyyy")}
+                        </span>
+                      </div>
+                    )}
+                    {inter.data_final && (
+                      <div className="grid-item">
+                        <p className="titulo-item">ATÉ:</p>
+                        <span className="conteudo-item">
+                          {moment(inter.data_final).format("DD/MM/yyyy")}
+                        </span>
+                      </div>
+                    )}
+                    {inter.dias_suspensao && (
+                      <div className="grid-item">
+                        <p className="titulo-item">Tempo de suspensão:</p>
+                        <span className="conteudo-item">
+                          {inter.dias_suspensao}
+                        </span>
+                      </div>
+                    )}
+                    {inter.dias_impedimento && (
+                      <div className="grid-item">
+                        <p className="titulo-item">Tempo de impedimento:</p>
+                        <span className="conteudo-item">
+                          {inter.dias_impedimento}
+                        </span>
+                      </div>
+                    )}
+                    {inter.tipo_intercorrencia === "Impedimento" &&
+                      inter.data_encerramento && (
+                        <div className="grid-item">
+                          <p className="titulo-item">
+                            Data de encerramento atualizada:
+                          </p>
+                          <span className="conteudo-item">
+                            {moment(inter.data_encerramento).format(
+                              "DD/MM/yyyy",
+                            )}
+                          </span>
+                        </div>
+                      )}
+                    {inter.data_rescisao && (
+                      <>
+                        <div className="grid-item col-3">
+                          <p className="titulo-item">Data da Rescisão:</p>
+                          <span className="conteudo-item">
+                            {moment(inter.data_rescisao).format("DD/MM/yyyy")}
+                          </span>
+                        </div>
+                        <div className="grid-item col-6"></div>
+                      </>
+                    )}
+                  </div>
+                  {inter.tipo_intercorrencia === "Suspensão" && (
+                    <>
+                      <div className="grid-row">
+                        <div className="grid-item col-9">
+                          <p className="titulo-item">
+                            Acrescentar dias de suspensão ao prazo de
+                            encerramento do contrato:
+                          </p>
+                          <span className="conteudo-item">
+                            {inter.acrescentar_dias
+                              ? "Sim, acrescentar dias de suspensão ao prazo final."
+                              : "Não, manter data de encerramento atual."}
+                          </span>
+                        </div>
+                        <div className="grid-item col-3">
+                          <p className="titulo-item">
+                            Data de encerramento do contrato:
+                          </p>
+                          <span className="conteudo-item">
+                            {moment(inter.data_encerramento).format(
+                              "DD/MM/yyyy",
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {inter.motivo_suspensao && (
+                    <div className="grid-row">
+                      <div className="grid-item">
+                        <p className="titulo-item">
+                          Motivo suspensão contratual:
+                        </p>
+                        <span className="conteudo-item">
+                          {inter.motivo_suspensao}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {inter.motivo_rescisao && (
+                    <div className="grid-row">
+                      <div className="grid-item">
+                        <p className="titulo-item pb-3">
+                          Motivos para rescisão contratual previstos no art. 78
+                          da Lei nº 8.666/93:
+                        </p>
+                        {inter.motivo_rescisao.map((motivo, index) => (
+                          <div key={index}>
+                            <span className="conteudo-item">
+                              <p>{motivo}</p>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {inter.opcao_suspensao && (
+                    <div className="grid-row">
+                      <div className="grid-item">
+                        <p className="titulo-item">Tipo de suspensão:</p>
+                        <span className="conteudo-item">
+                          {inter.opcao_suspensao}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {inter.descricao_suspensao && (
+                    <div className="grid-row">
+                      <div className="grid-item">
+                        <p className="titulo-item">Descrição da suspensão:</p>
+                        <span
+                          className="conteudo-item"
+                          dangerouslySetInnerHTML={{
+                            __html: inter.descricao_suspensao,
+                          }}
+                        ></span>
+                      </div>
+                    </div>
+                  )}
+                  {inter.descricao_impedimento && (
+                    <div className="grid-row">
+                      <div className="grid-item">
+                        <p className="titulo-item">Descrição do impedimento:</p>
+                        <span
+                          className="conteudo-item"
+                          dangerouslySetInnerHTML={{
+                            __html: inter.descricao_impedimento,
+                          }}
+                        ></span>
+                      </div>
+                    </div>
+                  )}
+                  {inter.anexos_impedimento && (
+                    <div className="grid-row">
+                      <div className="grid-item">
+                        <p className="titulo-item pb-3">Documentos anexados:</p>
+                        {inter.anexos_impedimento.map((anexo, index) => (
+                          <div key={index}>
+                            <span className="icones-acoes">
+                              <i
+                                className="fas fa-paperclip mr-3"
+                                onClick={() => abrirAnexo(anexo["anexo"])}
+                              >
+                                {" "}
+                                <span className="link-anexo">
+                                  {anexo["anexo"].split("/").slice(-1)}
+                                </span>
+                              </i>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Row>
+            </div>
+          ))}
+        </>
       )}
 
       {intercorrencia && (
