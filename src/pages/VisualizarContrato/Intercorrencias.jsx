@@ -165,11 +165,30 @@ export default ({ contrato }) => {
       }
       setIntercorrencia(null);
       setModalSalvar(false);
+      let newIntercorrencias = [...intercorrencias];
+      let index = newIntercorrencias.length;
+      newIntercorrencias[index] = resultado;
+      if (newIntercorrencias[index].tipo_intercorrencia === "IMPEDIMENTO") {
+        newIntercorrencias[index].dias_impedimento = `${diferenca} dias`;
+      }
+      if (newIntercorrencias[index].tipo_intercorrencia === "SUSPENSAO") {
+        newIntercorrencias[index].dias_suspensao = `${diferenca} dias`;
+      }
+      if (newIntercorrencias[index].tipo_intercorrencia === "RESCISAO") {
+        const listaMotivosRescisao = [];
+        newIntercorrencias[index].motivo_rescisao.forEach(obj => {
+          let motivo_rescisao = motivosRescisao.find(
+            motivo => motivo.id === obj,
+          );
+          listaMotivosRescisao.push(motivo_rescisao);
+        });
+        newIntercorrencias[index].motivo_rescisao = listaMotivosRescisao;
+      }
+      setIntercorrencias(newIntercorrencias);
     } else {
       toast.showError("Ocorreu um erro, tente novamente!");
     }
   };
-
   const editarIntercorrencia = async () => {
     let payload = getPayload();
     let anexos = payload.anexos;
@@ -203,7 +222,18 @@ export default ({ contrato }) => {
       if (newIntercorrencias[index].tipo_intercorrencia === "SUSPENSAO") {
         newIntercorrencias[index].dias_suspensao = `${diferenca} dias`;
       }
+      if (newIntercorrencias[index].tipo_intercorrencia === "RESCISAO") {
+        const listaMotivosRescisao = [];
+        newIntercorrencias[index].motivo_rescisao.forEach(obj => {
+          let motivo_rescisao = motivosRescisao.find(
+            motivo => motivo.id === obj,
+          );
+          listaMotivosRescisao.push(motivo_rescisao);
+        });
+        newIntercorrencias[index].motivo_rescisao = listaMotivosRescisao;
+      }
       setIntercorrencias(newIntercorrencias);
+      setEdicao(false);
     } else {
       toast.showError("Ocorreu um erro, tente novamente!");
     }
