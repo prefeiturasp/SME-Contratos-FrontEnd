@@ -85,26 +85,12 @@ export const excluiAnexoImpedimento = async uuid => {
   });
 };
 
-export const alteraIntercorrencia = payload => {
+export const alteraIntercorrencia = async payload => {
   const AUTH_HEADER = {
     headers: getHeaderToken(),
   };
-  return Api.put(
-    `${
-      CONFIG.API_URL
-    }/intercorrencias/${payload.tipo_intercorrencia.toLowerCase()}/${
-      payload.uuid
-    }/`,
-    payload,
-    AUTH_HEADER,
-  )
-    .then(
-      res => res.data,
-      res => {
-        return { statusCode: res.statusCode, result: res };
-      },
-    )
-    .catch(error => {
-      return { error: error };
-    });
+  const url = `intercorrencias/${payload.tipo_intercorrencia.toLowerCase()}/${
+    payload.uuid
+  }/`;
+  return await Api.put(url, payload, AUTH_HEADER);
 };

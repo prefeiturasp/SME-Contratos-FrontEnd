@@ -83,6 +83,7 @@ export default ({ contrato }) => {
   const cancelarIntercorrencia = () => {
     toast.showSuccess("Intercorrência cancelada com sucesso!");
     setIntercorrencia(null);
+    // setDiferenca(0);
     setModalCancelar(false);
   };
 
@@ -175,7 +176,7 @@ export default ({ contrato }) => {
     let anexos = payload.anexos;
     delete payload.anexos;
     const resultado = await alteraIntercorrencia(payload);
-    if (resultado.uuid) {
+    if (resultado.data.uuid) {
       toast.showSuccess(
         `O contrato foi ${getTextoSucesso(
           payload.tipo_intercorrencia,
@@ -185,7 +186,7 @@ export default ({ contrato }) => {
       if (anexos) {
         anexos.map(anexo => {
           let formData = new FormData();
-          formData.append("impedimento", resultado.uuid);
+          formData.append("impedimento", resultado.data.uuid);
           formData.append("anexo", anexo.anexo);
           return createAnexoIntercorrencia(formData);
         });
@@ -333,6 +334,10 @@ export default ({ contrato }) => {
                           newInter.data_rescisao,
                           "yyyy-MM-DD",
                         ).toDate();
+                      calculaDiferenca(
+                        newInter.data_inicial,
+                        newInter.data_final,
+                      );
                       setIntercorrencia(inter);
                       setEdicao(true);
                     }}
@@ -387,7 +392,7 @@ export default ({ contrato }) => {
                         </span>
                       </div>
                     )}
-                    {inter.tipo_intercorrencia === "Impedimento" &&
+                    {inter.tipo_intercorrencia === "IMPEDIMENTO" &&
                       inter.data_encerramento && (
                         <div className="grid-item">
                           <p className="titulo-item">
@@ -704,13 +709,7 @@ export default ({ contrato }) => {
                         "w-100 " +
                         (intercorrencia.acrescentar_dias ? "red" : "")
                       }
-                      value={
-                        intercorrencia.data_encerramento
-                          ? moment(intercorrencia.data_encerramento).format(
-                              "DD/MM/yyyy",
-                            )
-                          : retornaDataEncerramento()
-                      }
+                      value={retornaDataEncerramento()}
                       disabled={true}
                     />
                   </Col>
@@ -954,6 +953,7 @@ export default ({ contrato }) => {
                     </span>
                     <span className="red">
                       {retornaDataEncerramento("impedimento")}
+                      {/* {moment(intercorrencia.data_encerramento).format("DD/MM/yyyy")} */}
                     </span>
                   </div>
                 </Col>
