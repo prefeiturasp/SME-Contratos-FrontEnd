@@ -935,27 +935,25 @@ export default ({ contrato }) => {
           {intercorrencia.tipo_intercorrencia === "IMPEDIMENTO" && (
             <>
               <Row>
-                <Col lg={12} xl={12} className="mt-3 tempo-impedimento">
-                  <div>
-                    <span className="font-weight-bold">
-                      Tempo de impedimento:{" "}
-                    </span>
-                    <span className="red">{`${diferenca} dias`}</span>
-                  </div>
+                <Col lg={4} xl={4} className="mt-3">
+                  <span className="font-weight-bold">
+                    Tempo de impedimento:{" "}
+                  </span>
+                  <span className="red">{diferenca} dias</span>
+                </Col>
+                
+                <Col lg={4} xl={4} className="mt-3">
+                  <span className="font-weight-bold">Vigência: </span>
+                  <span>{contrato.vigencia} dias</span>
+                </Col>
 
-                  <div>
-                    <span className="font-weight-bold">Vigência: </span>
-                    <span>{contrato.vigencia} dias</span>
-                  </div>
-
-                  <div>
-                    <span className="font-weight-bold">
-                      Data de encerramento atualizada:{" "}
-                    </span>
-                    <span className="red">
-                      {retornaDataEncerramento("impedimento")}
-                    </span>
-                  </div>
+                <Col lg={4} xl={4} className="mt-3">
+                  <span className="font-weight-bold">
+                    Data de encerramento atualizada:{" "}
+                  </span>
+                  <span className="red">
+                    {retornaDataEncerramento("impedimento")}
+                  </span>
                 </Col>
               </Row>
               <Row>
