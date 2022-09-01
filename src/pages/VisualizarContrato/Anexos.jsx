@@ -59,7 +59,7 @@ class Anexos extends Component {
       <div className="coad-anexos">
         <Toast ref={el => (this.toast = el)}></Toast>
         <Row>
-          <Col className="pb-5">
+          <Col className="pb-3">
             <Row className="row-anexo">
               <div className="title-anexo">Anexar documentos</div>
               <div className="aviso-anexo">
