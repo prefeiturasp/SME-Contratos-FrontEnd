@@ -83,7 +83,6 @@ export default ({ contrato }) => {
   const cancelarIntercorrencia = () => {
     toast.showSuccess("Intercorrência cancelada com sucesso!");
     setIntercorrencia(null);
-    // setDiferenca(0);
     setModalCancelar(false);
   };
 
@@ -198,6 +197,12 @@ export default ({ contrato }) => {
         obj => obj.uuid === resultado.data.uuid,
       );
       newIntercorrencias[index] = resultado.data;
+      if (newIntercorrencias[index].tipo_intercorrencia === "IMPEDIMENTO") {
+        newIntercorrencias[index].dias_impedimento = `${diferenca} dias`;
+      }
+      if (newIntercorrencias[index].tipo_intercorrencia === "SUSPENSAO") {
+        newIntercorrencias[index].dias_suspensao = `${diferenca} dias`;
+      }
       setIntercorrencias(newIntercorrencias);
     } else {
       toast.showError("Ocorreu um erro, tente novamente!");
@@ -935,11 +940,7 @@ export default ({ contrato }) => {
                     <span className="font-weight-bold">
                       Tempo de impedimento:{" "}
                     </span>
-                    <span className="red">
-                      {diferenca !== 0
-                        ? `${diferenca} dias`
-                        : `${intercorrencia.dias_impedimento}`}
-                    </span>
+                    <span className="red">{`${diferenca} dias`}</span>
                   </div>
 
                   <div>
@@ -953,7 +954,6 @@ export default ({ contrato }) => {
                     </span>
                     <span className="red">
                       {retornaDataEncerramento("impedimento")}
-                      {/* {moment(intercorrencia.data_encerramento).format("DD/MM/yyyy")} */}
                     </span>
                   </div>
                 </Col>
