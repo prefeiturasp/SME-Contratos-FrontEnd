@@ -64,3 +64,47 @@ export const getMotivosRescisaoIntercorrencia = () => {
     AUTH_HEADER,
   ).then(res => res.data);
 };
+
+export const excluiIntercorrencia = async (uuid, tipo) => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  const url = `intercorrencias/${tipo.toLowerCase()}/${uuid}/`;
+  return await Api.delete(url, AUTH_HEADER).catch(() => {
+    return false;
+  });
+};
+
+export const excluiAnexoImpedimento = async uuid => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  const url = `intercorrencias/anexos-impedimento/${uuid}/`;
+  return await Api.delete(url, AUTH_HEADER).catch(() => {
+    return false;
+  });
+};
+
+export const alteraIntercorrencia = payload => {
+  const AUTH_HEADER = {
+    headers: getHeaderToken(),
+  };
+  return Api.put(
+    `${
+      CONFIG.API_URL
+    }/intercorrencias/${payload.tipo_intercorrencia.toLowerCase()}/${
+      payload.uuid
+    }/`,
+    payload,
+    AUTH_HEADER,
+  )
+    .then(
+      res => res.data,
+      res => {
+        return { statusCode: res.statusCode, result: res };
+      },
+    )
+    .catch(error => {
+      return { error: error };
+    });
+};

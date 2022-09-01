@@ -13,6 +13,9 @@ import {
   getMotivosSuspensaoIntercorrencia,
   getMotivosRescisaoIntercorrencia,
   createAnexoIntercorrencia,
+  excluiIntercorrencia,
+  alteraIntercorrencia,
+  excluiAnexoImpedimento,
 } from "../../service/Intercorrencias.service";
 import { InputText } from "primereact/inputtext";
 import { Editor } from "primereact/editor";
@@ -25,6 +28,18 @@ const tipoIntercorrenciaOptions = [
   { label: "Impedimento", value: "IMPEDIMENTO" },
   { label: "Rescisão", value: "RESCISAO" },
 ];
+const tipoIntercorrenciaNome = {
+  SUSPENSAO: "Suspensão",
+  IMPEDIMENTO: "Impedimento",
+  RESCISAO: "Rescisão",
+};
+
+const motivosSupesaoDic = {
+  UNILATERALMENTE_ADMINISTRACAO_PUBLICA:
+    "Unilateralmente pela Administração Pública",
+  UNILATERALMENTE_CONTRATADO: "Unilateralmente pelo Contratado",
+  CONSENSUALMENTE: "Consensualmente",
+};
 
 const { DATA_ASSINATURA, DATA_ORDEM_INICIO } = REFERENCIA_ENCERRAMENTO;
 
@@ -43,6 +58,11 @@ export default ({ contrato }) => {
   const [motivosRescisao, setMotivosRescisao] = useState([{}]);
   const [modalCancelar, setModalCancelar] = useState(false);
   const [modalSalvar, setModalSalvar] = useState(false);
+  const [modalDeletar, setModalDeletar] = useState(false);
+  const [modalDeletarAnexo, setModalDeletarAnexo] = useState(false);
+  const [uuidDelecao, setUuidDelecao] = useState(null);
+  const [uuidDelecaoAnexo, setUuidDelecaoAnexo] = useState(null);
+  const [edicao, setEdicao] = useState(false);
 
   const toast = useToast();
 
@@ -70,6 +90,39 @@ export default ({ contrato }) => {
     if (anexo) window.open(anexo.objectURL ? anexo.objectURL : anexo);
   };
 
+  const deletaIntercorrencia = async (uuid, tipo) => {
+    const resultado = await excluiIntercorrencia(uuid, tipo);
+    if (resultado) {
+      toast.showSuccess(
+        "Intercorrência removida com sucesso!",
+        "O contrato retornou para a versão anterior.",
+      );
+      let newIntercorrencias = [...intercorrencias];
+      newIntercorrencias = newIntercorrencias.filter(
+        inter => inter.uuid !== uuid,
+      );
+      setIntercorrencias([...newIntercorrencias]);
+      setModalDeletar(false);
+    } else {
+      toast.showError("Ocorreu um erro, tente novamente!");
+    }
+  };
+
+  const deletaAnexo = async uuid => {
+    const resultado = await excluiAnexoImpedimento(uuid);
+    if (resultado) {
+      toast.showSuccess("Documento removido com sucesso!");
+      let newIntercorrencia = intercorrencia;
+      newIntercorrencia.anexos_impedimento =
+        newIntercorrencia.anexos_impedimento.filter(
+          inter => inter.uuid !== uuid,
+        );
+      setIntercorrencia(newIntercorrencia);
+      setModalDeletarAnexo(false);
+    } else {
+      toast.showError("Ocorreu um erro, tente novamente!");
+    }
+  };
   const getPayload = () => {
     let payload = { ...intercorrencia };
     payload.contrato = contrato.uuid;
@@ -117,6 +170,39 @@ export default ({ contrato }) => {
     }
   };
 
+  const editarIntercorrencia = async () => {
+    let payload = getPayload();
+    let anexos = payload.anexos;
+    delete payload.anexos;
+    const resultado = await alteraIntercorrencia(payload);
+    if (resultado.uuid) {
+      toast.showSuccess(
+        `O contrato foi ${getTextoSucesso(
+          payload.tipo_intercorrencia,
+        )} conforme intercorrência informada.`,
+        "Intercorrência gravada com sucesso!",
+      );
+      if (anexos) {
+        anexos.map(anexo => {
+          let formData = new FormData();
+          formData.append("impedimento", resultado.uuid);
+          formData.append("anexo", anexo.anexo);
+          return createAnexoIntercorrencia(formData);
+        });
+      }
+      setIntercorrencia(null);
+      setModalSalvar(false);
+      let newIntercorrencias = [...intercorrencias];
+      let index = newIntercorrencias.findIndex(
+        obj => obj.uuid === resultado.data.uuid,
+      );
+      newIntercorrencias[index] = resultado.data;
+      setIntercorrencias(newIntercorrencias);
+    } else {
+      toast.showError("Ocorreu um erro, tente novamente!");
+    }
+  };
+
   const retornaDataInicioContrato = () => {
     if (contrato.referencia_encerramento === DATA_ASSINATURA)
       return contrato.data_assinatura;
@@ -141,7 +227,6 @@ export default ({ contrato }) => {
           .add("days", diferenca)
           .format("DD/MM/YYYY");
   };
-
   const validaCampos = () => {
     let desabilitar = false;
     desabilitar = intercorrencia.tipo_intercorrencia;
@@ -168,8 +253,7 @@ export default ({ contrato }) => {
         intercorrencia.data_inicial &&
         intercorrencia.data_final &&
         intercorrencia.descricao_impedimento &&
-        intercorrencia.anexos &&
-        intercorrencia.anexos.length > 0;
+        ((intercorrencia.anexos && intercorrencia.anexos.length > 0) || edicao);
     }
 
     return !desabilitar;
@@ -203,15 +287,63 @@ export default ({ contrato }) => {
               </Button>
             </Col>
           </Row>
-          <Row className="mb-3">
-            <Col lg={6} className="pl-0">
-              <div className="titulo-termo">Registro de Intercorrência</div>
-            </Col>
-          </Row>
 
           {intercorrencias.map((inter, index) => (
             <div key={index}>
-              {index !== 0 && <hr className="mt-4 mb-4" />}
+              {index !== 0 && <hr className="mt-5 mb-4" />}
+              <Row className="mb-3">
+                <Col lg={6} className="pl-0">
+                  <div className="titulo-termo">Registro de Intercorrência</div>
+                </Col>
+                <Col lg={6} className="d-flex flex-row-reverse pr-0">
+                  <Button
+                    className="btn btn-coad-background-outline"
+                    onClick={() => {
+                      setModalDeletar(true);
+                      setUuidDelecao([inter.uuid, inter.tipo_intercorrencia]);
+                    }}
+                    tooltip="Excluir"
+                    tooltipOptions={{ position: "top" }}
+                  >
+                    <i className="fas fa-trash" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      let newInter = inter;
+                      if (newInter.motivo_rescisao)
+                        newInter.motivo_rescisao = newInter.motivo_rescisao.map(
+                          obj => obj.id,
+                        );
+                      if (newInter.valor_aditamento)
+                        newInter.valor_aditamento = parseFloat(
+                          newInter.valor_aditamento,
+                        );
+                      if (newInter.data_inicial)
+                        newInter.data_inicial = moment(
+                          newInter.data_inicial,
+                          "yyyy-MM-DD",
+                        ).toDate();
+                      if (newInter.data_final)
+                        newInter.data_final = moment(
+                          newInter.data_final,
+                          "yyyy-MM-DD",
+                        ).toDate();
+                      if (newInter.data_rescisao)
+                        newInter.data_rescisao = moment(
+                          newInter.data_rescisao,
+                          "yyyy-MM-DD",
+                        ).toDate();
+                      setIntercorrencia(inter);
+                      setEdicao(true);
+                    }}
+                    className="btn btn-coad-background-outline mx-2"
+                    tooltip="Editar"
+                    tooltipOptions={{ position: "top" }}
+                  >
+                    <i className="fas fa-pencil-alt" />
+                  </Button>
+                </Col>
+              </Row>
               <Row className="mb-3">
                 <div className="tabela-aditamentos">
                   <div className="grid-row">
@@ -219,7 +351,7 @@ export default ({ contrato }) => {
                       <div className="grid-item">
                         <p className="titulo-item">Tipo de intercorrência:</p>
                         <span className="conteudo-item">
-                          {inter.tipo_intercorrencia}
+                          {tipoIntercorrenciaNome[inter.tipo_intercorrencia]}
                         </span>
                       </div>
                     )}
@@ -280,7 +412,7 @@ export default ({ contrato }) => {
                       </>
                     )}
                   </div>
-                  {inter.tipo_intercorrencia === "Suspensão" && (
+                  {inter.tipo_intercorrencia === "SUSPENSAO" && (
                     <>
                       <div className="grid-row">
                         <div className="grid-item col-9">
@@ -314,7 +446,7 @@ export default ({ contrato }) => {
                           Motivo suspensão contratual:
                         </p>
                         <span className="conteudo-item">
-                          {inter.motivo_suspensao}
+                          {motivosSupesaoDic[inter.motivo_suspensao]}
                         </span>
                       </div>
                     </div>
@@ -329,7 +461,7 @@ export default ({ contrato }) => {
                         {inter.motivo_rescisao.map((motivo, index) => (
                           <div key={index}>
                             <span className="conteudo-item">
-                              <p>{motivo}</p>
+                              <p>{motivo.nome}</p>
                             </span>
                           </div>
                         ))}
@@ -406,7 +538,9 @@ export default ({ contrato }) => {
           <Row>
             <Col lg={12} xl={12}>
               <h5>
-                <span>Cadastro de Nova Intercorrência:</span>
+                <span>
+                  {edicao ? "Edição de" : "Cadastro de Nova"} Intercorrência:
+                </span>
               </h5>
             </Col>
           </Row>
@@ -501,7 +635,9 @@ export default ({ contrato }) => {
                     encerramento do contrato?
                   </span>
                   <span className="texto-suspensao">
-                    {diferenca} dias de suspensão
+                    {diferenca !== 0
+                      ? `${diferenca} dias de suspensão`
+                      : `${intercorrencia.dias_suspensao} de suspensão`}
                   </span>
                 </Row>
 
@@ -568,7 +704,13 @@ export default ({ contrato }) => {
                         "w-100 " +
                         (intercorrencia.acrescentar_dias ? "red" : "")
                       }
-                      value={retornaDataEncerramento()}
+                      value={
+                        intercorrencia.data_encerramento
+                          ? moment(intercorrencia.data_encerramento).format(
+                              "DD/MM/yyyy",
+                            )
+                          : retornaDataEncerramento()
+                      }
                       disabled={true}
                     />
                   </Col>
@@ -590,7 +732,6 @@ export default ({ contrato }) => {
                 </Row>
               </>
             )}
-
           {intercorrencia.tipo_intercorrencia === "SUSPENSAO" &&
             intercorrencia.motivo_suspensao === motivosSuspensao[0].value && (
               <Row>
@@ -795,7 +936,11 @@ export default ({ contrato }) => {
                     <span className="font-weight-bold">
                       Tempo de impedimento:{" "}
                     </span>
-                    <span className="red">{diferenca} dias</span>
+                    <span className="red">
+                      {diferenca !== 0
+                        ? `${diferenca} dias`
+                        : `${intercorrencia.dias_impedimento}`}
+                    </span>
                   </div>
 
                   <div>
@@ -845,6 +990,36 @@ export default ({ contrato }) => {
                 intercorrencia={intercorrencia}
                 setIntercorrencia={setIntercorrencia}
               />
+              {edicao && (
+                <div className="grid-row">
+                  <div className="grid-item">
+                    {intercorrencia.anexos_impedimento.map((anexo, index) => (
+                      <div key={index}>
+                        <span className="icones-acoes">
+                          <i
+                            className="fas fa-paperclip mr-3"
+                            onClick={() => abrirAnexo(anexo["anexo"])}
+                          >
+                            {" "}
+                            <span className="link-anexo">
+                              {anexo["anexo"].split("/").slice(-1)}
+                            </span>
+                          </i>
+                        </span>
+                        <span
+                          className="link-deletar"
+                          onClick={() => {
+                            setModalDeletarAnexo(true);
+                            setUuidDelecaoAnexo(anexo["uuid"]);
+                          }}
+                        >
+                          X
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
 
@@ -910,7 +1085,9 @@ export default ({ contrato }) => {
                 </button>
                 <button
                   className="btn btn-coad-primary"
-                  onClick={() => salvarIntercorrencia()}
+                  onClick={() =>
+                    edicao ? editarIntercorrencia() : salvarIntercorrencia()
+                  }
                 >
                   Confirmo
                 </button>
@@ -949,8 +1126,66 @@ export default ({ contrato }) => {
             <br />
             <strong>Você confirma o registro da intercorrência?</strong>
           </Dialog>
+          <Dialog
+            header="Remover documento"
+            visible={modalDeletarAnexo}
+            style={{ width: "50vw" }}
+            modal={true}
+            onHide={() => setModalDeletarAnexo(false)}
+            footer={
+              <div className="mb-2">
+                <button
+                  className="btn btn-coad-background-outline"
+                  onClick={() => setModalDeletarAnexo(false)}
+                >
+                  Não
+                </button>
+                <button
+                  className="btn btn-coad-primary"
+                  onClick={() => deletaAnexo(uuidDelecaoAnexo)}
+                >
+                  Sim
+                </button>
+              </div>
+            }
+          >
+            Deseja remover este arquivo?
+          </Dialog>
         </>
       )}
+      <Dialog
+        header="Excluir Intercorrência"
+        visible={modalDeletar}
+        style={{ width: "50vw" }}
+        modal={true}
+        onHide={() => setModalDeletar(false)}
+        footer={
+          <div className="mb-2">
+            <button
+              className="btn btn-coad-background-outline"
+              onClick={() => setModalDeletar(false)}
+            >
+              Não
+            </button>
+            <button
+              className="btn btn-coad-primary"
+              onClick={() =>
+                deletaIntercorrencia(uuidDelecao[0], uuidDelecao[1])
+              }
+            >
+              Sim
+            </button>
+          </div>
+        }
+      >
+        <p>
+          <b>Deseja excluir o registro dessa intercorrência? </b>
+        </p>
+        <p>
+          A situação do contrato e a contagem do vencimento irão retornar para o
+          registro anterior do contrato.
+        </p>
+      </Dialog>
     </div>
   );
 };
