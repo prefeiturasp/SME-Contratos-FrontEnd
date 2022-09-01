@@ -125,11 +125,24 @@ $mainColor: #602a2a;
       margin-bottom: 0.2em;
     }
   }
-
+  .icones-acoes {
+    .fas {
+      color: #b40c02;
+      cursor: pointer;
+    }
+  }
+  .link-anexo {
+    font-weight: 200;
+  }
+  .link-deletar {
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: -2rem;
+  }
   .titulo-termo {
     color: #602a2a;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 600;
     padding-top: 10px;
   }
 
