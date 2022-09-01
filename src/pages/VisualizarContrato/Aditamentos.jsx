@@ -195,7 +195,7 @@ export default ({ contrato }) => {
                   </Button>
                   <Button
                     onClick={() => {
-                      let newAdit = adit;
+                      let newAdit = { ...adit };
                       newAdit.objeto_aditamento = newAdit.objeto_aditamento.map(
                         obj => obj.id,
                       );
@@ -221,7 +221,7 @@ export default ({ contrato }) => {
                           newAdit.data_final,
                           "yyyy-MM-DD",
                         ).toDate();
-                      setAditamento(adit);
+                      setAditamento(newAdit);
                       setEdicao(true);
                     }}
                     className="btn btn-coad-background-outline mx-2"
@@ -253,7 +253,7 @@ export default ({ contrato }) => {
                     )}
                     {adit.valor_mensal_atualizado && (
                       <div className="grid-item">
-                        <p className="titulo-item">Valor mensal atualizado:</p>
+                        <p className="titulo-item">Valor Mensal Atualizado:</p>
                         <span className="conteudo-item">
                           {formatadoMonetario(adit.valor_mensal_atualizado)}
                         </span>
@@ -261,7 +261,7 @@ export default ({ contrato }) => {
                     )}
                     {adit.valor_total_atualizado && (
                       <div className="grid-item">
-                        <p className="titulo-item">Valor total atualizado:</p>
+                        <p className="titulo-item">Valor Total Atualizado:</p>
                         <span className="conteudo-item">
                           {formatadoMonetario(adit.valor_total_atualizado)}
                         </span>
@@ -269,7 +269,7 @@ export default ({ contrato }) => {
                     )}
                     {adit.valor_aditamento && (
                       <div className="grid-item">
-                        <p className="titulo-item">Valor do aditamento:</p>
+                        <p className="titulo-item">Valor do Aditamento:</p>
                         <span className="conteudo-item">
                           {formatadoMonetario(adit.valor_aditamento)}
                         </span>
@@ -278,7 +278,7 @@ export default ({ contrato }) => {
                   </div>
                   <div className="grid-row">
                     <div className="grid-item">
-                      <p className="titulo-item">Objeto do termo aditivo:</p>
+                      <p className="titulo-item">Objeto do Termo Aditivo:</p>
                       <span className="conteudo-item">
                         {adit.objeto_aditamento.map((objeto, index) => (
                           <p className="mb-0" key={index}>
@@ -290,7 +290,7 @@ export default ({ contrato }) => {
                   </div>
                   <div className="grid-row">
                     <div className="grid-item">
-                      <p className="titulo-item">Razões do aditamento:</p>
+                      <p className="titulo-item">Razões do Aditamento:</p>
                       <span
                         className="conteudo-item"
                         dangerouslySetInnerHTML={{

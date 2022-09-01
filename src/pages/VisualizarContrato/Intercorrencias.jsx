@@ -523,7 +523,7 @@ export default ({ contrato }) => {
                 <Label>
                   Selecione um ou mais motivos para rescisão contratual{" "}
                   <span className="font-weight-bold">
-                    previstos no art. 78 da Lei n° 8.66/93
+                    previstos no art. 78 da Lei n° 8.666/93
                   </span>
                 </Label>
                 {motivosRescisao.map((obj, index) => {
@@ -644,7 +644,7 @@ export default ({ contrato }) => {
                 onClick={() => setModalSalvar(true)}
                 disabled={validaCampos()}
               >
-                Salvar Intercorrencia
+                Salvar Intercorrência
               </Button>
               <Button
                 onClick={() => setModalCancelar(true)}
@@ -680,7 +680,7 @@ export default ({ contrato }) => {
           >
             Deseja cancelar o preenchimento da intercorrência?
             <br />
-            Os dados inseridos serão removidos
+            Os dados inseridos serão removidos.
           </Dialog>
 
           <Dialog
@@ -736,7 +736,7 @@ export default ({ contrato }) => {
                 </span>
               )}
             <br />
-            <strong>Você confirma o registro da intercorrência?</strong>
+            Você confirma o registro da intercorrência?
           </Dialog>
         </>
       )}
