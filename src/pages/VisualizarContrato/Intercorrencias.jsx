@@ -389,7 +389,7 @@ export default ({ contrato }) => {
                   <div className="grid-row">
                     {inter.tipo_intercorrencia && (
                       <div className="grid-item">
-                        <p className="titulo-item">Tipo de intercorrência:</p>
+                        <p className="titulo-item">Tipo de Intercorrência:</p>
                         <span className="conteudo-item">
                           {tipoIntercorrenciaNome[inter.tipo_intercorrencia]}
                         </span>
@@ -421,7 +421,7 @@ export default ({ contrato }) => {
                     )}
                     {inter.dias_impedimento && (
                       <div className="grid-item">
-                        <p className="titulo-item">Tempo de impedimento:</p>
+                        <p className="titulo-item">Tempo de Impedimento:</p>
                         <span className="conteudo-item">
                           {inter.dias_impedimento}
                         </span>
@@ -483,7 +483,7 @@ export default ({ contrato }) => {
                     <div className="grid-row">
                       <div className="grid-item">
                         <p className="titulo-item">
-                          Motivo suspensão contratual:
+                          Motivo da Suspensão Contratual:
                         </p>
                         <span className="conteudo-item">
                           {motivosSupesaoDic[inter.motivo_suspensao]}
@@ -534,7 +534,7 @@ export default ({ contrato }) => {
                   {inter.descricao_impedimento && (
                     <div className="grid-row">
                       <div className="grid-item">
-                        <p className="titulo-item">Descrição do impedimento:</p>
+                        <p className="titulo-item">Descrição do Impedimento:</p>
                         <span
                           className="conteudo-item"
                           dangerouslySetInnerHTML={{
@@ -547,7 +547,7 @@ export default ({ contrato }) => {
                   {inter.anexos_impedimento && (
                     <div className="grid-row">
                       <div className="grid-item">
-                        <p className="titulo-item pb-3">Documentos anexados:</p>
+                        <p className="titulo-item pb-3">Documentos Anexados:</p>
                         {inter.anexos_impedimento.map((anexo, index) => (
                           <div key={index}>
                             <span className="icones-acoes">
@@ -971,7 +971,7 @@ export default ({ contrato }) => {
                   </span>
                   <span className="red">{diferenca} dias</span>
                 </Col>
-                
+
                 <Col lg={4} xl={4} className="mt-3">
                   <span className="font-weight-bold">Vigência: </span>
                   <span>{contrato.vigencia} dias</span>
