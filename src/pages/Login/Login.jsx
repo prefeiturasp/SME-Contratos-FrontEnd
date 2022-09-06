@@ -10,6 +10,11 @@ import { Row, Alert, Col } from "reactstrap";
 import { Button } from "primereact/button";
 import { Button as AntButton } from "antd";
 import { hasFlashMessage, getFlashMessage } from "../../utils/flashMessages";
+import { TooltipIcone } from "../../components/Shared/TooltipIcone";
+import { Password } from "primereact/password";
+
+const TOOLTIP_USUARIO =
+  "Digite, sem ponto e sem traço, os sete dígitos do seu RF.";
 
 const Login = props => {
   const [userName, setUserName] = useState("");
@@ -24,9 +29,9 @@ const Login = props => {
       <Row className="my-3">
         <Col xl={12} md={12}>
           <label>Usuário</label>
+          <TooltipIcone tooltipText={TOOLTIP_USUARIO} />
           <InputText
             value={userName}
-            placeholder="Insira seu Usuário"
             id={"username"}
             type={"text"}
             style={{ width: "100%" }}
@@ -35,16 +40,15 @@ const Login = props => {
           />
         </Col>
         <Col xl={12} md={12}>
-          <label>Senha</label>
-          <InputText
-            value={password}
-            placeholder="Insira sua senha"
+          <label className="mt-3">Senha</label>
+          <Password
             id={"password"}
             type={"password"}
-            style={{ width: "100%" }}
-            required
+            style={{ display: "grid", width: "100%" }}
+            feedback={false}
+            toggleMask={true}
+            value={password}
             onChange={e => setPassword(e.target.value)}
-            autoComplete="off"
           />
         </Col>
         <Col xl={12} md={12}>
