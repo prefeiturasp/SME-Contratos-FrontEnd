@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import React from "react";
-//import "../style.scss";
 import { Tooltip } from "antd";
 
 export const TooltipIcone = props => {
