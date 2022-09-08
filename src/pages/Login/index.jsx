@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import logoSP from "../../assets/images/logoSP.svg";
+import logoSP from "../../assets/images/logoSPatual.svg";
 import logoSafi from "../../assets/images/logoSafi.svg";
 import {
   login,
