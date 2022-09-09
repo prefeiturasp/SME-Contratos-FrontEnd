@@ -28,7 +28,7 @@ export class SelecionaSituacaoContrato extends Component {
         value={this.props.situacao}
         onChange={event => this.selecionaSituacao(event)}
         autoWidth={false}
-        placeholder="Selecione uma Situação..."
+        placeholder="Selecione um status"
         showClear={true}
       />
     );

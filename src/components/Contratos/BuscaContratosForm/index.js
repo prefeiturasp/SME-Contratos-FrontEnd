@@ -7,7 +7,7 @@ import { SelecionaEmpresa } from "../SelecionaEmpresa";
 import { SelecionaSituacaoContrato } from "../SelecionaSituacaoContrato";
 import { SelecionaTipoServico } from "../SelecionaTipoServico";
 import { SelecionaData } from "../SelecionaData";
-
+import { InputText } from "primereact/inputtext";
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
 import { Col, Row } from "reactstrap";
@@ -70,28 +70,43 @@ export class BuscaContratosForm extends Component {
 
   render() {
     const footer = (
-      <span>
-        <Button
-          className="float-right"
-          label="Consultar"
-          style={{ marginRight: ".25em" }}
-          onClick={this.handleClickBuscar.bind(this)}
-        />
-        <Button
-          className="float-right"
-          label="Limpar Filtros"
-          style={{ marginRight: ".25em" }}
-          onClick={this.limparFiltros.bind(this)}
-        />
-      </span>
+      <Row>
+        <Col lg={12} xl={6} className="float-left">
+          <span className="float-left">
+            <Button
+              icon="pi pi-file"
+              label="Novo Contrato"
+              style={{ marginBottom: ".80em", marginRight: ".5em" }}
+              className="btn-coad-background-outline"
+              onClick={() => {
+                redirect(`#/visualizar-contrato/`);
+              }}
+            />
+          </span>
+        </Col>
+        <Col lg={12} xl={6}>
+          <span>
+            <Button
+              className="float-right"
+              label="Filtrar"
+              style={{ marginRight: ".5em" }}
+              onClick={this.handleClickBuscar.bind(this)}
+            />
+            <Button
+              className="float-right"
+              label="Limpar Filtros"
+              style={{ marginRight: ".25em" }}
+              onClick={this.limparFiltros.bind(this)}
+            />
+          </span>
+        </Col>
+      </Row>
     );
 
     return (
       <Card footer={footer} className="filtro filtroBorda">
         <Row className="filtro-head-contrato">
-          <Col lg={12} xl={6} className="float-left">
-            <i className="pi pi-filter-fill"></i>Filtrar contratos
-          </Col>
+          <Col lg={12} xl={6} className="float-left"></Col>
 
           <Col lg={12} xl={6}>
             <span className="float-right">
@@ -112,22 +127,23 @@ export class BuscaContratosForm extends Component {
             <div className="p-grid contrato-grid ">
               <div className="p-col-6">
                 <h6>Nº do Termo de Contrato</h6>
-                <InputMask
-                  mask="********/9999"
+                <InputText
+                  id="termoContrato"
                   value={this.state.termo_contrato}
                   onChange={e =>
                     this.setState({ termo_contrato: e.target.value })
                   }
+                  placeholder="Informe o n° do Contrato TESTE"
                   autoClear={false}
-                  placeholder="Informe o nº do termo de contrato"
                 />
               </div>
 
-              <div className="p-col-6">
-                <h6>Nome da empresa</h6>
+              <div className="p-col-6 no-padding-right">
+                <h6>Nome da Empresa</h6>
                 <SelecionaEmpresa
                   empresa={this.state.empresa}
                   onSelect={this.setaEmpresa.bind(this)}
+                  filter
                 />
               </div>
 
@@ -144,10 +160,10 @@ export class BuscaContratosForm extends Component {
                 />
               </div>
 
-              <div className="p-col-6">
+              <div className="p-col-6 no-padding-right">
                 <h6>Período de Encerramento</h6>
-                <div className="p-grid">
-                  <div className="p-col-6">
+                <div className="p-grid ml-0">
+                  <div className="p-col-6 no-padding-left">
                     <SelecionaData
                       placeholder={"De"}
                       data={this.state.data_inicial}
@@ -155,7 +171,7 @@ export class BuscaContratosForm extends Component {
                       onSelect={this.setaDataInicialContrato.bind(this)}
                     />
                   </div>
-                  <div className="p-col-6">
+                  <div className="p-col-6 no-padding-right">
                     <SelecionaData
                       placeholder={"Até"}
                       data={this.state.data_final}
@@ -174,11 +190,12 @@ export class BuscaContratosForm extends Component {
                 />
               </div>
 
-              <div className="p-col-6 ">
+              <div className="p-col-6 no-padding-right">
                 <h6>Objeto</h6>
                 <SelecionaTipoServico
                   tipoServico={this.state.objeto}
                   onSelect={this.setaTipoServico.bind(this)}
+                  filter
                 />
               </div>
             </div>
