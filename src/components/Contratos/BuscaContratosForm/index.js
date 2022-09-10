@@ -105,23 +105,6 @@ export class BuscaContratosForm extends Component {
 
     return (
       <Card footer={footer} className="filtro filtroBorda">
-        <Row className="filtro-head-contrato">
-          <Col lg={12} xl={6} className="float-left"></Col>
-
-          <Col lg={12} xl={6}>
-            <span className="float-right">
-              <Button
-                icon="pi pi-file"
-                label="Novo Contrato"
-                style={{ marginBottom: ".80em" }}
-                className="btn-coad-background-outline"
-                onClick={() => {
-                  redirect(`#/visualizar-contrato/`);
-                }}
-              />
-            </span>
-          </Col>
-        </Row>
         <div className="p-grid contrato-grid p-fluid">
           <div className="card card-w-title-contrato filtro">
             <div className="p-grid contrato-grid ">
@@ -133,7 +116,7 @@ export class BuscaContratosForm extends Component {
                   onChange={e =>
                     this.setState({ termo_contrato: e.target.value })
                   }
-                  placeholder="Informe o n° do Contrato TESTE"
+                  placeholder="00/SME/CODAE/0000"
                   autoClear={false}
                 />
               </div>
