@@ -32,7 +32,7 @@ export class SelecionaEmpresa extends Component {
         value={this.props.empresa}
         onChange={event => this.selecionaEmpresa(event)}
         autoWidth={false}
-        placeholder="Selecione uma Empresa..."
+        placeholder="Selecione uma Empresa"
         showClear={true}
         emptyFilterMessage={"Nenhuma empresa encontrada"}
       />
