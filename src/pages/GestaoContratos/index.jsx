@@ -76,7 +76,9 @@ function GestaoContratos() {
         { label: "Gestão de Contratos", url: "#" + GESTAO_CONTRATOS },
       ]}
     >
-      <h4>Gestão de Contratos</h4>
+      <h4>
+        <strong>Gestão de Contratos</strong>
+      </h4>
       <Container>
         <BuscaContratosForm onBuscarClick={filtros => onBuscarClick(filtros)} />
         <hr />
