@@ -1,0 +1,26 @@
+.p-paginator {
+  .p-paginator-element {
+    border: 1px solid #602a2a !important;
+    border-radius: 4px !important;
+    margin-right: 8px !important;
+    color: #602a2a !important;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .p-highlight {
+    background: #602a2a !important;
+    color: white !important;
+    border-color: #602a2a !important;
+    box-shadow: 0 0 0 0.2rem #602a2a !important;
+  }
+  .pagination-semborda {
+    border: 0px !important;
+  }
+  .pagination-font {
+    font-size: 22px;
+  }
+  .pagination-fontPreviusNext {
+    font-weight: normal;
+    font-size: 30px;
+  }
+}

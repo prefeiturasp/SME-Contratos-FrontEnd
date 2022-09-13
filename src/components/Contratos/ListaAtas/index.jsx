@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Paginator } from "primereact/paginator";
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
 import moment from "moment";
+import Pagination from "../../Shared/pagination";
 
 const ListaAtas = ({ atas, totalAtas, mudarPagina, loading }) => {
   const [index, setIndex] = useState(0);
@@ -64,7 +64,7 @@ const ListaAtas = ({ atas, totalAtas, mudarPagina, loading }) => {
         />
       </DataTable>
       {atas.length < totalAtas && (
-        <Paginator
+        <Pagination
           rows={10}
           totalRecords={totalAtas}
           onPageChange={e => mudaPagina(e)}
