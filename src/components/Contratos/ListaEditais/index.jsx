@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Paginator } from "primereact/paginator";
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
+import Pagination from "../../Shared/pagination";
 
 const ListarEditais = ({ editais, totalEditais, mudarPagina, loading }) => {
   const [index, setIndex] = useState(0);
@@ -51,7 +51,7 @@ const ListarEditais = ({ editais, totalEditais, mudarPagina, loading }) => {
         <Column field="data_homologacao" header="Data de Homologação" />
       </DataTable>
       {editais.length < totalEditais && (
-        <Paginator
+        <Pagination
           rows={10}
           totalRecords={totalEditais}
           onPageChange={e => mudaPagina(e)}

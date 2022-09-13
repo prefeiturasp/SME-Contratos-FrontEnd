@@ -7,9 +7,9 @@ import { Button } from "primereact/button";
 import { redirect } from "../../utils/redirect";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Paginator } from "primereact/paginator";
 import { getListaDotacoes } from "../../service/DotacaoOrcamentaria.service";
 import { ORCAMENTO } from "../../configs/urls.constants";
+import Pagination from "../../components/Shared/pagination";
 
 export default () => {
   const [dotacoes, setDotacoes] = useState([]);
@@ -78,7 +78,7 @@ export default () => {
             <Column header="Pago" />
           </DataTable>
           {dotacoes.length < totalAtas && (
-            <Paginator
+            <Pagination
               rows={10}
               totalRecords={totalAtas}
               onPageChange={e => mudaPagina(e)}

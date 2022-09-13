@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Paginator } from "primereact/paginator";
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
+import Pagination from "../../Shared/pagination";
 
 const ListaEmpresas = ({ empresas, totalEmpresas, mudarPagina, loading }) => {
   const [index, setIndex] = useState(0);
@@ -35,7 +35,7 @@ const ListaEmpresas = ({ empresas, totalEmpresas, mudarPagina, loading }) => {
         <Column field="situacao" header="Situação" />
       </DataTable>
       {empresas.length < totalEmpresas && (
-        <Paginator
+        <Pagination
           rows={10}
           totalRecords={totalEmpresas}
           onPageChange={e => mudaPagina(e)}

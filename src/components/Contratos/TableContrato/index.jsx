@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Paginator } from "primereact/paginator";
 import "./style.scss";
 import { redirect } from "../../../utils/redirect";
 import moment from "moment";
+import Pagination from "../../Shared/pagination";
 
 function TableContrato({
   contratos,
@@ -87,7 +87,7 @@ function TableContrato({
             {dynamicColumns}
           </DataTable>
           {contratos.length < totalContratos && (
-            <Paginator
+            <Pagination
               rows={10}
               totalRecords={totalContratos}
               onPageChange={e => mudaPagina(e)}
