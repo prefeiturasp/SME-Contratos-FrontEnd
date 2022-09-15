@@ -132,7 +132,7 @@ export class BuscaContratosForm extends Component {
               </div>
 
               <div className="p-col-6">
-                <h6>CNPJ da empresa</h6>
+                <h6>CNPJ da Empresa</h6>
                 <InputMask
                   mask="99.999.999/9999-99"
                   value={this.state.cnpj_empresa}

@@ -126,7 +126,7 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
               />
             </div>
             <div className="p-col-6 ">
-              <h6>Tipo de Fornecedor</h6>
+              <h6>Tipo de Empresa</h6>
               <SelecionaTipoFornecedorEmpresa
                 className="w-100"
                 tipoFornecedor={filtros.tipo_fornecedor}

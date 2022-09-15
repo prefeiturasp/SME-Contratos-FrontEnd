@@ -15,7 +15,7 @@ function SelecionaTipoFornecedorEmpresa(props) {
       value={props.tipoFornecedor}
       onChange={event => selecionaTipoFornecedor(event)}
       autoWidth={false}
-      placeholder="Selecione Tipo de Fornecedor..."
+      placeholder="Selecione Tipo de Empresa..."
       showClear={true}
     />
   );
