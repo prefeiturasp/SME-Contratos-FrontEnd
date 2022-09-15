@@ -124,6 +124,7 @@ export class BuscaContratosForm extends Component {
               <div className="p-col-6 no-padding-right">
                 <h6>Nome da Empresa</h6>
                 <SelecionaEmpresa
+                  campo="nome"
                   empresa={this.state.empresa}
                   onSelect={this.setaEmpresa.bind(this)}
                   filter
@@ -131,7 +132,7 @@ export class BuscaContratosForm extends Component {
               </div>
 
               <div className="p-col-6">
-                <h6>CNPJ da empresa</h6>
+                <h6>CNPJ da Empresa</h6>
                 <InputMask
                   mask="99.999.999/9999-99"
                   value={this.state.cnpj_empresa}

@@ -27,6 +27,9 @@ export default () => {
       ? filtros.cnpj_empresa.replace(/\D+/g, "")
       : "";
     filtrosAjustados.nome = filtros.nome ? filtros.nome.nome : "";
+    filtrosAjustados.razao_social = filtros.razao_social
+      ? filtros.razao_social.razao_social
+      : "";
     filtrosAjustados.tipo_servico = filtros.tipo_servico
       ? filtros.tipo_servico.id
       : "";
@@ -71,7 +74,7 @@ export default () => {
         { label: "Empresas", url: "#" + LISTAR_EMPRESAS },
       ]}
     >
-      <h4>Cadastro de Empresas</h4>
+      <h4>Empresas</h4>
       <Container>
         <BuscaEmpresasForm
           onBuscarClick={filtros => onBuscarClick(filtros)}

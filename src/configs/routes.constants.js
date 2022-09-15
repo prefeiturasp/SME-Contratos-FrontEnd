@@ -125,7 +125,7 @@ export const MenuConfig = [
     icon: "pi pi-list",
     items: [
       {
-        label: "Cadastro de Empresas",
+        label: "Empresas",
         icon: "pi pi-cog pi-th-large",
         to: constants.LISTAR_EMPRESAS,
       },

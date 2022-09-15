@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FormGroup, Label, Button as ButtonBootstrap } from "reactstrap";
+import { FormGroup, Label } from "reactstrap";
 import moment from "moment";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { InputMask } from "primereact/inputmask";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { Switch } from "antd";
 import { CREATED, OK } from "http-status-codes";
 import { redirect } from "../../utils/redirect";
 import { getUrlParams } from "../../utils/params";
-import { Row, Col } from "reactstrap";
-
 import useToast from "../../hooks/useToast";
 import Container from "../../components/Global/Container";
 import Page from "../../components/Global/Page";
@@ -28,6 +25,7 @@ import "./style.scss";
 import { validarCNPJ } from "../../utils/validadores";
 import { deepCopy } from "../../utils/deepCopy";
 import { EMPRESAS, LISTAR_EMPRESAS } from "../../configs/urls.constants";
+import { mascaraTelefoneOuCelular } from "./helper";
 
 let valoresIniciais = {
   contatos: [
@@ -35,6 +33,7 @@ let valoresIniciais = {
       email: "",
       cargo: "",
       nome: "",
+      rg: "",
     },
   ],
   razao_social: "",
@@ -57,7 +56,6 @@ const Empresas = () => {
   );
   const [empresa, setEmpresa] = useState({});
   const [contatos, setContatos] = useState([{}]);
-  const [modoVisualizacao, setModoVisualizacao] = useState(true);
   const [incluir, setIncluir] = useState(true);
   const toast = useToast();
 
@@ -80,7 +78,6 @@ const Empresas = () => {
     const parametro = getUrlParams();
     if (!parametro.uuid) {
       setIncluir(false);
-      setModoVisualizacao(false);
     }
   }, [empresa]);
 
@@ -110,14 +107,17 @@ const Empresas = () => {
     empresaFormatada.cep = removeCaracteresEspeciais(empresa.cep);
     return empresaFormatada;
   };
-
   const criarEmpresa = async () => {
     if (validarCNPJ(removeCaracteresEspeciais(empresa.cnpj))) {
       try {
         let ataFormatada = formatarEmpresa();
         const resultado = await criaEmpresa(ataFormatada);
         if (resultado.status === CREATED) {
-          toast.showSuccess("Empresa criada com sucesso");
+          let mensagemSucesso =
+            empresa.situacao && empresa.situacao.id === "INATIVA"
+              ? "Empresa cadastrada com sucesso"
+              : "Empresa criada com sucesso";
+          toast.showSuccess(mensagemSucesso);
           redirect("#/listar-empresas");
         }
       } catch (e) {
@@ -148,7 +148,7 @@ const Empresas = () => {
         let empresaFormatada = formatarEmpresa();
         const resultado = await alteraEmpresa(empresaFormatada);
         if (resultado.status === OK) {
-          toast.showSuccess("Empresa alterada com sucesso");
+          toast.showSuccess("Cadastro alterado com sucesso.");
           redirect("#/listar-empresas");
         }
       } catch (e) {
@@ -193,6 +193,11 @@ const Empresas = () => {
     contatosNew.push({});
     setContatos(contatosNew);
   };
+  const removeContato = index => {
+    let contatosNew = [...contatos];
+    contatosNew.splice(index, 1);
+    setContatos(contatosNew);
+  };
 
   const validaContatos = () => {
     let validacao = contatos.filter(
@@ -200,6 +205,7 @@ const Empresas = () => {
         contato.nome &&
         contato.email &&
         contato.cargo &&
+        contato.rg &&
         contato.telefone &&
         contato.telefone.length > 0,
     );
@@ -220,13 +226,15 @@ const Empresas = () => {
     setContatos(deepCopy(contatosIniciais));
   };
 
-  const mensagemConfirmacao = incluir
-    ? "Confirma a alteração desta empresa?"
-    : "Confirma a criação de uma nova empresa?";
+  const tituloConfirmacao = incluir ? "Salvar alterações" : "Confirmar";
 
+  const mensagemConfirmacao = incluir
+    ? "Deseja salvar as alterações do cadastro?"
+    : empresa.situacao && empresa.situacao.id === "INATIVA"
+    ? "Empresa não está apta e não será possível inseri-la em um Contrato"
+    : "Confirma a criação de uma nova empresa?";
   const habilitaBotao =
     validaContatos() &&
-    !modoVisualizacao &&
     empresa.cnpj &&
     empresa.razao_social &&
     empresa.nome &&
@@ -244,33 +252,15 @@ const Empresas = () => {
   return (
     <>
       <Page
+        titulo="Cadastro de Empresas"
         breadcrumb={[
           { label: "Cadastros" },
           { label: "Empresas", url: "#" + LISTAR_EMPRESAS },
           { label: "Nova Empresa", url: "#" + EMPRESAS },
         ]}
+        onClickVoltar={() => redirect("#/listar-empresas")}
       >
-        <h5>Cadastro de Empresas</h5>
-        <Container>
-          <FormGroup className="d-flex flex-row-reverse mt-3">
-            <Button
-              disabled={!habilitaBotao}
-              className="btn-coad-primary"
-              label="Salvar"
-              onClick={exibeDialog}
-            />
-            <Button
-              className="btn-coad-background-outline mr-2"
-              label="Cancelar"
-              onClick={() => setVisivelCancelar(true)}
-            />
-            <ButtonBootstrap
-              onClick={() => redirect("#/listar-empresas")}
-              className="btn-coad-background-outline mx-2"
-            >
-              <i className="fas fa-arrow-left" /> Voltar
-            </ButtonBootstrap>
-          </FormGroup>
+        <Container classe="alinhamento">
           <Dialog
             header={"Cancelar "}
             visible={visivelCancelar}
@@ -296,10 +286,11 @@ const Empresas = () => {
               </FormGroup>
             }
           >
-            <span>Deseja cancelar alterações dessa empresa?</span>
+            <p>Deseja cancelar preenchimento das informações?</p>
+            <p>Os dados inseridos não serão salvos</p>
           </Dialog>
           <Dialog
-            header={"Confirmar"}
+            header={tituloConfirmacao}
             visible={visivel}
             style={{ width: "60vw" }}
             modal={true}
@@ -315,7 +306,11 @@ const Empresas = () => {
               {!incluir ? (
                 <Button
                   className="btn-coad-primary"
-                  label="Sim"
+                  label={
+                    empresa.situacao && empresa.situacao.id === "INATIVA"
+                      ? "Ciente"
+                      : "Sim"
+                  }
                   onClick={criarEmpresa}
                 />
               ) : (
@@ -327,44 +322,31 @@ const Empresas = () => {
               )}
             </FormGroup>
           </Dialog>
-          <Row>
-            {incluir ? (
-              <Col className="d-flex justify-content-end">
-                <Label className="px-3">Modo de edição</Label>
-                <Switch
-                  defaultChecked={!modoVisualizacao}
-                  onChange={() => setModoVisualizacao(!modoVisualizacao)}
-                />
-              </Col>
-            ) : (
-              ""
-            )}
-          </Row>
           <br />
-          <h5 className="titulo-secao">Empresa ou Fornecedor</h5>
+          <h5 className="titulo-secao">Empresa</h5>
           <div className="p-grid">
-            <div className="p-col-4">
+            <div className="p-col-4 info-required">
               <Label className="font-weight-bold">CNPJ</Label>
               <InputMask
                 className="w-100"
                 mask="99.999.999/9999-99"
                 value={empresa.cnpj}
                 autoClear={false}
-                placeholder="Ex.: XX.XXX.XXX/XXXX-XX"
+                placeholder="Ex.: 00.000.000/0000-00"
                 onChange={e => setEmpresa({ ...empresa, cnpj: e.value })}
-                disabled={modoVisualizacao}
               />
             </div>
 
-            <div className="p-col-8">
-              <Label className="font-weight-bold">Razão Social</Label>
+            <div className="p-col-8 info-required">
+              <Label className="font-weight-bold info-required">
+                Razão Social
+              </Label>
               <InputText
                 className="w-100"
                 value={empresa.razao_social}
                 onChange={e =>
                   setEmpresa({ ...empresa, razao_social: e.target.value })
                 }
-                disabled={modoVisualizacao}
               />
             </div>
 
@@ -374,11 +356,10 @@ const Empresas = () => {
                 className="w-100"
                 value={empresa.nome}
                 onChange={e => setEmpresa({ ...empresa, nome: e.target.value })}
-                disabled={modoVisualizacao}
               />
             </div>
 
-            <div className="p-col-4">
+            <div className="p-col-4 info-required">
               <Label className="font-weight-bold">Data de Cadastro</Label>
               <InputText
                 className="w-100"
@@ -391,7 +372,7 @@ const Empresas = () => {
               />
             </div>
 
-            <div className="p-col-4">
+            <div className="p-col-4 info-required">
               <Label className="font-weight-bold">Tipo de Serviço</Label>
               <Dropdown
                 className="w-100"
@@ -406,12 +387,11 @@ const Empresas = () => {
                   })
                 }
                 placeholder="Selecione"
-                disabled={modoVisualizacao}
               />
             </div>
 
-            <div className="p-col-4">
-              <Label className="font-weight-bold">Tipo de Fornecedor</Label>
+            <div className="p-col-4 info-required">
+              <Label className="font-weight-bold">Tipo de Empresa</Label>
               <Dropdown
                 className="w-100"
                 optionLabel="nome"
@@ -422,13 +402,12 @@ const Empresas = () => {
                 }
                 placeholder="Selecione"
                 disabled={
-                  modoVisualizacao ||
                   empresa.tipo_servico === TIPO_SERVICO[TIPO_SERVICO.length - 1]
                 }
               />
             </div>
 
-            <div className="p-col-4">
+            <div className="p-col-4 info-required">
               <Label className="font-weight-bold">Situação</Label>
               <Dropdown
                 className="w-100"
@@ -439,42 +418,39 @@ const Empresas = () => {
                   setEmpresa({ ...empresa, situacao: e.target.value })
                 }
                 placeholder="Selecione"
-                disabled={modoVisualizacao}
               />
             </div>
           </div>
 
           <hr />
 
-          <h5 className="titulo-secao">Logradouro</h5>
+          <h5 className="titulo-secao">Endereço</h5>
 
           <div className="p-grid">
-            <div className="p-col-4">
+            <div className="p-col-4 info-required">
               <Label className="font-weight-bold">CEP</Label>
               <InputMask
                 className="w-100"
                 mask="99999-999"
                 value={empresa.cep}
                 autoClear={false}
-                placeholder="Ex.: XXXXX-XX"
+                placeholder="Ex.: 00000-00"
                 onComplete={e => buscarCEP(e)}
-                disabled={modoVisualizacao}
               />
             </div>
 
             <div className="p-col-6">
-              <Label className="font-weight-bold">Endereço</Label>
+              <Label className="font-weight-bold">Logradouro</Label>
               <InputText
                 className="w-100"
                 value={empresa.endereco}
                 onChange={e =>
                   setEmpresa({ ...empresa, endereco: e.target.value })
                 }
-                disabled={modoVisualizacao}
               />
             </div>
 
-            <div className="p-col-2">
+            <div className="p-col-2 info-required">
               <Label className="font-weight-bold">Número</Label>
               <InputText
                 className="w-100"
@@ -485,7 +461,6 @@ const Empresas = () => {
                     numero: removeCaracteresEspeciais(e.target.value),
                   })
                 }
-                disabled={modoVisualizacao}
               />
             </div>
 
@@ -500,7 +475,6 @@ const Empresas = () => {
                     complemento: removeCaracteresEspeciais(e.target.value),
                   })
                 }
-                disabled={modoVisualizacao}
               />
             </div>
 
@@ -512,7 +486,6 @@ const Empresas = () => {
                 onChange={e =>
                   setEmpresa({ ...empresa, bairro: e.target.value })
                 }
-                disabled={modoVisualizacao}
               />
             </div>
 
@@ -524,7 +497,6 @@ const Empresas = () => {
                 onChange={e =>
                   setEmpresa({ ...empresa, cidade: e.target.value })
                 }
-                disabled={modoVisualizacao}
               />
             </div>
 
@@ -536,7 +508,6 @@ const Empresas = () => {
                 onChange={e =>
                   setEmpresa({ ...empresa, estado: e.target.value })
                 }
-                disabled={modoVisualizacao}
               />
             </div>
           </div>
@@ -545,10 +516,54 @@ const Empresas = () => {
 
           <h5 className="titulo-secao">Contatos</h5>
 
-          <div className="p-grid">
-            {contatos.map((contato, index) => (
-              <>
-                <div className="p-col-8">
+          {contatos.map((contato, index) => (
+            <>
+              <div className={index > 0 ? "p-grid mt-5" : "p-grid"}>
+                <div className="p-col-8 info-required">
+                  <Label className="font-weight-bold">
+                    Nome do Representante
+                  </Label>
+                  <InputText
+                    className="w-100"
+                    value={contato.nome}
+                    onChange={e =>
+                      atualizaContato("nome", index, e.target.value)
+                    }
+                  />
+                </div>
+                <div className="p-col-4 info-required">
+                  <Label className="font-weight-bold">Cargo</Label>
+                  <InputText
+                    className="w-100"
+                    value={contato.cargo}
+                    onChange={e =>
+                      atualizaContato("cargo", index, e.target.value)
+                    }
+                  />
+                </div>
+                <div className="p-col-3 info-required">
+                  <Label className="font-weight-bold">RG</Label>
+                  <InputText
+                    className="w-100"
+                    value={contato.rg}
+                    onChange={e => atualizaContato("rg", index, e.target.value)}
+                  />
+                </div>
+                <div className="p-col-3 info-required">
+                  <Label className="font-weight-bold">Telefone</Label>
+                  <InputText
+                    className="w-100"
+                    value={mascaraTelefoneOuCelular(
+                      contato.telefone ? contato.telefone : "",
+                    )}
+                    onChange={e =>
+                      atualizaContato("telefone", index, e.target.value)
+                    }
+                    autoClear={false}
+                  />
+                </div>
+
+                <div className="p-col-5 contato-email  info-required">
                   <Label className="font-weight-bold">Email</Label>
                   <InputText
                     className="w-100"
@@ -556,57 +571,35 @@ const Empresas = () => {
                     onChange={e =>
                       atualizaContato("email", index, e.target.value)
                     }
-                    disabled={modoVisualizacao}
                   />
                 </div>
-                <div className="p-col-4">
-                  <Label className="font-weight-bold">Cargo/Função</Label>
-                  <InputText
-                    className="w-100"
-                    value={contato.cargo}
-                    onChange={e =>
-                      atualizaContato("cargo", index, e.target.value)
-                    }
-                    disabled={modoVisualizacao}
-                  />
-                </div>
-                <div className="p-col-8">
-                  <Label className="font-weight-bold">Nome</Label>
-                  <InputText
-                    className="w-100"
-                    value={contato.nome}
-                    onChange={e =>
-                      atualizaContato("nome", index, e.target.value)
-                    }
-                    disabled={modoVisualizacao}
-                  />
-                </div>
-                <div className="p-col-3">
-                  <Label className="font-weight-bold">Telefone</Label>
-                  <InputMask
-                    mask="(99) 99999-9999"
-                    className="w-100"
-                    value={contato.telefone}
-                    onChange={e =>
-                      atualizaContato("telefone", index, e.target.value)
-                    }
-                    disabled={modoVisualizacao}
-                  />
-                </div>
-                <div className="p-col-1">
-                  <Label className="hide-label w-100">.</Label>
-                  <Button
-                    className="btn-coad-background-outline"
-                    label="+"
-                    onClick={() => novoContato()}
-                    disabled={modoVisualizacao}
-                  />
-                </div>
-              </>
-            ))}
-          </div>
 
-          <FormGroup className="d-flex flex-row-reverse mt-3">
+                <div className="p-col-1 contato-acoes">
+                  {index === 0 ? (
+                    <div>
+                      <Label className="hide-label w-100">.</Label>
+                      <Button
+                        className="btn-coad-background-outline contato-add"
+                        label="+"
+                        onClick={() => novoContato()}
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <Label className="hide-label w-100">.</Label>
+                      <Button
+                        className="btn-coad-background-outline contato-add"
+                        label="x"
+                        onClick={() => removeContato(index)}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          ))}
+
+          <FormGroup className="d-flex flex-row-reverse m-acoes">
             <Button
               disabled={!habilitaBotao}
               className="btn-coad-primary mr-1"
@@ -618,12 +611,6 @@ const Empresas = () => {
               label="Cancelar"
               onClick={() => setVisivelCancelar(true)}
             />
-            <ButtonBootstrap
-              onClick={() => redirect("#/listar-empresas")}
-              className="btn-coad-background-outline mx-2"
-            >
-              <i className="fas fa-arrow-left" /> Voltar
-            </ButtonBootstrap>
           </FormGroup>
         </Container>
       </Page>
