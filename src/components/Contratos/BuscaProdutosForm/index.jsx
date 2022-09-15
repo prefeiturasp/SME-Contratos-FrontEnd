@@ -7,11 +7,9 @@ import { Row, Col } from "reactstrap";
 
 import { redirect } from "../../../utils/redirect";
 import {
-  ARMAZENABILIDADE_PRODUTO,
   CATEGORIA_PRODUTO,
-  DURABILIDADE_PRODUTO,
   GRUPO_ALIMENTAR_PRODUTO,
-  SITUACAO_PRODUTO,
+  TIPO_PROGRAMA,
 } from "../../../pages/Produtos/constantes";
 
 export function BuscaProdutosForm({ onBuscarClick, onLimparClick }) {
@@ -24,7 +22,7 @@ export function BuscaProdutosForm({ onBuscarClick, onLimparClick }) {
   const limparFiltros = () => {
     setFiltros({
       nome: "",
-      situacao: "",
+      tipo_programa: "",
       categoria: "",
       grupo_alimentar: "",
       durabilidade: "",
@@ -83,14 +81,14 @@ export function BuscaProdutosForm({ onBuscarClick, onLimparClick }) {
               />
             </div>
             <div className="p-col-6 ">
-              <h6>Situação</h6>
+              <h6>Tipo de Programa</h6>
               <Dropdown
                 className="w-100"
                 optionLabel="nome"
-                options={SITUACAO_PRODUTO}
-                value={filtros.situacao}
+                options={TIPO_PROGRAMA}
+                value={filtros.tipo_programa}
                 onChange={e =>
-                  setFiltros({ ...filtros, situacao: e.target.value })
+                  setFiltros({ ...filtros, tipo_programa: e.target.value })
                 }
                 placeholder="Selecione"
               />
@@ -117,32 +115,6 @@ export function BuscaProdutosForm({ onBuscarClick, onLimparClick }) {
                 value={filtros.grupo_alimentar}
                 onChange={e =>
                   setFiltros({ ...filtros, grupo_alimentar: e.target.value })
-                }
-                placeholder="Selecione"
-              />
-            </div>
-            <div className="p-col-6">
-              <h6>Durabilidade</h6>
-              <Dropdown
-                className="w-100"
-                optionLabel="nome"
-                options={DURABILIDADE_PRODUTO}
-                value={filtros.durabilidade}
-                onChange={e =>
-                  setFiltros({ ...filtros, durabilidade: e.target.value })
-                }
-                placeholder="Selecione"
-              />
-            </div>
-            <div className="p-col-6">
-              <h6>Armazenabilidade</h6>
-              <Dropdown
-                className="w-100"
-                optionLabel="nome"
-                options={ARMAZENABILIDADE_PRODUTO}
-                value={filtros.armazenabilidade}
-                onChange={e =>
-                  setFiltros({ ...filtros, armazenabilidade: e.target.value })
                 }
                 placeholder="Selecione"
               />

@@ -130,7 +130,7 @@ export const MenuConfig = [
         to: constants.LISTAR_EMPRESAS,
       },
       {
-        label: "Cadastro de Produtos",
+        label: "Produtos",
         icon: "pi pi-cog pi-th-large",
         to: constants.LISTAR_PRODUTOS,
       },

@@ -18,22 +18,15 @@ const ListaProdutos = ({ produtos, totalProdutos, mudarPagina, loading }) => {
     mudarPagina(event.page + 1);
   };
 
-  const textoOriginal = (column, rowData) => {
-    switch (column) {
-      case "durabilidade":
-        return rowData.durabilidade;
-      case "grupo_alimentar":
-        return rowData.grupo_alimentar;
-      default:
-        return null;
-    }
-  };
   const textoSeCategoriaOutros = (rowData, column) => {
     let textoAlterado =
-      rowData.categoria === "Outro(s)"
-        ? "-"
-        : textoOriginal(column.field, rowData);
+      rowData.categoria === "Outro(s)" ? "-" : rowData[column.field];
     return <span>{textoAlterado}</span>;
+  };
+
+  const textoNegritoOutros = (rowData, column) => {
+    let classe = rowData.categoria === "Outro(s)" ? "font-weight-bold" : "";
+    return <span className={classe}>{rowData[column.field]}</span>;
   };
 
   return (
@@ -48,10 +41,14 @@ const ListaProdutos = ({ produtos, totalProdutos, mudarPagina, loading }) => {
         selectionMode="single"
       >
         <Column field="nome" header="Nome do Produto" />
-        <Column field="categoria" header="Categoria" />
         <Column
-          field="durabilidade"
-          header="Durabilidade"
+          field="categoria"
+          header="Categoria"
+          body={textoNegritoOutros}
+        />
+        <Column
+          field="tipo_programa"
+          header="Programa"
           body={textoSeCategoriaOutros}
         />
         <Column
@@ -59,7 +56,6 @@ const ListaProdutos = ({ produtos, totalProdutos, mudarPagina, loading }) => {
           header="Grupo Alimentar"
           body={textoSeCategoriaOutros}
         />
-        <Column field="armazenabilidade" header="Armazenabilidade" />
       </DataTable>
       {produtos.length < totalProdutos && (
         <Pagination
