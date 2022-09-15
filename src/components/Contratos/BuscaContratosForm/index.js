@@ -124,6 +124,7 @@ export class BuscaContratosForm extends Component {
               <div className="p-col-6 no-padding-right">
                 <h6>Nome da Empresa</h6>
                 <SelecionaEmpresa
+                  campo="nome"
                   empresa={this.state.empresa}
                   onSelect={this.setaEmpresa.bind(this)}
                   filter

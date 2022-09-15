@@ -29,8 +29,10 @@ const ListaEmpresas = ({ empresas, totalEmpresas, mudarPagina, loading }) => {
         onRowClick={e => redirecionaEmpresa(e.data)}
         selectionMode="single"
       >
-        <Column field="nome" header="Nome da Empresa" />
+        <Column field="razao_social" header="Razão Social" />
+        <Column field="nome" header="Nome Fantasia" />
         <Column field="cnpj" header="CNPJ" />
+        <Column field="tipo_fornecedor" header="Tipo de Empresa" />
         <Column field="tipo_servico" header="Tipo de Serviço" />
         <Column field="situacao" header="Situação" />
       </DataTable>

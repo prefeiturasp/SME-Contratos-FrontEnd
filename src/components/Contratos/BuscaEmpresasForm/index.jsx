@@ -17,7 +17,11 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
     setFiltros({ ...filtros, situacao });
   };
 
-  const setaEmpresa = nome => {
+  const setaRazaoSocial = razao_social => {
+    setFiltros({ ...filtros, razao_social });
+  };
+
+  const setaNomeFantasia = nome => {
     setFiltros({ ...filtros, nome });
   };
 
@@ -36,6 +40,7 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
   const limparFiltros = () => {
     setFiltros({
       nome: "",
+      razao_social: "",
       cnpj_empresa: "",
       tipo_servico: "",
       tipo_fornecedor: "",
@@ -49,18 +54,16 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
       <Button
         className="float-right"
         label="Consultar"
-        style={{ marginRight: ".25em" }}
         onClick={handleClickBuscar}
       />
       <Button
-        className="float-right btn-coad-background-outline"
+        className="float-right btn-coad-background-outline mr-2"
         label="Limpar Filtros"
         style={{ marginRight: ".25em" }}
         onClick={limparFiltros}
       />
     </span>
   );
-
   return (
     <Card footer={footer} className="filtro filtroBorda">
       <Row>
@@ -78,15 +81,26 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
           </span>
         </Col>
       </Row>
-      <div className="p-grid ">
+      <div className="p-grid" style={{ width: "auto" }}>
         <div className="card card-w-title filtro">
           <div className="p-grid">
             <div className="p-col-6">
-              <h6>Nome da Empresa</h6>
+              <h6>Razão Social</h6>
               <SelecionaEmpresa
                 className="w-100"
+                campo="razao_social"
+                empresa={filtros.razao_social}
+                onSelect={setaRazaoSocial}
+                filter
+              />
+            </div>
+            <div className="p-col-6 alimento-campo">
+              <h6>Nome Fantasia</h6>
+              <SelecionaEmpresa
+                className="w-100"
+                campo="nome"
                 empresa={filtros.nome}
-                onSelect={setaEmpresa}
+                onSelect={setaNomeFantasia}
                 filter
               />
             </div>
@@ -103,7 +117,7 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
                 placeholder="Ex: XX.XXX.XXX/XXXX-XX"
               />
             </div>
-            <div className="p-col-6 ">
+            <div className="p-col-6 pr-0">
               <h6>Tipo de Serviço</h6>
               <SelecionaTipoServicoEmpresa
                 className="w-100"
@@ -119,7 +133,7 @@ export function BuscaEmpresasForm({ onBuscarClick, onLimparClick }) {
                 onSelect={setaTipoFornecedor}
               />
             </div>
-            <div className="p-col-6">
+            <div className="p-col-6 pr-0">
               <h6>Situação</h6>
               <SelecionaSituacaoEmpresa
                 className="w-100"
