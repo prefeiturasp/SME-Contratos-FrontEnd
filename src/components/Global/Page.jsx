@@ -168,7 +168,15 @@ class Page extends Component {
                 <h3 className="pt-3">{this.props.titulo}</h3>
               )}
             </Col>
-            <Col lg={2} className="comeback">
+            <Col
+              lg={2}
+              className={
+                this.props.titulo &&
+                this.props.titulo === "Cadastro de Empresas"
+                  ? "comeback spacing2"
+                  : "comeback"
+              }
+            >
               {this.props.titulo && (
                 <Button
                   onClick={this.props.onClickVoltar}

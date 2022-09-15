@@ -120,6 +120,7 @@ export function BuscaAtasForm({ onBuscarClick, onLimparClick }) {
             <div className="p-col-6">
               <h6>Nome da Empresa</h6>
               <SelecionaEmpresa
+                campo="nome"
                 empresa={filtros.empresa}
                 onSelect={setaEmpresa}
               />

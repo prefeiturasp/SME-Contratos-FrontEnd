@@ -56,10 +56,14 @@ $mainColor: #602a2a;
   box-shadow: inset 0 0 0 0.2rem #602a2a;
 }
 .comeback {
+  padding-right: 1rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
   display: flex;
   flex-direction: row-reverse;
+}
+.spacing2 {
+  padding-right: 2rem;
 }
 .cards-contratos {
   margin-left: 0;

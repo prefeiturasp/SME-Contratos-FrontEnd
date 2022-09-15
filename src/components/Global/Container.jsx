@@ -5,7 +5,7 @@ export default class Container extends Component {
     return (
       <div className={`p-grid mt-2 w-100 ${this.props.className}`}>
         <div className="p-col-12">
-          <div className="card">
+          <div className={"card " + this.props.classe}>
             <h2>
               <i className={this.props.icone}></i> {this.props.subtitulo}
             </h2>

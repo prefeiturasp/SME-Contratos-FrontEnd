@@ -19,6 +19,7 @@ export function AccordionEmpresaContratada({
             <Label className="font-weight-bold">Nome Fantasia</Label>
             <SelecionaEmpresa
               className="w-100"
+              campo="nome"
               empresa={empresaContratada}
               onSelect={e => atualizaEmpresa(e)}
               disabled={disabilitado}

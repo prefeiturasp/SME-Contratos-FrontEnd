@@ -27,7 +27,7 @@ export class SelecionaEmpresa extends Component {
     return (
       <Dropdown
         {...this.props}
-        optionLabel="nome"
+        optionLabel={this.props.campo}
         options={this.state.empresas}
         value={this.props.empresa}
         onChange={event => this.selecionaEmpresa(event)}

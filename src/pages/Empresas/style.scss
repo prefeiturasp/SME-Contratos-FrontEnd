@@ -1,7 +1,37 @@
 .titulo-secao {
   color: #602a2a;
+  font-weight: bold;
 }
 
 .hide-label {
   color: transparent;
+}
+.info-required label::before {
+  color: #e32;
+  content: "* ";
+  display: inline;
+}
+.contato-acoes {
+  display: inline-flex;
+  margin-top: auto;
+  width: 6%;
+  display: block;
+}
+.contato-add {
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+}
+.alinhamento {
+  padding-right: 0;
+}
+.m-acoes {
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+}
+.alimento-campo {
+  padding-right: 0;
+}
+.contato-email {
+  width: 44%;
 }
