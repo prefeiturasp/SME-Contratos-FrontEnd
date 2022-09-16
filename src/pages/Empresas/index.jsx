@@ -262,7 +262,7 @@ const Empresas = () => {
       >
         <Container classe="alinhamento">
           <Dialog
-            header={"Cancelar "}
+            header={"Cancelar preenchimento"}
             visible={visivelCancelar}
             style={{ width: "60vw" }}
             modal={true}
@@ -271,17 +271,17 @@ const Empresas = () => {
               <FormGroup className="pt-4 d-flex justify-content-end">
                 <Button
                   className="btn-coad-background-outline"
+                  onClick={() => setVisivelCancelar(false)}
+                  label="Não"
+                />
+                <Button
+                  className="btn-coad-primary mx-2"
                   label="Sim"
                   onClick={() => {
                     setVisivelCancelar(false);
                     toast.showSuccess("Alterações canceladas");
                     cancelarEmpresa();
                   }}
-                />
-                <Button
-                  className="btn-coad-primary mx-2"
-                  onClick={() => setVisivelCancelar(false)}
-                  label="Não"
                 />
               </FormGroup>
             }
@@ -301,7 +301,11 @@ const Empresas = () => {
               <Button
                 className="btn-coad-background-outline mx-2"
                 onClick={fechaDialog}
-                label="Não"
+                label={
+                  empresa.situacao && empresa.situacao.id === "INATIVA"
+                    ? "Voltar"
+                    : "Não"
+                }
               />
               {!incluir ? (
                 <Button
@@ -559,7 +563,6 @@ const Empresas = () => {
                     onChange={e =>
                       atualizaContato("telefone", index, e.target.value)
                     }
-                    autoClear={false}
                   />
                 </div>
 
@@ -599,7 +602,7 @@ const Empresas = () => {
             </>
           ))}
 
-          <FormGroup className="d-flex flex-row-reverse m-acoes">
+          <FormGroup className="d-flex flex-row-reverse m-acoes mt-5">
             <Button
               disabled={!habilitaBotao}
               className="btn-coad-primary mr-1"

@@ -3,6 +3,7 @@ export const mascaraTelefoneOuCelular = telefone => {
     .replace(/[()]/g, "")
     .replace("-", "")
     .replace("_", "")
+    .replace(" ", "")
     .replace(" ", "");
   const ehCelular = fone.length > 10;
   if (fone > 11) {
