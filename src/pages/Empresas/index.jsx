@@ -438,7 +438,7 @@ const Empresas = () => {
                 mask="99999-999"
                 value={empresa.cep}
                 autoClear={false}
-                placeholder="Ex.: 00000-00"
+                placeholder="Ex.: 00000-000"
                 onComplete={e => buscarCEP(e)}
               />
             </div>
