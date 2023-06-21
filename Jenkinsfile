@@ -6,11 +6,11 @@ pipeline {
     }
   
     agent {
-      node { label 'jenkins-slave' }
+      node { label 'AGENT-NODES' }
     }
 
     options {
-      buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '15'))
+      buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
       disableConcurrentBuilds()
       skipDefaultCheckout()
     }
@@ -22,7 +22,7 @@ pipeline {
         }
       
         stage('AnaliseCodigo') {
-	        when { branch 'homolog' }
+            when { branch 'homolog' }
           steps {
               withSonarQubeEnv('sonarqube-local'){
                 sh 'echo "[ INFO ] Iniciando analise Sonar..." && sonar-scanner \
@@ -49,32 +49,22 @@ pipeline {
             }
           }
         }
-	    
+        
         stage('Deploy'){
             when { anyOf {  branch 'master'; branch 'main'; branch 'development'; branch 'release'; branch 'homolog';  } }        
             steps {
                 script{
                     if ( env.branchname == 'main' ||  env.branchname == 'master' || env.branchname == 'homolog' || env.branchname == 'release' ) {
                         sendTelegram("🤩 [Deploy ${env.branchname}] Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nMe aprove! \nLog: \n${env.BUILD_URL}")
-                        
-                        withCredentials([string(credentialsId: 'aprovadores-contratos', variable: 'aprovadores')]) {
-                          timeout(time: 24, unit: "HOURS") {
-                            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: "${aprovadores}"
-                          }
+                        timeout(time: 24, unit: "HOURS") {
+                            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'kelwy_oliveira, luis_zimmermann, diogo_santos'
                         }
-                        
-                        withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
-                            sh('cp $config '+"$home"+'/.kube/config')
-                            sh 'kubectl rollout restart deployment/safi-frontend -n sme-safi'
-                            sh('rm -f '+"$home"+'/.kube/config')
-                        }
-                    }
-                    else{
-                        withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
-                            sh('cp $config '+"$home"+'/.kube/config')
-                            sh 'kubectl rollout restart deployment/safi-frontend -n sme-safi'
-                            sh('rm -f '+"$home"+'/.kube/config')
-                        }
+                    }                    
+                    withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                        sh('if [ -f '+"$home"+'/.kube/config ];then rm -f '+"$home"+'/.kube/config; fi')
+                        sh('cp $config '+"$home"+'/.kube/config')
+                        sh 'kubectl rollout restart deployment/safi-frontend -n sme-safi'
+                        sh('if [ -f '+"$home"+'/.kube/config ];then rm -f '+"$home"+'/.kube/config; fi')
                     }
                 }
             }           
@@ -82,7 +72,7 @@ pipeline {
     }
 
   post {
-    always { cleanWs notFailBuild: true }
+    always { sh('if [ -f '+"$home"+'/.kube/config ];then rm -f '+"$home"+'/.kube/config; fi')}
     success { sendTelegram("🚀 Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nStatus: Success \nLog: \n${env.BUILD_URL}console") }
     unstable { sendTelegram("💣 Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nStatus: Unstable \nLog: \n${env.BUILD_URL}console") }
     failure { sendTelegram("💥 Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nStatus: Failure \nLog: \n${env.BUILD_URL}console") }
